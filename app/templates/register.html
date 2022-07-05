@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3>Register here</h3>
+    <form action="/register" method="POST">
+        {{ template_form.hidden_tag()}}
+
+{{template_form.username_field(size=27,placeholder="Enter username")}}
+
+    {% for error in template_form.username_field.errors %}
+<span class="error">[{{error}}]</span>
+{% endfor %}
+
+{{template_form.password_field.label}}
+{{template_form.password_field()}}
+
+{{template_form.password2_field.label}}
+{{template_form.password2_field()}}
+    {{ template_form.submit_field() }}
+</form>
+   <div class="row text-center">
+          <a href="/login">Return to Login Page</a>
+      </div>
+{% endblock %}

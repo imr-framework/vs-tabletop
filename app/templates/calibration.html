@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- tabs!!!! --
+    <div id="menu">
+        Include Buttons to access the 3 tabs
+        <h3 id="f0-button" class="tab-selector">Frequency</h3>
+        <h3 id="rf-button" class="tab-selector">RF power</h3>
+        <h3 id="shim-button" class="tab-selector">Shimming</h3>
+    </div>
+-->
+    <div class="container-fluid vh-100">
+    <form action="/calibration" method="POST" id="calibration_form">
+    <!-- Displays row -->
+        <div class="row" id="display-region">
+          <div class="col-4" id="fid-region">
+              <div id='chart-left' class='chart-left'></div>
+          </div>
+          <div class="col-4" id="spectrum-region">
+              <div id='chart-center' class='chart-center'></div>
+          </div>
+            <div class="col-4" id="fa-region">
+                <div id="chart-right" class="chart-right"></div>
+            </div>
+        </div>
+
+<!-- Separate parameters row -->
+<div class="row" id="param-panel">
+<div class="col card" id="f0-card">
+        <h4 class="font-weight-bold">Central frequency</h4>
+        <p>Adjust the central frequency to match the magnet's.</p>
+        <p id="declarer" class="text-info">Debug message may be printed here</p>
+            {{template_calibration_form.hidden_tag()}}
+            <div class="form-group">
+              {{template_calibration_form.f0_field.label}}
+                {{template_calibration_form.f0_field(id="f0",class_="form-control", value=session['calibration']['f0']/1e6)}}
+                  </div><br>
+
+
+
+  </div>
+
+    <div class="col card" id="shim-card">
+        <h4 class="font-weight-bold">Shimming</h4>
+        <p>Adjust shim currents to make B0 uniform</p>
+
+            <div class="form-group">
+                {{ template_calibration_form.shimx_field.label }} = <output id="shimx_val">{{ session['calibration']['shimx'] }}</output>
+        {{ template_calibration_form.shimx_field(class_="form-range",id='shimx',step=0.01,value=session['calibration']['shimx'],onchange="shimx_val.value=this.value") }}
+        </div>
+            <div class="form-group">
+            {{ template_calibration_form.shimy_field.label }} = <output id="shimy_val">{{ session['calibration']['shimy'] }}</output>
+        {{ template_calibration_form.shimy_field(class_="form-range",id='shimy',step=0.01, value=session['calibration']['shimy'],onchange="shimy_val.value=this.value") }}
+            </div>
+        <div class="form-group">
+      {{ template_calibration_form.shimz_field.label }} = <output id="shimz_val">{{ session['calibration']['shimz'] }}</output>
+      {{ template_calibration_form.shimz_field(class_="form-range",id='shimz',step=0.01, value=session['calibration']['shimz'],onchange="shimz_val.value=this.value") }}
+       </div>
+        <div class="row">
+            <div class="btn btn-primary col" id="zero-shims">Zero shims</div>
+            <div class="btn btn-primary col">Autoshim</div>
+        </div>
+  </div>
+
+  <div class="col card" id="rf-card">
+        <h4 class="font-weight-bold">RF power</h4>
+        <p>Find the RF power output needed for a 90-degree flip angle. </p>
+
+          <div class="form-group">
+          {{ template_calibration_form.tx_amp_field.label }}
+          {{ template_calibration_form.tx_amp_field(id='tx_amp',class_="form-control") }}
+              </div>
+
+          <div class="form-group">
+          {{ template_calibration_form.rx_gain_field.label }}
+          {{ template_calibration_form.rx_gain_field(id='rx_gain',class_="form-control") }}
+          </div>
+
+          <div class="form-group">
+              <div class="btn btn-info" id="run-fa">Run FA Calibration </div>
+          </div>
+
+
+</div>
+</div>
+  </form>
+
+        <div class="row">
+        <!-- Column 1:  Shared params -->
+            <div class="col-4 card">
+                <form action="/calibration" method="POST">
+                        <div class="row">
+                            <div class="col">
+                                {{ template_calibration_form.tr_field.label }}
+                                {{ template_calibration_form.tr_field(class_="form-control") }}
+                            </div>
+                            <div class="col">
+                                {{ template_calibration_form.readout_time_field.label }}
+                                {{ template_calibration_form.readout_time_field(class_="form-control") }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                            {{ template_calibration_form.num_avg_field.label }}
+                            {{ template_calibration_form.num_avg_field(class_="form-control") }}
+                            </div>
+                            <div class="col">
+                        {{ template_calibration_form.num_rep_field.label }}
+                        {{ template_calibration_form.num_rep_field(class_="form-control") }}
+                            </div>
+                        </div>
+
+                </form>
+            </div>
+        <!-- Column 2: Main buttons -->
+        <div class="col-4" id="button-region">
+                <div class="row h-50">
+                  <div class="btn btn-success btn-lg col  d-flex align-items-center justify-content-center" id="run-scan">START</div>
+                  <div class="btn btn-danger btn-lg col  d-flex align-items-center justify-content-center" id="stop-scan">STOP</div>
+                </div>
+                <!-- Saving current parameters, loading previous ones -->
+                <div class="row h-50">
+                    {{template_calibration_form.submit_field(class_="btn btn-info btn-lg col",form="calibration_form")}}
+                    <!-- input class="btn btn-info btn-lg col" type='submit' form="calibration_form" value="Save"></inpu-->
+                  <div class="btn btn-light btn-lg col  d-flex align-items-center justify-content-center">LOAD</div>
+                </div>
+
+        </div>
+        <!-- Column 3: Display options (checkboxes) -->
+            <div class="col-4">
+                <form action="/calibration" method="POST">
+                        <div class="form-check form-switch form-control">
+                          {{ template_disp_form.autoscale_field(class_="form-check-input",disabled=True) }}
+                          {{ template_disp_form.autoscale_field.label(class_="form-check-label") }}
+                        </div>
+                        <div class="form-check form-switch form-control">
+                          {{ template_disp_form.show_prev_field(class_="form-check-input",disabled=True) }}
+                          {{ template_disp_form.show_prev_field.label(class_="form-check-label text-left") }}
+                        </div>
+                </form>
+
+            </div>
+
+        </div>
+
+
+
+    </div>
+
+
+</div>
+
+     <!-- Javascript for Plotly integration (required)-->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+     <script type="text/javascript">
+         function plot_initial() {
+                 let graphs_left = {{ graphJSON_left | safe }};
+                 Plotly.plot('chart-left', graphs_left, {});
+                 let graphs_center = {{ graphJSON_center | safe }};
+                 Plotly.plot('chart-center', graphs_center, {});
+                 let graphs_right = {{ graphJSON_right | safe}};
+                 Plotly.plot("chart-right", graphs_right, {});
+         }
+         plot_initial()
+     </script>
+
+
+{% endblock %}
+{% block additional_imports %}
+        <script src="../static/calibration.js"></script>
+{% endblock %}

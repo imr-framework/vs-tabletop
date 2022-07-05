@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container-fluid">
+        <div  class="row">
+        {% for game_code, game in template_dict_games.items() %}
+            {% if (game_code + 1) == 5 %}
+            </div>                <div class="row">
+
+            {% endif %}
+
+        <h3 class="card col bg-info mh-100" href="./games/{{game_code+1}}">
+            <div class="card-header text-black font-monospace">Game {{game_code+1}}</div>
+            <div class="card-body">
+                <a class="card-title text-white font-monospace stretched-link" href="./games/{{game_code+1}}">{{game}}</a>
+                <p class="card-body text-black font-monospace">game-specific introduction text.</p>
+            </div>
+        </h3>
+        {% endfor %}
+        </div>
+    </div>
+
+
+{% endblock %}
+
