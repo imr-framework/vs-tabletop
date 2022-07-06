@@ -191,13 +191,15 @@ def stop_the_fake_plots(message):
         if hasattr(th,'f0'):
             th.raise_exception()
             th.join()
-            session['scanningFID'] = False
-            session.modified = True
         if hasattr(th,'tx_amp_90'): # FA thread
             th.raise_exception()
             th.join()
-            session['scanningFA'] = False
-            session.modified = True
+
+    session['scanningFID'] = False
+    session.modified = True
+    session['scanningFA'] = False
+    session.modified = True
+
 
 # Run FA calibration
 @socketio.on('run FA')

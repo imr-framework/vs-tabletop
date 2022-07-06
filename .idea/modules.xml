@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/tabletop_dev_boilerplate.iml" filepath="$PROJECT_DIR$/.idea/tabletop_dev_boilerplate.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/vs-tabletop.iml" filepath="$PROJECT_DIR$/.idea/vs-tabletop.iml" />
     </modules>
   </component>
 </project>

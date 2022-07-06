@@ -25,4 +25,7 @@ visitor==0.1.3
 Werkzeug==2.1.2
 WTForms==3.0.1
 zipp==3.8.0
+flask-socketio==5.2.0
+Flask-Session==0.4.0
 git+https://github.com/imr-framework/virtual-scanner.git@2ed303d42038449e28ebe44fa4177541cabe8eb2
+simple-websocket==0.5.2
