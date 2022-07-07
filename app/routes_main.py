@@ -24,6 +24,7 @@ def initialize_parameters():
     session['display'] = {'autoscale':True, 'show_prev':False}
     session['user_id'] = None
 
+    session['game1'] = {'FOV_scale', 'Matrix_scale', 'Voxel_scale', 'Min'}
     # TODO add Game 5 params
     session['game5'] = {'b0_on': False, 'coil_on': False, 'flip_angle': 90, 'rf_phase': 0,
                         'coil_dir': 'x', 'm_theta': 0, 'm_phi':0, 'm_size': 1}

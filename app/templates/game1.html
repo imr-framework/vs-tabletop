@@ -15,7 +15,7 @@
             <div class="row">
             <div class="col-4 h-100">
                 <div class="row">
-<<<<<<< Updated upstream
+
                     <div class="row-header"><b>FOV Metric</b></div>
                 </div>
                 <div class="row">
@@ -23,17 +23,14 @@
                 </div>
                 <div class="row">
                     <div class="row-header"><b>Voxel Size Metric</b></div>
-=======
-                    <div class="row-header">FOV Metric</div>
                 </div>
                 <div class="row">
-                    <div class="row-header">Matrix Size Metric</div>
+                    <div class="row-header"><b>Min Scale</b></div>
                 </div>
                 <div class="row">
-                    <div class="row-header">Voxel Size Metric</div>
->>>>>>> Stashed changes
+                    <div class="row-header"><b>Max Scale</b></div>
                 </div>
-                </div>
+            </div>
             <div class="col-8 h-100">
                 <form action="/games/1" method="POST">
                     {{G1Form.hidden_tag()}}
@@ -55,28 +52,41 @@
                         {{G1Form.Voxel_scale.label}}
                     </div>
                 </div>
+                   <div class="row">
+                       <div class="row-header">
+                           {{G1Form.min_scale()}}
+                       </div>
+                   </div>
+                    <div class="row">
+                       <div class="row-header">
+                           {{G1Form.max_scale()}}
+                       </div>
+                   </div>
                 <div class="row">
                     <div class="row-header">
 
                         {{G1Form.submit_field()}}
                     </div>
                 </div>
+
                     </form>
             </div>
 
             </div>
             <div class="row card">
             <div class="card header bg-light">Messages after Run</div>
-<<<<<<< Updated upstream
+
             <div class="card body"><i>There are no left messages to display</i></div>
         </div>
             <br><button class="btn btn-primary" type="submit">Submit</button>
-=======
-            <div class="card body">There are no left messages to display</div>
+
         </div>
->>>>>>> Stashed changes
+
         </div>
             </div>
 
-    </div>
+{% endblock %}
+
+{% block additional_imports%}
+    <script src="../static/game1.js"></script>
 {% endblock %}

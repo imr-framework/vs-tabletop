@@ -16,5 +16,12 @@ def game1():
         print(form.Matrix_scale.data)
         print(form.Voxel_scale.data)
 
+
+
     return render_template('game1.html',template_title="What is in an image?",
                            template_intro_text="Voxels, field-of-views, and resolution ",template_game_form=None, G1Form = form)
+
+
+@socketio.on('Update param for Game1')
+def update_parameter(info):
+    print(info)
