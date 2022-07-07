@@ -10,9 +10,6 @@ from __main__ import app, login_manager, db, socketio
 
 
 # Games
-@app.route('/games/1',methods=["GET","POST"])
-def game1():
-    return render_template('game1.html',template_title="What is in an image?",template_intro_text="Voxels, field-of-views, and resolution ",template_game_form=None)
 
 
 @app.route('/games/2',methods=["GET","POST"])

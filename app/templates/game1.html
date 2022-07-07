@@ -1,7 +1,82 @@
-{% extends "game.html" %}
-{% block fields %}
+{% extends "base.html" %}
+{% block content %}
+    <div class="container-fluid vh-100">
+        <div class="row h-100">
+            <div class="col-6 h-100">
+                <div class="row card">
+                    <div class="card-header">Phantom</div>
+                    <div class="card-body">
+                        <img src="../static/placeholder.png" class="img-fluid">
+                    </div>
+                </div>
+            </div>
 
+        <div class="col-6 h-100">
+            <div class="row">
+            <div class="col-4 h-100">
+                <div class="row">
+<<<<<<< Updated upstream
+                    <div class="row-header"><b>FOV Metric</b></div>
+                </div>
+                <div class="row">
+                    <div class="row-header"><b>Matrix Size Metric</b></div>
+                </div>
+                <div class="row">
+                    <div class="row-header"><b>Voxel Size Metric</b></div>
+=======
+                    <div class="row-header">FOV Metric</div>
+                </div>
+                <div class="row">
+                    <div class="row-header">Matrix Size Metric</div>
+                </div>
+                <div class="row">
+                    <div class="row-header">Voxel Size Metric</div>
+>>>>>>> Stashed changes
+                </div>
+                </div>
+            <div class="col-8 h-100">
+                <form action="/games/1" method="POST">
+                    {{G1Form.hidden_tag()}}
+                <div class="row">
+                    <div class="row-header">
+                        {{G1Form.FOV_scale()}}
+                        {{G1Form.FOV_scale.label}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="row-header">
+                        {{G1Form.Matrix_scale()}}
+                        {{G1Form.Matrix_scale.label}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="row-header">
+                        {{G1Form.Voxel_scale()}}
+                        {{G1Form.Voxel_scale.label}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="row-header">
 
+                        {{G1Form.submit_field()}}
+                    </div>
+                </div>
+                    </form>
+            </div>
 
+            </div>
+            <div class="row card">
+            <div class="card header bg-light">Messages after Run</div>
+<<<<<<< Updated upstream
+            <div class="card body"><i>There are no left messages to display</i></div>
+        </div>
+            <br><button class="btn btn-primary" type="submit">Submit</button>
+=======
+            <div class="card body">There are no left messages to display</div>
+        </div>
+>>>>>>> Stashed changes
+        </div>
+            </div>
 
+    </div>
 {% endblock %}

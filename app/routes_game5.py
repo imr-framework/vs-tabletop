@@ -13,7 +13,7 @@ import plotly.express as px
 import pandas as pd
 import json
 import numpy as np
-from workers.simulation_workers import simulate_spin_action
+#from workers.simulation_workers import simulate_spin_action
 
 @app.route('/games/5',methods=["GET","POST"])
 def game5():
@@ -24,8 +24,8 @@ def game5():
         # Run simulation and display results
         # Output animated plots
         # TODO: implement simulation function
-        a1, a2 = simulate_spin_action(fa=game_form.flip_angle_field.data,
-                       rlx=None)
+       ## a1, a2 = simulate_spin_action(fa=game_form.flip_angle_field.data,
+          #             rlx=None)
 
     j1, j2 = make_default_graphs()
 
