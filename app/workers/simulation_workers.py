@@ -14,18 +14,27 @@ GAMMA_BAR = 42.58e6
 
 
 # Game 5
-def simulate_RF_rotation(M_first, FA, rf_phase, rot_frame=False):
+def simulate_RF_rotation(M_first, FA, rf_phase, b0, rot_frame=False):
     rf_dur = 100*1e-6
+    df = b0*GAMMA_BAR
+
+
     # Simulate block RF pulse
-    spin = SpinGroup(pdt1t2=(1,0,0), df=0) # No relaxation
+    if rot_frame:
+        spin = SpinGroup(pdt1t2=(1,0,0), df=0) # No relaxation
+        rf_freq = 0
+    else:
+        spin = SpinGroup(pdt1t2=(1,0,0), df=df)
+        rf_freq = df
+
     spin.m = M_first # [3,1]
     rf = make_block_pulse(flip_angle=FA, duration=rf_dur)
     rfdt = rf.t[1] - rf.t[0]
+    rf_time = np.array(rf.t) - rfdt
 
+    pulse_shape = np.exp(1j*(-2*np.pi*rf_freq*rf_time + rf_phase))*rf.signal/GAMMA_BAR
     # Add phase to RF
-
-    __, mags = spin.apply_rf_store(pulse_shape=np.exp(1j*rf_phase)*rf.signal/GAMMA_BAR,
-                                   grads_shape=np.zeros((3,len(rf.signal))),dt = rfdt)
+    __, mags = spin.apply_rf_store(pulse_shape=pulse_shape, grads_shape=np.zeros((3,len(rf.signal))),dt=rfdt)
     mags = np.transpose(mags)
     return rfdt, mags
 
@@ -144,8 +153,8 @@ def make_spin_action_plot(simulated_data):
 
 
 if __name__ == '__main__':
-    #dt, mags = simulate_RF_rotation(M_first=[[0],[0],[1]],FA=np.pi/2,rf_phase=np.pi/3)
-    #print(dt)
-    dt, mags = simulate_spin_precession(M_first=[[0],[1],[0]], b0=0.001, rot_frame=False)
+    dt, mags = simulate_RF_rotation(M_first=[[0],[0],[1]],FA=np.pi/2,rf_phase=np.pi/3,b0=0.001,rot_frame=False)
+
+    #dt, mags = simulate_spin_precession(M_first=[[0],[0],[1]], b0=0.001, rot_frame=False)
 
     animate_spin_action(dt, mags)

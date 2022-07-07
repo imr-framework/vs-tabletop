@@ -24,13 +24,27 @@
                 <div class="row h-25 card">
                          <h3 class="card-header">Main field</h3>
                          <div class="card-body">
-                        {{ template_game_form.b0_onoff_field(class="btn-check",id="b0-button",autocomplete="off") }}
-                        <label class="btn btn-outline-info" for="b0-button">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" fill="currentColor" class="bi bi-magnet-fill" viewBox="0 0 16 16">
-                          <path d="M15 12h-4v3h4v-3ZM5 12H1v3h4v-3ZM0 8a8 8 0 1 1 16 0v8h-6V8a2 2 0 1 0-4 0v8H0V8Z"/>
-                        </svg>
-                        </label>
+                         <div class="row">
+                             <div class="col-4">
+                                {{ template_game_form.b0_onoff_field(class="btn-check",id="b0-button",autocomplete="off") }}
+                                <label class="btn btn-outline-info" for="b0-button">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" fill="currentColor" class="bi bi-magnet-fill" viewBox="0 0 16 16">
+                                  <path d="M15 12h-4v3h4v-3ZM5 12H1v3h4v-3ZM0 8a8 8 0 1 1 16 0v8h-6V8a2 2 0 1 0-4 0v8H0V8Z"/>
+                                </svg>
+                                </label>
                              </div>
+                             <div class="col-8">
+                                 <div class="row">
+                                 {{ template_game_form.b0_field(class="form-range",step=0.002) }}
+                                 </div>
+                                  <div class="ticks text-primary">
+                                      {% for b in [0.0,0.002,0.004,0.006,0.008,0.010] %}
+                                       <span class="tick">{{ b }}</span>
+                                      {% endfor %}
+                                  </div>
+                             </div>
+                         </div>
+                         </div>
                     </div>
                 <br>
                 <div class="row h-25 card">

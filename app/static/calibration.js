@@ -53,3 +53,4 @@ $('#zero-shims').click(()=>{
 $(':input').on('input',(event)=>{
     socket.emit("update single param",{'id': event.target.id, 'value': event.target.value});
 })
+

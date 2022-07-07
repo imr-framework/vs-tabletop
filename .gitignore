@@ -130,3 +130,9 @@ dmypy.json
 
 # External code 
 external/
+
+# Database
+.db 
+
+# Others
+.idea/

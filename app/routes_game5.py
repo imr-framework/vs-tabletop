@@ -13,19 +13,18 @@ import plotly.express as px
 import pandas as pd
 import json
 import numpy as np
-#from workers.simulation_workers import simulate_spin_action
+from workers.simulation_workers import simulate_RF_rotation
 
 @app.route('/games/5',methods=["GET","POST"])
 def game5():
     # Form for submitting data - current settings
     game_form = Game5Form()
+
     if game_form.validate_on_submit():
         print('form validated')
         # Run simulation and display results
         # Output animated plots
-        # TODO: implement simulation function
-       ## a1, a2 = simulate_spin_action(fa=game_form.flip_angle_field.data,
-          #             rlx=None)
+        #j1 = simulate_RF_rotation()
 
     j1, j2 = make_default_graphs()
 
