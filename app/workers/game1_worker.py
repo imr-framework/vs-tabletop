@@ -70,6 +70,9 @@ def generate_plot(img):
 
     return fig
 
+# TODO Rishi know what this function does and call it in routes_game1.py
+# You can add a line in routes_game1.py to import it, like this :
+#     from workers.game1_worker import game1_worker
 def game1_worker(fov,n,n_zf,min_level,max_level):
     """Receives game 1 user defined inputs and generates a corresponding image
        GT, July 2022
@@ -105,5 +108,12 @@ def game1_worker(fov,n,n_zf,min_level,max_level):
 
 
 if __name__ == '__main__':
+    # TODO Rishi: run this python script to see how the function works
+    # Example of generating a JSON string and printing it
     j1 = game1_worker(0.12,128,256,0,1)
     print(j1)
+
+    # Example of generating and displaying a plot
+    img = get_image(0.25,128,256,0,1)
+    fig = generate_plot(img)
+    fig.show()

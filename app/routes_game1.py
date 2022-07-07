@@ -7,7 +7,6 @@ from forms import *
 from info import GAMES_DICT
 from models import User, Calibration
 from __main__ import app, login_manager, db, socketio
-
 @app.route('/games/1',methods=["GET","POST"])
 def game1():
     form=Game1Form()

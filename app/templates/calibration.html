@@ -14,13 +14,14 @@
     <!-- Displays row -->
         <div class="row" id="display-region">
           <div class="col-4" id="fid-region">
-              <div id='chart-left' class='chart-left'></div>
+              <!-- TODO Rishi: here is the element with id='chart-left';  -->
+              <div id='chart-left' class='chart'></div>
           </div>
           <div class="col-4" id="spectrum-region">
-              <div id='chart-center' class='chart-center'></div>
+              <div id='chart-center' class='chart'></div>
           </div>
             <div class="col-4" id="fa-region">
-                <div id="chart-right" class="chart-right"></div>
+                <div id="chart-right" class="chart"></div>
             </div>
         </div>
 
@@ -149,13 +150,21 @@
 
 
 </div>
+    <!-- TODO Rishi: the following includes javascript code that plots JSONs with Plotly-->
+    <!-- graphJSON_left, graphJSON_center, graphJSON_right have been passed into the template
+                 from routes_main.html -->
 
-     <!-- Javascript for Plotly integration (required)-->
+     <!-- Import Javascript for Plotly integration (required)-->
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-     <script type="text/javascript">
+    <!-- Javascript for the actual plotting -->
+    <script type="text/javascript">
          function plot_initial() {
+                 // Declare a variable graphs_left and set it equal to
+                //    graphJSON_left, a JSON string passed into the template via render_template()
                  let graphs_left = {{ graphJSON_left | safe }};
+                 // Use Plotly function to plot graphs_left INTO THE ELEMENT with id = 'chart-left'
                  Plotly.plot('chart-left', graphs_left, {});
+
                  let graphs_center = {{ graphJSON_center | safe }};
                  Plotly.plot('chart-center', graphs_center, {});
                  let graphs_right = {{ graphJSON_right | safe}};

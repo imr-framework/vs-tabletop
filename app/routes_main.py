@@ -24,8 +24,9 @@ def initialize_parameters():
     session['display'] = {'autoscale':True, 'show_prev':False}
     session['user_id'] = None
 
-    session['game1'] = {'FOV_scale', 'Matrix_scale', 'Voxel_scale', 'Min'}
-    # TODO add Game 5 params
+    #TODO Rishi: we need default values for all the variables here; uncomment first
+    #session['game1'] = {'FOV_scale': fov_default_value, 'Matrix_scale', 'Voxel_scale', 'Min'}
+
 
     session['game5'] = {'b0_on': False, 'coil_on': False, 'flip_angle': 90, 'rf_phase': 0,
                         'coil_dir': 'x', 'm_theta': 0, 'm_phi':0, 'm_size': 1}
@@ -210,7 +211,8 @@ def run_fake_FA_calibration(message):
     print(message['data'])
     # Get a FA plot
     if not session.get('scanningFA'):
-        fa_thread = FlipAnglePlotThread(tx_amp_90=3, tx_amp_max=10, Npts=50) # Preset - TODO incorporate as options?
+        fa_thread = FlipAnglePlotThread(tx_amp_90=3, tx_amp_max=10, Npts=50)
+        # Preset - TODO incorporate as options?
         fa_thread.start()
         session['scanningFA'] = True
         session.modified = True
@@ -219,7 +221,17 @@ def run_fake_FA_calibration(message):
 @socketio.on('zero shims')
 def zero_shims(message):
     print(message['data'])
+    # This is another example of updating the session with newly zeroed shim values
     utils.update_session_subdict(session,'calibration',{'shimx':0.0,'shimy':0.0,'shimz':0.0})
+
+# TODO Rishi: this decorated function (the "@" line is the decorator) does the following:
+#        1. It is run when socketio receives 'update single param' from the client
+#        2. The data being sent over is passed as the "info" parameter
+#        3. If the info is central frequency, f0, it scales it by 1e6 for unit conversion from MHz to Hz
+#        4. A Python dictionary, param, is created where the key is still the id and the value is converted into float
+#        5. It updates the session dictionary using a function from utils.py
+#        6. It finds a thread that has the f0 attribute and updates its f0
+#           (this is for continuously updating the leftmost plot on the calibration page)
 
 # Update signal parameters on change
 @socketio.on('update single param')
@@ -227,8 +239,8 @@ def update_parameter(info):
     if info['id'] == 'f0':
         info['value'] = float(info['value'])*1e6
     param = {info['id']:float(info['value'])}
-    utils.update_session_subdict(session,'calibration',param)
-    # Update thread TODO incorporate other parameters once connected to Red Pitaya
+    utils.update_session_subdict(session,'calibration',param) # TODO This line is needed to update session variables
+    # Update thread
     for th in threading.enumerate():
         if hasattr(th, 'f0'):
             th.set_f0(session['calibration']['f0'])

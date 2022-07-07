@@ -14,6 +14,9 @@ socket.on('plots served', (msg)=>{
 
 } )
 
+// TODO (A) this does a thing (plots a new chart)
+//  when the client receives the instruction of "fa plot served" from the server
+//  combine this with TODO (B) to update the fields and make them co-dependent
 socket.on('fa plot served', (msg)=>{
     //$('#declarer').text('FA plot should be served now ... ');
     Plotly.newPlot('chart-right',JSON.parse(msg['fa_signal']),{});
@@ -36,6 +39,10 @@ $('#run-fa').click(()=>{
     socket.emit('run FA',{'data':'Start flip angle calibration.'})
 })
 
+
+// TODO (B) Rishi: this responds to the elment with id='zero-shims' being clicked
+//          by modifying all the following values to zero (0.0)
+//          you can use this with TODO (A) to update the fields!
 $('#zero-shims').click(()=>{
     // Set shim values to zero
     $('#shimx').val(0.0)
@@ -49,6 +56,7 @@ $('#zero-shims').click(()=>{
     socket.emit('zero shims',{'data': 'Zeroing shim parameters!'})
 })
 
+// TODO Rishi: this responds to any update on any input and sends over its name and value to the server
 // When any single parameter is changed, emit signal to server to update it
 $(':input').on('input',(event)=>{
     socket.emit("update single param",{'id': event.target.id, 'value': event.target.value});
