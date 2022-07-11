@@ -41,12 +41,12 @@ class Calibration_Form(FlaskForm):
 
 class Game1Form(FlaskForm):
     #Min and Max units are in cm
-    FOV_scale = DecimalField(label='cm', validators=[DataRequired(), NumberRange(min=.1, max=1)],default=0.5)
+    FOV_scale = DecimalField(label='m', validators=[DataRequired(), NumberRange(min=.1, max=1)],default=.16)
     Matrix_scale = IntegerField(label='cubes', validators=[DataRequired(), NumberRange(min=16,max=125)], default=16)
     Voxel_scale = DecimalField(label='cm cubed', validators=[DataRequired(), NumberRange(min=.00001, max=1)], default=.01)
     submit_field = SubmitField("Run")
-    min_scale = DecimalRangeField(label='', validators=[DataRequired(), NumberRange(min=0.01, max=1)],default=0)
-    max_scale = DecimalRangeField(label='', validators=[DataRequired(), NumberRange(min=0.01, max=1)],default=1)
+    min_scale = DecimalRangeField(label='range', validators=[DataRequired(), NumberRange(min=0.01, max=1)],default=.2)
+    max_scale = DecimalRangeField(label='range', validators=[DataRequired(), NumberRange(min=0.01, max=100)],default=.4)
 
 # EXAMPLE
 class Game4Form(FlaskForm):

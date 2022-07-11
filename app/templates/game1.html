@@ -6,7 +6,8 @@
                 <div class="row card">
                     <div class="card-header">Phantom</div>
                     <div class="card-body">
-                        <img src="../static/placeholder.png" class="img-fluid">
+                        <div class="chart" id="chart-G1">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -57,17 +58,14 @@
                            {{G1Form.min_scale()}}
                        </div>
                    </div>
-                    <div class="row">
-                       <div class="row-header">
-                           {{G1Form.max_scale()}}
-                       </div>
-                   </div>
-                <div class="row">
-                    <div class="row-header">
 
-                        {{G1Form.submit_field()}}
+                    <div class="row">
+                        <div class="row-header">
+                            {{G1Form.max_scale()}}
+                        </div>
                     </div>
-                </div>
+
+            {{G1Form.submit_field(class="btn btn-primary")}}
 
                     </form>
             </div>
@@ -78,8 +76,7 @@
 
             <div class="card body"><i>There are no left messages to display</i></div>
         </div>
-            <br><button class="btn btn-primary" type="submit">Submit</button>
-
+            <br>
         </div>
 
         </div>
@@ -89,4 +86,11 @@
 
 {% block additional_imports%}
     <script src="../static/game1.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script type="text/javascript">
+        let graphs_picture = {{ graphJSON_img | safe }};
+
+        Plotly.plot('chart-G1',  graphs_picture, {});
+
+     </script>
 {% endblock %}

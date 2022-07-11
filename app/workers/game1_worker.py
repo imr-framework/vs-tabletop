@@ -110,10 +110,10 @@ def game1_worker(fov,n,n_zf,min_level,max_level):
 if __name__ == '__main__':
     # TODO Rishi: run this python script to see how the function works
     # Example of generating a JSON string and printing it
-    j1 = game1_worker(0.12,128,256,0,1)
+    j1 = game1_worker(0.12,128,256,0,4)
     print(j1)
 
     # Example of generating and displaying a plot
-    img = get_image(0.25,128,256,0,1)
+    img = get_image(0.12,32,32,0,1)
     fig = generate_plot(img)
     fig.show()
