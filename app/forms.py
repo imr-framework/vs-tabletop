@@ -58,22 +58,21 @@ class Game4Form(FlaskForm):
 # Game 5: Proton's got moves
 class Game5Form(FlaskForm):
     b0_onoff_field = BooleanField("B0",default=False)
-    # TODO add the following two into template
     b0_field = DecimalRangeField("B0 field strength (Tesla)", validators=[DataRequired(),
                                                                      NumberRange(min=0.000,max=0.010)],default=0.005)
     rot_frame_onoff_field = BooleanField("Rotating Frame", default=False)
 
     # RF
     flip_angle_field = DecimalRangeField("Flip Angle (degrees)", validators=[DataRequired(), NumberRange(min=0,max=360)],default=90)
-    rf_phase_field = DecimalRangeField("Pulse direction (degrees)", validators=[DataRequired(), NumberRange(min=0,max=360)],default=0)
+    rf_phase_field = IntegerRangeField("Pulse direction (degrees)", validators=[DataRequired(), NumberRange(min=0,max=360)],default=0)
     # Receive
     rx_onoff_field = BooleanField("Coil",default=False)
 
     rx_dir_field = RadioField("Coil Direction", choices=['x','y'],validators=[DataRequired()],default='x')
 
     # Magnetization status
-    m_theta_field = DecimalField("Theta (deg)",validators=[DataRequired(),NumberRange(min=0,max=180)],default=0)
-    m_phi_field = DecimalField("Phi (deg)",validators=[DataRequired(),NumberRange(min=0,max=360)],default=0)
+    m_theta_field = IntegerField("Theta (deg)",validators=[DataRequired(),NumberRange(min=0,max=180)],default=0)
+    m_phi_field = IntegerField("Phi (deg)",validators=[DataRequired(),NumberRange(min=0,max=360)],default=0)
     m_size_field = DecimalField('|M/M0|', validators=[DataRequired(),NumberRange(min=0,max=1)],default=1)
     # No use for submit field
     submit_field = SubmitField("Tip!")

@@ -5,7 +5,9 @@
     <!-- Display panels on the left -->
         <div class="col-4 h-100" id="display-game5">
             <div class="row card bg-light">
-                <div class="card-header">Spin</div>
+                <div class="card-header">
+                    Spin Animation
+                </div>
                 <div class="card-body">
                 <div id='chart-spin' class='chart'></div>
                     </div>
@@ -21,13 +23,15 @@
     <!-- Input fields -->
         <div class="col-8 h-100" id="fields-game5">
             <form action="/games/5" method="POST">
+                {{ template_game_form.hidden_tag() }}
+
                 <div class="row h-25 card">
-                         <h3 class="card-header">Main field</h3>
+                         <h3 class="card-header">Main field (Tesla)</h3>
                          <div class="card-body">
                          <div class="row">
                              <div class="col-4">
                                 {{ template_game_form.b0_onoff_field(class="btn-check",id="b0-button",autocomplete="off") }}
-                                <label class="btn btn-outline-info" for="b0-button">
+                                <label class="btn btn-outline-success" for="b0-button">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" fill="currentColor" class="bi bi-magnet-fill" viewBox="0 0 16 16">
                                   <path d="M15 12h-4v3h4v-3ZM5 12H1v3h4v-3ZM0 8a8 8 0 1 1 16 0v8h-6V8a2 2 0 1 0-4 0v8H0V8Z"/>
                                 </svg>
@@ -48,7 +52,7 @@
                     </div>
                 <br>
                 <div class="row h-25 card">
-                    <h3 class="card-header">RF</h3>
+                    <h3 class="card-header">RF pulse</h3>
                     <div class="card-body">
                     <div class="row">
                         <div class="col-4">{{ template_game_form.flip_angle_field.label }}</div>
@@ -102,6 +106,11 @@
                                 {{ subfield(class="btn-check ", autocomplete="off", checked=True) }}
                                 {{ subfield.label(class="btn btn-outline-primary d-flex align-items-center justify-content-center") }}
                             {% endfor %}
+                        </div>
+
+                        <div class="col-4">
+                            {{ template_game_form.rot_frame_onoff_field(class="btn-check",id="rot-frame-button",autocomplete="off") }}
+                            <label class="btn btn-outline-info" for="rot-frame-button">Rotating frame </label>
                         </div>
 
 
@@ -163,7 +172,9 @@
             <div class="row card">
                 <div class="card-header h3">Messages</div>
                 <div class="card-body">
-                    <p>This space displays messages and hints.</p>
+                    <p>
+                        This space displays messages and hints.
+                    </p>
                 </div>
             </div>
             </form>
@@ -179,6 +190,10 @@
          }
 
          let layout = {
+             autosize: true,
+             width: 500,
+             xanchor: "left",
+             yanchor: "top"
          }
 
          let graph_spin = {{ graphJSON_spin | safe }};
@@ -188,4 +203,8 @@
 
      </script>
 
+{% endblock %}
+
+{% block additional_imports %}
+    <script src="../static/game5.js"></script>
 {% endblock %}

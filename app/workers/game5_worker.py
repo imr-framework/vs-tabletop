@@ -14,11 +14,11 @@ GAMMA_BAR = 42.58e6
 
 
 # Game 5
-def simulate_RF_rotation(M_first, FA, rf_phase, b0, rot_frame=False):
+def simulate_RF_rotation(M_first, FA, rf_phase_deg, b0, rot_frame=False):
+    rf_phase = rf_phase_deg * np.pi / 180
+    flip = FA * np.pi / 180
     rf_dur = 100*1e-6
     df = b0*GAMMA_BAR
-
-
     # Simulate block RF pulse
     if rot_frame:
         spin = SpinGroup(pdt1t2=(1,0,0), df=0) # No relaxation
@@ -28,7 +28,7 @@ def simulate_RF_rotation(M_first, FA, rf_phase, b0, rot_frame=False):
         rf_freq = df
 
     spin.m = M_first # [3,1]
-    rf = make_block_pulse(flip_angle=FA, duration=rf_dur)
+    rf = make_block_pulse(flip_angle=flip, duration=rf_dur)
     rfdt = rf.t[1] - rf.t[0]
     rf_time = np.array(rf.t) - rfdt
 
@@ -46,9 +46,7 @@ def simulate_spin_precession(M_first, b0, rot_frame=False):
         spin = SpinGroup(pdt1t2=(1,0,0),df=0)
     else:
         spin = SpinGroup(pdt1t2=(1,0,0),df=df)
-
     spin.m = M_first
-
     # Let it precess
     tmodel = np.linspace(0,1/df,100)
     dt = tmodel[1]-tmodel[0]
@@ -58,8 +56,6 @@ def simulate_spin_precession(M_first, b0, rot_frame=False):
         mags[q,:] = np.squeeze(spin.get_m())
 
     return animate_spin_action(dt, mags,{})
-
-
 
 def animate_b0_turn_on(M_final=1, T1=1):
     """
@@ -84,10 +80,7 @@ def animate_b0_turn_on(M_final=1, T1=1):
 
     return animate_spin_action(dt,mags,settings={})
 
-
 def animate_spin_action(dt, mags, settings={}):
-
-
     bgcolor = "darkgray"
     gridcolor = "white"
     spincolor = "darkorange"
@@ -138,7 +131,6 @@ def animate_spin_action(dt, mags, settings={}):
             showscale=False, anchor='tip')
             """
 
-    fig.show()
 
     #plotly.offline.plot(fig, auto_play=True)
 

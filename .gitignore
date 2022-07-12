@@ -137,3 +137,5 @@ external/
 # Others
 .idea/
 app/flask_session/
+.xml
+.iml

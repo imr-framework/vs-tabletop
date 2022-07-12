@@ -105,8 +105,6 @@ def game1_worker(fov,n,n_zf,min_level,max_level):
     return j1
 
 
-
-
 if __name__ == '__main__':
     # TODO Rishi: run this python script to see how the function works
     # Example of generating a JSON string and printing it
