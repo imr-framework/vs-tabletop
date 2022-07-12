@@ -16,10 +16,7 @@ def game1():
                       session['game1']['Min_scale'], session['game1']['Max_scale'])
 
     if form.validate_on_submit():
-        print(form.FOV_scale.data)
-        print(form.Matrix_scale.data)
-        print(form.Voxel_scale.data)
-        #TODO Update second Matrix scale with the 0 field.
+        #TODO Update second Matrix scale with the zerofill field.
         j1 = game1_worker(float(form.FOV_scale.data), int(form.Matrix_scale.data) , int(form.Matrix_scale.data), float(form.min_scale.data),
                           float(form.max_scale.data))
 
@@ -29,22 +26,29 @@ def game1():
                            graphJSON_img = j1)
 
 
-@socketio.on('Update param for Game1 -')
+@socketio.on('Update param for Game1')
 def update_parameter(info):
     # Update corresponding entry in session
-    session['game1'][info['id']] = float(info['value'])
+    if info['id'] == 'Matrix_scale':
+        info['value'] = int(info['value'])
+    else:
+        info['value'] = float(info['value'])
+
+    session['game1'][info['id']] = info['value']
+    session.modified = True
 
     # If FOV got changed, change matrix size based on FOV and voxel size
     if info['id'] == 'FOV_scale':
         print('yes')
-        session['game1']['Matrix_scale'] = np.round(float(session['game1']['FOV_scale'])/(float(session['game1']['Voxel_scale'])))
+        session['game1']['Matrix_scale'] = int(np.round(float(session['game1']['FOV_scale'])/(float(session['game1']['Voxel_scale']))))
         session['game1']['Voxel_scale'] = session['game1']['FOV_scale']/session['game1']['Matrix_scale']
 
     # Matrix Size is kept the same, voxel size increases.
     if info['id'] == 'Voxel_scale':
         print('printing VS')
-        session['game1']['Matrix_scale'] = np.round_(float(session['game1']['FOV_scale'])/float(session['game1']['Voxel_scale']))
+        session['game1']['Matrix_scale'] = int(np.round_(float(session['game1']['FOV_scale'])/float(session['game1']['Voxel_scale'])))
         session['game1']['FOV_scale'] = session['game1']['Matrix_scale']* session['game1']['Voxel_scale']
+
     if info['id'] == 'Matrix_scale':
         print('printing MS')
         session['game1']['Voxel_scale'] = float(session['game1']['FOV_scale'])/(float(session['game1']['Matrix_scale']))

@@ -59,6 +59,9 @@ def get_image(fov,n,n_zf,min_level,max_level):
     final_image[final_image<=0] = 0
     final_image[final_image>=1] = 1
 
+    # Fix phantom orientation
+    final_image = np.flipud(final_image)
+
     return final_image
 
 
@@ -106,12 +109,12 @@ def game1_worker(fov,n,n_zf,min_level,max_level):
 
 
 if __name__ == '__main__':
-    # TODO Rishi: run this python script to see how the function works
+    #  Rishi: run this python script to see how the function works
     # Example of generating a JSON string and printing it
     j1 = game1_worker(0.12,128,256,0,4)
     print(j1)
 
     # Example of generating and displaying a plot
-    img = get_image(0.12,32,32,0,1)
+    img = get_image(0.128,128,128,0,1)
     fig = generate_plot(img)
     fig.show()
