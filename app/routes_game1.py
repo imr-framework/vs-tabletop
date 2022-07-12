@@ -53,3 +53,5 @@ def update_parameter(info):
 
     socketio.emit('G1 take session data', {'data': session['game1']})
 
+    print(info)
+    
