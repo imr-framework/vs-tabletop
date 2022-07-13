@@ -25,7 +25,8 @@ def initialize_parameters():
     session['user_id'] = None
 
     #TODO Rishi: we need default values for all the variables here; uncomment first
-    session['game1'] = {'FOV_scale': 0.128, 'Matrix_scale': 128, 'Voxel_scale': 0.001, 'Min_scale': 0.0, 'Max_scale': 1.0}
+    session['game1'] = {'FOV_scale': 0.128, 'Matrix_scale': 128, 'Voxel_scale': 0.001,'zero_fill': 128, 
+                        'Min_scale': 0.0, 'Max_scale': 1.0}
 
 
     session['game5'] = {'b0_on': False, 'b0': 0.006,'coil_on': False, 'rot_frame_on': True, 'flip_angle': 90, 'rf_phase': 0.0,

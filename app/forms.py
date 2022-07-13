@@ -41,6 +41,7 @@ class Calibration_Form(FlaskForm):
 
 class Game1Form(FlaskForm):
     #Min and Max units are in cm
+    zero_fill = IntegerField(label='cubes', validators=[DataRequired(), NumberRange(min=4, max=5000)], default=128)
     FOV_scale = DecimalField(label='m', places=3, validators=[DataRequired(), NumberRange(min=.1, max=5)],default=.128)
     Matrix_scale = IntegerField(label='cubes per side', validators=[DataRequired(), NumberRange(min=4,max=1000)], default=128)
     Voxel_scale = DecimalField(label='m', places=3, validators=[DataRequired(), NumberRange(min=.0001, max=1.25)], default=.001)

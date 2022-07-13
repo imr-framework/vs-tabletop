@@ -11,3 +11,8 @@ socket.on('G1 take session data', (msg)=>{
     $('#FOV_scale').val(msg['data']['FOV_scale']);
 
 })
+
+socket.on('G1 take zero_fill data', (msg)=>{
+    console.log('Updating 0 fill')
+    $('#zero_fill').val(msg['data']['zero_fill']);
+})

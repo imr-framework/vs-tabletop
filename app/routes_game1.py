@@ -12,12 +12,13 @@ from __main__ import app, login_manager, db, socketio
 def game1():
     form=Game1Form()
 
-    j1 = game1_worker(session['game1']['FOV_scale'], session['game1']['Matrix_scale'], session['game1']['Matrix_scale'],
+    j1 = game1_worker(session['game1']['FOV_scale'], session['game1']['Matrix_scale'], session['game1']['zero_fill'],
                       session['game1']['Min_scale'], session['game1']['Max_scale'])
 
     if form.validate_on_submit():
         #TODO Update second Matrix scale with the zerofill field.
-        j1 = game1_worker(float(form.FOV_scale.data), int(form.Matrix_scale.data) , int(form.Matrix_scale.data), float(form.min_scale.data),
+
+        j1 = game1_worker(float(form.FOV_scale.data), int(form.Matrix_scale.data) , int(form.zero_fill.data), float(form.min_scale.data),
                           float(form.max_scale.data))
 
 
@@ -36,8 +37,9 @@ def update_parameter(info):
 
     session['game1'][info['id']] = info['value']
     session.modified = True
-
+    # If zero fill is changed, then matrix size = zero fill(smaller)
     # If FOV got changed, change matrix size based on FOV and voxel size
+
     if info['id'] == 'FOV_scale':
         print('yes')
         session['game1']['Matrix_scale'] = int(np.round(float(session['game1']['FOV_scale'])/(float(session['game1']['Voxel_scale']))))
@@ -53,9 +55,18 @@ def update_parameter(info):
         print('printing MS')
         session['game1']['Voxel_scale'] = float(session['game1']['FOV_scale'])/(float(session['game1']['Matrix_scale']))
 
+    if info['id'] == 'zero_fill':
+        session['game1']['zero_fill'] = session['game1']['zero_fill']/1
+        if session['game1']['Matrix_scale'] > session['game1']['zero_fill']:
+            session['game1']['Matrix_scale'] = session['game1']['zero_fill']
+
+
+
+
     print(session['game1'])
 
     socketio.emit('G1 take session data', {'data': session['game1']})
+    socketio.emit('G1 take zero_fill data', {'data': session['game1']['zero_fill']})
 
     print(info)
     
