@@ -9,6 +9,8 @@ import numpy as np
 import json
 
 def get_image(fov,n,n_zf,min_level,max_level):
+    if n_zf is None:
+        n_zf = n
     # Make sure n and n_zf is even
     n += n%2
     n_zf += n_zf%2

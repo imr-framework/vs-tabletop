@@ -86,27 +86,27 @@ def animate_spin_action(dt, mags, settings={}):
     spincolor = "darkorange"
 
     axis_shared = dict(
-        range=[-1, 1],
-        backgroundcolor=bgcolor,
-        gridcolor=gridcolor,
-        showbackground=True,
-        zerolinecolor=None,
-        autorange=False)
+            range=[-1,1],
+            backgroundcolor=bgcolor,
+            gridcolor=gridcolor,
+            showbackground=True,
+            showgrid=False,
+            zeroline=True,
+            zerolinecolor=None)
 
     frame_layout = go.Layout(dict(
         scene=dict(xaxis=axis_shared,yaxis=axis_shared,zaxis=axis_shared,
                    aspectmode="cube"),
-        title='SPINNING'
     ))
 
     fig = go.Figure(
         data = [go.Scatter3d(x=[0,mags[0,0]],y=[0,mags[0,1]],z=[0,mags[0,2]],
                              mode='lines', line=dict(width=10, color=spincolor))],
         layout = go.Layout(
-            title = "let's spin",
-            scene=dict(xaxis=axis_shared, yaxis=axis_shared, zaxis=axis_shared),
-            width=1000, height=1000, margin=dict(r=50, l=50, b=50, t=50),
+            scene=dict(xaxis=axis_shared, yaxis=axis_shared, zaxis=axis_shared,aspectmode="cube"),
+            width=500, height=500, margin=dict(r=10, l=10, b=10, t=10),
 
+            # Update menus for play button - useful in preview
             updatemenus=[dict(
                 type = "buttons",
                 buttons = [dict(label="Play",
@@ -116,27 +116,70 @@ def animate_spin_action(dt, mags, settings={}):
                                     "fromcurrent": True,
                                     "transition": {"duration": 0},
                                 }])])]
+
         ),
-        frames = [go.Frame(data=[go.Scatter3d(
+            frames = [go.Frame(data=[go.Scatter3d(
                                     x=[0,mags[q,0]],y=[0,mags[q,1]],z=[0,mags[q,2]],
                                     mode='lines', line=dict(width=10, color=spincolor)),
-                                 ],
-                            layout=frame_layout) for q in range(mags.shape[0])]
+                                 ],layout=frame_layout) for q in range(mags.shape[0])]
         )
 
-    """ Arrow at the end 
-    go.Cone(x=[mags[q, 0]], y=[mags[q, 1]], z=[mags[q, 2]],
-            u=[0.2 * mags[q, 0]], v=[0.2 * mags[q, 1]], w=[0.2 * mags[q, 2]],
-            sizemode='scaled', sizeref=1, colorscale=[[0, spincolor], [1, spincolor]],
-            showscale=False, anchor='tip')
-            """
+    #Arrow at the end
+    #go.Cone(x=[mags[q, 0]], y=[mags[q, 1]], z=[mags[q, 2]],
+    #        u=[0.2 * mags[q, 0]], v=[0.2 * mags[q, 1]], w=[0.2 * mags[q, 2]],
+    #        sizemode='scaled', sizeref=1, colorscale=[[0, spincolor], [1, spincolor]],
+    #        showscale=False, anchor='tip')
+
 
 
     #plotly.offline.plot(fig, auto_play=True)
 
+    fig.add_trace(go.Mesh3d(x=[1,-1,-1,1],y=[1,-1,1,-1],z=[0,0,0,0],color='green',opacity=0.2))
+    fig.add_trace(go.Scatter3d(x=[-1,1],y=[0,0],z=[0,0],mode='lines',line=dict(width=5,dash='dash',color='gray')))
+    fig.add_trace(go.Scatter3d(x=[0,0],y=[-1,1],z=[0,0],mode='lines',line=dict(width=5,dash='dash',color='gray')))
+    fig.update_traces(showlegend=False)
+
+    fig.show()
+
+
     j1 = json.dumps(fig,cls=plotly.utils.PlotlyJSONEncoder)
     return j1
 
+
+def generate_static_plot(dt, mags):
+    bgcolor = "darkgray"
+    gridcolor = "white"
+    spincolor = "darkorange"
+
+    axis_shared = dict(
+        range=[-1.2, 1.2],
+        backgroundcolor=bgcolor,
+        gridcolor=gridcolor,
+        showbackground=True,
+        showgrid=False,
+        zeroline=True,
+        zerolinecolor=None)
+
+
+    fig = go.Figure(
+        data=[go.Scatter3d(x=mags[:,0], y=mags[:,1], z= mags[:,2],
+                           mode='lines', line=dict(width=10, color=spincolor))],
+        layout=go.Layout(
+            scene=dict(xaxis=axis_shared, yaxis=axis_shared, zaxis=axis_shared, aspectmode="cube"),
+            width=500, height=500, margin=dict(r=10, l=10, b=10, t=10))
+    )
+
+    fig.add_trace(go.Mesh3d(x=[1, -1, -1, 1], y=[1, -1, 1, -1], z=[0, 0, 0, 0], color='green', opacity=0.2))
+    fig.add_trace(
+        go.Scatter3d(x=[-1, 1], y=[0, 0], z=[0, 0], mode='lines', line=dict(width=5, dash='dash', color='gray')))
+    fig.add_trace(
+        go.Scatter3d(x=[0, 0], y=[-1, 1], z=[0, 0], mode='lines', line=dict(width=5, dash='dash', color='gray')))
+    fig.update_traces(showlegend=False)
+
+
+
+    j1 = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+    return j1
 
 def make_spin_action_plot(simulated_data):
     a = simulated_data
@@ -145,8 +188,10 @@ def make_spin_action_plot(simulated_data):
 
 
 if __name__ == '__main__':
-    dt, mags = simulate_RF_rotation(M_first=[[0],[0],[1]],FA=np.pi/2,rf_phase=np.pi/3,b0=0.001,rot_frame=False)
+    #dt, mags = simulate_RF_rotation(M_first=[[0],[0],[1]],FA=90,rf_phase_deg=0,b0=0.001,rot_frame=True)
+    mags = np.zeros((1,3))
+    dt = 1
 
     #dt, mags = simulate_spin_precession(M_first=[[0],[0],[1]], b0=0.001, rot_frame=False)
-
-    animate_spin_action(dt, mags)
+    print(mags.shape)
+    generate_static_plot(dt, mags)

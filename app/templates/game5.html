@@ -13,7 +13,7 @@
                     </div>
           </div>
             <div class="row card">
-                <div class="card-header">Magnetization in time</div>
+                <div class="card-header">Signal</div>
                 <div class="card-body">
                 <div id='chart-m' class='chart'></div>
                 </div>
@@ -22,16 +22,33 @@
         </div>
     <!-- Input fields -->
         <div class="col-8 h-100" id="fields-game5">
+
             <form action="/games/5" method="POST">
                 {{ template_game_form.hidden_tag() }}
-
+                <div class="row card">
+                    <div class="card-header h3">Messages</div>
+                    <div class="card-body">
+                        <p id="message-game5">
+                            {% with messages = get_flashed_messages() %}
+                                 {% if messages %}
+                                    <div class='flashes text-danger'>
+                                    {% for message in messages %}
+                                      <p>{{ message }}</p>
+                                    {% endfor %}
+                                    </div>
+                                 {% endif %}
+                            {% endwith %}
+                        </p>
+                    </div>
+                </div>
                 <div class="row h-25 card">
                          <h3 class="card-header">Main field (Tesla)</h3>
                          <div class="card-body">
                          <div class="row">
                              <div class="col-4">
-                                {{ template_game_form.b0_onoff_field(class="btn-check",id="b0-button",autocomplete="off") }}
-                                <label class="btn btn-outline-success" for="b0-button">
+                                {{ template_game_form.b0_onoff_field(class="btn-check",id="b0_on",autocomplete="off",
+                                                                     checked=session['game5']['b0_on']) }}
+                                <label class="btn btn-outline-success" for="b0_on">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" fill="currentColor" class="bi bi-magnet-fill" viewBox="0 0 16 16">
                                   <path d="M15 12h-4v3h4v-3ZM5 12H1v3h4v-3ZM0 8a8 8 0 1 1 16 0v8h-6V8a2 2 0 1 0-4 0v8H0V8Z"/>
                                 </svg>
@@ -39,7 +56,7 @@
                              </div>
                              <div class="col-8">
                                  <div class="row">
-                                 {{ template_game_form.b0_field(class="form-range",step=0.002) }}
+                                 {{ template_game_form.b0_field(class="form-range",id='b0',step=0.002, value=session['game5']['b0']) }}
                                  </div>
                                   <div class="ticks text-primary">
                                       {% for b in [0.0,0.002,0.004,0.006,0.008,0.010] %}
@@ -58,7 +75,7 @@
                         <div class="col-4">{{ template_game_form.flip_angle_field.label }}</div>
                         <div class="col-8">
                             <div class="row">
-                            {{ template_game_form.flip_angle_field(class="form-range",step=5) }}
+                            {{ template_game_form.flip_angle_field(class="form-range",id='flip_angle',step=5,value=session['game5']['flip_angle']) }}
                             </div>
                             <div class="ticks text-primary">
                             {% for angle in [0,45,90,135,180,225,270,315,360] %}
@@ -72,7 +89,7 @@
                         <div class="col-4">{{ template_game_form.rf_phase_field.label }}</div>
                         <div class="col-8">
                             <div class="row">
-                            {{ template_game_form.rf_phase_field(class="form-range",step=5) }}
+                            {{ template_game_form.rf_phase_field(class="form-range",id='rf_phase',step=5,value=session['game5']['rf_phase']) }}
                             </div>
                             <div class="ticks text-primary">
                                 {% for angle in [0,45,90,135,180,225,270,315,360] %}
@@ -89,7 +106,8 @@
                     <div class="card-body row">
                     <div class="col-4">
                         <!-- input type="checkbox" class="btn-check" name="options-outlined" id="rx-button" autocomplete="off" -->
-                        {{ template_game_form.rx_onoff_field(class="btn-check",id="rx-button",autocomplete="off") }}
+                        {{ template_game_form.rx_onoff_field(class="btn-check",id="rx-button",autocomplete="off",
+                                                             checked=session['game5']['coil_on']) }}
                         <label class="btn btn-outline-info" for="rx-button">
                             <svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" fill="currentColor" class="bi bi-bullseye" viewBox="0 0 16 16">
                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
@@ -99,19 +117,24 @@
                             </svg>
                          </label>
                     </div>
+                        <div class="col-4">
+                            {{ template_game_form.rot_frame_onoff_field(class="btn-check",id="rot-frame-button",autocomplete="off",
+                                                                        checked=session['game5']['rot_frame_on']) }}
+                            <label class="btn btn-outline-info" for="rot-frame-button">Rotating frame </label>
+                        </div>
 
-                        <!-- TODO -->
                         <div class="btn-group col-4">
                             {% for subfield in template_game_form.rx_dir_field %}
-                                {{ subfield(class="btn-check ", autocomplete="off", checked=True) }}
+                                {% if subfield.id == "rx_dir_field-0" %}
+                                    {{ subfield(class="btn-check ", autocomplete="off",checked=session['game5']['coil_dir']=='x') }}
+                                {% else %}
+                                    {{ subfield(class="btn-check ", autocomplete="off", checked=session['game5']['coil_dir']=='y') }}
+                                {% endif %}
                                 {{ subfield.label(class="btn btn-outline-primary d-flex align-items-center justify-content-center") }}
+
                             {% endfor %}
                         </div>
 
-                        <div class="col-4">
-                            {{ template_game_form.rot_frame_onoff_field(class="btn-check",id="rot-frame-button",autocomplete="off") }}
-                            <label class="btn btn-outline-info" for="rot-frame-button">Rotating frame </label>
-                        </div>
 
 
                         </div>
@@ -124,7 +147,8 @@
                         <h3 class="card-header">Set initial magnetization</h3>
                         <div class="card-body">
                             <!-- Add in options to set initial magnetization value. -->
-                        <div class="btn-group">
+                            <div class="row">
+                        <div class="col-8 btn-group">
                             <input type="radio" class="btn-check" name="mag-options" id="mag-x" autocomplete="off" checked>
                             <label class="btn btn-outline-primary" for="mag-x">x</label>
 
@@ -137,19 +161,23 @@
                             <input type="radio" class="btn-check" name="mag-options" id="mag-0" autocomplete="off">
                             <label class="btn btn-outline-primary" for="mag-0">0</label>
                         </div>
+                            <div class="col-4">
+                                <div class="btn btn-primary d-flex align-items-center justify-content-center" id="set-mag">SET</div>
+                            </div>
+                        </div>
 
                             <div class="row">
                             <div class="col">
                                 {{ template_game_form.m_theta_field.label }}
-                                {{ template_game_form.m_theta_field(class="form-control") }}
+                                {{ template_game_form.m_theta_field(class="form-control",id='m_theta',value=session['game5']['m_theta']) }}
                             </div>
                             <div class="col">
                                 {{ template_game_form.m_phi_field.label }}
-                                {{ template_game_form.m_phi_field(class="form-control") }}
+                                {{ template_game_form.m_phi_field(class="form-control",id='m_phi',value=session['game5']['m_phi']) }}
                             </div>
                             <div class="col">
                                 {{ template_game_form.m_size_field.label }}
-                                {{ template_game_form.m_size_field(class="form-control") }}
+                                {{ template_game_form.m_size_field(class="form-control",id='m_size',value=session['game5']['m_size']) }}
                             </div>
                             </div>
 
@@ -169,14 +197,7 @@
 
                         </div>
                     </div>
-            <div class="row card">
-                <div class="card-header h3">Messages</div>
-                <div class="card-body">
-                    <p>
-                        This space displays messages and hints.
-                    </p>
-                </div>
-            </div>
+
             </form>
         </div>
     </div>
@@ -185,26 +206,86 @@
      <!-- Javascript for Plotly integration (required)-->
 
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <script type="text/javascript">
-         let config = {
-         }
 
-         let layout = {
-             autosize: true,
-             width: 500,
-             xanchor: "left",
-             yanchor: "top"
-         }
 
-         let graph_spin = {{ graphJSON_spin | safe }};
-         Plotly.plot('chart-spin',graph_spin,layout,config);
-         let graph_m = {{ graphJSON_m | safe }};
-         Plotly.plot('chart-m',graph_m,layout,config);
 
-     </script>
+
+
+
 
 {% endblock %}
 
 {% block additional_imports %}
     <script src="../static/game5.js"></script>
+    <script type="text/javascript">
+
+    graphData = {{ graphJSON_spin | safe }};
+    console.log(graphData.data[0].x)
+    let mx, my, mz;
+    let time_ind = 0;
+    let data_length = graphData.data[0].x.length;
+
+    //Plotly.plot('chart-spin',graphData);
+
+
+    // TODO have index keep track of animation ... animate only until last point; then keep it fixed
+    Plotly.newPlot('chart-spin', {
+        // Data
+        data: [{
+                type: 'scatter3d',
+                x: [0, graphData.data[0].x[0]],
+                y: [0, graphData.data[0].y[0]],
+                z: [0, graphData.data[0].z[0]],
+                mode: 'lines',
+                line: graphData.data[0].line
+        },
+            graphData.data[1], graphData.data[2], graphData.data[3]
+            ],
+        layout: graphData.layout
+    });
+
+
+    // Retrieve next frame
+    function compute(ind){
+        mx = graphData.data[0].x[ind];
+        my = graphData.data[0].y[ind];
+        mz = graphData.data[0].z[ind];
+    }
+
+    // Animate plot with all succeeding points
+    function update(){
+            compute(time_ind);
+            Plotly.animate('chart-spin', {
+                // A. Plot
+                // B. Data
+            data: [{
+                type: 'scatter3d',
+                    x: [0,mx],
+                    y: [0,my],
+                    z: [0,mz],
+                    mode: 'lines',
+                    line: graphData.data[0].line}],
+                // Layout
+            layout: graphData.layout},
+                // B. Animation options
+           {
+            transition: {
+              duration: 0
+            },
+            frame: {
+              duration: 10,
+              redraw: true
+            }
+          });
+        // Stop increasing it once it hits the end
+        if (time_ind < data_length - 1){
+            time_ind ++;
+        }
+        requestAnimationFrame(update)
+        }
+        requestAnimationFrame(update);
+
+    </script>
+
+
 {% endblock %}

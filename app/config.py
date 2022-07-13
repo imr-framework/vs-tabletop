@@ -1,14 +1,13 @@
-LARMOR_FREQ = 15.0005 
+LARMOR_FREQ = 15.0 
 RF_MAX = 7661.29 
 RF_PI2_FRACTION = 0.5 
 GX_MAX = 8.0e6 
 GY_MAX = 9.2e6 
 GZ_MAX = 10e6 
-SHIM_X = 0.0 
-SHIM_Y = 0.0 
-SHIM_Z = 0.0 
+SHIM_X = -0.37 
+SHIM_Y = -0.02 
+SHIM_Z = 0.42 
 MGH_PATH = 'PATH/TO/mgh/DIR' 
 LOG_PATH = 'PATH/TO/PROGRAM/LOG/DIR' 
 SEQ_PATH = 'PATH/TO/SEQ/FILES/DIR' 
-DATA_PATH = 'PATH/TO/DATA/OUTPUT/DIR'
-# Export to config file - xml/html/json/yaml
+DATA_PATH = 'PATH/TO/DATA/OUTPUT/DIR'# Export to config file - xml/html/json/yaml
