@@ -9,10 +9,6 @@ socket.on('G1 take session data', (msg)=>{
     $('#Matrix_scale').val(msg['data']['Matrix_scale']);
     $('#Voxel_scale').val(msg['data']['Voxel_scale']);
     $('#FOV_scale').val(msg['data']['FOV_scale']);
-
+    $('#zero_scale').val(msg['data']['zero_scale']);
 })
 
-socket.on('G1 take zero_fill data', (msg)=>{
-    console.log('Updating 0 fill')
-    $('#zero_fill').val(msg['data']['zero_fill']);
-})

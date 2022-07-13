@@ -30,8 +30,9 @@ def game1():
 @socketio.on('Update param for Game1')
 def update_parameter(info):
     # Update corresponding entry in session
-    if info['id'] == 'Matrix_scale':
+    if info['id'] in ['Matrix_scale', 'zero_fill']:
         info['value'] = int(info['value'])
+
     else:
         info['value'] = float(info['value'])
 
@@ -56,17 +57,12 @@ def update_parameter(info):
         session['game1']['Voxel_scale'] = float(session['game1']['FOV_scale'])/(float(session['game1']['Matrix_scale']))
 
     if info['id'] == 'zero_fill':
-        session['game1']['zero_fill'] = session['game1']['zero_fill']/1
         if session['game1']['Matrix_scale'] > session['game1']['zero_fill']:
             session['game1']['Matrix_scale'] = session['game1']['zero_fill']
-
-
-
 
     print(session['game1'])
 
     socketio.emit('G1 take session data', {'data': session['game1']})
-    socketio.emit('G1 take zero_fill data', {'data': session['game1']['zero_fill']})
 
     print(info)
     
