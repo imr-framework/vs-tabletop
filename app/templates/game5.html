@@ -187,13 +187,13 @@
                     <div class="col-6 card bg-light" id="game5-button-region">
                         <h3 class="card-header">Controls</h3>
                         <div class="row card-body">
-                            {{template_game_form.submit_field(class_="btn btn-success btn-lg col")}}
-                            <div class="btn btn-danger btn-lg col d-flex align-items-center justify-content-center">PAUSE</div>
-                            <div class="btn btn-light btn-outline-primary btn-lg col d-flex align-items-center justify-content-center">RESET</div>
+                            <!--{{template_game_form.submit_field(class_="btn btn-success btn-lg col")}}-->
+                            <div class="btn btn-light btn-lg col d-flex align-items-center justify-content-center" id="start">START</div>
+                            <div class="btn btn-danger btn-lg col d-flex align-items-center justify-content-center" id="tip">TIP</div>
+                            <div class="btn btn-light btn-outline-primary btn-lg col d-flex align-items-center justify-content-center" id="reset">RESET</div>
 
                         </div>
                         <!-- Saving current parameters, loading previous ones -->
-
 
                         </div>
                     </div>
@@ -218,74 +218,8 @@
 {% block additional_imports %}
     <script src="../static/game5.js"></script>
     <script type="text/javascript">
-
     graphData = {{ graphJSON_spin | safe }};
-    console.log(graphData.data[0].x)
-    let mx, my, mz;
-    let time_ind = 0;
-    let data_length = graphData.data[0].x.length;
-
-    //Plotly.plot('chart-spin',graphData);
-
-
-    // TODO have index keep track of animation ... animate only until last point; then keep it fixed
-    Plotly.newPlot('chart-spin', {
-        // Data
-        data: [{
-                type: 'scatter3d',
-                x: [0, graphData.data[0].x[0]],
-                y: [0, graphData.data[0].y[0]],
-                z: [0, graphData.data[0].z[0]],
-                mode: 'lines',
-                line: graphData.data[0].line
-        },
-            graphData.data[1], graphData.data[2], graphData.data[3]
-            ],
-        layout: graphData.layout
-    });
-
-
-    // Retrieve next frame
-    function compute(ind){
-        mx = graphData.data[0].x[ind];
-        my = graphData.data[0].y[ind];
-        mz = graphData.data[0].z[ind];
-    }
-
-    // Animate plot with all succeeding points
-    function update(){
-            compute(time_ind);
-            Plotly.animate('chart-spin', {
-                // A. Plot
-                // B. Data
-            data: [{
-                type: 'scatter3d',
-                    x: [0,mx],
-                    y: [0,my],
-                    z: [0,mz],
-                    mode: 'lines',
-                    line: graphData.data[0].line}],
-                // Layout
-            layout: graphData.layout},
-                // B. Animation options
-           {
-            transition: {
-              duration: 0
-            },
-            frame: {
-              duration: 10,
-              redraw: true
-            }
-          });
-        // Stop increasing it once it hits the end
-        if (time_ind < data_length - 1){
-            time_ind ++;
-        }
-        requestAnimationFrame(update)
-        }
-        requestAnimationFrame(update);
-
+    play_animation(graphData);
     </script>
-
 
 {% endblock %}

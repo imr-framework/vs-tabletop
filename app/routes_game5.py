@@ -13,13 +13,15 @@ import plotly.express as px
 import pandas as pd
 import json
 import numpy as np
-from workers.game5_worker import simulate_RF_rotation, animate_spin_action, generate_static_plot
+from workers.game5_worker import simulate_RF_rotation, animate_spin_action, generate_static_plot,\
+                                 generate_M0_growth
 
 @app.route('/games/5',methods=["GET","POST"])
 def game5():
     # Form for submitting data - current settings
     game_form = Game5Form()
     j1, j2 = make_default_graphs()
+    print(j1)
 
     if request.method == 'POST':
         print(request.form)
@@ -48,7 +50,6 @@ def game5():
                            template_game_form=game_form, graphJSON_spin=j1, graphJSON_m=j2)
 
 
-# TODO
 def spherical_to_cartesian(theta,phi,m0):
     # theta, phi are in radians
     M = m0*np.array([[np.sin(theta)*np.cos(phi)],[np.sin(theta)*np.sin(phi)],[np.cos(theta)]])
@@ -86,10 +87,10 @@ def make_default_graphs():
                      width=500, height=500, margin=dict(r=10, l=10,b=10, t=10),
                      scene_aspectmode='cube')
 
-    #mags = np.zeros((1,3))
-    #dt = 1
-    #f1 = generate_static_plot(dt, mags)
-    j1 = json.dumps(f1,cls=plotly.utils.PlotlyJSONEncoder)
+    mags = np.zeros((1,3))
+    dt = 1
+    j1 = generate_static_plot(dt, mags)
+    #j1 = json.dumps(f1,cls=plotly.utils.PlotlyJSONEncoder)
 
     # j2,j3,j4 : M
     f2 = go.Figure()
@@ -113,6 +114,9 @@ def update_parameter(info):
         utils.update_session_subdict(session,'game5',{})
     elif info['id'] == 'b0_on':
         utils.update_session_subdict(session,'game5',{'b0_on':info['checked']})
+        generate_M0_growth(info['checked'])
+
+
     elif info['id'] == 'rx-button':
         utils.update_session_subdict(session,'game5',{'coil_on':info['checked']})
     elif info['id'] == 'rot-frame-button':
@@ -122,10 +126,11 @@ def update_parameter(info):
 
     print(session)
 
-# TODO 
 @socketio.on('reset magnetization')
 def reset_m():
+    mags_zero = np.zeros((1,3))
+    j0 = generate_static_plot(dt=1,mags=mags_zero)
     # Generate static plot and replace current plot with it
-    socketio.emit()
+    socketio.emit('reset mags', {'graph':j0})
     return
 

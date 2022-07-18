@@ -1,8 +1,8 @@
 # Generates simulation & plots for Game 5: Proton's got moves
 import numpy as np
 from pypulseq.make_block_pulse import make_block_pulse
-#from virtualscanner.server.simulation.rf_sim.rf_simulations import simulate_rf
-#from virtualscanner.server.simulation.bloch.spingroup_ps import SpinGroup
+from virtualscanner.server.simulation.rf_sim.rf_simulations import simulate_rf
+from virtualscanner.server.simulation.bloch.spingroup_ps import SpinGroup
 import plotly
 import plotly.graph_objects as go
 import plotly.express as px
@@ -165,10 +165,12 @@ def generate_static_plot(dt, mags):
         data=[go.Scatter3d(x=mags[:,0], y=mags[:,1], z= mags[:,2],
                            mode='lines', line=dict(width=10, color=spincolor))],
         layout=go.Layout(
+            paper_bgcolor='gainsboro',
             scene=dict(xaxis=axis_shared, yaxis=axis_shared, zaxis=axis_shared, aspectmode="cube"),
             width=500, height=500, margin=dict(r=10, l=10, b=10, t=10))
     )
 
+    # Zero lines and plane
     fig.add_trace(go.Mesh3d(x=[1, -1, -1, 1], y=[1, -1, 1, -1], z=[0, 0, 0, 0], color='green', opacity=0.2))
     fig.add_trace(
         go.Scatter3d(x=[-1, 1], y=[0, 0], z=[0, 0], mode='lines', line=dict(width=5, dash='dash', color='gray')))
@@ -177,13 +179,22 @@ def generate_static_plot(dt, mags):
     fig.update_traces(showlegend=False)
 
 
-
     j1 = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return j1
 
 def make_spin_action_plot(simulated_data):
     a = simulated_data
     graphJSON = 0
+    return graphJSON
+
+def generate_M0_growth(b0_on):
+    # TODO
+    if b0_on: # If B0 got turned on, generate T1 growth of M0
+       b = 1
+    else: # If B0 got turned off, reset magnetization
+       a = 0
+    graphJSON = 0
+
     return graphJSON
 
 

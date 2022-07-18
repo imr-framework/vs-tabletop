@@ -1,7 +1,7 @@
 # routes_main.py
 # Gehua Tong, June 2022
 # Login, register, and calibration pages for Virtual Scanner Biobus Mode
-
+import numpy as np
 import threading
 from flask import flash, render_template, session, redirect, url_for, request
 from flask_login import login_required, login_user, logout_user
@@ -30,11 +30,12 @@ def initialize_parameters():
 
 
     session['game5'] = {'b0_on': False, 'b0': 0.006,'coil_on': False, 'rot_frame_on': True, 'flip_angle': 90, 'rf_phase': 0.0,
-                        'coil_dir': 'x', 'm_theta': 0.0, 'm_phi':0.0, 'm_size': 1}
-
-
-
-
+                        'coil_dir': 'x', 'm_theta': 0.0, 'm_phi':0.0, 'm_size': 1,
+                        'M_init': np.array([[0],[0],[0]])}
+                       # TODO M_init will be set upon click of "set" button using M_theta, M_phi, M_size
+                                                       #clicking it also returns the magnetization to M_init instantly.
+                       # TODO M_end will be set as the last magnetization vector in the current animation.
+                       # TODO When "Tip" is clicked, M_init is set to M_end for the next simulation
 
 # Login callback (required)
 @login_manager.user_loader
