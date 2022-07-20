@@ -59,9 +59,9 @@ class Game4Form(FlaskForm):
 # Game 5: Proton's got moves
 class Game5Form(FlaskForm):
     b0_onoff_field = BooleanField("B0",default=False)
-    b0_field = DecimalRangeField("B0 field strength (Tesla)", validators=[InputRequired(),
-                                                                     NumberRange(min=0.000,max=0.010)],default=0.006)
-    rot_frame_onoff_field = BooleanField("Rotating Frame", default=True)
+    b0_field = DecimalRangeField("B0 field strength (Gauss)", validators=[InputRequired(),
+                                                                     NumberRange(min=0.0,max=100.0)],default=60.0)
+    rot_frame_onoff_field = BooleanField("Rotating Frame", default=False)
 
     # RF
     flip_angle_field = DecimalRangeField("Flip Angle (degrees)", validators=[InputRequired(), NumberRange(min=0,max=360)],default=90)

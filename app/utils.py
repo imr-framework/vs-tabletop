@@ -1,3 +1,4 @@
+import numpy as np
 # Utility functions
 
 
@@ -39,3 +40,11 @@ def read_configuration(config_path):
     # TODO read configuration parameters from config.py
     f0 = 0
     return f0
+
+
+def spherical_to_cartesian(theta,phi,m0):
+    # theta, phi are in degrees
+    theta *= np.pi / 180
+    phi *= np.pi / 180
+    M = m0*np.array([[np.sin(theta)*np.cos(phi)],[np.sin(theta)*np.sin(phi)],[np.cos(theta)]])
+    return M

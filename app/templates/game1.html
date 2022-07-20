@@ -68,8 +68,6 @@
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script type="text/javascript">
         let graphs_picture = {{ graphJSON_img | safe }};
-
         Plotly.plot('chart-G1',  graphs_picture, {});
-
      </script>
 {% endblock %}

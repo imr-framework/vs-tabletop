@@ -15,7 +15,7 @@
             <div class="row card">
                 <div class="card-header">Signal</div>
                 <div class="card-body">
-                <div id='chart-m' class='chart'></div>
+                <div id='chart-signal' class='chart'></div>
                 </div>
             </div>
 
@@ -29,7 +29,10 @@
                     <div class="card-header h3">Messages</div>
                     <div class="card-body">
                         <p id="message-game5">
-                            {% with messages = get_flashed_messages() %}
+
+
+                            <!-- Flash messages (TODO: replace with socket messages) -->
+                        <!--    {% with messages = get_flashed_messages() %}
                                  {% if messages %}
                                     <div class='flashes text-danger'>
                                     {% for message in messages %}
@@ -37,12 +40,15 @@
                                     {% endfor %}
                                     </div>
                                  {% endif %}
-                            {% endwith %}
+                            {% endwith %} -->
+
+
+
                         </p>
                     </div>
                 </div>
                 <div class="row h-25 card">
-                         <h3 class="card-header">Main field (Tesla)</h3>
+                         <h3 class="card-header">Main field (Gauss)</h3>
                          <div class="card-body">
                          <div class="row">
                              <div class="col-4">
@@ -56,10 +62,10 @@
                              </div>
                              <div class="col-8">
                                  <div class="row">
-                                 {{ template_game_form.b0_field(class="form-range",id='b0',step=0.002, value=session['game5']['b0']) }}
+                                 {{ template_game_form.b0_field(class="form-range",id='b0',step=10, value=1e4*session['game5']['b0']) }}
                                  </div>
                                   <div class="ticks text-primary">
-                                      {% for b in [0.0,0.002,0.004,0.006,0.008,0.010] %}
+                                      {% for b in [0,20,40,60,80,100] %}
                                        <span class="tick">{{ b }}</span>
                                       {% endfor %}
                                   </div>
@@ -149,13 +155,13 @@
                             <!-- Add in options to set initial magnetization value. -->
                             <div class="row">
                         <div class="col-8 btn-group">
-                            <input type="radio" class="btn-check" name="mag-options" id="mag-x" autocomplete="off" checked>
+                            <input type="radio" class="btn-check" name="mag-options" id="mag-x" autocomplete="off">
                             <label class="btn btn-outline-primary" for="mag-x">x</label>
 
                             <input type="radio" class="btn-check" name="mag-options" id="mag-y" autocomplete="off">
                             <label class="btn btn-outline-primary" for="mag-y">y</label>
 
-                            <input type="radio" class="btn-check" name="mag-options" id="mag-z" autocomplete="off">
+                            <input type="radio" class="btn-check" name="mag-options" id="mag-z" autocomplete="off" checked>
                             <label class="btn btn-outline-primary" for="mag-z">z</label>
 
                             <input type="radio" class="btn-check" name="mag-options" id="mag-0" autocomplete="off">
@@ -188,8 +194,9 @@
                         <h3 class="card-header">Controls</h3>
                         <div class="row card-body">
                             <!--{{template_game_form.submit_field(class_="btn btn-success btn-lg col")}}-->
-                            <div class="btn btn-light btn-lg col d-flex align-items-center justify-content-center" id="start">START</div>
-                            <div class="btn btn-danger btn-lg col d-flex align-items-center justify-content-center" id="tip">TIP</div>
+                            <div class="btn btn-info btn-lg col d-flex align-items-center justify-content-center" id="start">START</div>
+                            <div class="btn btn-danger btn-lg col d-flex align-items-center justify-content-center" id="stop">STOP</div>
+                            <div class="btn btn-success btn-lg col d-flex align-items-center justify-content-center" id="tip">TIP!</div>
                             <div class="btn btn-light btn-outline-primary btn-lg col d-flex align-items-center justify-content-center" id="reset">RESET</div>
 
                         </div>
@@ -219,7 +226,9 @@
     <script src="../static/game5.js"></script>
     <script type="text/javascript">
     graphData = {{ graphJSON_spin | safe }};
-    play_animation(graphData);
+    graphData2 = {{ graphJSON_signal | safe }}
+    play_animation_spin(graphData,false);
+    play_animation_signal(graphData2,false);
     </script>
 
 {% endblock %}

@@ -26,7 +26,9 @@ def game3_worker(TR,TE,FA):
 
     """
     graphJSON_image = get_image_json(TR,TE,FA)
-    graphJSON_bar = get_bargraph_json(TR,TE,FA, ['csf','wm','gm'])
+    graphJSON_bar = get_bargraph_json(TR,TE,FA, ['csf','wm','gm'])# Shows three tissue types
+    # All possible tissue types:
+    # ['bkg','csf','gm','wm','fat','muscle/skin','skin','skull','glial','connective']
 
     return graphJSON_image, graphJSON_bar
 

@@ -29,7 +29,7 @@ def initialize_parameters():
                         'Min_scale': 0.0, 'Max_scale': 1.0}
 
 
-    session['game5'] = {'b0_on': False, 'b0': 0.006,'coil_on': False, 'rot_frame_on': True, 'flip_angle': 90, 'rf_phase': 0.0,
+    session['game5'] = {'b0_on': False, 'b0': 0.006,'coil_on': False, 'rot_frame_on': False, 'flip_angle': 90, 'rf_phase': 0.0,
                         'coil_dir': 'x', 'm_theta': 0.0, 'm_phi':0.0, 'm_size': 1,
                         'M_init': np.array([[0],[0],[0]])}
                        # TODO M_init will be set upon click of "set" button using M_theta, M_phi, M_size
