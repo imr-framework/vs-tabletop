@@ -42,7 +42,10 @@ class Calibration(db.Model):
         return f'f0={self.f0/1e6} MHz, shim = ({self.shimx},{self.shimy},{self.shimz}), Tx amp = {self.tx_amp}, \
                stored at {self.stored_at}.'
 
-
+#class Progress():
+    #id = db.Column(db.Integer(),primary_key=True)
+    #game_number = db.Column(db.Integer(),index=True)
+    #num_stars = db.Column(db.Integer(),)
 
 if __name__ == '__main__':
     # When models.py is run by itself, the database gets established.

@@ -1,3 +1,5 @@
+// Calibration script
+
 
 let socket = io();
 // When server emits an event of 'take this', display its message
@@ -5,18 +7,14 @@ socket.on('take this', (msg)=>{
     ///$('#declarer').text(msg.data);
 });
 
-
 socket.on('plots served', (msg)=>{
     //$('#declarer').text('FID & Spectrum plots should be served now...');
-    // TODO use extend Traces so that the plot is UPDATED rather than REDRAWN - the goal is to stay zoomed in
+    // consider extending Traces so that the plot is UPDATED rather than REDRAWN - the goal is to stay zoomed in
     Plotly.newPlot('chart-left',JSON.parse(msg['fid']),{});
     Plotly.newPlot('chart-center',JSON.parse(msg['spectrum']),{});
 
 } )
 
-// TODO (A) this does a thing (plots a new chart)
-//  when the client receives the instruction of "fa plot served" from the server
-//  combine this with TODO (B) to update the fields and make them co-dependent
 socket.on('fa plot served', (msg)=>{
     //$('#declarer').text('FA plot should be served now ... ');
     Plotly.newPlot('chart-right',JSON.parse(msg['fa_signal']),{});
@@ -40,9 +38,6 @@ $('#run-fa').click(()=>{
 })
 
 
-// TODO (B) Rishi: this responds to the elment with id='zero-shims' being clicked
-//          by modifying all the following values to zero (0.0)
-//          you can use this with TODO (A) to update the fields!
 $('#zero-shims').click(()=>{
     // Set shim values to zero
     $('#shimx').val(0.0)
@@ -56,7 +51,6 @@ $('#zero-shims').click(()=>{
     socket.emit('zero shims',{'data': 'Zeroing shim parameters!'})
 })
 
-// TODO Rishi: this responds to any update on any input and sends over its name and value to the server
 // When any single parameter is changed, emit signal to server to update it
 $(':input').on('input',(event)=>{
     socket.emit("update single param",{'id': event.target.id, 'value': event.target.value});

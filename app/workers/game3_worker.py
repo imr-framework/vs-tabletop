@@ -32,8 +32,27 @@ def game3_worker(TR,TE,FA):
 
     return graphJSON_image, graphJSON_bar
 
-# TODO @Rishi Use this function below to extract TR, TE, FA for each weighing option
 def weighing_options(option):
+    """Generate sequence parameters for different qualitative scans
+
+    Parameters
+    ----------
+    option : str
+        Sequence type; the following options are enabled:
+            'PDw' : proton density weighted (long TR, short TE, FA = 90 deg)
+            'T1w' : T1 weighted (medium TR, short TE, FA = 90 deg)
+            'T2w' : T2 weighted (long TR, medium TE, FA = 90 deg)
+
+    Returns
+    -------
+    TR : float
+        Repetition time in [seconds]
+    TE : float
+        Echo time in [seconds]
+    FA : float
+        Flip angle in [degrees]
+    """
+
     TR, TE, FA = 0,0,0
     if option == 'PDw':
         TR = 4000e-3
@@ -51,17 +70,56 @@ def weighing_options(option):
     return TR, TE, FA
 
 def signal_model(PD,T1,T2,TR,TE,FA):
+    """Signal model for a spoiled GRE sequence
+
+    Parameters
+    ----------
+    PD : float
+        Proton density of tissue (arbitrary units; use of range 0 - 1 recommended)
+    T1 : float
+        T1 value of tissue in [seconds]
+    T2 : float
+        T2 value of tissue in [seconds]
+    TR : float
+        Repetition time of sequence in [seconds]
+    TE : float
+        Echo time of sequence in [seconds]
+    FA : float
+        Flip angle of sequence in [degrees]
+
+    Returns
+    -------
+    S : float
+        Signal level
+    """
+
     if np.mod(FA,360) == 0:
         return 0
-
     theta = FA * np.pi / 180
     E1 = np.exp(-TR/T1) if T2 != 0 else 1
     E2 = np.exp(-TE/T2) if T1 != 0 else 1
+    S = PD * E2 * np.sin(theta) * (1-E1) / (1-np.cos(theta)*E1)
 
-
-    return PD * E2 * np.sin(theta) * (1-E1) / (1-np.cos(theta)*E1)
+    return S
 
 def get_image_json(TR,TE,FA):
+    """Gets JSON string of Brainweb image based on sequence parameters
+
+    Parameters
+    ----------
+    TR : float
+        Repetition time in [seconds]
+    TE : float
+        Echo time in [seconds]
+    FA : float
+        Flip angle in [degrees]
+
+    Returns
+    -------
+    graphJSON : str
+        JSON string for Plotly.js
+    """
+
     # Load brainweb model
     brainweb = loadmat('static/data/bw.mat')
     type_slice = brainweb['typemap'][:,:,87]
@@ -83,8 +141,27 @@ def get_image_json(TR,TE,FA):
 
     return graphJSON
 
-
 def get_bargraph_json(TR,TE,FA,tissue_names):
+    """Generate bar plot JSON given sequence parameters and tissue types to plot
+
+    Parameters
+    ----------
+    TR : float
+        Repetition time in [seconds]
+    TE : float
+        Echo time in [seconds]
+    FA : float
+        Flip angle in [degrees]
+    tissue_names : list
+        List of tissue types to display:
+        {'bkg','csf','gm','wm','fat','muscle/skin','skin','skull','glial','connective'}
+
+    Returns
+    -------
+    graphJSON : str
+        JSON string of bar plot of relative tissue signals for Plotly.js
+    """
+
     full_names = ['Background','Cerebrospinal fluid','Gray matter','White matter','Fat',
                   'Muscle/skin', 'Skin', 'Skull', 'Glia','Connective Tissue']
 
@@ -103,7 +180,6 @@ def get_bargraph_json(TR,TE,FA,tissue_names):
     graphJSON = json.dumps(fig,cls=plotly.utils.PlotlyJSONEncoder)
 
     return graphJSON
-
 
 if __name__ == '__main__':
     # Example usage

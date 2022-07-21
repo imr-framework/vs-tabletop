@@ -1,14 +1,33 @@
 # Have a choice of multiple images
-# 1. Scenery
-# 2. Brain
-# 3. Cat
 from phantominator import shepp_logan
 import plotly
 import plotly.express as px
 import numpy as np
 import json
 
+# TODO add function for a choice of different medical modalities
+
 def get_image(fov,n,n_zf,min_level,max_level):
+    """
+    Parameters
+    ----------
+    fov : float
+        Field-of-view in [meters]
+    n : integer
+        Final matrix size. Will be converted to the next larger even number if it's odd.
+    n_zf : integer
+        Zero-filled matrix size. Will be converted to the next larger even number if it's odd.
+    min_level : float
+        Lower bound for image intensity window. Between zero and one.
+    max_level : float
+        Upper bound for image intensity window. Between zero and one.
+        If max_level is smaller than min_level, (min_level,max_level) will be reset to (0,1)
+
+    Returns
+    final_image : np.ndarray
+        n_zf x n_zf image array of shepp logan phantom
+
+    """
     # Make sure n and n_zf is even
     n += n%2
     n_zf += n_zf%2
@@ -46,8 +65,6 @@ def get_image(fov,n,n_zf,min_level,max_level):
         kspace_zf[ind1:ind2,ind1:ind2] = kspace
         final_image = np.absolute(np.fft.ifft2(np.fft.fftshift(kspace_zf)))
 
-
-
     # Normalize to between (0,1)
     final_image = (final_image - np.min(final_image)) / (np.max(final_image)-np.min(final_image))
 
@@ -61,8 +78,20 @@ def get_image(fov,n,n_zf,min_level,max_level):
 
     return final_image
 
-
 def generate_plot(img):
+    """Make styled Plotly figure of image
+
+    Parameters
+    ----------
+    img : np.ndarray
+        2D image to display
+
+    Returns
+    -------
+    fig : plotly.graph_objects.Figure
+        Plotly figure of image display
+    """
+
     fig = px.imshow(img,binary_string=True)
     fig.update(layout_coloraxis_showscale=False)
     fig.update_xaxes(showticklabels=False)
@@ -70,9 +99,6 @@ def generate_plot(img):
 
     return fig
 
-# TODO Rishi know what this function does and call it in routes_game1.py
-# You can add a line in routes_game1.py to import it, like this :
-#     from workers.game1_worker import game1_worker
 def game1_worker(fov,n,n_zf,min_level,max_level):
     """Receives game 1 user defined inputs and generates a corresponding image
        GT, July 2022
@@ -92,28 +118,24 @@ def game1_worker(fov,n,n_zf,min_level,max_level):
         If max_level is smaller than min_level, (min_level,max_level) will be reset to (0,1)
 
     Returns
-    j1 : str
-        JSON string for Plotly use
-
     -------
+    j1 : str
+        JSON string for Plotly.js to display
     """
     img = get_image(fov,n,n_zf, min_level, max_level)
     fig = generate_plot(img)
-
     j1 = json.dumps(fig,cls=plotly.utils.PlotlyJSONEncoder)
 
     return j1
 
-
-
-
 if __name__ == '__main__':
-    # TODO Rishi: run this python script to see how the function works
-    # Example of generating a JSON string and printing it
+    # Example usage
+    # Example of generating a JSON string of figure and printing it
     j1 = game1_worker(0.12,128,256,0,1)
     print(j1)
 
     # Example of generating and displaying a plot
     img = get_image(0.25,128,256,0,1)
     fig = generate_plot(img)
+
     fig.show()

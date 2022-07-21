@@ -1,5 +1,8 @@
+/* Additional styles; imported last on all pages */
+
+/* Generel */
 *{
-    font-family: Arial;
+    font-family: Arial sans-serif;
 }
 
 .row{
@@ -29,59 +32,7 @@ img{
     font-family: Arial sans-serif;
 }
 
-
-/* Slider bar ticks */
-/*
-@mixin range-track {
-  -webkit-appearance: none;
-  width: 100%;
-  height: $unit * 4;
-  color: transparent;
-  background: lightgray;
-  border-radius: 999px;
-  border: none;
-}
-@mixin range-thumb {
-  -webkit-appearance: none;
-  height: $unit * 4;
-  width: $unit * 4;
-  border-radius: 30px;
-  background: black;
-  box-shadow: 0px 2px 10px -2px black(1);
-}
-input[type=range] {
-  -webkit-appearance: none;
-  display: block;
-  margin: 0;
-  width: 100%;
-  background: transparent;
-}
-input[type=range]::-webkit-slider-runnable-track {
-  @include range-track();
-}
-input[type=range]::-moz-range-track {
-  @include range-track();
-}
-input[type=range]::-ms-track {
-  @include range-track();
-}
-input[type=range]::-ms-fill-lower {
-  display: none;
-}
-input[type=range]::-ms-fill-upper {
-  display: none;
-}
-input[type=range]::-webkit-slider-thumb {
-  @include range-thumb();
-}
-input[type=range]::-moz-range-thumb {
-  @include range-thumb();
-}
-input[type=range]::-ms-thumb {
-  @include range-thumb();
-}
-*/
-
+/* Ticks for range slider labeling */
 .ticks {
     box-sizing:border-box;
   display: flex;

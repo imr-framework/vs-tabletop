@@ -13,7 +13,6 @@ from fake_data_generator import get_fake_calibration_plots, SignalPlotsThread, F
 from __main__ import app, login_manager, db, socketio
 
 
-
 def initialize_parameters():
     #session.clear() # This line causes csrf_token to fail validation in the root / login route, so it's disabled
     session['scanningFID'] = False
@@ -24,7 +23,6 @@ def initialize_parameters():
     session['display'] = {'autoscale':True, 'show_prev':False}
     session['user_id'] = None
 
-    #TODO: need default values for all the variables here; uncomment first
     session['game1'] = {'FOV_scale': 0.128, 'Matrix_scale': 128, 'Voxel_scale': 0.001,'zero_fill': 128,
                         'Min_scale': 0.0, 'Max_scale': 1.0}
 
@@ -32,10 +30,6 @@ def initialize_parameters():
     session['game5'] = {'b0_on': False, 'b0': 0.006,'coil_on': False, 'rot_frame_on': False, 'flip_angle': 90, 'rf_phase': 0.0,
                         'coil_dir': 'x', 'm_theta': 0.0, 'm_phi':0.0, 'm_size': 1,
                         'M_init': np.array([[0],[0],[0]])}
-                       # TODO M_init will be set upon click of "set" button using M_theta, M_phi, M_size
-                                                       #clicking it also returns the magnetization to M_init instantly.
-                       # TODO M_end will be set as the last magnetization vector in the current animation.
-                       # TODO When "Tip" is clicked, M_init is set to M_end for the next simulation
 
 # Login callback (required)
 @login_manager.user_loader
@@ -111,9 +105,6 @@ def register():
     return render_template('register.html', title='Register', template_form=reg_form)
 
 # TODO calibration tunings - #4 save to file
-# DONE - 1. Have "Start" button save parameters to session
-# DONE - 2. "Save" button both saves to session and to config.py (via form submission)
-# DONE - 3. *** Changing of any parameter changes the corresponding value in "session". ***
 # 4. "Save to file" / "Load" buttons split the current "load previous" one
 #     save to file - > outputs as config file apart from config.py
 #     load - > load a config file to (a) config.py (b) session
@@ -226,7 +217,7 @@ def zero_shims(message):
     # This is another example of updating the session with newly zeroed shim values
     utils.update_session_subdict(session,'calibration',{'shimx':0.0,'shimy':0.0,'shimz':0.0})
 
-# TODO Rishi: this decorated function (the "@" line is the decorator) does the following:
+#  Rishi: this decorated function (the "@" line is the decorator) does the following:
 #        1. It is run when socketio receives 'update single param' from the client
 #        2. The data being sent over is passed as the "info" parameter
 #        3. If the info is central frequency, f0, it scales it by 1e6 for unit conversion from MHz to Hz

@@ -46,8 +46,7 @@ def game5_view():
 def make_default_graphs():
     game5 = session['game5']
     mags = np.zeros((1,3))
-    dt = 1
-    j1 = generate_static_plot(dt, mags,coil=(game5['coil_dir'] if game5['coil_on'] else None))
+    j1 = generate_static_plot(mags,coil=(game5['coil_dir'] if game5['coil_on'] else None))
     #j1 = json.dumps(f1,cls=plotly.utils.PlotlyJSONEncoder)
 
     # j2 : signal
@@ -112,7 +111,7 @@ def reset_m():
     # Reset spin plot
     game5=session['game5']
     mags_zero = np.zeros((1,3))
-    j0 = generate_static_plot(dt=1,mags=mags_zero,coil=(game5['coil_dir'] if game5['coil_on'] else None))
+    j0 = generate_static_plot(mags=mags_zero,coil=(game5['coil_dir'] if game5['coil_on'] else None))
     # Generate static plot and replace current plot with it
     socketio.emit('update spin animation', {'graph':j0,'loop_on':False})
     j1=  generate_static_signals(dt=1, signals=np.zeros(1))
@@ -153,7 +152,7 @@ def set_M_init():
     utils.update_session_subdict(session, 'game5', {'M_init': Mi})
 
     # Make the static animation and send it over to frontend
-    j1 = generate_static_plot(1,mags=np.transpose(Mi),coil=(game5['coil_dir'] if game5['coil_on'] else None))
+    j1 = generate_static_plot(mags=np.transpose(Mi),coil=(game5['coil_dir'] if game5['coil_on'] else None))
     socketio.emit('update spin animation',{'graph':j1,'loop_on':False})
 
     return
@@ -170,7 +169,7 @@ def let_spin_precess():
         #TODO make sure signal gets displayed
         if game5['coil_on']:
             print('receiving Rx signal! ')
-            j2 = generate_static_signals(dt, signals=generate_coil_signal(dt,mags,coil_dir=game5['coil_dir']))
+            j2 = generate_static_signals(dt, signals=generate_coil_signal(mags,coil_dir=game5['coil_dir']))
             socketio.emit('message',{'text': 'Receiving signal from coil... ','type':'success'})
             socketio.emit('update signal animation', {'graph': j2, 'loop_on': True})
 
@@ -225,13 +224,13 @@ def turn_on_rx_coil(info):
         # Inform user
         socketio.emit('message',{'text':'Rx coil is on!','type':'success'})
         # Make the static animation and send it over to frontend
-        j1 = generate_static_plot(1, mags=np.transpose(game5['M_init']), coil=info['rx_dir'])
+        j1 = generate_static_plot(mags=np.transpose(game5['M_init']), coil=info['rx_dir'])
 
         # Display coil with M set to M_init
     else:
         # Inform user
         socketio.emit('message',{'text':'Rx coil is off!','type':''})
-        j1 = generate_static_plot(1,mags=np.transpose(game5['M_init']), coil=None)
+        j1 = generate_static_plot(mags=np.transpose(game5['M_init']), coil=None)
 
     socketio.emit('update spin animation', {'graph': j1, 'loop_on': False})
 
