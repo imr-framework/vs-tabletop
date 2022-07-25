@@ -48,6 +48,7 @@ class Calibration(db.Model):
     #num_stars = db.Column(db.Integer(),)
 
 if __name__ == '__main__':
+    print("test")
     # When models.py is run by itself, the database gets established.
     # 3. Database checks
     # Check that database exists and contains the admin entry
