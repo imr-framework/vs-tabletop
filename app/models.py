@@ -47,6 +47,7 @@ class Calibration(db.Model):
     #game_number = db.Column(db.Integer(),index=True)
     #num_stars = db.Column(db.Integer(),)
 
+
 if __name__ == '__main__':
     # When models.py is run by itself, the database gets established.
     # 3. Database checks
