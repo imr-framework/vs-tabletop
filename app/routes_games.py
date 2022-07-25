@@ -10,8 +10,6 @@ from __main__ import app, login_manager, db, socketio
 
 
 # Games
-
-
 @app.route('/games/2',methods=["GET","POST"])
 def game2():
     return render_template('game2.html',template_title="K-space magik",template_intro_text="Can you find your way?",template_game_form=None)
@@ -30,7 +28,6 @@ def game4():
 
     return render_template('game4.html',template_title="Fresh Blood",template_intro_text="See how flow changes MR signal!",
                            template_game_form=game4form)
-
 
 @app.route('/games/6',methods=["GET","POST"])
 def game6():

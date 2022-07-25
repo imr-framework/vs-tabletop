@@ -5,6 +5,8 @@ import plotly.express as px
 from scipy.io import loadmat
 import json
 
+#TODO fix brain upside donw thing
+
 def game3_worker(TR,TE,FA):
     """Generate brainweb brain image using sequence parameters
 

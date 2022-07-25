@@ -237,3 +237,9 @@ def update_parameter(info):
     for th in threading.enumerate():
         if hasattr(th, 'f0'):
             th.set_f0(session['calibration']['f0'])
+
+
+# Dev route for new features
+@app.route('/examples',methods=['POST','GET'])
+def example_elements():
+    return render_template('examples.html')
