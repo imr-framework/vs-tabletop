@@ -17,10 +17,6 @@ def game2():
     return render_template('game2.html',template_title="K-space magik",template_intro_text="Can you find your way?",template_game_form=None)
 
 
-@app.route('/games/3',methods=["GET","POST"])
-def game3():
-    return render_template('game3.html',template_title="Brains, please!",template_intro_text="Of mice and men",
-                           template_game_form=None)
 
 
 @app.route('/games/4',methods=["GET","POST"])
