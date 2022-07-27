@@ -26,7 +26,7 @@ def game7_projection_worker(voxels, proj3d_axis, proj2d_angle): # update all thr
 
     return graphJSON_2D,graphJSON_1D
 
-def game7_prep3d_worker(difficulty="all",name=None,):
+def game7_prep3d_worker(difficulty="all",name=None):
     # TODO enable non-random option
     # Pre-loads a 3D model and calculates its voxel representation
     # To speed up things
@@ -248,6 +248,7 @@ if __name__ == "__main__":
     j2, j3 = game7_projection_worker(voxels, proj3d_axis, proj2d_angle)
 
     # j1, j2, and j3 are the 3D, 2D, and 1D plots, respectively.
+
 
     # Right now fig.show() is called for all 3 graphs.
     # It needs to be disabled in actual GUI usage.

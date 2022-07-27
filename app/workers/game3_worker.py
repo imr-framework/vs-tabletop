@@ -131,13 +131,15 @@ def get_image_json(TR,TE,FA):
     params = brainweb['params']
     for type_ind in range(10):
         mr_image[type_slice == type_ind] = \
-            signal_model(params[type_ind,3], params[type_ind,0], params[type_ind,1],
+            signal_model(params[type_ind,3], params[type_ind,0]/1e3, params[type_ind,1]/1e3,
                          TR, TE, FA)
     mr_image = np.transpose(mr_image)
     # Generate image
     fig = px.imshow(mr_image, binary_string=True)
     fig.update_xaxes(showticklabels=False)
     fig.update_yaxes(showticklabels=False)
+
+    #fig.show()
 
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
@@ -179,6 +181,8 @@ def get_bargraph_json(TR,TE,FA,tissue_names):
     fig = go.Figure(go.Bar(x=names_for_plot,y=signals,marker=dict(color=np.arange(len(names)),colorscale="Viridis")))
     fig.update_layout(xaxis=dict(tickfont=dict(size=48)),yaxis=dict(tickfont=dict(size=48)))
 
+    #fig.show()
+
     graphJSON = json.dumps(fig,cls=plotly.utils.PlotlyJSONEncoder)
 
     return graphJSON
@@ -186,7 +190,10 @@ def get_bargraph_json(TR,TE,FA,tissue_names):
 if __name__ == '__main__':
     # Example usage
     # j1, j2 are to be passed into render_template()
-    j1, j2 = game3_worker(TR=0.5,TE=0.02,FA=90)
+
+
+
+    j1, j2 = game3_worker(TR=0.5,TE=0.05,FA=90)
 
 
 
