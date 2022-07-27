@@ -25,28 +25,12 @@
 
             <form action="/games/5" method="POST">
                 {{ template_game_form.hidden_tag() }}
-                <div class="row card">
-                    <div class="card-header h3">Messages</div>
-                    <div class="card-body">
-                        <p id="message-game5">
 
+                    <div class="row h-25 card">
+                        <div class="card-header">Tasks</div>
+                        <div class="card-body"></div>
 
-                            <!-- Flash messages (TODO: replace with socket messages) -->
-                        <!--    {% with messages = get_flashed_messages() %}
-                                 {% if messages %}
-                                    <div class='flashes text-danger'>
-                                    {% for message in messages %}
-                                      <p>{{ message }}</p>
-                                    {% endfor %}
-                                    </div>
-                                 {% endif %}
-                            {% endwith %} -->
-
-
-
-                        </p>
                     </div>
-                </div>
                 <div class="row h-25 card">
                          <h3 class="card-header">Main field (Gauss)</h3>
                          <div class="card-body">
@@ -204,7 +188,28 @@
 
                         </div>
                     </div>
+                    <div class="row card">
+                            <div class="card-header h3">Messages</div>
+                            <div class="card-body">
+                                <p id="message-game5">
 
+
+                                    <!-- Flash messages (TODO: replace with socket messages) -->
+                                <!--    {% with messages = get_flashed_messages() %}
+                                         {% if messages %}
+                                            <div class='flashes text-danger'>
+                                            {% for message in messages %}
+                                              <p>{{ message }}</p>
+                                            {% endfor %}
+                                            </div>
+                                         {% endif %}
+                                    {% endwith %} -->
+
+
+
+                                </p>
+                            </div>
+                    </div>
             </form>
         </div>
     </div>
