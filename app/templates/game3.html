@@ -1,7 +1,129 @@
 {% extends "base.html" %}
 {% block content %}
+    <div class="container-fluid vh-100">
+        <div class="row h-100">
+            <div class="col-6 h-100">
+                <form action="/games/3" method="POST">
+                    {{ G3Form.hidden_tag() }}
+                <div class="row card">
+                    <div class="card-header">Phantom</div>
+                    <div class="card-body">
+                        <div class="chart" id="chart-G3">
+                        </div>
+                    </div>
+                </div>
+                <div class="row-card">
+                    <div class="card-header">Questions</div>
+                    <div class="card-body">
+                        Answer this to reveal the second panel:
+                        <br>Which scan type outputs the highest GM signal intensity?
+                        {{ G3Form.P1_q() }}
+
+                        {{G3Form.submit(class="btn btn-primary")}}
+
+                        {% if session['game3']['P1_q'] == 'T1' %}
+                            <br><b>Good Job! You earned a star</b>
+                        {% endif %}
+                    </div>
+                </div>
+                </form>
+            </div>
+             <div class="col-6 h-100">
+                 <form action="/games/3" method="POST">
+                     {{ G3Form.hidden_tag() }}
+                 <div class="row card">
+                     <div class="card-header">Select TE, TR, or PD weighted scan</div>
+                     <div class="card-body">
+                         {% for subfield in G3Form.options %}
+                                {% if subfield.id == "options" %}
+                                    {{ subfield(class="btn-check ", autocomplete="off",checked=session['game3']['options']=='T1') }}
+                                {% elif subfield.id == "options" %}
+                                    {{ subfield(class="btn-check ", autocomplete="off",checked=session['game3']['options']=='T2') }}
+                                {% else %}
+                                    {{ subfield(class="btn-check ", autocomplete="off", checked=session['game3']['options']=='PD') }}
+                                {% endif %}
+                                {{ subfield.label(class="btn btn-outline-primary d-flex align-items-center justify-content-center") }}
+
+                            {% endfor %}
+
+                            {{G3Form.submit(class="btn btn-primary")}}
 
 
+                     </div>
+                 </div>
+                {% if session['game3']['P1_q'] == 'T1' %}
+                 <div class="row card">
+                     <div class="class-header">Self-Input TR, TE, and FA values</div>
+                     <div class="card-body">
+                         <div class="row">
+                             <div class="col-4">{{ G3Form.TR.label }}</div>
+                             <div class="col-8">
+                                 <div class="row">
+                                     {{ G3Form.TR(class="form-range", id='TR', step=0.1, value=session['game3']['TR']) }}
+                                 </div>
+                                 <div class="ticks text-primary">
+                                     {% for angle in [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1] %}
+                                     <span class="tick">{{ angle }}</span>
+                                     {% endfor %}
+                                 </div>
+                             </div>
+                         </div>
+                         <div class="row">
+                             <div class="col-4">{{ G3Form.TE.label }}</div>
+                             <div class="col-8">
+                                 <div class="row">
+                                     {{ G3Form.TE(class="form-range", id="TE", step=0.1, value=session['game3']['TE']) }}
+                                 </div>
+                                 <div class="ticks text-primary">
+                                     {% for angle in [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1] %}
+                                     <span class="tick">{{ angle }}</span>
+                                     {% endfor %}
+                                 </div>
+                             </div>
+                         </div>
+                         <div class="row">
+                             <div class="col-4">{{ G3Form. FA.label }}</div>
+                             <div class="col-8">
+                                 <div class="row">
+                                     {{ G3Form.FA(class="form-range", id="FA", step=5, value=session['game3']['FA']) }}
+                                 </div>
+                                 <div class="ticks text-primary">
+                                     {% for angle in [0,45,90,135,180,225,270,315,360] %}
+                                     <span class="tick">{{ angle }}</span>
+                                {% endfor %}
+                                 </div>
+                             </div>
+                         </div>
+                         {{G3Form.submit(class="btn btn-primary")}}
+                     </div>
 
+                 </div>
+                {% endif %}
+                 <div class="row card">
+                     <div class="row-header">CSF, GM, and WM signal levels</div>
+                     <div class="row-body">
+                         <div class="chart" id="chart-G3-bar">
 
+                         </div>
+                     </div>
+                 </div>
+                 </form>
+                     </div>
+                 </div>
+             </div>
+
+{% endblock %}
+
+{% block additional_imports %}
+    <script src="../static/game3.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script type="text/javascript">
+        let graphs_picture = {{ graphJSON_img | safe }};
+        Plotly.plot('chart-G3', graphs_picture, {});
+
+    </script>
+    <script type="text/javascript">
+        let bar_graph = {{ graphJSON_bar | safe }};
+        Plotly.plot('chart-G3-bar', bar_graph, {});
+    </script>
 {% endblock %}

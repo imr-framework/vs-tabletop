@@ -19,7 +19,7 @@ def game1():
 
     if form.validate_on_submit():
         #TODO Update second Matrix scale with the zerofill field.
-
+        print('validate')
         j1 = game1_worker(float(form.FOV_scale.data), int(form.Matrix_scale.data) , int(form.zero_fill.data), float(form.min_scale.data),
                           float(form.max_scale.data))
 

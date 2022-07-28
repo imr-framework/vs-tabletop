@@ -166,7 +166,7 @@ def get_bargraph_json(TR,TE,FA,tissue_names):
         JSON string of bar plot of relative tissue signals for Plotly.js
     """
 
-    full_names = ['Background','Cerebrospinal fluid','Gray matter','White matter','Fat',
+    full_names = ['Background','CSF','GM','WM','Fat',
                   'Muscle/skin', 'Skin', 'Skull', 'Glia','Connective Tissue']
 
     brainweb = loadmat('static/data/bw.mat')

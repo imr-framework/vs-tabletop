@@ -49,6 +49,14 @@ class Game1Form(FlaskForm):
     min_scale = DecimalRangeField(label='range', validators=[DataRequired(), NumberRange(min=0.0, max=1.0),],default=0.1)
     max_scale = DecimalRangeField(label='range', validators=[DataRequired(), NumberRange(min=0.0, max=1.0)],default=0.9)
 
+class Game3Form(FlaskForm):
+    options = RadioField('options', choices=['T1', 'T2', 'PD'],validators=[InputRequired()],default='T1')
+    TR = DecimalRangeField(label='TR Value:', validators= [DataRequired(), NumberRange(min=0.0, max=1.0)],default=0.5)
+    TE = DecimalRangeField(label='TE Value:', validators= [DataRequired(), NumberRange(min=0.0, max=1.0)],default=0.01)
+    FA = DecimalRangeField(label='FA Value:', validators= [DataRequired(), NumberRange(min=0.0, max=360)],default=90)
+    submit = SubmitField("Submit")
+    P1_q = RadioField('question1', choices=['T1', 'T2', 'PD'], validators=[InputRequired()])
+    P2_q = RadioField('question2', choices=['Yes', 'No'], validators=[InputRequired()])
 # EXAMPLE
 class Game4Form(FlaskForm):
     thk_field = DecimalField('Slice thickness (mm)',places=1,validators=[DataRequired(),NumberRange(min=1.0,max=10.0)])
