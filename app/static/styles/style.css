@@ -31,7 +31,23 @@ img{
 .nav-link{
     font-family: Arial sans-serif;
 }
+.hide {
+    display:none;
+}
 
+.myDIV:hover + .hide{
+    display: block;
+    color: blue;
+}
+.carousel-item {
+    height:32rem;
+    background: #379563;
+    color: white
+}
+.carousel-inner{
+    height: 450px;
+    color: #F64C72
+}
 /* Ticks for range slider labeling */
 .ticks {
     box-sizing:border-box;
