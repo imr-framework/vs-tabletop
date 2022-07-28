@@ -23,7 +23,7 @@ def initialize_parameters():
     session['display'] = {'autoscale':True, 'show_prev':False}
     session['user_id'] = None
 
-    session['game1'] = {'FOV_scale': 0.128, 'Matrix_scale': 128, 'Voxel_scale': 0.001,'zero_fill': 128,
+    session['game1'] = {'FOV_scale': 0.128, 'Matrix_scale': 128, 'Voxel_scale': 0.001,'zero_fill': 500,
                         'Min_scale': 0.0, 'Max_scale': 1.0}
 
     session['game3'] = {'options': 'T1', 'TR': 0.5, 'TE': 0.01, 'FA':90, 'P1_q': 'No', 'P2_q': 'No'}

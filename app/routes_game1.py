@@ -48,6 +48,7 @@ def update_parameter(info):
         session['game1']['Matrix_scale'] = int(np.round(float(session['game1']['FOV_scale'])/(float(session['game1']['Voxel_scale']))))
         session['game1']['Voxel_scale'] = session['game1']['FOV_scale']/session['game1']['Matrix_scale']
 
+
     # Matrix Size is kept the same, voxel size increases.
     if info['id'] == 'Voxel_scale':
         print('printing VS')
