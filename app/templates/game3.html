@@ -1,12 +1,21 @@
 {% extends "base.html" %}
 {% block content %}
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alphal/css/bootstrap.min.css"
+          integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17SuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
+            integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js"
+        integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>
+</head>
     <div class="container-fluid vh-100">
         <div class="row h-100">
             <div class="col-6 h-100">
                 <form action="/games/3" method="POST">
                     {{ G3Form.hidden_tag() }}
                 <div class="row card">
-                    <div class="card-header">Phantom</div>
+                    <div class="card-header">Image</div>
                     <div class="card-body">
                         <div class="chart" id="chart-G3">
                         </div>
@@ -15,17 +24,60 @@
                 <div class="row-card">
                     <div class="card-header">Questions</div>
                     <div class="card-body">
-                        Answer this to reveal the second panel:
-                        <br>Which scan type outputs the highest GM signal intensity?
-                        {{ G3Form.P1_q() }}
+                        <div id="slide" class=" carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-indicators">
+                            <button type="button" data-bs-target="#slide" data-bs-slide-to="0" class="active"></button>
+                            <button type="button" data-bs-target="#slide" data-bs-slide-to="1"></button>
+                        </div>
 
-                        {{G3Form.submit(class="btn btn-primary")}}
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <h2><b>Question 1</b></h2>
+                                    <br>Which scan type outputs the lowest GM signal intensity?
+                                    <br>{{ G3Form.P1_q() }}
+                                    <br>{{G3Form.submit(class="btn btn-primary")}}
+                                    {% if session['game3']['P1_q'] == 'T1' %}
+                                    <br><i class="bi bi-patch-check"></i>
+                                        <br><b>Good Job! You unlocked an achievement!</b>
+                                    <br><i class="bi bi-bookmark-star"></i>
 
-                        {% if session['game3']['P1_q'] == 'T1' %}
-                            <br><b>Good Job! You earned a star</b>
-                        {% endif %}
+                                    {% elif session['game3']['P1_q'] == 'T2' %}
+                                        <br>Try again!
+
+                                    {% elif session['game3']['P1_q'] == 'T2' %}
+                                        <br>Try again!
+
+                                    {% endif %}
+                                </div>
+                                <div class="carousel-item"><h2>Question 2</h2></div>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#slide" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon"></span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#slide" data-bs-slide="next">
+                                <span class="carousel-control-next-icon"></span>
+                            </button>
+                            </div>
                     </div>
                 </div>
+                    <div class="row-card">
+                        <div class="card-header">Hints for Questions</div>
+                        <div class="card-body">
+
+                            {% if session['game3']['P1_q'] == 'T1' %}
+                            Continue to question 2 to challenge yourself!
+
+                            {% elif session['game3']['P1_q'] == 'T2' %}
+                            Options Change detected: Hover on the GM bar on the bar graph to note its values.
+
+                            {% elif session['game3']['P1_q'] == 'PD' %}
+                            Options Change detected: Hover on the GM bar on the bar graph to note its values.
+
+                            {% elif session['game3']['P1_q'] == none %}
+                            Answer Question 1!
+                            {% endif %}
+                        </div>
+                    </div>
                 </form>
             </div>
              <div class="col-6 h-100">
@@ -46,7 +98,7 @@
 
                             {% endfor %}
 
-                            {{G3Form.submit(class="btn btn-primary")}}
+                            <br>{{G3Form.submit(class="btn btn-primary")}}
 
 
                      </div>
@@ -94,7 +146,7 @@
                                  </div>
                              </div>
                          </div>
-                         {{G3Form.submit(class="btn btn-primary")}}
+                         <br>{{G3Form.submit(class="btn btn-primary")}}
                      </div>
 
                  </div>
