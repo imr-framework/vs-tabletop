@@ -7,7 +7,8 @@ import json
 
 #TODO fix brain upside donw thing
 
-def game3_worker(TR,TE,FA):
+def game3_worker(TR,TE,FA,empty=False):
+    # TODO enable empty JSON
     """Generate brainweb brain image using sequence parameters
 
     Parameters
@@ -27,6 +28,7 @@ def game3_worker(TR,TE,FA):
         JSON string of the signal bars
 
     """
+
     graphJSON_image = get_image_json(TR,TE,FA)
     graphJSON_bar = get_bargraph_json(TR,TE,FA, ['csf','wm','gm'])# Shows three tissue types
     # All possible tissue types:

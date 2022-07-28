@@ -88,4 +88,9 @@ class Game5Form(FlaskForm):
     submit_field = SubmitField("Tip!")
 
 
+# More user interaction through questions
+#class MultipleChoiceForm(FlaskForm):
+    # Radio field
+    # How to define labels?
+
 

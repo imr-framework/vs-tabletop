@@ -1,6 +1,5 @@
 # Game 7 worker
 # Gehua Tong, July 2022
-
 import numpy as np
 from stl import mesh
 import plotly.express as px
@@ -13,7 +12,28 @@ import glob
 from skimage.transform import radon
 
 
-def game7_projection_worker(voxels, proj3d_axis, proj2d_angle): # update all three images
+def game7_projection_worker(voxels, proj3d_axis, proj2d_angle):
+    """Generates 2D and 1D projections of the given raster representation of a 3D model
+
+    Parameters
+    ----------
+    voxels : np.ndarray
+        Voxel representation of 3D model
+    proj3d_axis : str
+        Axis along which the volume is projected.
+        One of 'x', 'y', 'z'
+    proj2d_angle : float
+        Projection angle in [degrees]
+
+    Returns
+    -------
+    graphJSON_2D : str
+        JSON representation of 2D projection Plotly figure
+    graphJSON_1D : str
+        JSON representation of 1D projection Plotly figure
+    """
+
+    # update all three images
     # inputs: model choice, angle(s),
     # outputs: graphs
     proj2d = generate_projection_3d_2d(voxels,proj3d_axis)
@@ -27,7 +47,25 @@ def game7_projection_worker(voxels, proj3d_axis, proj2d_angle): # update all thr
     return graphJSON_2D,graphJSON_1D
 
 def game7_prep3d_worker(difficulty="all",name=None):
-    # TODO enable non-random option
+    """Loads random or specified STL file and returns rasterized 3D image and 3D model plot
+
+    Parameters
+    ----------
+    difficulty : str
+        Difficulty of game. Default = 'all' (no filtering)
+        Other possible values : 'easy','medium','hard' - suffixes to file names for selective loading
+    name : str
+        Name of specified phantom. Default = None
+        The 3D model {name}.stl will be loaded
+
+    Returns
+    -------
+    graphJSON_3D : str
+        JSON representation of 3D model figure
+    voxels : np.ndarray
+        3D array; rasterized representation of 3D model
+    """
+
     # Pre-loads a 3D model and calculates its voxel representation
     # To speed up things
 
@@ -40,13 +78,28 @@ def game7_prep3d_worker(difficulty="all",name=None):
 
     print(f'Using model: {name}')
     graphJSON_3D = get_3d_model_plot(model_info)
-    voxels = process_3d_model(model_info)
+    voxels = convert_stls_to_voxels([model_info],resolution=100)
 
     return graphJSON_3D, voxels
 
+
 def get_random_model(difficulty="all"):
-    # Generates and returns a random stl path
-    # Set difficulty filter
+    """ Generates and returns a random STL path with optional difficulty filter
+
+    Parameters
+    ----------
+    difficulty : bool
+        Difficulty of game. Default = 'all' (no filtering)
+        Other possible values : 'easy','medium','hard' - suffixes to file names for selective loading
+
+    Returns
+    -------
+    path : str
+        Path to STL file
+    name : str
+        Name of STL file loaded
+    """
+
     level = ''
     if difficulty != 'all':
         level += f'{difficulty}'
@@ -62,18 +115,22 @@ def get_random_model(difficulty="all"):
 
     return path, name
 
-def process_user_image():
-    # TODO implement later - user can upload image. It gets converted to grayscale and can be projected.
-    img = 0
-    return img
-
-def process_3d_model(model_info):
-    # Load blank cylinder and get background info
-    vol = convert_files_simple(model_info,resolution=100)
-    return vol
 
 
 def get_3d_model_plot(model_info):
+    """Loads STL of given path, displays it in Plotly, and returns JSON string of figure
+
+    Parameters
+    ----------
+    model_info : str
+        Path to requested STL model
+
+    Returns
+    -------
+    graphJSON : str
+        JSON representation of 3D model Plotly figure
+
+    """
     x,y,z,I,J,K = load_3d_model(model_info)
 
     colorscale = [[0, 'lightblue'], [1, 'lightblue']]
@@ -136,7 +193,6 @@ def get_3d_model_plot(model_info):
         ]
     )
 
-    # Comment out later
     fig.show()
 
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
@@ -144,6 +200,20 @@ def get_3d_model_plot(model_info):
     return graphJSON
 
 def load_3d_model(model_info):
+    """Loads STL into mesh representation
+
+    Parameters
+    ----------
+    model_info : str
+        Path to requested STL model
+
+    Returns
+    -------
+    X, Y, Z, I, J, K : np.ndarray
+        Arrays representing the 3D mesh
+        Inputs for constructing a Plotly.graph_objects.Mesh3d object
+
+    """
     meshy = mesh.Mesh.from_file(model_info)
     vertices, I, J, K = stl2mesh3d(meshy)
     X,Y,Z = vertices.T
@@ -166,13 +236,28 @@ def generate_projection_3d_2d(voxels,axis):
     proj2d : np.ndarray
         2D projected image
     """
-    # Invert voxels
+    # Invert voxels so 1 in model => no signal (0); 0 in model => water signal (1)
     voxels = 1 - voxels
     proj2d = np.sum(voxels,'xyz'.index(axis))
     return proj2d
 
 
 def generate_projection_2d_1d(img,angle):
+    """Generates 1D projection from 2D image
+
+    Parameters
+    ----------
+    img : np.ndarray
+        2D grayscale image to undergo projection
+    angle : float
+        Angle of projection in [degrees]
+
+    Returns
+    -------
+    proj1d : np.ndarray
+        1D normalized array of projection
+    """
+
     # Use Radon transform
     # Generate 1D projection of 2D image
     proj1d = radon(img,[angle])
@@ -182,6 +267,25 @@ def generate_projection_2d_1d(img,angle):
     return proj1d
 
 def plot_projection(proj,axes):
+    """Make 2D or 1D projection plot
+
+    Parameters
+    ----------
+    proj : np.ndarray
+        2D projected image or 1D projected curve
+    axes : np.ndarray
+        Length-2 or length-1 array
+        If length-2, a 2D projection is displayed
+          with x-axis labeled axes[0] and y-axis labeled axes[1]
+        If length-1, a 1D projection is displayed
+          with x-axis labeled axes[0]
+
+    Returns
+    -------
+    graphJSON : str
+        JSON representation of Plotly figure
+
+    """
     # Generates JSON string of a projection plot
     if len(axes) == 2:
         fig = px.imshow(np.rot90(proj), binary_string=True)
@@ -195,17 +299,32 @@ def plot_projection(proj,axes):
     else:
         fig = go.Figure()
 
-    # TODO comment out later
     fig.show()
 
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
     return graphJSON
 
-# Helper functions
 def stl2mesh3d(stl_mesh):
     """Convert STL to Mesh3D for display
+    Author : @empet
     (https://chart-studio.plotly.com/~empet/15276/converting-a-stl-mesh-to-plotly-gomes/#/)
+    # stl_mesh is read by nympy-stl from a stl file; it is  an array of faces/triangles (i.e. three 3d points)
+    # this function extracts the unique vertices and the lists I, J, K to define a Plotly mesh3d
+    # the array stl_mesh.vectors.reshape(p*q, r) can contain multiple copies of the same vertex;
+    # extract unique vertices from all mesh triangles
+
+    Parameters
+    ----------
+    stl_mesh : numpy-stl Mesh object
+
+    Returns
+    -------
+    vertices : array_like
+        Mesh vertice representation 
+    I, J, K : array_like
+        Information for determining triangulation of the vertices data
+
     """
     p, q, r = stl_mesh.vectors.shape #(p, 3, 3)
     vertices, ixr = np.unique(stl_mesh.vectors.reshape(p*q, r), return_inverse=True, axis=0)
@@ -214,7 +333,7 @@ def stl2mesh3d(stl_mesh):
     K = np.take(ixr, [3*k+2 for k in range(p)])
     return vertices, I, J, K
 
-def convert_files_simple(input_file_path, resolution=100):
+def convert_stls_to_voxels(input_file_paths, resolution=100):
     """Modified function from stltovoxel to output rasterized volume directly
 
     Parameters
@@ -230,9 +349,11 @@ def convert_files_simple(input_file_path, resolution=100):
         3D array - rasterized boolean volume representation of 3D model
     """
     meshes = []
-    mesh_obj = mesh.Mesh.from_file(input_file_path)
-    org_mesh = np.hstack((mesh_obj.v0[:, np.newaxis], mesh_obj.v1[:, np.newaxis], mesh_obj.v2[:, np.newaxis]))
-    meshes.append(org_mesh)
+    for path in input_file_paths:
+        mesh_obj = mesh.Mesh.from_file(path)
+        org_mesh = np.hstack((mesh_obj.v0[:, np.newaxis], mesh_obj.v1[:, np.newaxis], mesh_obj.v2[:, np.newaxis]))
+        meshes.append(org_mesh)
+
     parallel = False
     vol, scale, shift = stltovoxel.convert_meshes(meshes, resolution, parallel)
     vol = np.swapaxes(vol,0,2)
