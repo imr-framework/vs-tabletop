@@ -1,5 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
+<head>
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alphal/css/bootstrap.min.css"
+          integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17SuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
+            integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js"
+        integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>
+</head>
     <div class="container-fluid vh-100">
         <div class="row h-100">
             <div class="col-6 h-100">
@@ -49,9 +58,57 @@
                 </div>
 
             {{G1Form.submit_field(class="btn btn-primary")}}
-
                 <div class="row-card">
-                    <div class="card header bg-light">Messages after Run</div>
+                    <div class="card-header">Questions</div>
+                    <div class="card-body">
+                        <div id="slide" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-indicators">
+                                <button type="button" data-bs-target="#slide" data-bs-slide-to="0" class="active"></button>
+                                <button type="button" data-bs-target="#slide" data-bs-slide-to="1"></button>
+                            </div>
+
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <h2><b>Question 1</b></h2>
+                                    <br> What combination of values outputs the image with the best resolution?
+                                    <br> {{ G1Form.P1_q() }}
+                                    <br>{{G1Form.submit_field(class="btn btn-primary")}}
+
+                                    {% if session['game1']['P1_q'] == 'High Matrix Size and Low Voxel Size' %}
+                                    <br><i class="bi bi-patch-check"></i>
+                                        <br><b>Good Job! You unlocked an achievement!</b>
+                                    <br><i class="bi bi-bookmark-star"></i>
+
+                                    {% elif session['game1']['P1_q'] == 'Low Matrix Size and High Voxel Size' %}
+                                        <br>Try again! 1
+
+                                    {% elif session['game1']['P1_q'] == 'High Matrix Size and High Voxel Size' %}
+                                        <br>Try again! 2
+
+                                    {% elif session['game1']['P1_q'] == 'Low Matrix Size and Low Voxel Size' %}
+                                        <br>Try again! 3
+
+                                    {% endif %}
+                                </div>
+                                <div class="carousel-item">
+                                    <form action="/games/3" method="POST">
+                                        <h2>Question 2</h2>
+                                        <br> Place holder
+                                        <br>{{G1Form.submit_field(class="btn btn-primary")}}
+                                    </form>
+                                </div>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#slide" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon"></span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#slide" data-bs-slide="next">
+                                <span class="carousel-control-next-icon"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-card">
+                    <div class="card header bg-light">Question Hints</div>
                     <div class="card body"><i>There are no left messages to display</i></div>
                 </div>
             </form>

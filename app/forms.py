@@ -48,6 +48,7 @@ class Game1Form(FlaskForm):
     submit_field = SubmitField("Run")
     min_scale = DecimalRangeField(label='range', validators=[DataRequired(), NumberRange(min=0.0, max=1.0),],default=0.1)
     max_scale = DecimalRangeField(label='range', validators=[DataRequired(), NumberRange(min=0.0, max=1.0)],default=0.9)
+    P1_q = RadioField('question1', choices =['High Matrix Size and Low Voxel Size', 'Low Matrix Size and High Voxel Size', 'High Matrix Size and High Voxel Size', 'Low Matrix Size and Low Voxel Size'], default='High Matrix Size and Low Voxel Size')
 
 class Game3Form(FlaskForm):
     options = RadioField('options', choices=['T1', 'T2', 'PD'],validators=[InputRequired()],default='T1')
@@ -56,7 +57,7 @@ class Game3Form(FlaskForm):
     FA = DecimalRangeField(label='FA Value:', validators= [DataRequired(), NumberRange(min=0.0, max=360)],default=90)
     submit = SubmitField("Submit")
     P1_q = RadioField('question1', choices=['T1', 'T2', 'PD'], validators=[InputRequired()])
-    P2_q = RadioField('question2', choices=['Contrast Increases', 'Contrast Decreases'], validators=[InputRequired()])
+    P2_q = RadioField('question2', choices=['Contrast Increases', 'Contrast Decreases'], validators=[InputRequired()], default='Contrast Decreases')
 # EXAMPLE
 class Game4Form(FlaskForm):
     thk_field = DecimalField('Slice thickness (mm)',places=1,validators=[DataRequired(),NumberRange(min=1.0,max=10.0)])

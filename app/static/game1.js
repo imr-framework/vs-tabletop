@@ -10,5 +10,7 @@ socket.on('G1 take session data', (msg)=>{
     $('#Voxel_scale').val(msg['data']['Voxel_scale']);
     $('#FOV_scale').val(msg['data']['FOV_scale']);
     $('#zero_scale').val(msg['data']['zero_scale']);
+    $('#P1_q').val(msg['data']['P1_q'])
+    console.log(msg['data'])
 })
 

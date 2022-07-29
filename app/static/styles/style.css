@@ -41,8 +41,8 @@ img{
 }
 .carousel-item {
     height:32rem;
-    background: #379563;
-    color: white
+    background: grey;
+    color: gold
 }
 .carousel-inner{
     height: 450px;

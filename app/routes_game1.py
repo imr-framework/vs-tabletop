@@ -32,8 +32,12 @@ def game1():
 @socketio.on('Update param for Game1')
 def update_parameter(info):
     # Update corresponding entry in session
+    print(info['id'])
     if info['id'] in ['Matrix_scale', 'zero_fill']:
         info['value'] = int(info['value'])
+
+    elif info['id'] in ['P1_q-0', 'P1_q', 'P1_q-1', 'P1_q-2', 'P1_q-3']:
+        info['value'] = str(info['value'])
 
     else:
         info['value'] = float(info['value'])
@@ -50,20 +54,46 @@ def update_parameter(info):
 
 
     # Matrix Size is kept the same, voxel size increases.
-    if info['id'] == 'Voxel_scale':
+    elif info['id'] == 'Voxel_scale':
         print('printing VS')
         session['game1']['Matrix_scale'] = int(np.round_(float(session['game1']['FOV_scale'])/float(session['game1']['Voxel_scale'])))
         session['game1']['FOV_scale'] = session['game1']['Matrix_scale']* session['game1']['Voxel_scale']
 
-    if info['id'] == 'Matrix_scale':
+    elif info['id'] == 'Matrix_scale':
         print('printing MS')
         session['game1']['Voxel_scale'] = float(session['game1']['FOV_scale'])/(float(session['game1']['Matrix_scale']))
 
-    if info['id'] == 'zero_fill':
+    elif info['id'] == 'zero_fill':
         if session['game1']['Matrix_scale'] > session['game1']['zero_fill']:
             session['game1']['Matrix_scale'] = session['game1']['zero_fill']
 
-    print(session['game1'])
+    elif info['id'] in ['P1_q']:
+        print('changing p1')
+        info['id'] = info['id']
+        info['value'] = str(info['value'])
+
+    elif info['id'] in ['P1_q-0']:
+        print('changing p1-0')
+        info['id'] = info['id']
+        info['value'] = str(info['value'])
+
+    elif info['id'] in ['P1_q-1']:
+        print('changing p1-1')
+        info['id'] = info['id'][0:4]
+        info['value'] = str(info['value'])
+
+    elif info['id'] in ['P1_q-2']:
+        print('changing p1-2')
+        info['id'] = 'P1_q'
+        print(info['id'])
+        info['value'] = str(info['value'])
+
+    elif info['id'] in ['P1_q-3']:
+        print('changing p1-2')
+        info['id'] = info['id'][0:4]
+        info['value'] = str(info['value'])
+
+    print(session['game1'], 'hi')
 
     socketio.emit('G1 take session data', {'data': session['game1']})
 

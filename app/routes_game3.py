@@ -68,6 +68,17 @@ def update_parameter(info):
         info['id'] = info['id'][0:4]
         info['value'] = str(info['value'])
 
+    elif info['id'] in ['P2_q-0']:
+        info['id'] = info['id'][0:4]
+        info['value'] = str(info['value'])
+
+    elif info['id'] in ['P2_q']:
+        info['id'] = info['id']
+        info['value'] = str(info['value'])
+
+    elif info['id'] in ['P2_q-1']:
+        info['id'] = info['id'][0:4]
+        info['value'] = str(info['value'])
 
     session['game3'][info['id']] = info['value']
     print(session['game3'])

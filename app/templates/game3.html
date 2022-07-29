@@ -12,7 +12,7 @@
     <div class="container-fluid vh-100">
         <div class="row h-100">
             <div class="col-6 h-100">
-                <form action="/games/3" method="POST">
+                    <form action="/games/3" method="POST">
                     {{ G3Form.hidden_tag() }}
                 <div class="row card">
                     <div class="card-header">Image</div>
@@ -24,7 +24,7 @@
                 <div class="row-card">
                     <div class="card-header">Questions</div>
                     <div class="card-body">
-                        <div id="slide" class=" carousel slide" data-bs-ride="carousel">
+                        <div id="slide" class="carousel slide" data-bs-ride="carousel">
                         <div class="carousel-indicators">
                             <button type="button" data-bs-target="#slide" data-bs-slide-to="0" class="active"></button>
                             <button type="button" data-bs-target="#slide" data-bs-slide-to="1"></button>
@@ -33,9 +33,10 @@
                             <div class="carousel-inner">
                                 <div class="carousel-item active">
                                     <h2><b>Question 1</b></h2>
-                                    <br>Which scan type outputs the lowest GM signal intensity?
+                                    <br>Which scan type highlights fat and proteins?
                                     <br>{{ G3Form.P1_q() }}
                                     <br>{{G3Form.submit(class="btn btn-primary")}}
+
                                     {% if session['game3']['P1_q'] == 'T1' %}
                                     <br><i class="bi bi-patch-check"></i>
                                         <br><b>Good Job! You unlocked an achievement!</b>
@@ -47,9 +48,28 @@
                                     {% elif session['game3']['P1_q'] == 'T2' %}
                                         <br>Try again!
 
+                                    {% elif session['game3']['P1_q'] == 'PD' %}
+                                        <br>Try again!
                                     {% endif %}
                                 </div>
-                                <div class="carousel-item"><h2>Question 2</h2></div>
+                                <div class="carousel-item">
+                                    <form action="/games/3" method="POST">
+                                    <h2><b>Question 2</b></h2>
+                                    <br>What happens as the FA value increases?
+                                    <br>{{ G3Form.P2_q() }}
+                                    <br>{{G3Form.submit(class="btn btn-primary")}}
+
+                                {% if session['game3']['P2_q'] == "Contrast Increases" %}
+                                    <br><i class="bi bi-patch-check"></i>
+                                        <br><b>Good Job! You unlocked an achievement!</b>
+                                    <br><i class="bi bi-bookmark-star"></i>
+
+                                    {% elif session['game3']['P2_q'] == "Contrast Decreases" %}
+                                        <br>Try again!
+
+                                    {% endif %}
+                                    </form>
+                                </div>
                             </div>
                             <button class="carousel-control-prev" type="button" data-bs-target="#slide" data-bs-slide="prev">
                                 <span class="carousel-control-prev-icon"></span>
@@ -68,12 +88,12 @@
                             Continue to question 2 to challenge yourself!
 
                             {% elif session['game3']['P1_q'] == 'T2' %}
-                            Options Change detected: Hover on the GM bar on the bar graph to note its values.
+                            Options Change detected: Read the T1, T2, and PD explanation section of the lab manual!
 
                             {% elif session['game3']['P1_q'] == 'PD' %}
-                            Options Change detected: Hover on the GM bar on the bar graph to note its values.
+                            Options Change detected: Read the T1, T2, and PD explanation section of the lab manual!
 
-                            {% elif session['game3']['P1_q'] == none %}
+                            {% else %}
                             Answer Question 1!
                             {% endif %}
                         </div>
@@ -150,7 +170,7 @@
                      </div>
 
                  </div>
-                {% endif %}
+                  {% if session['game3']['P2_q'] == "Contrast Increases" %}
                  <div class="row card">
                      <div class="row-header">CSF, GM, and WM signal levels</div>
                      <div class="row-body">
@@ -159,6 +179,8 @@
                          </div>
                      </div>
                  </div>
+                     {% endif %}
+                     {% endif %}
                  </form>
                      </div>
                  </div>
