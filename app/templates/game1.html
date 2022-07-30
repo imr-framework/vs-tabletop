@@ -8,57 +8,25 @@
             integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js"
         integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/wrunner-default-theme.css">
+    <script src="js/wrunner-native.js"></script>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
     <div class="container-fluid vh-100">
         <div class="row h-100">
-            <div class="col-6 h-100">
+            <div class="col-6 h-50">
+                <form action="/games/1" method="POST">
+                    {{ G1Form.hidden_tag() }}
                 <div class="row card">
-                    <div class="card-header">Phantom</div>
+                    <div class="card-header">Image</div>
                     <div class="card-body">
                         <div class="chart" id="chart-G1">
                         </div>
                     </div>
                 </div>
-            </div>
-
-        <div class="col-6 h-100">
-            <form action="/games/1" method="POST">
-            <div class="row">
-                    <div class="row-header"><b>FOV Metric:
-                        {{G1Form.FOV_scale()}}
-                        {{G1Form.FOV_scale.label}}
-                    </b></div>
-                </div>
-            <div class="row">
-                    <div class="row-header"><b>Matrix Size:
-                        {{G1Form.Matrix_scale()}}
-                        {{G1Form.Matrix_scale.label}}
-                    </b></div>
-                </div>
-                <div class="row">
-                    <div class="row-header"><b>Voxel Size:
-                        {{G1Form.Voxel_scale()}}
-                        {{G1Form.Voxel_scale.label}}
-                    </b></div>
-                </div>
-                <div class="row">
-                    <div class="row-header"><b>Zero Fill:
-                        {{G1Form.zero_fill()}}
-                    </b></div>
-                </div>
-                <div class="row">
-                    <div class="row-header"><b>Min Scale
-                        {{G1Form.min_scale()}}
-                    </b></div>
-                </div>
-                <div class="row">
-                    <div class="row-header"><b>Max Scale
-                        {{G1Form.max_scale()}}
-                    </b></div>
-                </div>
-
-            {{G1Form.submit_field(class="btn btn-primary")}}
-                <div class="row-card">
+                    <div class="row-card">
                     <div class="card-header">Questions</div>
                     <div class="card-body">
                         <div id="slide" class="carousel slide" data-bs-ride="carousel">
@@ -69,6 +37,7 @@
 
                             <div class="carousel-inner">
                                 <div class="carousel-item active">
+                                    <form action="/games/1" method="POST">
                                     <h2><b>Question 1</b></h2>
                                     <br> What combination of values outputs the image with the best resolution?
                                     <br> {{ G1Form.P1_q() }}
@@ -80,21 +49,37 @@
                                     <br><i class="bi bi-bookmark-star"></i>
 
                                     {% elif session['game1']['P1_q'] == 'Low Matrix Size and High Voxel Size' %}
-                                        <br>Try again! 1
+                                        <br>Try again!
 
                                     {% elif session['game1']['P1_q'] == 'High Matrix Size and High Voxel Size' %}
-                                        <br>Try again! 2
+                                        <br>Try again!
 
                                     {% elif session['game1']['P1_q'] == 'Low Matrix Size and Low Voxel Size' %}
-                                        <br>Try again! 3
+                                        <br>Try again!
 
                                     {% endif %}
+                                    </form>
                                 </div>
                                 <div class="carousel-item">
-                                    <form action="/games/3" method="POST">
+                                    <form action="/games/1" method="POST">
                                         <h2>Question 2</h2>
-                                        <br> Place holder
+                                        <br> What happens as the zero-fill value increases?
+                                        <br>{{ G1Form.P2_q() }}
                                         <br>{{G1Form.submit_field(class="btn btn-primary")}}
+
+                                        {% if session['game1']['P2_q'] == 'The matrix size increases' %}
+                                            <br><i class="bi bi-patch-check"></i>
+                                            <br><b>Good Job! You unlocked another achievement!</b>
+                                            <br><i class="bi bi-bookmark-star"></i>
+                                            <i class="bi bi-bookmark-star"></i>
+
+                                        {% elif session['game1']['P2_q'] == 'The matrix size decreases' %}
+                                            <br>Try again!
+
+                                        {% elif session['game1']['P2_q'] == 'The matrix size stay the same' %}
+                                            <br>Try again!
+
+                                        {% endif %}
                                     </form>
                                 </div>
                             </div>
@@ -107,9 +92,118 @@
                         </div>
                     </div>
                 </div>
+                </form>
+            </div>
+
+        <div class="col-6 h-100">
+            <form action="/games/1" method="POST">
+                <div class="row card">
+                    <div class="card-header"><b>Select FOV, Matrix size, and Voxel Size Metric</b></div>
+                    <div class="card-body">
+                        <b>FOV Metric:</b>
+                        {{G1Form.FOV_scale()}}
+                        {{G1Form.FOV_scale.label}}
+
+                        <br><b>Matrix Size:</b>
+                        {{ G1Form.Matrix_scale() }}
+                        {{ G1Form.Matrix_scale.label }}
+
+                        <br><b>Voxel Size:</b>
+                        {{ G1Form.Voxel_scale() }}
+                        {{ G1Form.Voxel_scale.label }}
+
+                        <br>{{G1Form.submit_field(class="btn btn-primary")}}
+                    </div>
+                </div>
+                {% if session['game1']['P1_q'] == "High Matrix Size and Low Voxel Size" %}
+                <div class="row card">
+                    <div class="card-header"><b>Adjust Zero-fill</b></div>
+                    <div class="card-body">
+                        <b>Zero-fill:</b>
+                        {{ G1Form.zero_fill() }}
+                        {{ G1Form.zero_fill.value }}
+                        <br> {{G1Form.submit_field(class="btn btn-primary")}}
+                    </div>
+                </div>
+                {% if session['game1']['P2_q'] == "The matrix size increases" %}
+                <div class="row card">
+                    <div class="card-header"><b>Windowing</b></div>
+                    <div class="card-body">
+                        <b>Min Value:</b>
+                        {{ G1Form.min_scale() }}
+                        {{ G1Form.min_scale.value }}
+                        <br><b>Max Value:</b>
+                        {{ G1Form.max_scale() }}
+                        {{ G1Form.max_scale.value }}
+                        <div class="wrapper">
+      <header>
+        <h2>Price Range</h2>
+        <p>Use slider or enter min and max price</p>
+      </header>
+      <div class="price-input">
+        <div class="field">
+          <span>Min</span>
+          <input type="number" class="input-min" value="2500">
+        </div>
+        <div class="separator">-</div>
+        <div class="field">
+          <span>Max</span>
+          <input type="number" class="input-max" value="7500">
+        </div>
+      </div>
+      <div class="slider">
+        <div class="progress"></div>
+      </div>
+      <div class="range-input">
+        <input type="range" class="range-min" min="0" max="10000" value="2500" step="100">
+        <input type="range" class="range-max" min="0" max="10000" value="7500" step="100">
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+                        <br>{{G1Form.submit_field(class="btn btn-primary")}}
+                    </div>
+                </div>
+                {% endif %}
+                {% endif %}
+
+                <div class="row-card">
+                    <div class="card header bg-light">Hints to achieve a higher resolution</div>
+                    <div class="card body">
+                        {% if session['game1']['FOV_scale'] < 0.25 %}
+                            <i>Increase the FOV metric to view the entire image</i>
+                        {% elif session['game1']['FOV_scale'] > 0.6 %}
+                            <i>Decrease the FOV metric to zoom into the image</i>
+                        {% elif session['game1']['Matrix_scale'] < 150 %}
+                            <i>Increase the Matrix Size to get a clearer image</i>
+                        {% else %}
+                            <i>You are on the right track! Keep exploring!</i>
+                        {% endif %}
+                    </div>
+                </div>
                 <div class="row-card">
                     <div class="card header bg-light">Question Hints</div>
-                    <div class="card body"><i>There are no left messages to display</i></div>
+                    <div class="card body">
+                        {% if session['game1']['P1_q'] == "Low Matrix Size and High Voxel Size" %}
+                            <i>1. Check Explanations B section of the lab manual</i>
+                        {% elif session['game1']['P1_q'] == "High Matrix Size and High Voxel Size" %}
+                            <i>1. You got the Matrix Size correct! Rethink Voxel size quantity by reading the Explanations B section of the lab manual</i>
+                        {% elif session['game1']['P1_q'] == "Low Matrix Size and Low Voxel Size" %}
+                            <i>1. You got the Voxel Size correct! Rethink Matrix size quantity by reading the Explanations B section of the lab manual</i>
+                        {% elif session['game1']['P1_q'] == "High Matrix Size and Low Voxel Size" %}
+                            <i>1. You got the first question correct! Experiment with the Zero-fill panel next and answer question 2</i>
+                        {% else %}
+                            <i>Answer the first question to display hints</i>
+                        {% endif %}
+
+                        {% if session['game1']['P2_q'] == "The matrix size increases" %}
+                            <i>2. You got the second answer correct!</i>
+                        {% elif session['game1']['P2_q'] == "The matrix size decreases" %}
+                            <i>2. Check Explanations G section of the lab manual</i>
+                        {% elif session['game1']['P2_q'] == "The matrix size stays the same" %}
+                            <i>2. Check Explanations G section of the lab manual</i>
+                        {% endif %}
+                    </div>
                 </div>
             </form>
                 </div>

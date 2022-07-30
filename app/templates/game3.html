@@ -33,6 +33,7 @@
                             <div class="carousel-inner">
                                 <div class="carousel-item active">
                                     <h2><b>Question 1</b></h2>
+                                    <form action="/games/3" method="POST">
                                     <br>Which scan type highlights fat and proteins?
                                     <br>{{ G3Form.P1_q() }}
                                     <br>{{G3Form.submit(class="btn btn-primary")}}
@@ -51,6 +52,7 @@
                                     {% elif session['game3']['P1_q'] == 'PD' %}
                                         <br>Try again!
                                     {% endif %}
+                                    </form>
                                 </div>
                                 <div class="carousel-item">
                                     <form action="/games/3" method="POST">
@@ -62,7 +64,7 @@
                                 {% if session['game3']['P2_q'] == "Contrast Increases" %}
                                     <br><i class="bi bi-patch-check"></i>
                                         <br><b>Good Job! You unlocked an achievement!</b>
-                                    <br><i class="bi bi-bookmark-star"></i>
+                                    <br><i class="bi bi-bookmark-star"></i><i class="bi bi-bookmark-star"></i>
 
                                     {% elif session['game3']['P2_q'] == "Contrast Decreases" %}
                                         <br>Try again!
@@ -80,11 +82,11 @@
                             </div>
                     </div>
                 </div>
-                    <div class="row-card">
+                        <div class="row-card">
                         <div class="card-header">Hints for Questions</div>
                         <div class="card-body">
 
-                            {% if session['game3']['P1_q'] == 'T1' %}
+                            {% if (session['game3']['P1_q'] == 'T1') &&  %}
                             Continue to question 2 to challenge yourself!
 
                             {% elif session['game3']['P1_q'] == 'T2' %}
@@ -128,7 +130,9 @@
                      <div class="class-header">Self-Input TR, TE, and FA values</div>
                      <div class="card-body">
                          <div class="row">
-                             <div class="col-4">{{ G3Form.TR.label }}</div>
+                             <div class="col-4">{{ G3Form.TR.label }}
+                             {{ session['game1']['TR'] }}
+                             </div>
                              <div class="col-8">
                                  <div class="row">
                                      {{ G3Form.TR(class="form-range", id='TR', step=0.1, value=session['game3']['TR']) }}
@@ -168,7 +172,6 @@
                          </div>
                          <br>{{G3Form.submit(class="btn btn-primary")}}
                      </div>
-
                  </div>
                   {% if session['game3']['P2_q'] == "Contrast Increases" %}
                  <div class="row card">
@@ -181,6 +184,18 @@
                  </div>
                      {% endif %}
                      {% endif %}
+                     <div class="row-card">
+                         <div class="card-header">Panel Messages</div>
+                         <div class="card-body">
+                             Panel 1: Click on T1, T2, or PD values to observe their impact on the scan!
+                             {% if session['game3']['P1_q'] == 'T1' %}
+                             <br>Panel 2: Alter TR, TE, and FA values to observe their impact on the scan!
+                             {% endif %}
+                             {% if session['game3']['P2_q'] == 'Contrast Increases' %}
+                             <br>Panel 3: Change specific TR, TE, and FA values and observe signal intensity changes on the bar graph!
+                             {% endif %}
+                         </div>
+                     </div>
                  </form>
                      </div>
                  </div>

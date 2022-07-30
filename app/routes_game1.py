@@ -36,7 +36,7 @@ def update_parameter(info):
     if info['id'] in ['Matrix_scale', 'zero_fill']:
         info['value'] = int(info['value'])
 
-    elif info['id'] in ['P1_q-0', 'P1_q', 'P1_q-1', 'P1_q-2', 'P1_q-3']:
+    elif info['id'] in ['P1_q-0', 'P1_q', 'P1_q-1', 'P1_q-2', 'P1_q-3', 'P2_q', 'P2_q-0', 'P2_q-1', 'P2_q-2']:
         info['value'] = str(info['value'])
 
     else:
@@ -67,6 +67,9 @@ def update_parameter(info):
         if session['game1']['Matrix_scale'] > session['game1']['zero_fill']:
             session['game1']['Matrix_scale'] = session['game1']['zero_fill']
 
+        elif session['game1']['Matrix_scale'] < session['game1']['zero_fill']:
+            session['game1']['Matrix_scale'] = session['game1']['zero_fill']
+
     elif info['id'] in ['P1_q']:
         print('changing p1')
         info['id'] = info['id']
@@ -74,7 +77,7 @@ def update_parameter(info):
 
     elif info['id'] in ['P1_q-0']:
         print('changing p1-0')
-        info['id'] = info['id']
+        info['id'] = info['id'][0:4]
         info['value'] = str(info['value'])
 
     elif info['id'] in ['P1_q-1']:
@@ -84,7 +87,7 @@ def update_parameter(info):
 
     elif info['id'] in ['P1_q-2']:
         print('changing p1-2')
-        info['id'] = 'P1_q'
+        info['id'] = info['id'][0:4]
         print(info['id'])
         info['value'] = str(info['value'])
 
@@ -93,8 +96,26 @@ def update_parameter(info):
         info['id'] = info['id'][0:4]
         info['value'] = str(info['value'])
 
+    elif info['id'] in ['P2_q']:
+        info['id'] = info['id'][0:4]
+        info['value'] = str(info['value'])
+
+    elif info['id'] in ['P2_q-0']:
+        info['id'] = info['id'][0:4]
+        info['value'] = str(info['value'])
+
+    elif info['id'] in ['P2_q-1']:
+        info['id'] = info['id'][0:4]
+        info['value'] = str(info['value'])
+
+    elif info['id'] in ['P2_q-2']:
+        info['id'] = info['id'][0:4]
+        info['value'] = str(info['value'])
+
     print(session['game1'], 'hi')
 
+    session['game1'][info['id']] = info['value']
+    session.modified = True
     socketio.emit('G1 take session data', {'data': session['game1']})
 
     print(info)
