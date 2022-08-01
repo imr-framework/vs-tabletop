@@ -136,6 +136,7 @@ def get_image_json(TR,TE,FA):
             signal_model(params[type_ind,3], params[type_ind,0]/1e3, params[type_ind,1]/1e3,
                          TR, TE, FA)
     mr_image = np.transpose(mr_image)
+    mr_image = np.flipud(mr_image)
     # Generate image
     fig = px.imshow(mr_image, binary_string=True)
     fig.update_xaxes(showticklabels=False)
