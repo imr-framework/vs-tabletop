@@ -1,12 +1,16 @@
 import Interactive from "https://vectorjs.org/interactive.js";
 
 
-const cc = [500, 300];
-const R = 200;
+const W = 400;
+const H = 400;
+
+
+const cc = [W/2, H/2];
+const R = H/3;
 // Construct an interactive within the HTML element with the id "my-interactive"
 let myInteractive = new Interactive("my-interactive");
-myInteractive.width = 1000;
-myInteractive.height = 600;
+myInteractive.width = W;
+myInteractive.height = H;
 myInteractive.originX = 0;
 myInteractive.originY = 0;
 
@@ -16,10 +20,10 @@ myInteractive.border = true;
 // Text
 
 //Big circle
-let circle = myInteractive.circle(cc[0],cc[1], 200);
-let biggerCircle = myInteractive.circle(cc[0],cc[1],250);
+let circle = myInteractive.circle(cc[0],cc[1], R);
+let biggerCircle = myInteractive.circle(cc[0],cc[1],R*5/4);
 //Center
-let center = myInteractive.circle(500,300,3);
+let center = myInteractive.circle(cc[0],cc[1],3);
 biggerCircle.style.fill='transparent';
 biggerCircle.stroek = ' transparent';
 circle.style.fill = 'transparent';
@@ -43,11 +47,11 @@ for (let i = 0; i < 8; i++){
 
 // Interactive elements
 // Construct a control point at the the location (500, 50)
-let control = myInteractive.control(500,100);
+let control = myInteractive.control(cc[0],cc[1]/2-R/4);
 control.root.setAttribute('id','eye-control-handle');
 control.constrainTo(circle);
 // Construct projection line
-let projLine = myInteractive.line(500,50,500,550);
+let projLine = myInteractive.line(cc[0]/2,R/4,cc[0]/2,cc[1]-R/4);
 projLine.style.strokeWidth='2px';
 projLine.style.stroke='DodgerBlue';
 
@@ -75,7 +79,6 @@ thetaDisplay.update();
 import { getScriptName } from 'https://vectorjs.org/index.js';
 import { getURL } from 'https://vectorjs.org/util/file.js';
 import { parseSVG } from 'https://vectorjs.org/util/svg.js';
-let eyepath = getURL('../static/img/eye.svg');
 
 const svgSize = 32;
 const x0 = cc[0] - svgSize / 2;
@@ -105,7 +108,7 @@ const blueEye = new Eye(0,'DodgerBlue');
 blueEye.group.root.setAttribute('id','blueEye');
 blueEye.group.update = function(){
     this.root.setAttribute('transform',`rotate(${-rad2Deg(getAngle())+90},${cc[0]},${cc[1]}) translate(${x0},${y0}) scale(2)`);
-
+    $('#angle1d').val(rad2Deg(getAngle()));
 }
 blueEye.group.update();
 blueEye.group.addDependency(control)
@@ -159,4 +162,3 @@ function deg2Rad(degrees) {
 function rad2Deg(rad) {
   return rad / (Math.PI / 180);
 }
-

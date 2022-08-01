@@ -243,6 +243,7 @@ body {font-family: Arial;}
                     <div class="card-header"><b>Windowing</b></div>
                     <div class="card-body">
                         <div class="range_container">
+
                             <div class="sliders_control">
                                 {{ G1Form.from_slider_value(id="fromSlider", min="0", max="100", value=(session['game1']['Min_scale'])*100) }}
                                 {{ G1Form.to_slider_value(id="toSlider", min="0", max="100", value=(session['game1']['Max_scale'])*100) }}
@@ -279,6 +280,7 @@ body {font-family: Arial;}
                     </div>
                 </div>
                 {% endif %}
+
                 {% endif %}
                 <br>{{G1Form.submit_field(class="btn btn-primary")}}
 

@@ -19,6 +19,15 @@ from workers.game5_worker import simulate_RF_rotation, generate_static_plot,\
 
 @app.route('/games/5',methods=["GET","POST"])
 def game5_view():
+    """View function for the main route to Game 5
+
+    Returns
+    -------
+    str
+        HTML view of Game 5
+    """
+
+
     # Form for submitting data - current settings
     game_form = Game5Form()
     j1, j2 = make_default_graphs()
@@ -44,21 +53,32 @@ def game5_view():
 
 
 def make_default_graphs():
+    """Make default empty plots to dispaly when Game 5 is first loaded
+
+    Returns
+    -------
+    graphJSON_spin : str
+        JSON representation of
+    graphJSON_signal : str
+        JSON representation of
+
+    """
     game5 = session['game5']
     mags = np.zeros((1,3))
-    j1 = generate_static_plot(mags,coil=(game5['coil_dir'] if game5['coil_on'] else None))
+    graphJSON_spin = generate_static_plot(mags,coil=(game5['coil_dir'] if game5['coil_on'] else None))
     #j1 = json.dumps(f1,cls=plotly.utils.PlotlyJSONEncoder)
 
     # j2 : signal
     # Make empty plot
-    j2 = generate_static_signals(dt=1, signals=np.zeros(1))
+    graphJSON_signal = generate_static_signals(dt=1, signals=np.zeros(1))
 
-    return j1,j2
+    return graphJSON_spin, graphJSON_signal
 
 
 @socketio.on('Update param for Game5')
 def update_parameter(info):
     """Update session parameters for game 5 on change
+
     Parameters
     ----------
     info : dict
@@ -89,13 +109,23 @@ def update_parameter(info):
 
 @socketio.on('update params for Game5')
 def update_multiple_parameters(info):
+    """Instantly update multiple parameters at socket signal from the frontend
+
+    Parameters
+    ----------
+    info : dict
+        Each key-value pair is one to update in session['game5']
+
+    """
     print(info)
     utils.update_session_subdict(session,'game5',info)
     print(session['game5'])
 
 @socketio.on('reset everything')
 def reset_everything():
-    # Reset m and update animation
+    """Resets the following:
+       - m
+    """
     reset_m()
     # Reset other things
     utils.update_session_subdict(session,'game5',
@@ -114,7 +144,7 @@ def reset_m():
     j0 = generate_static_plot(mags=mags_zero,coil=(game5['coil_dir'] if game5['coil_on'] else None))
     # Generate static plot and replace current plot with it
     socketio.emit('update spin animation', {'graph':j0,'loop_on':False})
-    j1=  generate_static_signals(dt=1, signals=np.zeros(1))
+    j1 = generate_static_signals(dt=1, signals=np.zeros(1))
     socketio.emit('update signal animation',{'graph':j1})
     return
 
