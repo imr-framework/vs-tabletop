@@ -46,11 +46,15 @@ class Game1Form(FlaskForm):
     Matrix_scale = IntegerField(label='cubes per side', validators=[DataRequired(), NumberRange(min=4,max=1000)], default=128)
     Voxel_scale = DecimalField(label='m', places=3, validators=[DataRequired(), NumberRange(min=.0001, max=1.25)], default=.001)
     submit_field = SubmitField("Run")
+    submit_field_q = SubmitField("Submit Answer")
     min_scale = DecimalRangeField(label='range', validators=[DataRequired(), NumberRange(min=0.0, max=1.0),],default=0.1)
     max_scale = DecimalRangeField(label='range', validators=[DataRequired(), NumberRange(min=0.0, max=1.0)],default=0.9)
     P1_q = RadioField('question1', choices=['High Matrix Size and Low Voxel Size', 'Low Matrix Size and High Voxel Size', 'High Matrix Size and High Voxel Size', 'Low Matrix Size and Low Voxel Size'])
     P2_q = RadioField('question2', choices=['The matrix size increases', 'The matrix size decreases', 'The matrix size stays the same'], default='The matrix size stays the same')
-
+    from_slider_value = DecimalRangeField(label='range', validators=[DataRequired(), NumberRange(min=0.0, max=100),],default=10)
+    to_slider_value = DecimalRangeField(label='range', validators=[DataRequired(), NumberRange(min=0.0, max=100),],default=40)
+    min_value = DecimalField(label='m', validators=[DataRequired(), NumberRange(min=0, max=100)],default=10)
+    max_value = DecimalField(label='m', validators=[DataRequired(), NumberRange(min=0, max=100)],default=40)
 class Game3Form(FlaskForm):
     options = RadioField('options', choices=['T1', 'T2', 'PD'],validators=[InputRequired()],default='T1')
     TR = DecimalRangeField(label='TR Value:', validators= [DataRequired(), NumberRange(min=0.0, max=1.0)],default=0.5)

@@ -17,6 +17,7 @@ socket.on('G1 take session data', (msg)=>{
     $('#P2_q').val(msg['data']['P2_q'])
     console.log(msg['data'])
 })
+// a comment
 
 function controlFromInput(fromSlider, fromInput, toInput, controlSlider) {
     const [from, to] = getParsed(fromInput, toInput);
@@ -106,6 +107,22 @@ toSlider.oninput = () => controlToSlider(fromSlider, toSlider, toInput);
 fromInput.oninput = () => controlFromInput(fromSlider, fromInput, toInput, toSlider);
 toInput.oninput = () => controlToInput(toSlider, fromInput, toInput, toSlider);
 
-$('.carousel').carousel({
-  data-interval="false"
+$(document).ready(function(){
+  $('[data-bs-toggle="popover"]').popover();
+});
+
+let tabs = document.querySelectorAll('.tabs__toggle'),
+    contents = document.querySelectorAll('.tabs__content');
+
+tabs.forEach((tab, index) => {
+    tab.addEventListener('click', () => {
+        contents.forEach((content) => {
+            content.classList.remove('is-active');
+        });
+        tabs.forEach((tab) => {
+            tab.classList.remove('is-active');
+        });
+        contents[index].classList.add('is-active');
+        tabs[index].classList.add('is-active');
+    });
 });

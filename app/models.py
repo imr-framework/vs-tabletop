@@ -138,6 +138,7 @@ def initialize_users():
 
 
 if __name__ == '__main__':
+    initialize_users()
     # Try initiating some MC questions!
     mc = MultipleChoice(
         game_number = 1,
