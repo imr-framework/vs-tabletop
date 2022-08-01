@@ -242,4 +242,5 @@ def update_parameter(info):
 # Dev route for new features
 @app.route('/examples',methods=['POST','GET'])
 def example_elements():
-    return render_template('examples.html')
+    return render_template('examples.html',template_title="UI Element Examples",
+                           template_intro_text="For developer use")
