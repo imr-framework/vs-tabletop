@@ -89,7 +89,8 @@ class Game5Form(FlaskForm):
     # No use for submit field
     submit_field = SubmitField("Tip!")
 
-
+class Game7Form(FlaskForm):
+    example = BooleanField("Hi", default=False)
 # More user interaction through questions
 #class MultipleChoiceForm(FlaskForm):
     # Radio field

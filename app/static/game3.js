@@ -13,3 +13,7 @@ socket.on('G3 take session data', (msg)=>{
     $('#FA').val(msg['data']['FA']);
     console.log(msg['data'])
 })
+
+$('.carousel').carousel({
+  interval: false,
+});
