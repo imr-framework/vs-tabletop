@@ -33,6 +33,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(10),index=True,unique=True)
     password_hash = db.Column(db.String(128),index=False,unique=False)
     joined_at = db.Column(db.Date(),index=True,default=datetime.utcnow())
+    progresses = db.relationship('Progress',backref='user',lazy='dynamic')
 
     def set_password(self,password):
         self.password_hash = generate_password_hash(password)
@@ -52,6 +53,7 @@ class Calibration(db.Model):
     tx_amp = db.Column(db.Float(6,False))
     stored_at = db.Column(db.Date(),index=True,default=datetime.utcnow())
 
+
     def get_config_dict(self):
         # Write calibration parameters to config.py provided by path
         params = {'f0': float(self.f0) * 1e6, 'tx_amp': float(self.tx_amp),
@@ -67,7 +69,27 @@ class Calibration(db.Model):
 class Progress(db.Model):
     id = db.Column(db.Integer(),primary_key=True)
     game_number = db.Column(db.Integer(),index=True)
+    num_questions = db.Column(db.Integer(),index=True)
+    num_correct = db.Column(db.Integer(),index=True)
     num_stars = db.Column(db.Integer(),index=True)
+    num_lab_steps_complete = db.Column(db.Integer(),index=True)
+    num_lab_steps_total = db.Column(db.Integer(),index=True)
+    user_id = db.Column(db.Integer(),db.ForeignKey('user.id'),nullable=False) # Which user it belongs to
+
+    def update_stars(self):
+        correct_rate = self.num_correct / self.num_questions
+        complete_rate = self.num_lab_steps_complete / self.num_lab_steps_total
+        self.num_stars = correct_rate * 2 + complete_rate * 3
+
+    def another_question_answered(self,correct):
+        self.num_questions += 1
+        if correct:
+            self.num_correct += 1
+
+    def another_step_complete(self):
+        self.num_lab_steps_complete += 1
+
+
 
 class MultipleChoice(db.Model):
     # Multiple choice question to store in database
@@ -138,6 +160,7 @@ def initialize_users():
 
 
 if __name__ == '__main__':
+    initialize_users()
     # Try initiating some MC questions!
     mc = MultipleChoice(
         game_number = 1,

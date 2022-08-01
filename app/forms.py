@@ -90,7 +90,18 @@ class Game5Form(FlaskForm):
     submit_field = SubmitField("Tip!")
 
 class Game7Form(FlaskForm):
-    example = BooleanField("Hi", default=False)
+    # For selectfields, choices are (value, label) pairs
+    phantom_type_field = SelectField('Select phantom', choices=[
+                                                                ('letterN', 'Letter N'),
+                                                                ('letterY', 'Letter Y'),
+                                                                ('letterC', 'Letter C'),
+                                                               ],default='letterN')
+    proj_2d_axis_field = RadioField("2D proj. axis", choices=['x','y','z'],default='z')
+    proj_1d_angle_field = DecimalField("1D proj. angle (degrees)",validators=[NumberRange(min=0,max=360)],default=90)
+
+    submit_field = SubmitField("Project!")
+
+
 # More user interaction through questions
 #class MultipleChoiceForm(FlaskForm):
     # Radio field

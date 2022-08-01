@@ -1,68 +1,130 @@
 {% extends "base.html" %}
 {% block content %}
-<head>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+
+    <div class="container-fluid vh-100">
+        <div class="row h-50">
+                    <div class="col-4 card">
+                        <div class="card-header">
+                            <div class="btn btn-lg btn-info" id="button-3d-model">Load 3D model</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart" id="chart-G7-3D"></div>
+                        </div>
+                    </div>
+
+                    <div class="col-4 card">
+                        <div class="card-header">
+                            <div class="btn btn-lg btn-success" id="button-2d-proj">2D projection</div>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="chart" id="chart-G7-2D"></div>
+                        </div>
+                    </div>
+
+                    <div class="col-4 card">
+                        <div class="card-header">
+                            <div class="btn btn-lg btn-success" id="button-1d-proj">1D projection</div>
+                    </div>
+                        <div class="card-body">
+                            <div class="chart" id="chart-G7-1D"></div>
+                        </div>
+                    </div>
+        </div>
+
+            <div class="row h-50">
+                 <div class="col-6 card">
+                <form action="/games/7" method="POST">
+                    {{ G7Form.hidden_tag() }}
+                        <div class="card-header">Projection settings</div>
+                        <div class="card-body">
+                            <div class="row">
+                            <div class="col-4">
+                            <div class="form-group">
+                            {{ G7Form.phantom_type_field.label}}
+                            {{ G7Form.phantom_type_field(class="form-control")}}
+                            </div>
+
+                            <div class="form-group">
+                            {{ G7Form.proj_2d_axis_field.label}}
+                            {{ G7Form.proj_2d_axis_field()}}
+                            </div>
+
+                                <div class="form-group">
+                                {{ G7Form.proj_1d_angle_field.label}}
+                                {{ G7Form.proj_1d_angle_field(id='angle1d')}}
+                            </div>
+
+                                {{ G7Form.submit_field(class='btn btn-lg btn-info')}}
+
+                                </div>
+
+                            <div class="col-8">
+
+                            <div class="row">
+                                <div id="my-interactive"></div>
+                                <script type="module" src="../static/eyeplot.js"></script>
+
+                            </div>
+
+                            </div>
+                            </div>
+
+                        </div>
+                </form>
+
+                 </div>
+                <div class="col-6 card">
+                    <div class="card-header">Tasks</div>
+                    <div class="card-body">
+                        <ol>
+                            <li>Select a 3D model and load it. </li>
+                            <li>Change the 2D projection axis to 'x', 'y', and 'z' and hit "2D projection".
+                            What do you observe for each view? </li>
+                            <li>
+                                Change the 1D projection angle and hit "1D projection".
+                                How does changing the angle affect the 1D curve you see?
+                            </li>
+                            <li>Think about what each projection means. Then hit "proceed" to enter the guessing game!</li>
+
+                        </ol>
+                    </div>
+                </div>
+
+
+
+            </div>
+    </div>
+
+{% endblock %}
+
+{% block additional_imports %}
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alphal/css/bootstrap.min.css"
           integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17SuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
             integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js"
         integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>
-</head>
 
-    <div class="container-fluid vh-100">
-        <div class="row h-100">
-            <div class="col-6 h-100">
-                <form action="/games/7" method="POST">
-                    {{ G7Form.hidden_tag() }}
-                    <div class="row card">
-                        <div class="card-header">3D projection</div>
-                        <div class="card-body">
-                            <div class="chart" id="chart-G7-3D"></div>
-                        </div>
-                    </div>
-                    <div class="row-card">
-                        <div class="card-header">2D Image</div>
-                        <div class="card-body">
-                            <div class="chart" id="chart-G7-2D"></div>
-                        </div>
-                    </div>
-                    <div class="row-card">
-                        <div class="card-header">1D Image</div>
-                        <div class="card-body">
-                            <div class="chart" id="chart-G7-1D"></div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="col-6 h-100">
-                <form action="/games/7" method="POST">
-                    {{ G3Form.hidden_tag() }}
-                    <div class="row card">
-                        <div class="card-header">Select the angle to look through</div>
-                        <div class="card-body"> Insert eyeplot here </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+    <!-- vector.js -->
+    <link rel="stylesheet" href="https://vectorjs.org/library.css">
 
-{% endblock %}
+   <script src="../static/game7.js"></script>
 
-{% block additional_imports %}
-    <script src="../static/game7.js"></script>
+
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script type="text/javascript">
-        let 3dimg = {{ graphJSON_3dimg}};
-        Plotly.plot('chart-G7-3D', 3dimg, {});
-    </script>
-    <script type="text/javascript">
-        let 2dimg = {{ graphJSON_2dimg}};
-        Plotly.plot('chart-G7-2D', 2dimg, {});
-    </script>
-    <script type="tex/javascript">
-        let 1dimg = {{ graphJSON_1dimg}};
-        Plotly.plot('chart-G7-1D', 1dimg, {});
+        let layout = {
+              autosize: true
+        };
+
+
+        let img3d = {{ graphJSON_3dimg | safe }};
+        Plotly.plot('chart-G7-3D', img3d, layout);
+        let img2d = {{ graphJSON_2dimg | safe }};
+        Plotly.plot('chart-G7-2D', img2d, layout);
+        let img1d = {{ graphJSON_1dimg | safe}};
+        Plotly.plot('chart-G7-1D', img1d, layout);
     </script>
 
 {% endblock %}

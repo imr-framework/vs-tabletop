@@ -1,11 +1,6 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>Getting Started</title>
-    <link rel="stylesheet" href="https://vectorjs.org/library.css">
-  </head>
-  <body>
+{% extends "base.html" %}
+
+{% block content %}
     <div>Example: eye circle! </div>
     <div>Instructions from GT: inspect the html on the browser - the small circle is the handle that lets the
         user choose a viewing angle. Its id is "eye-control-handle" - you can use a socket to respond to
@@ -21,5 +16,7 @@
     <script type="module" src="../static/eyeplot.js"></script>
     <!-- You should import this code without changing it and handle all the other logic in game7.js -->
 
-  </body>
-</html>
+    {% endblock %}
+  {%  block additional_imports %}
+          <link rel="stylesheet" href="https://vectorjs.org/library.css">
+  {% endblock %}

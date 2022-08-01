@@ -21,7 +21,8 @@ def initialize_parameters():
                               'autoscale':True, 'show_prev':False,
                               'TR':1, 'readout_dur':0.03, 'N_avg': 1, 'N_rep':1}
     session['display'] = {'autoscale':True, 'show_prev':False}
-    session['user_id'] = None
+    session['user'] = {'id':None, 'username':None, 'date_joined':None, 'role':'administrator'}
+    session['user_name'] = None
 
     session['game1'] = {'FOV_scale': 0.128, 'Matrix_scale': 128, 'Voxel_scale': 0.001,'zero_fill': 500,
                         'Min_scale': 0.0, 'Max_scale': 1.0, 'P1_q': 'No', 'P2_q': 'No'}
@@ -30,7 +31,7 @@ def initialize_parameters():
     session['game5'] = {'b0_on': False, 'b0': 0.006,'coil_on': False, 'rot_frame_on': False, 'flip_angle': 90, 'rf_phase': 0.0,
                         'coil_dir': 'x', 'm_theta': 0.0, 'm_phi':0.0, 'm_size': 1,
                         'M_init': np.array([[0],[0],[0]])}
-    session['game7'] = {'proj3d': 'x', 'proj2d': '90.0'}
+    session['game7'] = {'model':'letterN', 'proj2d_axis': 'x', 'proj1d_angle': 90,}
 
 # Login callback (required)
 @login_manager.user_loader
@@ -69,7 +70,10 @@ def login():
             login_user(user)
             print('login success')
             flash("Login successful!")
-            session['user_id'] = user.id
+            session['user']['id'] = user.id
+            session['user']['username'] = user.username
+            session['user']['date_joined'] = user.joined_at
+
             return redirect('index')
         # If login fails, show error message
         else:

@@ -13,7 +13,7 @@ def initialize_game1_questions():
     Returns
     -------
     mcs : list
-        List of MulitpleChoice database models for game 1
+        List of MultipleChoice database models for game 1
     """
     mcs = [] # List of questions
 
@@ -126,6 +126,16 @@ def refresh_database_and_add_questions(mcs):
             db.session.commit()
         except:
             db.session.rollback()
+
+
+def draw_random_question(game_number):
+    myQs = MultipleChoice.query.filter_by(game_number=game_number).all()
+    Q = random.sample(myQs,1)[0]
+    return Q
+
+def get_all_questions(game_number):
+    # Returns a list of all questions for specified game
+    return MultipleChoice.query.filter_by(game_number=game_number).all( )
 
 
 if __name__ == "__main__":
