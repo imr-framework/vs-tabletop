@@ -73,12 +73,13 @@ class MultipleChoice(db.Model):
     # Multiple choice question to store in database
     id = db.Column(db.Integer(),primary_key=True)
     game_number = db.Column(db.Integer(),index=True)# 1 - 8
+    main_image_path = db.Column(db.String(),default='')
     uses_images = db.Column(db.Boolean(),default=False, index=True)
     question_text = db.Column(db.Text(),index=True, unique=True)
-    choiceA = db.Column(db.Text(),default='First choice') # Choice text or path to image
-    choiceB = db.Column(db.Text(),default='Second choice')
-    choiceC = db.Column(db.Text(),default='Third choice')
-    choiceD = db.Column(db.Text(),default='Fourth choice')
+    choiceA = db.Column(db.String(),default='First choice') # Choice text or path to image
+    choiceB = db.Column(db.String(),default='Second choice')
+    choiceC = db.Column(db.String(),default='Third choice')
+    choiceD = db.Column(db.String(),default='Fourth choice')
     correct_choice = db.Column(db.Enum('A','B','C','D',name='four_choices')) # A, B, C, or D
     difficulty = db.Column(db.Enum('easy','medium','hard'),default='easy',index=True) # easy, medium, hard
 
@@ -96,7 +97,8 @@ class MultipleChoice(db.Model):
         return answer_letter == self.correct_choice
 
     def get_randomized_data(self):
-        # Returns: question text, choices, correct choice letter
+        # Returns: question text, list of shuffled choices, new correct choice letter
+        # If a choice's text is an empty string, it doesn't exist.
         # Randomize options!
         perm = np.random.permutation(4)
         letters = ['A','B','C','D']
