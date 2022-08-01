@@ -38,6 +38,10 @@ def update_parameter(info):
     if info['id'] in ['TR', 'TE', 'FA']:
         info['value'] = float(info['value'])
 
+    elif info['id'] in ['TR']:
+        if info['value'] < float(session['game1']['TE']):
+            info['value'] = session['game1']['TE']
+
     elif info['id'] in ['options-0']:
         info['id'] = info['id'][0:7]
         info['value'] = str(info['value'])

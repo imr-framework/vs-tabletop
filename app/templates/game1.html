@@ -13,6 +13,28 @@
     <meta charset="utf-8">
     <link rel="stylesheet" href="style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>jQuery UI Slider - Range slider</title>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+  <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+  <script>
+  $( function() {
+    $( "#slider-range" ).slider({
+      range: true,
+      min: 0,
+      max: 500,
+      values: [ 75, 300 ],
+      slide: function( event, ui ) {
+        $( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
+      }
+    });
+    $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
+      " - $" + $( "#slider-range" ).slider( "values", 1 ) );
+  } );
+  </script>
 </head>
     <div class="container-fluid vh-100">
         <div class="row h-100">
@@ -29,7 +51,7 @@
                     <div class="row-card">
                     <div class="card-header">Questions</div>
                     <div class="card-body">
-                        <div id="slide" class="carousel slide" data-bs-ride="carousel">
+                        <div id="slide" class="carousel slide" data-bs-interval="False">
                             <div class="carousel-indicators">
                                 <button type="button" data-bs-target="#slide" data-bs-slide-to="0" class="active"></button>
                                 <button type="button" data-bs-target="#slide" data-bs-slide-to="1"></button>
@@ -41,7 +63,7 @@
                                     <h2><b>Question 1</b></h2>
                                     <br> What combination of values outputs the image with the best resolution?
                                     <br> {{ G1Form.P1_q() }}
-                                    <br>{{G1Form.submit_field(class="btn btn-primary")}}
+                                    {{G1Form.submit_field(class="btn btn-primary")}}
 
                                     {% if session['game1']['P1_q'] == 'High Matrix Size and Low Voxel Size' %}
                                     <br><i class="bi bi-patch-check"></i>
@@ -129,39 +151,23 @@
                 <div class="row card">
                     <div class="card-header"><b>Windowing</b></div>
                     <div class="card-body">
-                        <b>Min Value:</b>
-                        {{ G1Form.min_scale() }}
-                        {{ G1Form.min_scale.value }}
-                        <br><b>Max Value:</b>
-                        {{ G1Form.max_scale() }}
-                        {{ G1Form.max_scale.value }}
-                        <div class="wrapper">
-      <header>
-        <h2>Price Range</h2>
-        <p>Use slider or enter min and max price</p>
-      </header>
-      <div class="price-input">
-        <div class="field">
-          <span>Min</span>
-          <input type="number" class="input-min" value="2500">
-        </div>
-        <div class="separator">-</div>
-        <div class="field">
-          <span>Max</span>
-          <input type="number" class="input-max" value="7500">
-        </div>
-      </div>
-      <div class="slider">
-        <div class="progress"></div>
-      </div>
-      <div class="range-input">
-        <input type="range" class="range-min" min="0" max="10000" value="2500" step="100">
-        <input type="range" class="range-max" min="0" max="10000" value="7500" step="100">
-      </div>
-    </div>
-    <script src="script.js"></script>
-  </body>
-                        <br>{{G1Form.submit_field(class="btn btn-primary")}}
+                        <div class="range_container">
+                            <div class="sliders_control">
+                                <input id="fromSlider" type="range" value="10" min="0" max="100"/>
+                                <input id="toSlider" type="range" value="40" min="0" max="100"/>
+                            </div>
+                            <div class="form_control">
+                                <div class="form_control_container">
+                                    <div class="form_control_container__time">Min</div>
+                                    <input class="form_control_container__time__input" type="number" id="fromInput" value="10" min="0" max="100"/>
+                                </div>
+                                <div class="form_control_container">
+                                    <div class="form_control_container__time">Max</div>
+                                    <input class="form_control_container__time__input" type="number" id="toInput" value="40" min="0" max="100"/>
+                                </div>
+                            </div>
+                        </div>
+                        {{G1Form.submit_field(class="btn btn-primary")}}
                     </div>
                 </div>
                 {% endif %}

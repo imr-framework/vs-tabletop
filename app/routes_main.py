@@ -30,6 +30,7 @@ def initialize_parameters():
     session['game5'] = {'b0_on': False, 'b0': 0.006,'coil_on': False, 'rot_frame_on': False, 'flip_angle': 90, 'rf_phase': 0.0,
                         'coil_dir': 'x', 'm_theta': 0.0, 'm_phi':0.0, 'm_size': 1,
                         'M_init': np.array([[0],[0],[0]])}
+    session['game7'] = {'proj3d': 'x', 'proj2d': '90.0'}
 
 # Login callback (required)
 @login_manager.user_loader

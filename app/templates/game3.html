@@ -24,7 +24,7 @@
                 <div class="row-card">
                     <div class="card-header">Questions</div>
                     <div class="card-body">
-                        <div id="slide" class="carousel slide" data-bs-ride="carousel">
+                        <div id="slide" class="carousel slide" data-bs-interval="false">
                         <div class="carousel-indicators">
                             <button type="button" data-bs-target="#slide" data-bs-slide-to="0" class="active"></button>
                             <button type="button" data-bs-target="#slide" data-bs-slide-to="1"></button>
@@ -85,8 +85,13 @@
                         <div class="row-card">
                         <div class="card-header">Hints for Questions</div>
                         <div class="card-body">
+                            {% if session['game3']['P2_q'] == 'Contrast Increases' %}
+                            Nice work on getting the second question correct!
 
-                            {% if (session['game3']['P1_q'] == 'T1') &&  %}
+                            {% elif session['game3']['P2_q'] == 'Contrast Decreases' %}
+                            Increase the FA value again and observe what happens
+
+                            {% elif (session['game3']['P1_q'] == 'T1') %}
                             Continue to question 2 to challenge yourself!
 
                             {% elif session['game3']['P1_q'] == 'T2' %}
@@ -172,6 +177,9 @@
                          </div>
                          <br>{{G3Form.submit(class="btn btn-primary")}}
                      </div>
+                     <div class="d-inline p-2 bg-primary text-white">TR Value: {{ session['game3']['TR'] }}</div>
+                     <div class="d-inline p-2 bg-dark text-white">TE Value: {{ session['game3']['TE'] }}</div>
+                     <div class="d-inline p-2 bg-primary text-white">FA Value: {{ session['game3']['FA'] }}</div>
                  </div>
                   {% if session['game3']['P2_q'] == "Contrast Increases" %}
                  <div class="row card">

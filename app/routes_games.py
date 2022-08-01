@@ -34,11 +34,6 @@ def game6():
     return render_template('game6.html',template_title="Relaxation station",template_intro_text="Sit back and map",template_game_form=None)
 
 
-@app.route('/games/7',methods=["GET","POST"])
-def game7():
-    return render_template('game7.html',template_title="Puzzled by Projection I",template_intro_text="Forward puzzle",template_game_form=None)
-
-
 @app.route('/games/8',methods=["GET","POST"])
 def game8():
     return render_template('game8.html',template_title="Puzzled by Projection II",template_intro_text="Backward puzzle",template_game_form=None)

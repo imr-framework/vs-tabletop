@@ -112,6 +112,13 @@ def update_parameter(info):
         info['id'] = info['id'][0:4]
         info['value'] = str(info['value'])
 
+    elif info['id'] in ['toSlider']:
+        session['game1']['Max_scale'] = info['value'] / 100
+        print(session['game1']['Max_scale'])
+
+    elif info['id'] in ['fromSlider']:
+        session['game1']['Min_scale'] = info['value'] / 100
+
     print(session['game1'], 'hi')
 
     session['game1'][info['id']] = info['value']

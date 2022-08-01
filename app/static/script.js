@@ -1,38 +1,32 @@
-const rangeInput = document.querySelectorAll(".range-input input"),
-priceInput = document.querySelectorAll(".price-input input"),
-range = document.querySelector(".slider .progress");
-let priceGap = 1000;
-priceInput.forEach(input =>{
-    input.addEventListener("input", e =>{
-        let minPrice = parseInt(priceInput[0].value),
-        maxPrice = parseInt(priceInput[1].value);
+var lowerSlider = document.querySelector('#lower'),
+   upperSlider = document.querySelector('#upper'),
+   lowerVal = parseInt(lowerSlider.value);
+   upperVal = parseInt(upperSlider.value);
 
-        if((maxPrice - minPrice >= priceGap) && maxPrice <= rangeInput[1].max){
-            if(e.target.className === "input-min"){
-                rangeInput[0].value = minPrice;
-                range.style.left = ((minPrice / rangeInput[0].max) * 100) + "%";
-            }else{
-                rangeInput[1].value = maxPrice;
-                range.style.right = 100 - (maxPrice / rangeInput[1].max) * 100 + "%";
-            }
-        }
-    });
-});
-rangeInput.forEach(input =>{
-    input.addEventListener("input", e =>{
-        let minVal = parseInt(rangeInput[0].value),
-        maxVal = parseInt(rangeInput[1].value);
-        if((maxVal - minVal) < priceGap){
-            if(e.target.className === "range-min"){
-                rangeInput[0].value = maxVal - priceGap
-            }else{
-                rangeInput[1].value = minVal + priceGap;
-            }
-        }else{
-            priceInput[0].value = minVal;
-            priceInput[1].value = maxVal;
-            range.style.left = ((minVal / rangeInput[0].max) * 100) + "%";
-            range.style.right = 100 - (maxVal / rangeInput[1].max) * 100 + "%";
-        }
-    });
-});
+upperSlider.oninput = function() {
+   lowerVal = parseInt(lowerSlider.value);
+   upperVal = parseInt(upperSlider.value);
+   
+   if (upperVal < lowerVal + 4) {
+      lowerSlider.value = upperVal - 4;
+      
+      if (lowerVal == lowerSlider.min) {
+         upperSlider.value = 4;
+      }
+   }
+};
+
+
+lowerSlider.oninput = function() {
+   lowerVal = parseInt(lowerSlider.value);
+   upperVal = parseInt(upperSlider.value);
+   
+   if (lowerVal > upperVal - 4) {
+      upperSlider.value = lowerVal + 4;
+      
+      if (upperVal == upperSlider.max) {
+         lowerSlider.value = parseInt(upperSlider.max) - 4;
+      }
+
+   }
+};

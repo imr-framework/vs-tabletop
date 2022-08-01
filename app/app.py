@@ -42,6 +42,7 @@ def launch_virtualscanner():
     import routes_games
     import routes_game1
     import routes_game3
+    import routes_game7
     #app.run()
     socketio.run(app,debug=True)
 
