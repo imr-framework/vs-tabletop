@@ -27,7 +27,7 @@ def game7():
                                                  session['game7']['proj1d_angle'])
 
     return render_template('game7.html',G7Form=form, template_title="Projection Imaging",
-                           template_intro_text="Forward puzzle",
+                           template_intro_text="Forward puzzle", instructions=get_instructions_game7(),
                             graphJSON_3dimg = j1, graphJSON_2dimg = j2, graphJSON_1dimg = j3)
 
 
@@ -103,3 +103,28 @@ def get_updated_plots():
                                      session['game7']['proj1d_angle'],lines=session['game7']['lines_on'],
                                      lines_angle=session['game7']['proj1d_angle'])
     return j1, j2, j3
+
+
+def get_instructions_game7():
+    instr = {
+        'step1': ['Select a 3D model and load it',
+                  'Change the 2D projection axis and hit "show/hide lines" each time ',
+                  'Press "2D projection after selecting each of the 3 axes. What do you observe?'
+                  'Using the "transparent" button, explore different views of the phantom. Can you replicate the 3 projections?',
+                  'If we cannot see the model, are 3 projections enough for us to figure out the complete 3D structure?'] ,
+        'step2': ['a','b','c'],
+        'step3': ['d','e','f']
+    }
+    return instr
+#
+# #
+#
+# "        <ol>
+#                             <li>Select a 3D model and load it. </li>
+#                             <li></li>
+#                             <li>
+#                                 Change the 1D projection angle and hit "1D projection".
+#                                 How does changing the angle affect the 1D curve you see?
+#                             </li>
+#                             <li>Think about what each projection means. Then hit "proceed" to enter the guessing game!</li>
+#                         </ol>"

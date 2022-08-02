@@ -19,7 +19,7 @@ $('#mag-x').on('click',()=>{
     $('#m_theta').val(90);
     $('#m_phi').val(0);
     $('#m_size').val(1.0);
-    socket.emit("update params for Game5",{'m_theta':90,'m_phi':0,'m_size':1})
+    socket.emit("Update params for Game5",{'m_theta':90,'m_phi':0,'m_size':1})
 })
 
 // Change spherical coordinates to make M0 point towards y
@@ -28,7 +28,7 @@ $('#mag-y').on('click',()=>{
     $('#m_theta').val(90);
     $('#m_phi').val(90);
     $('#m_size').val(1.0);
-    socket.emit("update params for Game5",{'m_theta':90,'m_phi':90,'m_size':1})
+    socket.emit("Update params for Game5",{'m_theta':90,'m_phi':90,'m_size':1})
 
 })
 
@@ -38,7 +38,7 @@ $('#mag-z').on('click',()=>{
     $('#m_theta').val(0);
     $('#m_phi').val(0);
     $('#m_size').val(1.0);
-    socket.emit("update params for Game5",{'m_theta':0,'m_phi':0,'m_size':1})
+    socket.emit("Update params for Game5",{'m_theta':0,'m_phi':0,'m_size':1})
 
 })
 
@@ -47,7 +47,7 @@ $('#mag-0').on('click',()=>{
     $('#m_theta').val(0);
     $('#m_phi').val(0);
     $('#m_size').val(0);
-    socket.emit("update params for Game5",{'m_theta':0,'m_phi':0,'m_size':0})
+    socket.emit("Update params for Game5",{'m_theta':0,'m_phi':0,'m_size':0})
 
 })
 
@@ -72,7 +72,8 @@ $('#start').on('click',()=>{
 })
 
 $('#tip').on('click',()=>{
-    socket.emit('simulate nutation');
+    socket.emit('simulate nutation',
+                {'b0_on':$('#b0_on').is(':checked'), 'rot_frame_on':$('#rot-frame-button').is(':checked')});
 })
 
 $('#reset').on('click',()=>{

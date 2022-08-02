@@ -340,7 +340,7 @@ def plot_projection(proj,axes,lines=False,lines_angle=90):
 
         fig = go.Figure(go.Heatmap(z=proj,colorscale='gray',showscale=False))
         fig.update_layout(yaxis=dict(scaleanchor='x'),plot_bgcolor='rgba(0,0,0,0)',
-                          width=400,height=400)
+                          width=500,height=350)
         if lines:
             theta = lines_angle * np.pi / 180
             # Add projection lines!

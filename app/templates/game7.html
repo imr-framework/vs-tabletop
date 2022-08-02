@@ -40,6 +40,8 @@
                         <div class="card-body">
                             <div class="row">
                             <div class="col-4">
+                                <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="top" title="3D Model" data-bs-content="">
+                                <i class="bi bi-question-square"></i></button>
                             <div class="form-group">
                             {{ G7Form.phantom_type_field.label(class="form-label")}}
                             {{ G7Form.phantom_type_field(class="form-control",id='model')}}
@@ -60,8 +62,8 @@
                                 {{ G7Form.proj_1d_angle_field(class='form-control',id='proj1d_angle')}}
                             </div>
                                 <div class="form-group pt-3">
-                                    {{ G7Form.submit_field(class='btn btn-lg btn-info')}}
-                                    <div class="btn btn-outline btn-lg" id="lines-toggle">Show/hide lines</div>
+                                    {{ G7Form.submit_field(class='btn btn-lg btn-success')}}
+                                    <div class="btn btn-lg btn-info" id="lines-toggle">Show/hide lines</div>
                                 </div>
 
 
@@ -85,17 +87,12 @@
                 <div class="col-6 card">
                     <div class="card-header">Tasks</div>
                     <div class="card-body">
-                        <ol>
-                            <li>Select a 3D model and load it. </li>
-                            <li>Change the 2D projection axis to 'x', 'y', and 'z' and hit "2D projection".
-                            What do you observe for each view? </li>
-                            <li>
-                                Change the 1D projection angle and hit "1D projection".
-                                How does changing the angle affect the 1D curve you see?
-                            </li>
-                            <li>Think about what each projection means. Then hit "proceed" to enter the guessing game!</li>
-
-                        </ol>
+                        <h3>Step 1</h3>
+                        <ul class="list-group">
+                            {% for instr in instructions['step1'] %}
+                                <li class="list-group-item">{{ instr }}</li>
+                            {% endfor %}
+                        </ul>
                     </div>
                 </div>
 

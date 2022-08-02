@@ -239,7 +239,8 @@ def update_parameter(info):
     if info['id'] == 'f0':
         info['value'] = float(info['value'])*1e6
     param = {info['id']:float(info['value'])}
-    utils.update_session_subdict(session,'calibration',param) # TODO This line is needed to update session variables
+    utils.update_session_subdict(session,'calibration',param)
+    # TODO This line is needed to update session variables
     # Update thread
     for th in threading.enumerate():
         if hasattr(th, 'f0'):

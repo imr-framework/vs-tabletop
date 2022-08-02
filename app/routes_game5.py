@@ -107,7 +107,7 @@ def update_parameter(info):
 
     print(session['game5'])
 
-@socketio.on('update params for Game5')
+@socketio.on('Update params for Game5')
 def update_multiple_parameters(info):
     """Instantly update multiple parameters at socket signal from the frontend
 
@@ -175,7 +175,6 @@ def set_M_init():
     game5 = session['game5']
     # Set it
     print("setting Mi")
-
     Mi = utils.spherical_to_cartesian(session['game5']['m_theta'],
                                  session['game5']['m_phi'],
                                  session['game5']['m_size'])
@@ -193,12 +192,10 @@ def let_spin_precess():
     if game5['b0_on']:
         j1, dt, mags = simulate_spin_precession(M_first=game5['M_init'], b0=game5['b0'], rot_frame=game5['rot_frame_on'],
                                       coil=(game5['coil_dir'] if game5['coil_on'] else None))
-        print(j1)
         socketio.emit('update spin animation',{'graph':j1, 'loop_on':True})
 
         #TODO make sure signal gets displayed
         if game5['coil_on']:
-            print('receiving Rx signal! ')
             j2 = generate_static_signals(dt, signals=generate_coil_signal(mags,coil_dir=game5['coil_dir']))
             socketio.emit('message',{'text': 'Receiving signal from coil... ','type':'success'})
             socketio.emit('update signal animation', {'graph': j2, 'loop_on': True})
@@ -211,15 +208,13 @@ def let_spin_precess():
 
 
 @socketio.on('simulate nutation')
-def tip_spin_with_rf():
-    print("simulating B1")
+def tip_spin_with_rf(msg):
     game5 = session['game5']
-    print(game5)
-    if game5['b0_on'] and game5['rot_frame_on']:
+    #if game5['b0_on'] and game5['rot_frame_on']:
+    if msg['b0_on'] and msg['rot_frame_on']:
         j1, M_last = simulate_RF_rotation(M_first=game5['M_init'], FA=game5['flip_angle'],rf_phase_deg=game5['rf_phase'],
                                   b0=game5['b0'], rot_frame=game5['rot_frame_on'],
                                           coil=(game5['coil_dir'] if game5['coil_on'] else None))
-
         # Initial M was changed.
         utils.update_session_subdict(session,'game5',{'M_init':np.transpose(M_last)})
 

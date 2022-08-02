@@ -151,6 +151,156 @@ def initialize_game1_questions():
 
     return mcs
 
+def initialize_game3_questions():
+    mcs = []
+
+    mcs.append(MultipleChoice(
+        id = 301,
+        game_number=3,
+        uses_images=False,
+        question_text="Which set of parameters gives you the most T1-weighted scan?",
+        choiceA = "TR = 4 s, TE = 2 ms",
+        choiceB = "TR = 5 s, TE = 500 ms",
+        choiceC = "TR = 900 ms, TE = 5 ms",
+        choiceD = "TR = 800 ms, TE = 500 ms",
+        correct_choice="C",
+        difficulty="medium"
+    ))
+
+    mcs.append(MultipleChoice(
+        id = 302,
+        game_number=3,
+        uses_images=False,
+        question_text="What does a PD-weighted scan highlight?",
+        choiceA = "It highlights tissues with a higher density of protons.",
+        choiceB = "It highlights tissues with a lower density of protons",
+        choiceC = "It highlights tissues only at a specific density that the imager can specify.",
+        choiceD = "It highlights tissues with no protons at all.",
+        correct_choice = "A",
+        difficulty="easy"
+    ))
+
+    mcs.append(MultipleChoice(
+        id=303,
+        game_number=3,
+        uses_images=False,
+        question_text="How would substances with small T2 values appear on a T2-weighted scan?",
+        choiceA="They would appear bright",
+        choiceB="They would appear dark",
+        choiceC="They would appear larger than their physical sizes",
+        choiceD="They would appear smaller than their physical sizes",
+        correct_choice="B",
+        difficulty="medium"
+    ))
+
+    mcs.append(MultipleChoice(
+        id = 304,
+        game_number=3,
+        question_text="What are T1-weighted images most useful for?",
+        choiceA = "Assessing the relative densities of brain tissues",
+        choiceB = "Detecting breakdown in the blood-brain barrier",
+        choiceC = "Detecting deoxygenated hemoglobin",
+        choiceD = "Visualizing the ankle joint",
+        correct_choice="B",
+        difficulty="easy"
+    ))
+
+    mcs.append(MultipleChoice(
+        id = 305,
+        game_number=3,
+        question_text="Using the table, predict which tissue type will be highlighted with a T1w MR contrast:",
+        main_image_path = "./static/img/tissue_table.png",
+        choiceA = "Gray matter",
+        choiceB = "White matter",
+        choiceC = "",
+        choiceD = "",
+        correct_choice="B",
+        difficulty="medium"
+    ))
+
+    mcs.append(MultipleChoice(
+        id = 306,
+        game_number=3,
+        question_text="Using the table, predict which tissue type will be highlighted with a T2w MR contrast:",
+        main_image_path = "./static/img/tissue_table.png",
+        choiceA = "Gray matter",
+        choiceB = "White matter",
+        choiceC = "",
+        choiceD = "",
+        correct_choice="A",
+        difficulty="medium"
+    ))
+
+    mcs.append(MultipleChoice(
+        id = 307,
+        game_number=3,
+        question_text="Using the table, predict which tissue type will be highlighted with a PDw MR contrast:",
+        main_image_path = "./static/img/tissue_table.png",
+        choiceA = "Gray matter",
+        choiceB = "White matter",
+        choiceC = "",
+        choiceD = "",
+        correct_choice="A",
+        difficulty="medium"
+    ))
+
+    return mcs
+
+
+def initialize_game5_questions():
+    mcs = []
+
+    mcs.append(MultipleChoice(
+        id = 501,
+        game_number=5,
+        uses_images=False,
+        question_text="What is the difference between 90-degree and 180-degree RF pulses?",
+        choiceA="90-degree pulses are shorter than 180-degree pulses",
+        choiceB="90-degree pulses are at a right angle to the spin magnetic moment while 180-degree pulses are antiparallel to it",
+        choiceC="90-degree pulses rotate half the number of spins compared to 180-degree pulses",
+        choiceD="90-degree pulses tip the equilibrium M to the x-y plane while 180-degree pulses do not",
+        correct_choice="D",
+        difficulty="medium"
+    ))
+
+    mcs.append(MultipleChoice(
+        id = 502,
+        game_number = 5,
+        uses_images=False,
+        question_text="Why do we need to apply an RF pulse?",
+        choiceA="The spins absorb RF energy and converts it into heat, which can then be detected by the coil",
+        choiceB="The RF pulse allows spins to develop a magnetic moment which is necessary for signal generation",
+        choiceC="The spin magnetic moments start out along z but cannot be detected unless tipped to the x-y plane",
+        choiceD="The spins precess around the transmitted RF field to generate emf in the receiving coil",
+        correct_choice="C",
+        difficulty="hard"
+    ))
+
+    mcs.append(MultipleChoice(
+        id=503,
+        game_number=5,
+        uses_images=False,
+        question_text="What happens to the emf signal when the main magnetic field is turned up?",
+        choiceA="The signal oscillates faster",
+        choiceB="The signal oscillates more slowly",
+        choiceC="The signal decays more over time",
+        choiceD="The signal grows more over time",
+        correct_choice="A",
+        difficulty="easy"
+    ))
+
+    mcs.append(MultipleChoice(
+        id = 504,
+        game_number=5,
+        question_text="Which of the four options maximizes the voltage range of the received signal? The initial M is at equilibrium and points along z.",
+        choiceA="Using a 5-degree pulse with a phase of 180 degrees",
+        choiceB="Using a 85-degree pulse with a phase of 45 degrees",
+        choiceC="Using a 179-degree pulse with a phase of 0 degrees",
+        choiceD="Using a 225-degree pulse with a phase of 76 degrees",
+        correct_choice="B",
+        difficulty="hard"
+    ))
+
 def refresh_database_and_add_questions(mcs):
     db.drop_all() # Gets rid of database structure as well
     db.create_all()# Re-create tables
@@ -183,15 +333,18 @@ if __name__ == "__main__":
     from models import initialize_users
 
     mc_list = initialize_game1_questions()
+    mc_list += initialize_game3_questions()
     refresh_database_and_add_questions(mc_list)
     initialize_users() # adds admin back into database
 
     # Get first and second question for unlocking purposes
     # First question
-    print(MultipleChoice.query.get(101).get_randomized_data())
+    #print(MultipleChoice.query.get(101).get_randomized_data())
     # Second question
-    print(MultipleChoice.query.get(102).get_randomized_data())
+    #print(MultipleChoice.query.get(102).get_randomized_data())
 
+
+    print(MultipleChoice.query.filter_by(game_number=3).all())
 
     # Example querying of database
     # All Game 1 questions
