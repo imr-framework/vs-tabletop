@@ -85,104 +85,7 @@ body {font-family: Arial;}
         <div class="row h-100">
             <div class="col-6 h-50">
                 <form action="/games/1" method="POST">
-                    {{ G1Form.hidden_tag() }}
-                <div class="row card">
-                    <div class="card-header">Image</div>
-                    <div class="card-body">
-                        <div class="chart" id="chart-G1">
-                        </div>
-                    </div>
-                </div>
-                    <div class="row-card">
-                    <div class="card-header">Questions</div>
-                    <div class="card-body">
-                        <div id="slide" class="carousel slide" data-bs-interval="false">
-                            <div class="carousel-indicators">
-                                <button type="button" data-bs-target="#slide" data-bs-slide-to="0" class="active"></button>
-                                <button type="button" data-bs-target="#slide" data-bs-slide-to="1"></button>
-                                <button type="button" data-bs-target="#slide" data-bs-slide-to="2"></button>
-                                <button type="button" data-bs-target="#slide" data-bs-slide-to="3"></button>
-                                <button type="button" data-bs-target="#slide" data-bs-slide-to="4"></button>
-                                <button type="button" data-bs-target="#slide" data-bs-slide-to="5"></button>
-                                <button type="button" data-bs-target="#slide" data-bs-slide-to="6"></button>
-                                <button type="button" data-bs-target="#slide" data-bs-slide-to="7"></button>
-                                <button type="button" data-bs-target="#slide" data-bs-slide-to="8"></button>
-                                <button type="button" data-bs-target="#slide" data-bs-slide-to="9"></button>
-
-                            </div>
-
-                            <div class="carousel-inner">
-                                <form action="/games/1" method="POST">
-                                {% for ind in range(success_text | length) %}
-                                    {% set letters = ['a','b','c','d'] %}
-
-
-                                    {% set active_text = 'active' if ind==0 else '' %}
-                                    <div class="carousel-item {{active_text}}">
-                                        <h2>Question {{ ind+1 }}</h2>
-                                        <br>{{ questions[ind]['text']}}
-                                        <br>
-
-                                        {% for ind2 in range(questions[ind]['choices'] | length) %}
-                                            {% if not uses_images[ind] %}
-                                            <br><input type="radio" class="q{{ind}}-choice" id="q{{ind}}-{{letters[ind2]}}" name="mc-question" value="{{ letters[ind2] }}">
-                                            <label for="q{{ind}}-{{letters[ind2]}}">{{ questions[ind]['choices'][ind2] }}</label>
-                                            {% else %}
-                                            <input type="radio"  class="q{{ind}}-choice" id="q{{ind}}-{{letters[ind2] }}" name="mc-question" value="{{ letters[ind2] }}">
-                                            <label for="q{{ind}}-{{letters[ind2]}}"><img src=".{{ questions[ind]['choices'][ind2] }}" style="height: 150px; width:150px;"></label>
-                                            {% endif %}
-                                        {% endfor %}
-
-                                        <p class="d-none">Correct choice: <span id="mc-correct-choice-{{ind}}">{{ questions[ind]['correct']}}</span></p>
-
-                                        <br> <!-- {{ G1Form.submit_field_q(class="btn btn-primary") }}-->
-                                            <div class="btn btn-large btn-primary answer-mc" id="answer-mc-{{ind}}">Submit</div>
-                                        <br>
-                                        <p id="mc-success-text-{{ind}}" class="d-none">{{ success_text[ind] }}</p>
-                                    </div>
-
-                                {% endfor %}
-                                </form>
-                            </div>
-                            <button class="carousel-control-prev" type="button" data-bs-target="#slide" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon"></span>
-                            </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#slide" data-bs-slide="next">
-                                <span class="carousel-control-next-icon"></span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                    <div class="row-card">
-                    <div class="card header bg-light">Question Hints</div>
-                    <div class="card body">
-                        {% if session['game1']['P1_q'] == "Low Matrix Size and High Voxel Size" %}
-                            <i>1. Check Explanations B section of the lab manual</i>
-                        {% elif session['game1']['P1_q'] == "High Matrix Size and High Voxel Size" %}
-                            <i>1. You got the Matrix Size correct! Rethink Voxel size quantity by reading the Explanations B section of the lab manual</i>
-                        {% elif session['game1']['P1_q'] == "Low Matrix Size and Low Voxel Size" %}
-                            <i>1. You got the Voxel Size correct! Rethink Matrix size quantity by reading the Explanations B section of the lab manual</i>
-                        {% elif session['game1']['P1_q'] == "High Matrix Size and Low Voxel Size" %}
-                            <i>1. You got the first question correct! Experiment with the Zero-fill panel next and answer question 2</i>
-                        {% else %}
-                            <i>Answer the first question to display hints</i>
-                        {% endif %}
-
-                        {% if session['game1']['P2_q'] == "The matrix size increases" %}
-                            <i>2. You got the second answer correct!</i>
-                        {% elif session['game1']['P2_q'] == "The matrix size decreases" %}
-                            <i>2. Check Explanations G section of the lab manual</i>
-                        {% elif session['game1']['P2_q'] == "The matrix size stays the same" %}
-                            <i>2. Check Explanations G section of the lab manual</i>
-                        {% endif %}
-                    </div>
-                </div>
-                </form>
-            </div>
-
-        <div class="col-6 h-100">
-            <form action="/games/1" method="POST">
-                <div class="tabs">
+<div class="tabs">
       <div class="tabs__head" style="width: 170%">
         <div class="tabs__toggle is-active">
           <span class="tabs__name">Task 1: FOV</span>
@@ -367,10 +270,107 @@ body {font-family: Arial;}
                             {% endif %}
                         </div>
                     </div>
-            </form>
+
                 </div>
             </div>
+                </form>
+            </div>
 
+        <div class="col-6 h-100">
+            <form action="/games/1" method="POST">
+            {{ G1Form.hidden_tag() }}
+                <div class="row card">
+                    <div class="card-header">Image</div>
+                    <div class="card-body">
+                        <div class="chart" id="chart-G1">
+                        </div>
+                    </div>
+                </div>
+                    <div class="row-card">
+                    <div class="card-header">Questions</div>
+                    <div class="card-body">
+                        <div id="slide" class="carousel slide" data-bs-interval="false">
+                            <div class="carousel-indicators">
+                                <button type="button" data-bs-target="#slide" data-bs-slide-to="0" class="active"></button>
+                                <button type="button" data-bs-target="#slide" data-bs-slide-to="1"></button>
+                                <button type="button" data-bs-target="#slide" data-bs-slide-to="2"></button>
+                                <button type="button" data-bs-target="#slide" data-bs-slide-to="3"></button>
+                                <button type="button" data-bs-target="#slide" data-bs-slide-to="4"></button>
+                                <button type="button" data-bs-target="#slide" data-bs-slide-to="5"></button>
+                                <button type="button" data-bs-target="#slide" data-bs-slide-to="6"></button>
+                                <button type="button" data-bs-target="#slide" data-bs-slide-to="7"></button>
+                                <button type="button" data-bs-target="#slide" data-bs-slide-to="8"></button>
+                                <button type="button" data-bs-target="#slide" data-bs-slide-to="9"></button>
+
+                            </div>
+
+                            <div class="carousel-inner">
+                                <form action="/games/1" method="POST">
+                                {% for ind in range(success_text | length) %}
+                                    {% set letters = ['a','b','c','d'] %}
+
+
+                                    {% set active_text = 'active' if ind==0 else '' %}
+                                    <div class="carousel-item {{active_text}}">
+                                        <h2>Question {{ ind+1 }}</h2>
+                                        <br>{{ questions[ind]['text']}}
+                                        <br>
+
+                                        {% for ind2 in range(questions[ind]['choices'] | length) %}
+                                            {% if not uses_images[ind] %}
+                                            <br><input type="radio" class="q{{ind}}-choice" id="q{{ind}}-{{letters[ind2]}}" name="mc-question" value="{{ letters[ind2] }}">
+                                            <label for="q{{ind}}-{{letters[ind2]}}">{{ questions[ind]['choices'][ind2] }}</label>
+                                            {% else %}
+                                            <input type="radio"  class="q{{ind}}-choice" id="q{{ind}}-{{letters[ind2] }}" name="mc-question" value="{{ letters[ind2] }}">
+                                            <label for="q{{ind}}-{{letters[ind2]}}"><img src=".{{ questions[ind]['choices'][ind2] }}" style="height: 150px; width:150px;"></label>
+                                            {% endif %}
+                                        {% endfor %}
+
+                                        <p class="d-none">Correct choice: <span id="mc-correct-choice-{{ind}}">{{ questions[ind]['correct']}}</span></p>
+
+                                        <br> <!-- {{ G1Form.submit_field_q(class="btn btn-primary") }}-->
+                                            <div class="btn btn-large btn-primary answer-mc" id="answer-mc-{{ind}}">Submit</div>
+                                        <br>
+                                        <p id="mc-success-text-{{ind}}" class="d-none">{{ success_text[ind] }}</p>
+                                    </div>
+
+                                {% endfor %}
+                                </form>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#slide" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon"></span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#slide" data-bs-slide="next">
+                                <span class="carousel-control-next-icon"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                    <div class="row-card">
+                    <div class="card header bg-light">Question Hints</div>
+                    <div class="card body">
+                        {% if session['game1']['P1_q'] == "Low Matrix Size and High Voxel Size" %}
+                            <i>1. Check Explanations B section of the lab manual</i>
+                        {% elif session['game1']['P1_q'] == "High Matrix Size and High Voxel Size" %}
+                            <i>1. You got the Matrix Size correct! Rethink Voxel size quantity by reading the Explanations B section of the lab manual</i>
+                        {% elif session['game1']['P1_q'] == "Low Matrix Size and Low Voxel Size" %}
+                            <i>1. You got the Voxel Size correct! Rethink Matrix size quantity by reading the Explanations B section of the lab manual</i>
+                        {% elif session['game1']['P1_q'] == "High Matrix Size and Low Voxel Size" %}
+                            <i>1. You got the first question correct! Experiment with the Zero-fill panel next and answer question 2</i>
+                        {% else %}
+                            <i>Answer the first question to display hints</i>
+                        {% endif %}
+
+                        {% if session['game1']['P2_q'] == "The matrix size increases" %}
+                            <i>2. You got the second answer correct!</i>
+                        {% elif session['game1']['P2_q'] == "The matrix size decreases" %}
+                            <i>2. Check Explanations G section of the lab manual</i>
+                        {% elif session['game1']['P2_q'] == "The matrix size stays the same" %}
+                            <i>2. Check Explanations G section of the lab manual</i>
+                        {% endif %}
+                    </div>
+                </div>
+</form>
             </div>
 
 
