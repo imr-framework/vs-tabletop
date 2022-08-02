@@ -42,11 +42,11 @@ img{
 .carousel-item {
     height:32rem;
     background: grey;
-    color: gold
+    color: white;
 }
 .carousel-inner{
     height: 450px;
-    color: #F64C72
+    color: white
 }
 /* Ticks for range slider labeling */
 .ticks {
@@ -71,6 +71,3 @@ img{
     overflow: hidden
 }
 
-.tabs{
-    width: 150%
-}

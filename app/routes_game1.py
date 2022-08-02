@@ -14,6 +14,7 @@ from __main__ import app, login_manager, db, socketio
 
 from models import MultipleChoice
 
+questions = []
 
 @app.route('/games/1',methods=["GET","POST"])
 def game1():
@@ -42,26 +43,31 @@ def game1():
 
 @socketio.on('Update param for Game1')
 def update_parameter(info):
-
+    print(session)
     # Update corresponding entry in session
     print(info['id'])
     if info['id'] in ['Matrix_scale', 'zero_fill']:
         info['value'] = int(info['value'])
 
-    elif info['id'] in ['P1_q-0', 'P1_q', 'P1_q-1', 'P1_q-2', 'P1_q-3', 'P2_q', 'P2_q-0', 'P2_q-1', 'P2_q-2']:
+    elif info['id'] in ['P1_q-0', 'P1_q', 'P1_q-1', 'P1_q-2', 'P1_q-3', 'P2_q', 'P2_q-0', 'P2_q-1', 'P2_q-2', 'a', 'b', 'c', 'd']:
         info['value'] = str(info['value'])
 
+    elif info['id'] in ['FOV_scale', 'Voxel_scale']:
+        info['value'] = float(info['value']) / 1000
     else:
         info['value'] = float(info['value'])
 
     session['game1'][info['id']] = info['value']
     session.modified = True
+
     # If zero fill is changed, then matrix size = zero fill(smaller)
     # If FOV got changed, change matrix size based on FOV and voxel size
 
     if info['id'] == 'FOV_scale':
-        print('yes')
+        print('FOV changed')
+        print('Old:',session['game1'])
         session['game1']['Matrix_scale'] = int(np.round(float(session['game1']['FOV_scale'])/(float(session['game1']['Voxel_scale']))))
+
         session['game1']['Voxel_scale'] = session['game1']['FOV_scale']/session['game1']['Matrix_scale']
 
         if session['game1']['Matrix_scale'] > session['game1']['zero_fill']:
@@ -70,8 +76,11 @@ def update_parameter(info):
         elif session['game1']['Matrix_scale'] < session['game1']['zero_fill']:
             session['game1']['Matrix_scale'] = session['game1']['zero_fill']
 
+        print('New:',session['game1'])
+
     # Matrix Size is kept the same, voxel size increases.
     elif info['id'] == 'Voxel_scale':
+
         print('printing VS')
         session['game1']['Matrix_scale'] = int(np.round_(float(session['game1']['FOV_scale'])/float(session['game1']['Voxel_scale'])))
         session['game1']['FOV_scale'] = session['game1']['Matrix_scale']* session['game1']['Voxel_scale']
@@ -87,10 +96,11 @@ def update_parameter(info):
         session['game1']['Voxel_scale'] = float(session['game1']['FOV_scale'])/(float(session['game1']['Matrix_scale']))
 
         if session['game1']['Matrix_scale'] > session['game1']['zero_fill']:
+            print("changing")
             session['game1']['zero_fill'] = session['game1']['Matrix_scale']
 
         elif session['game1']['Matrix_scale'] < session['game1']['zero_fill']:
-            session['game1']['Matrix_scale'] = session['game1']['zero_fill']
+            session['game1']['zero_fill'] = session['game1']['Matrix_scale']
 
     elif info['id'] == 'zero_fill':
         if session['game1']['Matrix_scale'] > session['game1']['zero_fill']:
@@ -98,6 +108,9 @@ def update_parameter(info):
 
         elif session['game1']['Matrix_scale'] < session['game1']['zero_fill']:
             session['game1']['Matrix_scale'] = session['game1']['zero_fill']
+
+
+
 
     elif info['id'] in ['P1_q']:
         print('changing p1')
@@ -150,15 +163,16 @@ def update_parameter(info):
 
     print(session['game1'], 'hi')
 
-    session['game1'][info['id']] = info['value']
+    #session['game1'][info['id']] = info['value']
+
     session.modified = True
+
     socketio.emit('G1 take session data', {'data': session['game1']})
 
     print(info)
     
 
 def fetch_all_game1_questions():
-    questions = []
     uses_images_list = []
     success_text = 10*['Correct! Move on to the next question.']
     for id in range(101,111):
@@ -180,11 +194,26 @@ def fetch_all_game1_questions():
                           'choices':qchoices,
                           'correct': corr_array_new.index(True)})
 
-    success_text[0] = "Special text for 1 "
-    success_text[1] = "Special text for 2 "
+    # TODO Rishi replace success text as needed 
+    success_text[0] = "You got the first answer correct!"
+    success_text[1] = "You got the second answer correct!"
 
     return questions, success_text, uses_images_list
 
 @socketio.on("Updating choice for Game 1")
 def update_Choice(info):
     print(info)
+    if info['choice'] == 'a':
+        info['choice'] = 0
+    elif info['choice'] == 'b':
+        info['choice'] = 1
+    elif info['choice'] == 'c':
+        info['choice'] = 2
+    elif info['choice'] == 'd':
+        info['choice'] = 3
+
+    if info['choice'] in questions[0]['correct']:
+        print('correct')
+        socketio.emit("Correct")
+    else:
+        print("No")

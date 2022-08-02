@@ -114,27 +114,31 @@ body {font-family: Arial;}
                             <div class="carousel-inner">
                                 <form action="/games/1" method="POST">
                                 {% for ind in range(success_text | length) %}
-                                    {% for int in range(choices | length) %}
-                                        {% set letters = ['a','b','c','d'] %}
-                                    {% endfor %}
                                     {% set letters = ['a','b','c','d'] %}
+
+
                                     {% set active_text = 'active' if ind==0 else '' %}
                                     <div class="carousel-item {{active_text}}">
                                         <h2>Question {{ ind+1 }}</h2>
                                         <br>{{ questions[ind]['text']}}
                                         <br>
-                                        {% for choice in questions[ind]['choices'] %}
+
+                                        {% for ind2 in range(questions[ind]['choices'] | length) %}
                                             {% if not uses_images[ind] %}
-                                            <br><input type="radio" id="{{ letters[ind] }}" name="mc-question" value="{{ letters[ind] }}">
-                                            <label for="{{ letters[ind] }}">{{ choice }}</label>
+                                            <br><input type="radio" class="q{{ind}}-choice" id="q{{ind}}-{{letters[ind2]}}" name="mc-question" value="{{ letters[ind2] }}">
+                                            <label for="q{{ind}}-{{letters[ind2]}}">{{ questions[ind]['choices'][ind2] }}</label>
                                             {% else %}
-                                            <input type="radio" id="{{ letters[ind] }}" name="mc-question" value="{{ letters[ind] }}">
-                                            <label for="{{ letters[ind] }}"><img src=".{{ choice }}" style="height: 150px; width:150px;"></label>
+                                            <input type="radio"  class="q{{ind}}-choice" id="q{{ind}}-{{letters[ind2] }}" name="mc-question" value="{{ letters[ind2] }}">
+                                            <label for="q{{ind}}-{{letters[ind2]}}"><img src=".{{ questions[ind]['choices'][ind2] }}" style="height: 150px; width:150px;"></label>
                                             {% endif %}
                                         {% endfor %}
 
+                                        <p class="d-none">Correct choice: <span id="mc-correct-choice-{{ind}}">{{ questions[ind]['correct']}}</span></p>
+
                                         <br> <!-- {{ G1Form.submit_field_q(class="btn btn-primary") }}-->
-                                            <button class="btn btn-large btn-primary" id="submit-mc">Submit</button>
+                                            <div class="btn btn-large btn-primary answer-mc" id="answer-mc-{{ind}}">Submit</div>
+                                        <br>
+                                        <p id="mc-success-text-{{ind}}" class="d-none">{{ success_text[ind] }}</p>
                                     </div>
 
                                 {% endfor %}
@@ -273,7 +277,7 @@ body {font-family: Arial;}
                     </script>
                     </div>
                 </div>
-                {% if session['game1']['P1_q'] == "High Matrix Size and Low Voxel Size" %}
+
                 <div class="row card">
                     <div class="card-header"><b>Adjust Zero-fill</b></div>
                     <div class="card-body">
@@ -294,7 +298,7 @@ body {font-family: Arial;}
                     </script>
                     </div>
                 </div>
-                {% if session['game1']['P2_q'] == "The matrix size increases" %}
+
                 <div class="row card">
                     <div class="card-header"><b>Windowing</b></div>
                     <div class="card-body">
@@ -335,9 +339,6 @@ body {font-family: Arial;}
                     </script>
                     </div>
                 </div>
-                {% endif %}
-
-                {% endif %}
                 <br>{{G1Form.submit_field(class="btn btn-primary")}}
 
                     <br><div class="row card">

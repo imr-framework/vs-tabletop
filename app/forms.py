@@ -41,16 +41,17 @@ class Calibration_Form(FlaskForm):
 
 class Game1Form(FlaskForm):
     #Min and Max units are in cm
-    zero_fill = IntegerField(label='cubes', validators=[DataRequired(), NumberRange(min=4, max=5000)], default=500)
-    FOV_scale = DecimalField(label='m', places=3, validators=[DataRequired(), NumberRange(min=.1, max=5)],default=.128)
+    zero_fill = IntegerField(label='cubes', validators=[DataRequired(), NumberRange(min=4, max=5000)], default=128)
+    FOV_scale = DecimalField(label='mm', validators=[DataRequired(), NumberRange(min=100, max=5000)],default=128)
     Matrix_scale = IntegerField(label='cubes per side', validators=[DataRequired(), NumberRange(min=4,max=1000)], default=128)
-    Voxel_scale = DecimalField(label='m', places=3, validators=[DataRequired(), NumberRange(min=.0001, max=1.25)], default=.001)
+    Voxel_scale = DecimalField(label='mm', validators=[DataRequired(), NumberRange(min=.0001, max=1250)], default=1)
     submit_field = SubmitField("Run")
     submit_field_q = SubmitField("Submit Answer")
     min_scale = DecimalRangeField(label='range', validators=[DataRequired(), NumberRange(min=0.0, max=1.0),],default=0.1)
     max_scale = DecimalRangeField(label='range', validators=[DataRequired(), NumberRange(min=0.0, max=1.0)],default=0.9)
     P1_q = RadioField('question1', choices=['High Matrix Size and Low Voxel Size', 'Low Matrix Size and High Voxel Size', 'High Matrix Size and High Voxel Size', 'Low Matrix Size and Low Voxel Size'])
-    P2_q = RadioField('question2', choices=['The matrix size increases', 'The matrix size decreases', 'The matrix size stays the same'], default='The matrix size stays the same')
+    P2_q = RadioField('question2', choices=['The matrix size increases', 'The matrix size decreases', 'The matrix size stays the same'])
+    G_P3_q = RadioField('general questions', choices=['1', '2','3','4'])
     from_slider_value = DecimalRangeField(label='range', validators=[DataRequired(), NumberRange(min=0.0, max=100),],default=10)
     to_slider_value = DecimalRangeField(label='range', validators=[DataRequired(), NumberRange(min=0.0, max=100),],default=40)
     min_value = DecimalField(label='m', validators=[DataRequired(), NumberRange(min=0, max=100)],default=10)

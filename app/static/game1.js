@@ -20,20 +20,39 @@ $(':input').on('change', (event)=>{
     socket.emit("Update param for Game1", {'id': event.target.id, 'value': event.target.value});
 })
 
-$('#submit-mc').on('click', (event)=>{
+$('.answer-mc').on('click', (event)=>{
+    submit_id = event.target.id;
+    q_ind = submit_id[submit_id.length-1]
+    console.log(submit_id);
+    choice = $(`.q${q_ind}-choice:checked`).attr("value");
 
-    choice = $("input[name=mc-question]:checked").attr("id")
+    console.log(choice)
+
+    let letters = ['a','b','c','d'];
+
+    if (choice == letters[parseInt($(`#mc-correct-choice-${q_ind}`).text())]){
+        console.log("Answer is correct! ")
+        // Make success text visible
+        $(`#mc-success-text-${q_ind}`).removeClass('d-none')
+    }
+    else{
+        console.log("Answer is wrong! ")
+        $(`#mc-success-text-${q_ind}`).addClass('d-none')
+        // Hide success text
+    }
+
+
     //choice="some choice"
     console.log('Updating choice')
-    socket.emit("Updating choice for Game 1", {'choice':choice});
+    //socket.emit("Updating choice for Game 1", {'choice':choice});
 })
 
 socket.on('G1 take session data', (msg)=>{
     console.log('I am supposed to be updating data')
     $('#Matrix_scale').val(msg['data']['Matrix_scale']);
-    $('#Voxel_scale').val(msg['data']['Voxel_scale']);
-    $('#FOV_scale').val(msg['data']['FOV_scale']);
-    $('#zero_scale').val(msg['data']['zero_scale']);
+    $('#Voxel_scale').val(msg['data']['Voxel_scale']*1000);
+    $('#FOV_scale').val(msg['data']['FOV_scale']*1000);
+    $('#zero_fill').val(msg['data']['zero_fill']);
     $('#Min_scale').val(msg['data']['Min_scale']);
     $('#Max_scale').val(msg['data']['Max_scale']);
     $('#P1_q').val(msg['data']['P1_q'])
