@@ -33,18 +33,6 @@ def initialize_game1_questions():
         id=102,
         game_number=1,
         uses_images=False,
-        question_text="What happens as the zero-fill value is increased?",
-        choiceA="The matrix size increases",
-        choiceB = "The matrix size decreases",
-        choiceC = "The matrix size stays the same",
-        choiceD = "The resolution is improved",
-        correct_choice="A",
-        difficulty="medium"
-    ))
-    mcs.append(MultipleChoice(
-        id=103,
-        game_number=1,
-        uses_images=False,
         question_text="What combination of matrix size and FOV gives you the highest resolution?",
         choiceA='Matrix size = 16, FOV = 0.16 cm',
         choiceB='Matrix size = 18, FOV = 0.36 cm',
@@ -55,20 +43,20 @@ def initialize_game1_questions():
     ))
 
     mcs.append(MultipleChoice(
-        id=104,
+        id=103,
         game_number=1,
         uses_images=False,
-        question_text="Why does acquiring smaller pixels lead to better resolution?",
-        choiceA='More pixels means a larger range of gray values are possible',
-        choiceB='A small pixel contains more information than a large pixel',
-        choiceC='Pixel amount and size have no effect on resolution',
-        choiceD='Each pixel represents a smaller amount of space',
-        correct_choice='D',
-        difficulty='easy'
+        question_text="What happens as the zero-fill value is increased?",
+        choiceA="The matrix size increases",
+        choiceB = "The matrix size decreases",
+        choiceC = "The matrix size stays the same",
+        choiceD = "The resolution is improved",
+        correct_choice="A",
+        difficulty="medium"
     ))
 
     mcs.append(MultipleChoice(
-        id=105,
+        id=104,
         game_number=1,
         uses_images=False,
         question_text="What min/max window settings would allow the most visual contrast to show up between the two circles (numbers indicate gray level)?",
@@ -80,6 +68,20 @@ def initialize_game1_questions():
         correct_choice='D',
         difficulty='medium'
     ))
+
+    mcs.append(MultipleChoice(
+        id=105,
+        game_number=1,
+        uses_images=False,
+        question_text="Why does acquiring smaller pixels lead to better resolution?",
+        choiceA='More pixels means a larger range of gray values are possible',
+        choiceB='A small pixel contains more information than a large pixel',
+        choiceC='Pixel amount and size have no effect on resolution',
+        choiceD='Each pixel represents a smaller amount of space',
+        correct_choice='D',
+        difficulty='easy'
+    ))
+
 
     mcs.append(MultipleChoice(
         id=106,
