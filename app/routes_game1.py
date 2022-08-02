@@ -31,6 +31,7 @@ def game1():
 
 @socketio.on('Update param for Game1')
 def update_parameter(info):
+
     # Update corresponding entry in session
     print(info['id'])
     if info['id'] in ['Matrix_scale', 'zero_fill']:
@@ -52,6 +53,11 @@ def update_parameter(info):
         session['game1']['Matrix_scale'] = int(np.round(float(session['game1']['FOV_scale'])/(float(session['game1']['Voxel_scale']))))
         session['game1']['Voxel_scale'] = session['game1']['FOV_scale']/session['game1']['Matrix_scale']
 
+        if session['game1']['Matrix_scale'] > session['game1']['zero_fill']:
+            session['game1']['zero_fill'] = session['game1']['Matrix_scale']
+
+        elif session['game1']['Matrix_scale'] < session['game1']['zero_fill']:
+            session['game1']['Matrix_scale'] = session['game1']['zero_fill']
 
     # Matrix Size is kept the same, voxel size increases.
     elif info['id'] == 'Voxel_scale':
@@ -59,9 +65,21 @@ def update_parameter(info):
         session['game1']['Matrix_scale'] = int(np.round_(float(session['game1']['FOV_scale'])/float(session['game1']['Voxel_scale'])))
         session['game1']['FOV_scale'] = session['game1']['Matrix_scale']* session['game1']['Voxel_scale']
 
+        if session['game1']['Matrix_scale'] > session['game1']['zero_fill']:
+            session['game1']['zero_fill'] = session['game1']['Matrix_scale']
+
+        elif session['game1']['Matrix_scale'] < session['game1']['zero_fill']:
+            session['game1']['Matrix_scale'] = session['game1']['zero_fill']
+
     elif info['id'] == 'Matrix_scale':
         print('printing MS')
         session['game1']['Voxel_scale'] = float(session['game1']['FOV_scale'])/(float(session['game1']['Matrix_scale']))
+
+        if session['game1']['Matrix_scale'] > session['game1']['zero_fill']:
+            session['game1']['zero_fill'] = session['game1']['Matrix_scale']
+
+        elif session['game1']['Matrix_scale'] < session['game1']['zero_fill']:
+            session['game1']['Matrix_scale'] = session['game1']['zero_fill']
 
     elif info['id'] == 'zero_fill':
         if session['game1']['Matrix_scale'] > session['game1']['zero_fill']:
