@@ -31,7 +31,9 @@ def initialize_parameters():
     session['game5'] = {'b0_on': False, 'b0': 0.006,'coil_on': False, 'rot_frame_on': False, 'flip_angle': 90, 'rf_phase': 0.0,
                         'coil_dir': 'x', 'm_theta': 0.0, 'm_phi':0.0, 'm_size': 1,
                         'M_init': np.array([[0],[0],[0]])}
-    session['game7'] = {'model':'letterN', 'proj2d_axis': 'x', 'proj1d_angle': 90,}
+    session['game7'] = {'model':'letterN', 'proj2d_axis': 'x', 'proj1d_angle': 90,
+                        'plot3d_visible':False, 'plot2d_visible':False, 'plot1d_visible':False,
+                        'lines_on': False}
 
 # Login callback (required)
 @login_manager.user_loader

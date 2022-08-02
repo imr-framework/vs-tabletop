@@ -95,7 +95,7 @@ class Game5Form(FlaskForm):
 
 class Game7Form(FlaskForm):
     # For selectfields, choices are (value, label) pairs
-    phantom_type_field = SelectField('Select phantom', choices=[
+    phantom_type_field = SelectField('Select model', choices=[
                                                                 ('letterN', 'Letter N'),
                                                                 ('letterY', 'Letter Y'),
                                                                 ('letterC', 'Letter C'),

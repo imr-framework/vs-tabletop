@@ -11,15 +11,8 @@ from __main__ import app, login_manager, db, socketio
 
 @app.route('/games/7', methods=["GET","POST"])
 def game7():
+    # Viewing function for game 7
     form=Game7Form()
-
-    #j1, voxels = game7_prep3d_worker(difficulty="all")
-    #j2, j3 = game7_projection_worker(voxels, session['game7']['proj3d'], session['game7']['proj2d'])
-
-
-    #j1, voxels = game7_prep3d_worker(name='letterC')
-    #j2, j3 = game7_projection_worker(voxels, proj3d_axis, proj2d_angle)
-
     j1, j2, j3 = game7_empty_plots_worker()
 
     if form.validate_on_submit():
@@ -30,10 +23,8 @@ def game7():
         else:
             j1, voxels = game7_prep3d_worker(name=form.phantom_type_field.data)
 
-        j2, j3 = game7_projection_worker(voxels,
-                                         form.proj_2d_axis_field.data,
-                                         float(form.proj_1d_angle_field.data))
-                                         #session['game7']['proj3d'], session['game7']['proj2d'])
+        j2, j3 = game7_projection_worker(voxels, session['game7']['proj2d_axis'],
+                                                 session['game7']['proj1d_angle'])
 
     return render_template('game7.html',G7Form=form, template_title="Projection Imaging",
                            template_intro_text="Forward puzzle",
@@ -43,16 +34,72 @@ def game7():
 
 @socketio.on('Update param for Game7')
 def update_parameter(info):
-    print(info['id'])
-    if info['id'] in ['proj3d']:
-        info['value'] = str(info['value'])
-
-    elif info['id'] in ['proj2d']:
+    if info['id'] == 'proj1d_angle':
         info['value'] = float(info['value'])
+    elif info['id'] in ['proj_2d_axis','proj_2d_axis-1','proj_2d_axis-2']:
+        info['id'] = 'proj2d_axis'
+    elif info['id'] == 'model':
+        info['value'] = str(info['value'])
+    utils.update_session_subdict(session, 'game7', {info['id']:info['value']})
+    print(session['game7'])
 
-    session['game7'][info['id']] = info['value']
+
+@socketio.on('Request 3D model')
+def update_3d_model():
+    # Generate the 3D model
+    j1, __, __ = get_updated_plots()
+    __, j2, j3 = game7_empty_plots_worker()
+
+    # Also nullify the other 2
+    socketio.emit('Deliver 3D model',{'graph1':j1,
+                                      'graph2':j2,
+                                      'graph3':j3})
+
+    utils.update_session_subdict(session,'game7',{'plot3d_visible':True,
+                                                  'plot2d_visible':False,
+                                                  'plot1d_visible':False})
+
+@socketio.on('Request 2D projection')
+def update_2d_proj():
+    # Check if 3D is visible
+    if session['game7']['plot3d_visible']:
+        __, j2, __ = get_updated_plots()
+        socketio.emit('Deliver 2D projection',{'graph': j2})
+        utils.update_session_subdict(session, 'game7', {'plot2d_visible': True})
+    else:
+        flash("Choose a 3D model first!")
+
+@socketio.on('Request 1D projection')
+def update_1d_proj():
+    # Check if both 3D and 2D are visible
+    if session['game7']['plot3d_visible'] and session['game7']['plot2d_visible']:
+        __, __, j3 = get_updated_plots()
+        socketio.emit("Deliver 1D projection",{'graph': j3})
+        utils.update_session_subdict(session, 'game7', {'plot1d_visible': True})
+    else:
+        flash("Generate the 2D projection first!")
+
+@socketio.on('Toggle line display')
+def toggle_line():
+
+    session['game7']['lines_on'] = not session['game7']['lines_on']
     session.modified = True
 
-    socketio.emit('G7 take session data', {'data': session['game1']})
-    print(info)
+    j1,j2,__ = get_updated_plots()
+    __, j20, j3 = game7_empty_plots_worker()
 
+    if session['game7']['plot3d_visible']:
+        socketio.emit("Deliver 3D model",{'graph1':j1,
+                                      'graph2':j20,
+                                      'graph3':j3})
+
+    if session['game7']['plot2d_visible']:
+        socketio.emit("Deliver 2D projection",{'graph':j2})
+
+def get_updated_plots():
+    j1, voxels = game7_prep3d_worker(name=session['game7']['model'],lines=session['game7']['lines_on'],
+                                     line_dir=session['game7']['proj2d_axis'])
+    j2, j3 = game7_projection_worker(voxels, session['game7']['proj2d_axis'],
+                                     session['game7']['proj1d_angle'],lines=session['game7']['lines_on'],
+                                     lines_angle=session['game7']['proj1d_angle'])
+    return j1, j2, j3

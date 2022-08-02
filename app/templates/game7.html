@@ -41,21 +41,29 @@
                             <div class="row">
                             <div class="col-4">
                             <div class="form-group">
-                            {{ G7Form.phantom_type_field.label}}
-                            {{ G7Form.phantom_type_field(class="form-control")}}
+                            {{ G7Form.phantom_type_field.label(class="form-label")}}
+                            {{ G7Form.phantom_type_field(class="form-control",id='model')}}
                             </div>
 
-                            <div class="form-group">
-                            {{ G7Form.proj_2d_axis_field.label}}
-                            {{ G7Form.proj_2d_axis_field()}}
+                            <div class="form-group pt-3">
+                            {{ G7Form.proj_2d_axis_field.label(class="form-label") }}
+                            {% for subfield in G7Form.proj_2d_axis_field %}
+                                <tr>
+                                    <td>{{ subfield(id='proj2d_axis',class='form-check-input') }}</td>
+                                    <td>{{ subfield.label(class='form-check-label') }}</td>
+                                </tr>
+                            {% endfor %}
                             </div>
 
-                                <div class="form-group">
-                                {{ G7Form.proj_1d_angle_field.label}}
-                                {{ G7Form.proj_1d_angle_field(id='angle1d')}}
+                                <div class="form-group pt-3">
+                                {{ G7Form.proj_1d_angle_field.label(class="form-label")}}
+                                {{ G7Form.proj_1d_angle_field(class='form-control',id='proj1d_angle')}}
                             </div>
+                                <div class="form-group pt-3">
+                                    {{ G7Form.submit_field(class='btn btn-lg btn-info')}}
+                                    <div class="btn btn-outline btn-lg" id="lines-toggle">Show/hide lines</div>
+                                </div>
 
-                                {{ G7Form.submit_field(class='btn btn-lg btn-info')}}
 
                                 </div>
 
@@ -108,23 +116,17 @@
 
     <!-- vector.js -->
     <link rel="stylesheet" href="https://vectorjs.org/library.css">
-
-   <script src="../static/game7.js"></script>
+    <script src="../static/game7.js"></script>
 
 
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script type="text/javascript">
-        let layout = {
-              autosize: true
-        };
-
-
         let img3d = {{ graphJSON_3dimg | safe }};
-        Plotly.plot('chart-G7-3D', img3d, layout);
+        Plotly.newPlot('chart-G7-3D', img3d, layout);
         let img2d = {{ graphJSON_2dimg | safe }};
-        Plotly.plot('chart-G7-2D', img2d, layout);
+        Plotly.newPlot('chart-G7-2D', img2d, layout);
         let img1d = {{ graphJSON_1dimg | safe}};
-        Plotly.plot('chart-G7-1D', img1d, layout);
+        Plotly.newPlot('chart-G7-1D', img1d, layout);
     </script>
 
 {% endblock %}

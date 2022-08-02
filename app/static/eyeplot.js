@@ -108,7 +108,8 @@ const blueEye = new Eye(0,'DodgerBlue');
 blueEye.group.root.setAttribute('id','blueEye');
 blueEye.group.update = function(){
     this.root.setAttribute('transform',`rotate(${-rad2Deg(getAngle())+90},${cc[0]},${cc[1]}) translate(${x0},${y0}) scale(2)`);
-    $('#angle1d').val(rad2Deg(getAngle()));
+    $('#proj1d_angle').val(rad2Deg(getAngle()));
+    $('#proj1d_angle').trigger('change');
 }
 blueEye.group.update();
 blueEye.group.addDependency(control)

@@ -10,9 +10,9 @@ import stltovoxel
 import os
 import glob
 from skimage.transform import radon
+from scipy.spatial.transform import Rotation as R
 
-
-def game7_projection_worker(voxels, proj3d_axis, proj2d_angle):
+def game7_projection_worker(voxels, proj3d_axis, proj2d_angle, lines=False, lines_angle=90):
     """Generates 2D and 1D projections of the given raster representation of a 3D model
 
     Parameters
@@ -41,12 +41,12 @@ def game7_projection_worker(voxels, proj3d_axis, proj2d_angle):
 
     axes = list('xyz'.replace(proj3d_axis,''))
 
-    graphJSON_2D = plot_projection(proj2d,axes)
-    graphJSON_1D = plot_projection(proj1d,['r'])
+    graphJSON_2D = plot_projection(proj2d,axes,lines,lines_angle)
+    graphJSON_1D = plot_projection(proj1d,['r'],lines,lines_angle)
 
     return graphJSON_2D,graphJSON_1D
 
-def game7_prep3d_worker(difficulty="all",name=None):
+def game7_prep3d_worker(difficulty="all",name=None,lines=False,line_dir='z'):
     """Loads random or specified STL file and returns rasterized 3D image and 3D model plot
 
     Parameters
@@ -77,8 +77,12 @@ def game7_prep3d_worker(difficulty="all",name=None):
 
 
     print(f'Using model: {name}')
-    graphJSON_3D = get_3d_model_plot(model_info)
-    voxels = convert_stls_to_voxels([model_info],resolution=100)
+    graphJSON_3D = get_3d_model_plot(model_info,lines,line_dir)
+    #voxels = convert_stls_to_voxels([model_info],resolution=100)
+    voxels = np.load(f'./static/data/solids/{name}.npy')
+    print(f'Loaded {name}.npy')
+
+
 
     return graphJSON_3D, voxels
 
@@ -111,13 +115,13 @@ def get_random_model(difficulty="all"):
     index = np.random.randint(0,len(all_stl_paths))
     path = all_stl_paths[index]
 
-    name = path.removesuffix(f'{difficulty}.stl').removeprefix('./static/data/solids/')
+    name = path.removeprefix('./static/data/solids').removeprefix('/').removeprefix('\\').removesuffix('.stl')
 
     return path, name
 
 
 
-def get_3d_model_plot(model_info):
+def get_3d_model_plot(model_info,lines=False,line_dir='z'):
     """Loads STL of given path, displays it in Plotly, and returns JSON string of figure
 
     Parameters
@@ -144,12 +148,11 @@ def get_3d_model_plot(model_info):
         opacity=1,
         alphahull=10)
 
-    title = "Model"
     layout = go.Layout(paper_bgcolor='gainsboro',
-                       title_text=title, title_x=0.5,
+                       title_x=0.5,
                        font_color='black',
-                       width=800,
-                       height=800,
+                       width=500,
+                       height=350,
                        scene_camera=dict(eye=dict(x=1.25, y=-1.25, z=1)),
                        scene_xaxis_visible=False,
                        scene_yaxis_visible=False,
@@ -167,6 +170,13 @@ def get_3d_model_plot(model_info):
                                           z=10000))
     # Transparency buttons
     fig.update_layout(
+        margin=dict(
+            l=10,
+            r=10,
+            b=10,
+            t=10,
+            pad=0
+        ),
         updatemenus=[
             dict(
                 type="buttons",
@@ -183,19 +193,55 @@ def get_3d_model_plot(model_info):
                         method="update"
                     )
                 ]),
-                pad={"r": 10, "t": 10},
+                pad={"r": 1, "t": 1},
                 showactive=True,
-                x=0.11,
+                x=0,
                 xanchor="left",
-                y=1.1,
+                y=0,
                 yanchor="top"
             ),
         ]
     )
 
-    fig.show()
+    # TODO add projection direction lines
+    #full_fig = fig.full_figure_for_development()
+    #print(full_fig.layout.xaxis.range)
+
+    if lines:
+        proj_line_width = 3
+        proj_line_color = 'indigo'
+        # Generate
+        xmin, xmax = np.min(x), np.max(x)
+        ymin, ymax = np.min(y), np.max(y)
+        zmin, zmax = np.min(z), np.max(z)
+
+        if line_dir == 'z':
+            xgrid = np.linspace(xmin,xmax,5)
+            ygrid = np.linspace(ymin,ymax,5)
+            for x0 in xgrid:
+                for y0 in ygrid:
+                    fig.add_trace(go.Scatter3d(x=[x0,x0],y=[y0,y0],z=[zmin,zmax],mode='lines',
+                                               line=dict(width=proj_line_width,color=proj_line_color)))
+        elif line_dir =='y':
+            xgrid = np.linspace(xmin,xmax,5)
+            zgrid = np.linspace(zmin,zmax,5)
+            for x0 in xgrid:
+                for z0 in zgrid:
+                    fig.add_trace(go.Scatter3d(x=[x0,x0],y=[ymin,ymax],z=[z0,z0],mode='lines',
+                                               line=dict(width=proj_line_width,color=proj_line_color)))
+        elif line_dir =='x':
+            ygrid = np.linspace(ymin,ymax,5)
+            zgrid = np.linspace(zmin,zmax,5)
+            for y0 in ygrid:
+                for z0 in zgrid:
+                    fig.add_trace(go.Scatter3d(x=[xmin,xmax],y=[y0,y0],z=[z0,z0],mode='lines',
+                                               line=dict(width=proj_line_width,color=proj_line_color)))
+
+        fig.update_traces(showlegend=False)
 
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+
+    #fig.show()
 
     return graphJSON
 
@@ -257,7 +303,7 @@ def generate_projection_2d_1d(img,angle):
     proj1d : np.ndarray
         1D normalized array of projection
     """
-
+    # TODO Null all voxels outside of cylinder
     # Use Radon transform
     # Generate 1D projection of 2D image
     proj1d = radon(img,[angle])
@@ -266,7 +312,7 @@ def generate_projection_2d_1d(img,angle):
 
     return proj1d
 
-def plot_projection(proj,axes):
+def plot_projection(proj,axes,lines=False,lines_angle=90):
     """Make 2D or 1D projection plot
 
     Parameters
@@ -288,18 +334,43 @@ def plot_projection(proj,axes):
     """
     # Generates JSON string of a projection plot
     if len(axes) == 2:
-        fig = px.imshow(np.rot90(proj), binary_string=True)
-        fig.update_xaxes(title=axes[0],showticklabels=False)
-        fig.update_yaxes(title=axes[1],showticklabels=False)
+        proj = np.rot90(proj)
+        proj = np.flipud(proj)
+        #fig = px.imshow(proj, binary_string=True)
+
+        fig = go.Figure(go.Heatmap(z=proj,colorscale='gray',showscale=False))
+        fig.update_layout(yaxis=dict(scaleanchor='x'),plot_bgcolor='rgba(0,0,0,0)',
+                          width=400,height=400)
+        if lines:
+            theta = lines_angle * np.pi / 180
+            # Add projection lines!
+            line_ys = np.linspace(-20,proj.shape[1]+21,9)
+            for y in line_ys:
+                xs = np.array([-20,proj.shape[0]+21])
+                ys = np.array([y,y])
+                xy = np.array([xs-proj.shape[0]/2,ys-proj.shape[1]/2])
+                R = np.array([[np.cos(theta),-np.sin(theta)],[np.sin(theta),np.cos(theta)]])
+                rotxys = np.matmul(R,xy)
+                rxs = rotxys[0,:]+proj.shape[0]/2
+                rys = rotxys[1,:]+proj.shape[1]/2
+                fig.add_trace(go.Scatter(x=rxs, y=rys,mode='lines',
+                                         line=dict(width=1,color='lime')))
+
+        fig.update_traces(showlegend=False)
+        fig.update_xaxes(title=axes[0], showticklabels=False, range=[1, proj.shape[0]])
+        fig.update_yaxes(title=axes[1], showticklabels=False, range=[1, proj.shape[1]])
+
     elif len(axes) == 1:
         fig = go.Figure()
         fig.add_trace(go.Scatter(y=proj,mode='lines',line=dict(width=3,color='darkslateblue')))
         fig.update_xaxes(title=axes[0])
         fig.update_yaxes(title='Relative amplitude')
+        fig.update_layout(dict(width=500, height=350))
+
     else:
         fig = go.Figure()
 
-    fig.show()
+    #fig.show()
 
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
@@ -333,7 +404,7 @@ def stl2mesh3d(stl_mesh):
     K = np.take(ixr, [3*k+2 for k in range(p)])
     return vertices, I, J, K
 
-def convert_stls_to_voxels(input_file_paths, resolution=100):
+def convert_stl_to_voxels(input_file_path, resolution=100):
     """Modified function from stltovoxel to output rasterized volume directly
 
     Parameters
@@ -349,27 +420,33 @@ def convert_stls_to_voxels(input_file_paths, resolution=100):
         3D array - rasterized boolean volume representation of 3D model
     """
     meshes = []
-    for path in input_file_paths:
-        mesh_obj = mesh.Mesh.from_file(path)
-        org_mesh = np.hstack((mesh_obj.v0[:, np.newaxis], mesh_obj.v1[:, np.newaxis], mesh_obj.v2[:, np.newaxis]))
-        meshes.append(org_mesh)
-
-    parallel = False
-    vol, scale, shift = stltovoxel.convert_meshes(meshes, resolution, parallel)
+    mesh_obj = mesh.Mesh.from_file(input_file_path)
+    org_mesh = np.hstack((mesh_obj.v0[:, np.newaxis], mesh_obj.v1[:, np.newaxis], mesh_obj.v2[:, np.newaxis]))
+    meshes.append(org_mesh)
+    vol, scale, shift = stltovoxel.convert_meshes(meshes, resolution, parallel=False)
     vol = np.swapaxes(vol,0,2)
+
     return vol
 
+def game7_empty_plots_worker():
+    j1 = go.Figure()
+    j1.add_trace(go.Scatter(x=[],y=[]))
+    j1.update_layout(width=500, height=350,paper_bgcolor='gainsboro')
+
+    j2 = plot_projection(np.zeros((256,256)),['',''],lines=False)
+    j3 = plot_projection([],['r'],lines=False)
+
+    return j2, j2, j3
 
 if __name__ == "__main__":
     proj3d_axis = 'y' # Can only be x, y, or z
     proj2d_angle = 45 # degrees
 
     # Replace name with any included in the /static/data/solids folde
-    j1, voxels = game7_prep3d_worker(name='letterY')
-    j2, j3 = game7_projection_worker(voxels, proj3d_axis, proj2d_angle)
+    j1, voxels = game7_prep3d_worker(name='letterC',lines=True,line_dir='y')
+    j2, j3 = game7_projection_worker(voxels, proj3d_axis, proj2d_angle,lines=True,lines_angle=45)
 
     # j1, j2, and j3 are the 3D, 2D, and 1D plots, respectively.
-
 
     # Right now fig.show() is called for all 3 graphs.
     # It needs to be disabled in actual GUI usage.
