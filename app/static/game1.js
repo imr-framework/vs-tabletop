@@ -13,6 +13,12 @@ tabs.forEach((tab, index) => {
         tabs[index].classList.add('is-active');
     });
 });
+
+$('.tabs__toggle').on('click', (event)=>{
+    $('#Matrix_scale').val(128);
+    $('#Voxel_scale').val(1.00);
+    $('#FOV_scale').val(128.00);
+})
 let socket = io();
 
 $(':input').on('change', (event)=>{

@@ -194,7 +194,7 @@ def fetch_all_game1_questions():
                           'choices':qchoices,
                           'correct': corr_array_new.index(True)})
 
-    # TODO Rishi replace success text as needed 
+    # TODO Rishi replace success text as needed
     success_text[0] = "You got the first answer correct!"
     success_text[1] = "You got the second answer correct!"
 
