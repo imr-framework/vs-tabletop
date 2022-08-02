@@ -97,7 +97,7 @@ class MultipleChoice(db.Model):
     game_number = db.Column(db.Integer(),index=True)# 1 - 8
     main_image_path = db.Column(db.String(),default='')
     uses_images = db.Column(db.Boolean(),default=False, index=True)
-    question_text = db.Column(db.Text(),index=True, unique=True)
+    question_text = db.Column(db.Text(),index=True, unique=False)
     choiceA = db.Column(db.String(),default='First choice') # Choice text or path to image
     choiceB = db.Column(db.String(),default='Second choice')
     choiceC = db.Column(db.String(),default='Third choice')
