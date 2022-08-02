@@ -76,6 +76,8 @@ def get_image(fov,n,n_zf,min_level,max_level):
     final_image[final_image<=0] = 0
     final_image[final_image>=1] = 1
 
+    final_image = np.flipud(final_image)
+
     return final_image
 
 def generate_plot(img):
