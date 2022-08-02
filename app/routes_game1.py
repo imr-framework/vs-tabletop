@@ -7,12 +7,23 @@ import utils
 from forms import *
 from info import GAMES_DICT
 from models import User, Calibration
+
+
 from __main__ import app, login_manager, db, socketio
+
+
+from models import MultipleChoice
 
 
 @app.route('/games/1',methods=["GET","POST"])
 def game1():
     form=Game1Form()
+
+    questions, success_text, uses_images = fetch_all_game1_questions()
+
+    print(questions)
+    print(success_text)
+    print(uses_images)
 
     j1 = game1_worker(session['game1']['FOV_scale'], session['game1']['Matrix_scale'], session['game1']['zero_fill'],
                       session['game1']['Min_scale'], session['game1']['Max_scale'])
@@ -26,7 +37,7 @@ def game1():
 
     return render_template('game1.html',template_title="What is in an image?",
                            template_intro_text="Voxels, field-of-views, and resolution ", G1Form = form,
-                           graphJSON_img = j1)
+                           graphJSON_img = j1, questions=questions, success_text=success_text, uses_images=uses_images)
 
 
 @socketio.on('Update param for Game1')
@@ -145,3 +156,35 @@ def update_parameter(info):
 
     print(info)
     
+
+def fetch_all_game1_questions():
+    questions = []
+    uses_images_list = []
+    success_text = 10*['Correct! Move on to the next question.']
+    for id in range(101,111):
+        print(id)
+        Q = MultipleChoice.query.get(id)
+
+        qdata = Q.get_randomized_data()
+        uses_images_list.append(Q.uses_images)
+
+        corr_array = [l==qdata[2] for l in ['A','B','C','D']]
+        corr_array_new = []
+        qchoices = []
+        for ind in range(len(qdata[1])):
+            if len(qdata[1][ind])!=0:
+                qchoices.append(qdata[1][ind])
+                corr_array_new.append(corr_array[ind])
+
+        questions.append({'text': qdata[0],
+                          'choices':qchoices,
+                          'correct': corr_array_new.index(True)})
+
+    success_text[0] = "Special text for 1 "
+    success_text[1] = "Special text for 2 "
+
+    return questions, success_text, uses_images_list
+
+@socketio.on("Updating choice for Game 1")
+def update_Choice(info):
+    print(info)

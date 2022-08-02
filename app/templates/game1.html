@@ -100,52 +100,45 @@ body {font-family: Arial;}
                             <div class="carousel-indicators">
                                 <button type="button" data-bs-target="#slide" data-bs-slide-to="0" class="active"></button>
                                 <button type="button" data-bs-target="#slide" data-bs-slide-to="1"></button>
+                                <button type="button" data-bs-target="#slide" data-bs-slide-to="2"></button>
+                                <button type="button" data-bs-target="#slide" data-bs-slide-to="3"></button>
+                                <button type="button" data-bs-target="#slide" data-bs-slide-to="4"></button>
+                                <button type="button" data-bs-target="#slide" data-bs-slide-to="5"></button>
+                                <button type="button" data-bs-target="#slide" data-bs-slide-to="6"></button>
+                                <button type="button" data-bs-target="#slide" data-bs-slide-to="7"></button>
+                                <button type="button" data-bs-target="#slide" data-bs-slide-to="8"></button>
+                                <button type="button" data-bs-target="#slide" data-bs-slide-to="9"></button>
+
                             </div>
 
                             <div class="carousel-inner">
-                                <div class="carousel-item active">
-                                    <form action="/games/1" method="POST">
-                                    <h2><b>Question 1</b></h2>
-                                    <br> What combination of values outputs the image with the best resolution?
-                                    <br> {{ G1Form.P1_q() }}
-                                    {{G1Form.submit_field_q(class="btn btn-primary")}}
+                                <form action="/games/1" method="POST">
+                                {% for ind in range(success_text | length) %}
+                                    {% for int in range(choices | length) %}
+                                        {% set letters = ['a','b','c','d'] %}
+                                    {% endfor %}
+                                    {% set letters = ['a','b','c','d'] %}
+                                    {% set active_text = 'active' if ind==0 else '' %}
+                                    <div class="carousel-item {{active_text}}">
+                                        <h2>Question {{ ind+1 }}</h2>
+                                        <br>{{ questions[ind]['text']}}
+                                        <br>
+                                        {% for choice in questions[ind]['choices'] %}
+                                            {% if not uses_images[ind] %}
+                                            <br><input type="radio" id="{{ letters[ind] }}" name="mc-question" value="{{ letters[ind] }}">
+                                            <label for="{{ letters[ind] }}">{{ choice }}</label>
+                                            {% else %}
+                                            <input type="radio" id="{{ letters[ind] }}" name="mc-question" value="{{ letters[ind] }}">
+                                            <label for="{{ letters[ind] }}"><img src=".{{ choice }}" style="height: 150px; width:150px;"></label>
+                                            {% endif %}
+                                        {% endfor %}
 
-                                    {% if session['game1']['P1_q'] == 'High Matrix Size and Low Voxel Size' %}
-                                    <br><i class="bi bi-patch-check"></i>
-                                        <br><b>Good Job! You unlocked the Zero-fill panel!</b>
+                                        <br> <!-- {{ G1Form.submit_field_q(class="btn btn-primary") }}-->
+                                            <button class="btn btn-large btn-primary" id="submit-mc">Submit</button>
+                                    </div>
 
-                                    {% elif session['game1']['P1_q'] == 'Low Matrix Size and High Voxel Size' %}
-                                        <br>Try again!
-
-                                    {% elif session['game1']['P1_q'] == 'High Matrix Size and High Voxel Size' %}
-                                        <br>Try again!
-
-                                    {% elif session['game1']['P1_q'] == 'Low Matrix Size and Low Voxel Size' %}
-                                        <br>Try again!
-
-                                    {% endif %}
-                                    </form>
-                                </div>
-                                <div class="carousel-item">
-                                    <form action="/games/1" method="POST">
-                                        <h2>Question 2</h2>
-                                        <br> What happens as the zero-fill value increases?
-                                        <br>{{ G1Form.P2_q() }}
-                                        <br>{{G1Form.submit_field_q(class="btn btn-primary")}}
-
-                                        {% if session['game1']['P2_q'] == 'The matrix size increases' %}
-                                            <br><i class="bi bi-patch-check"></i>
-                                            <br><b>Good Job! You unlocked the Windowing Panel!</b>
-
-                                        {% elif session['game1']['P2_q'] == 'The matrix size decreases' %}
-                                            <br>Try again!
-
-                                        {% elif session['game1']['P2_q'] == 'The matrix size stay the same' %}
-                                            <br>Try again!
-
-                                        {% endif %}
-                                    </form>
-                                </div>
+                                {% endfor %}
+                                </form>
                             </div>
                             <button class="carousel-control-prev" type="button" data-bs-target="#slide" data-bs-slide="prev">
                                 <span class="carousel-control-prev-icon"></span>
@@ -185,6 +178,69 @@ body {font-family: Arial;}
 
         <div class="col-6 h-100">
             <form action="/games/1" method="POST">
+                <div class="tabs">
+      <div class="tabs__head" style="width: 170%">
+        <div class="tabs__toggle is-active">
+          <span class="tabs__name">Task 1: FOV</span>
+        </div>
+        <div class="tabs__toggle">
+          <span class="tabs__name">Task 2: Matrix Size</span>
+        </div>
+        <div class="tabs__toggle">
+          <span class="tabs__name">Third Tab</span>
+        </div>
+      </div>
+      <div class="tabs__body" style="width: 170%">
+        <div class="tabs__content is-active">
+          <h2 class="tabs__title">Instructions</h2>
+          <p class="tabs__text">
+              1. Experiment with multiple FOV sizes and observe how the image changes with increasing and decreasing values.
+              <br>2. After you are done, answer Question 1 and continue to the Task!
+          </p>
+            <h2 class="tabs__title">Task: Finding the perfect FOV size</h2>
+            <p class="tabs__text">
+                <i>Change the FOV sizes to find the perfect FOV that allows the entire image to be seen in the scan area.</i>
+                {% if session['game1']['FOV_scale'] < 0.2 %}
+                    <br><b><i>Increase the FOV to zoom out!</i></b>
+                {% elif session['game1']['FOV_scale'] > 0.3 %}
+                    <br><i>Decrease the FOV to zoom in!</i>
+                {% else %}
+                    <br><i class="bi bi-clipboard-check-fill"></i>
+                    <i><b>Perfect FOV achieved!</b></i>
+                    <i class="bi bi-clipboard-check-fill"></i>
+                    <br><i class="bi bi-unlock"></i>
+                    <i><b>Task 2 Unlocked!</b></i>
+                    <i class="bi bi-unlock"></i>
+                    {{ session['game1']['FOV_scale'] == 0.128 }}
+                {% endif %}
+            </p>
+        </div>
+        <div class="tabs__content">
+          <h2 class="tabs__title">Instructions</h2>
+          <p class="tabs__text">1. Experiment with multiple Matrix sizes and observe how the image changes with increasing and decreasing values.
+                            <br>2. After you are done, answer Question 2 and continue to the task!
+          </p>
+            <h2 class="tabs__title">Task: Finding the perfect Matrix Size</h2>
+                <p class="tabs__text">
+                    <i>Change the Matrix Sizes to find the perfect Matrix Size that allows the image to be seen the most clearly.</i>
+                {% if session['game1']['Matrix_scale'] < 200  %}
+                    <br><b><i>Continue to increase the Matrix Size. You are close.</i></b>
+                    {% elif session['game1']['Matrix_scale'] >= 200 %}
+                        <br><i class="bi bi-clipboard-check-fill"></i>
+                        <b><i>Perfect Matrix Size Achieved!</i></b>
+                        <i class="bi bi-clipboard-check-fill"></i>
+                        <br><i class="bi bi-unlock"></i>
+                        <i><b>Task 3 Unlocked!</b></i>
+                        <i class="bi bi-unlock"></i>
+                {% endif %}
+            </p>
+        </div>
+        <div class="tabs__content">
+          <h2 class="tabs__title">Third Title</h2>
+          <p class="tabs__text">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Mollitia quasi commodi nisi ex nostrum, aspernatur dicta perferendis deserunt reiciendis a delectus molestias eius porro, tempore molestiae ipsam sit quam aut officia, autem, perferendis?</p>
+        </div>
+      </div>
+    </div>
                 <div class="row card">
                     <div class="card-header"><b>Select FOV, Matrix size, and Voxel Size Metric</b></div>
                     <div class="card-body">
@@ -283,65 +339,6 @@ body {font-family: Arial;}
 
                 {% endif %}
                 <br>{{G1Form.submit_field(class="btn btn-primary")}}
-
-                      <div class="tabs">
-      <div class="tabs__head">
-        <div class="tabs__toggle is-active">
-          <span class="tabs__name">Task 1: FOV</span>
-        </div>
-        <div class="tabs__toggle">
-          <span class="tabs__name">Task 2: Matrix Size</span>
-        </div>
-        <div class="tabs__toggle">
-          <span class="tabs__name">Third Tab</span>
-        </div>
-      </div>
-      <div class="tabs__body">
-        <div class="tabs__content is-active">
-          <h2 class="tabs__title">Instructions</h2>
-          <p class="tabs__text">
-              1. Experiment with multiple FOV sizes and observe how the image changes with increasing and decreasing values.
-              2. After you are done, answer Question 1 and continue to the Task!
-          </p>
-            <h2 class="tabs__title">Task: Finding the perfect FOV size</h2>
-            <p class="tabs__text">
-                <i>Change the FOV sizes to find the perfect FOV that allows the entire image to be seen in the scan area.</i>
-                {% if session['game1']['FOV_scale'] < 0.2 %}
-                    <br><b><i>Increase the FOV to zoom out!</i></b>
-                {% elif session['game1']['FOV_scale'] > 0.5 %}
-                    <i>Decrease the FOV to zoom in!</i>
-                {% else %}
-
-                    <br><i class="bi bi-clipboard-check-fill"></i>
-                    <i><b>Perfect FOV achieved!</b></i>
-                    <i class="bi bi-clipboard-check-fill"></i>
-                    <i></i>
-                {% endif %}
-            </p>
-        </div>
-        <div class="tabs__content">
-          <h2 class="tabs__title">Instructions</h2>
-          <p class="tabs__text">1. Experiment with multiple Matrix sizes and observe how the image changes with increasing and decreasing values.
-                            <br>2. After you are done, answer Question 2 and continue to the task!
-          </p>
-            <h2 class="tabs__title">Task: Finding the perfect Matrix Size</h2>
-                <p class="tabs__text">
-                    <i>Change the Matrix Sizes to find the perfect Matrix Size that allows the image to be seen the most clearly.</i>
-                {% if session['game1']['Matrix_scale'] < 200  %}
-                    <br><b><i>Continue to increase the Matrix Size. You are close.</i></b>
-                    {% elif session['game1']['Matrix_scale'] >= 200 %}
-                        <br><i class="bi bi-clipboard-check-fill"></i>
-                        <b><i>Perfect Matrix Size Achieved!</i></b>
-                        <i class="bi bi-clipboard-check-fill"></i>
-                {% endif %}
-            </p>
-        </div>
-        <div class="tabs__content">
-          <h2 class="tabs__title">Third Title</h2>
-          <p class="tabs__text">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Mollitia quasi commodi nisi ex nostrum, aspernatur dicta perferendis deserunt reiciendis a delectus molestias eius porro, tempore molestiae ipsam sit quam aut officia, autem, perferendis?</p>
-        </div>
-      </div>
-    </div>
 
                     <br><div class="row card">
                     <div class="card header bg-light"><b>Star Count: Climb your way up to 5 black stars!</b></div>

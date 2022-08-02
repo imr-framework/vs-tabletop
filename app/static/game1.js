@@ -1,8 +1,31 @@
+let tabs = document.querySelectorAll('.tabs__toggle'),
+    contents = document.querySelectorAll('.tabs__content');
+
+tabs.forEach((tab, index) => {
+    tab.addEventListener('click', () => {
+        contents.forEach((content) => {
+            content.classList.remove('is-active');
+        });
+        tabs.forEach((tab) => {
+            tab.classList.remove('is-active');
+        });
+        contents[index].classList.add('is-active');
+        tabs[index].classList.add('is-active');
+    });
+});
 let socket = io();
 
 $(':input').on('change', (event)=>{
     console.log('Updating')
     socket.emit("Update param for Game1", {'id': event.target.id, 'value': event.target.value});
+})
+
+$('#submit-mc').on('click', (event)=>{
+
+    choice = $("input[name=mc-question]:checked").attr("id")
+    //choice="some choice"
+    console.log('Updating choice')
+    socket.emit("Updating choice for Game 1", {'choice':choice});
 })
 
 socket.on('G1 take session data', (msg)=>{
@@ -111,18 +134,3 @@ $(document).ready(function(){
   $('[data-bs-toggle="popover"]').popover();
 });
 
-let tabs = document.querySelectorAll('.tabs__toggle'),
-    contents = document.querySelectorAll('.tabs__content');
-
-tabs.forEach((tab, index) => {
-    tab.addEventListener('click', () => {
-        contents.forEach((content) => {
-            content.classList.remove('is-active');
-        });
-        tabs.forEach((tab) => {
-            tab.classList.remove('is-active');
-        });
-        contents[index].classList.add('is-active');
-        tabs[index].classList.add('is-active');
-    });
-});
