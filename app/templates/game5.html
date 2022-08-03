@@ -242,6 +242,37 @@
                            <div class="row h-25 card bsg-light d-flex justify-content-center align-content-center" id="message-region">
                                <i class="bi bi-megaphone" id="megaphone"></i>
                                <p class="font-monospace" id="message-game5"></p>
+
+
+                               <p class="font-monospace" id="stars-display">
+
+                                   {% set num_stars = session['game5']['progress'].num_stars %}
+                                   {% set num_full = (num_stars | round(0,'floor') )| int %}
+                                   {% set num_half = ((2*(num_stars-num_full)) | round) | int %}
+                                   {% set num_empty = 5 - num_full - num_half %}
+                                   {% set star_array = [] %}
+                                    <span>{{ num_stars }}/5 stars earned</span>
+                                   {% for f in range(num_full) %}
+                                        {% set star_array = star_array.append(2) %}
+                                   {% endfor %}
+                                   {% for h in range(num_half) %}
+                                        {% set star_array = star_array.append(1) %}
+                                   {% endfor %}
+                                   {% for e in range(num_empty) %}
+                                       {% set star_array = star_array.append(0) %}
+                                    {% endfor %}
+
+                                   {% for star in star_array %}
+                                       {% if star == 2 %}
+                                            <i class="bi bi-star-fill"></i>
+                                       {% elif star == 1 %}
+                                           <i class="bi bi-star-half"></i>
+                                       {% else %}
+                                           <i class="bi bi-star"></i>
+                                       {% endif %}
+                                   {% endfor %}
+                               </p>
+
                            </div>
 
 
@@ -254,28 +285,31 @@
                     <div class="card-header h3">Tasks</div>
                     <div class="card-body">
 
-                    <ul class="nav nav-tabs" id="taskTab" role="tablist">
-                        {% for ind, title in enumerate(instructions['titles']) %}
+                    <ul class="nav nav-tabs" id="game5-tab" role="tablist">
+                        {% for title in instructions['titles'] %}
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="task{{ ind + 1 }}" data-bs-toggle="tab" data-bs-target="#step{{ ind + 1 }}"
-                                        type="button" role="tab"  aria-controls="step{{ ind + 1 }}" aria-selected="{{ str(ind==0) }}">
+                                <button class="nav-link" id="task{{ loop.index }}" data-bs-toggle="tab" data-bs-target="#step{{ loop.index }}"
+                                        type="button" role="tab"  aria-controls="step{{ loop.index }}" aria-selected="{{ loop.index==1 }}">
                                     {{ title }}
                                 </button>
                             </li>
                         {% endfor %}
                     </ul>
 
-
                     <div class="tab-content" id="game5-tab-content">
-                      <div class="tab-pane fade show active" id="step1" role="tabpanel" aria-labelledby="home-tab">
-                          <p>This is step 1.</p>
-                      </div>
-                      <div class="tab-pane fade" id="step2" role="tabpanel" aria-labelledby="profile-tab">
+                        {% for task in instructions['tasks'] %}
+                            {% set show_text = (loop.index==1) %}
+                          <div class="tab-pane fade {{ show_text }} {{ active_text }}" id="step{{ loop.index }}" role="tabpanel" aria-labelledby="step{{ loop.index }}-tab">
+                              <p>{{ task }}</p>
+                          </div>
+                        {% endfor %}
 
-                      </div>
-                      <div class="tab-pane fade" id="step3" role="tabpanel" aria-labelledby="contact-tab">
 
-                      </div>
+
+                      <div class="tab-pane fade" id="step2" role="tabpanel" aria-labelledby="profile-tab"></div>
+                      <div class="tab-pane fade" id="step3" role="tabpanel" aria-labelledby="contact-tab"></div>
+
+
                     </div>
 
                     </div>
