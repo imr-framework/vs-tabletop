@@ -72,22 +72,24 @@ class Progress(db.Model):
     num_questions = db.Column(db.Integer(),index=True)
     num_correct = db.Column(db.Integer(),index=True)
     num_stars = db.Column(db.Integer(),index=True)
-    num_lab_steps_complete = db.Column(db.Integer(),index=True)
-    num_lab_steps_total = db.Column(db.Integer(),index=True)
-    user_id = db.Column(db.Integer(),db.ForeignKey('user.id'),nullable=False) # Which user it belongs to
+    num_steps_complete = db.Column(db.Integer(),index=True)
+    num_steps_total = db.Column(db.Integer(),index=True)
+    user_id = db.Column(db.Integer(),db.ForeignKey('user.id')) # Which user it belongs to
+    date_achieved = db.Column(db.Date(),index=True,default=datetime.utcnow())
 
     def update_stars(self):
         correct_rate = self.num_correct / self.num_questions
-        complete_rate = self.num_lab_steps_complete / self.num_lab_steps_total
+        complete_rate = self.num_steps_complete / self.num_steps_total
         self.num_stars = correct_rate * 2 + complete_rate * 3
 
-    def another_question_answered(self,correct):
-        self.num_questions += 1
-        if correct:
-            self.num_correct += 1
+    def __repr__(self):
+        rep = f'Progress of User ID #{self.user_id} for Game {self.game_number}: \n'
+        rep += f'Multiple choice questions: {self.num_correct}/{self.num_questions} correct \n'
+        rep += f'Game steps: {self.num_steps_complete}/{self.num_steps_total} complete \n'
+        rep += f'Number of stars earned: {self.num_stars}/5 \n'
+        rep += f'Date: {self.date_achieved}'
 
-    def another_step_complete(self):
-        self.num_lab_steps_complete += 1
+        return rep
 
 
 

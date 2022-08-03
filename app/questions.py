@@ -292,6 +292,7 @@ def initialize_game5_questions():
     mcs.append(MultipleChoice(
         id = 504,
         game_number=5,
+        uses_images=False,
         question_text="Which of the four options maximizes the voltage range of the received signal? The initial M is at equilibrium and points along z.",
         choiceA="Using a 5-degree pulse with a phase of 180 degrees",
         choiceB="Using a 85-degree pulse with a phase of 45 degrees",
@@ -300,6 +301,8 @@ def initialize_game5_questions():
         correct_choice="B",
         difficulty="hard"
     ))
+
+    return mcs
 
 def refresh_database_and_add_questions(mcs):
     db.drop_all() # Gets rid of database structure as well
@@ -334,6 +337,7 @@ if __name__ == "__main__":
 
     mc_list = initialize_game1_questions()
     mc_list += initialize_game3_questions()
+    mc_list += initialize_game5_questions()
     refresh_database_and_add_questions(mc_list)
     initialize_users() # adds admin back into database
 
@@ -344,7 +348,7 @@ if __name__ == "__main__":
     #print(MultipleChoice.query.get(102).get_randomized_data())
 
 
-    print(MultipleChoice.query.filter_by(game_number=3).all())
+    print(MultipleChoice.query.filter_by(game_number=5).all())
 
     # Example querying of database
     # All Game 1 questions

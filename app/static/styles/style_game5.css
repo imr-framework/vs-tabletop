@@ -1,0 +1,15 @@
+
+.carousel-item {
+    height:32rem;
+    background: gray;
+    color: white;
+    font-family: monospace sans-serif;
+}
+.carousel-inner{
+    height: 450px;
+    color: grey;
+}
+
+#slide{
+    background: gray;
+}

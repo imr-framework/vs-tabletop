@@ -133,6 +133,7 @@ socket.on('message', (msg)=>{
         added_class = 'text-primary';
     }
     $('#message-game5').text(msg['text']).removeClass('text-success text-danger text-primary').addClass(added_class);
+    $('#megaphone').removeClass('text-success text-danger text-primary').addClass(added_class)
 })
 
 
@@ -295,3 +296,39 @@ function play_animation_signal(graphData,loop){
 function stop_animation_signal(){
     cancelAnimationFrame(reqAnim2)
 }
+
+// Enable question mark popovers
+
+$(document).ready(function(){
+  $('[data-bs-toggle="popover"]').popover();
+});
+
+// Multiple choice
+$('.answer-mc').on('click', (event)=>{
+    submit_id = event.target.id;
+    q_ind = submit_id[submit_id.length-1]
+    console.log(submit_id);
+    choice = $(`.q${q_ind}-choice:checked`).attr("value");
+
+    console.log(choice)
+
+    let letters = ['a','b','c','d'];
+
+    if (choice == letters[parseInt($(`#mc-correct-choice-${q_ind}`).text())]){
+        console.log("Answer is correct! ")
+        // Make success text visible
+        $(`#mc-success-text-${q_ind}`).removeClass('d-none')
+        $(`#mc-failure-text-${q_ind}`).addClass('d-none')
+        socket.emit('question answered',{'ind':q_ind, 'correct':true});
+
+    }
+    else{
+        console.log("Answer is wrong! ")
+        $(`#mc-success-text-${q_ind}`).addClass('d-none')
+        $(`#mc-failure-text-${q_ind}`).removeClass('d-none')
+        socket.emit('question answered',{'ind':q_ind,'correct':false});
+
+        // Hide success text
+    }
+    console.log('Updating choice')
+})
