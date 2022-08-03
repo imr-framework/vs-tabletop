@@ -5,17 +5,35 @@
 
     <div class="row h-100">
     <!-- Display panels on the left -->
-        <div class="col-4 h-100" id="display-game5">
+        <div class="col-3 h-100" id="display-game5">
 
             <div class="row card bg-light">
-                <div class="card-header">Spin Animation</div>
+                <div class="card-header">
+                    <span>Magnetization</span>
+                        <div type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="right"
+                                      title="Magnetization (M)"
+                                data-bs-content="Net magnetic dipole moment that develops when protons are placed in the main magnetic field.
+                                                 At equilibrium, M is parallel to B0. Both are along the z (top-down) direction in this graph.">
+                                    <i class="bi bi-question-circle-fill"></i>
+                                </div>
+
+                </div>
                 <div class="card-body">
                     <div id='chart-spin' class='chart'></div>
                 </div>
             </div>
 
             <div class="row card">
-                <div class="card-header">Signal</div>
+                <div class="card-header">
+                    <span>Signal (emf)</span>
+                        <div type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="right"
+                                      title="Electromotive Force (emf)"
+                             data-bs-content="Voltage that develops across the wire loop when the magnetic flux that passes through it changes in time;
+                                              this change can be caused by rotating / precessing magnetization. The voltage waveform is the raw signal that
+                                              will be converted to an MR image.">
+                                    <i class="bi bi-question-circle-fill"></i>
+                                </div>
+                </div>
                 <div class="card-body">
                   <div id='chart-signal' class='chart'></div>
                 </div>
@@ -23,12 +41,19 @@
         </div>
 
     <!-- Input fields -->
-        <div class="col col-8">
+        <div class="col col-9">
             <div class="row h-50" id="fields-game5">
                     {{ template_game_form.hidden_tag() }}
                     <div class="col col-6">
                         <div class="row h-25 card">
-                                 <h3 class="card-header">Main field (Gauss)</h3>
+                                 <div class="card-header">
+                                     <span class="h3">Main field (Gauss)</span>
+                                      <div type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="right"
+                                              title="Main field" data-bs-content="Also called B0, it is a strong magnetic field that generates a net magnetization in the imaged subject. The main field needs to stay on throughout the experiment.">
+                                            <i class="bi bi-question-circle-fill"></i>
+                                      </div>
+                                 </div>
+
                                  <div class="card-body row">
                                      <div class="col-4">
                                         {{ template_game_form.b0_onoff_field(class="btn-check",id="b0_on",autocomplete="off",
@@ -52,15 +77,38 @@
                                  </div>
                             </div>
                         <div class="row h-50 card">
-                            <h3 class="card-header">RF pulse</h3>
+                            <h3 class="card-header">
+                                <span>RF pulse</span>
+                             <div type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="bottom"
+                                      title="Radiofrequency Pulse"
+                                  data-bs-content="The RF pulses are a short-lived and high frequency magnetic fields that sit within the x-y plane. They can rotate the magnetization to different degrees.">
+                                    <i class="bi bi-question-circle-fill"></i>
+                                </div>
+                            </h3>
                             <!-- TODO fix this! -->
                             <div class="card-body row">
                                 <div class="col-4">
                                     <div class="row h-50">
+
+                                        <div class="col-8">
                                         {{ template_game_form.flip_angle_field.label }}
+                                        </div>
+                                         <button type="button" class="col-4 btn btn-sm d-flex justify-content-evenly" data-bs-toggle="popover" data-bs-placement="top"
+                                              title="Flip Angle"
+                                              data-bs-content="The change in the magnetization's angle relative to the z-axis caused by an RF pulse">
+                                            <i class="bi bi-question-circle-fill"></i>
+                                        </button>
                                     </div>
+
                                     <div class="row h-50">
+                                        <div class="col-8">
                                         {{ template_game_form.rf_phase_field.label }}
+                                        </div>
+
+                                         <div type="button" class="col-4 btn btn-sm d-flex justify-content-evenly" data-bs-toggle="popover" data-bs-placement="top"
+                                              title="Pulse direction" data-bs-content="The angle the RF field (also called B1 field, which lies in the x-y plane) makes with the positive x-axis. ">
+                                            <i class="bi bi-question-circle-fill"></i>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-8">
@@ -87,7 +135,14 @@
                             </div>
                     </div>
                         <div class="row h-25 card">
-                            <h3 class="card-header">Receive coil</h3>
+                            <h3 class="card-header">
+                            <span>Receive coil</span>
+                                 <div type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="right"
+                                      title="Receive Coil"
+                                      data-bs-content="A loop of conductive wire is placed vertically so that the processing magnetization vectors pierce through it. ">
+                                    <i class="bi bi-question-circle-fill"></i>
+                                </div>
+                            </h3>
                             <div class="card-body row">
                             <div class="col-4">
                                 <!-- input type="checkbox" class="btn-check" name="options-outlined" id="rx-button" autocomplete="off" -->
@@ -106,6 +161,12 @@
                                     {{ template_game_form.rot_frame_onoff_field(class="btn-check",id="rot-frame-button",autocomplete="off",
                                                                                 checked=session['game5']['rot_frame_on']) }}
                                     <label class="btn btn-outline-info" for="rot-frame-button">Rotating frame </label>
+                                        <div type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="bottom"
+                                      title="Rotating frame of reference"
+                                             data-bs-content="We can make the precessing magnetization look still if we are on a merry-go-round at the same speed;
+                                                              that is, if we are in a rotating frame of reference. Turn it on and see for yourself!">
+                                    <i class="bi bi-question-circle-fill"></i>
+                                </div>
                                 </div>
 
                                 <div class="btn-group col-4">
@@ -164,8 +225,8 @@
                                 </div>
 
                             </div>
-                            <div class="row h-50 card bg-light" id="game5-button-region">
-                                <h3 class="card-header">Controls</h3>
+
+                            <div class="row h-25 card bg-light" id="game5-button-region">
                                 <div class="row card-body">
                                     <!--{{template_game_form.submit_field(class_="btn btn-success btn-lg col")}}-->
                                     <div class="btn btn-info btn-lg col d-flex align-items-center justify-content-center" id="start">START</div>
@@ -176,98 +237,106 @@
                                 </div>
                                 <!-- Saving current parameters, loading previous ones -->
 
-                                </div>
+                            </div>
+
+                           <div class="row h-25 card bsg-light d-flex justify-content-center align-content-center" id="message-region">
+                               <i class="bi bi-megaphone" id="megaphone"></i>
+                               <p class="font-monospace" id="message-game5"></p>
+                           </div>
+
 
                     </div>
             </div>
             <div class="row h-50">
-                <div class="col-6 card">
-                            <div class="card-header h3">Messages</div>
-                            <div class="card-body">
 
-                                <p id="message-game5">
-                                <!-- Flash messages (TODO: replace with socket messages) -->
-                            <!--    {% with messages = get_flashed_messages() %}
-                                     {% if messages %}
-                                        <div class='flashes text-danger'>
-                                        {% for message in messages %}
-                                          <p>{{ message }}</p>
-                                        {% endfor %}
-                                        </div>
-                                     {% endif %}
-                                {% endwith %} -->
-                                </p>
-
-                            </div>
-                </div>
+                <!-- Instructions panel -->
                 <div class="col-6 card">
                     <div class="card-header h3">Tasks</div>
                     <div class="card-body">
 
-                      <div class="tabs">
-                          <div class="tabs__head">
-                            <div class="tabs__toggle is-active">
-                              <span class="tabs__name">Task 1: Main field</span>
-                            </div>
-                            <div class="tabs__toggle">
-                              <span class="tabs__name">Task 2: RF rotation </span>
-                            </div>
-                            <div class="tabs__toggle">
-                              <span class="tabs__name">Task 3: Signal reception</span>
-                            </div>
-                          </div>
-                      <div class="tabs__body">
-                        <div class="tabs__content is-active">
-                          <h2 class="tabs__title">Instructions</h2>
-                          <p class="tabs__text">
-                              1. Experiment with multiple FOV sizes and observe how the image changes with increasing and decreasing values.
-                              2. After you are done, answer Question 1 and continue to the Task!
-                          </p>
-                            <h2 class="tabs__title">Task: Finding the perfect FOV size</h2>
-                            <p class="tabs__text">
-                                <i>Change the FOV sizes to find the perfect FOV that allows the entire image to be seen in the scan area.</i>
-                                {% if session['game1']['FOV_scale'] < 0.2 %}
-                                    <br><b><i>Increase the FOV to zoom out!</i></b>
-                                {% elif session['game1']['FOV_scale'] > 0.5 %}
-                                    <i>Decrease the FOV to zoom in!</i>
-                                {% else %}
+                    <ul class="nav nav-tabs" id="taskTab" role="tablist">
+                        {% for ind, title in enumerate(instructions['titles']) %}
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="task{{ ind + 1 }}" data-bs-toggle="tab" data-bs-target="#step{{ ind + 1 }}"
+                                        type="button" role="tab"  aria-controls="step{{ ind + 1 }}" aria-selected="{{ str(ind==0) }}">
+                                    {{ title }}
+                                </button>
+                            </li>
+                        {% endfor %}
+                    </ul>
 
-                                    <br><i class="bi bi-clipboard-check-fill"></i>
-                                    <i><b>Perfect FOV achieved!</b></i>
-                                    <i class="bi bi-clipboard-check-fill"></i>
-                                    <i></i>
-                                {% endif %}
-                            </p>
-                        </div>
-                        <div class="tabs__content">
-                          <h2 class="tabs__title">Instructions</h2>
-                          <p class="tabs__text">1. Experiment with multiple Matrix sizes and observe how the image changes with increasing and decreasing values.
-                                            <br>2. After you are done, answer Question 2 and continue to the task!
-                          </p>
-                            <h2 class="tabs__title">Task: Finding the perfect Matrix Size</h2>
-                                <p class="tabs__text">
-                                    <i>Change the Matrix Sizes to find the perfect Matrix Size that allows the image to be seen the most clearly.</i>
-                                {% if session['game1']['Matrix_scale'] < 200  %}
-                                    <br><b><i>Continue to increase the Matrix Size. You are close.</i></b>
-                                    {% elif session['game1']['Matrix_scale'] >= 200 %}
-                                        <br><i class="bi bi-clipboard-check-fill"></i>
-                                        <b><i>Perfect Matrix Size Achieved!</i></b>
-                                        <i class="bi bi-clipboard-check-fill"></i>
-                                {% endif %}
-                            </p>
-                        </div>
-                        <div class="tabs__content">
-                          <h2 class="tabs__title">Third Title</h2>
-                          <p class="tabs__text">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Mollitia quasi commodi nisi ex nostrum, aspernatur dicta perferendis deserunt reiciendis a delectus molestias eius porro, tempore molestiae ipsam sit quam aut officia, autem, perferendis?</p>
-                        </div>
+
+                    <div class="tab-content" id="game5-tab-content">
+                      <div class="tab-pane fade show active" id="step1" role="tabpanel" aria-labelledby="home-tab">
+                          <p>This is step 1.</p>
                       </div>
-
+                      <div class="tab-pane fade" id="step2" role="tabpanel" aria-labelledby="profile-tab">
 
                       </div>
+                      <div class="tab-pane fade" id="step3" role="tabpanel" aria-labelledby="contact-tab">
 
-
+                      </div>
+                    </div>
 
                     </div>
+                </div>
+                    <!-- Questions panel -->
+                   <div class="col-6 card">
+                            <div class="card-header h3">Questions</div>
+                                <div id="slide" class="carousel slide card-body" data-bs-interval="false">
+                                <div class="carousel-indicators">
+                                    <button type="button" data-bs-target="#slide" data-bs-slide-to="0" class="active"></button>
+                                    {% for i in range(1, success_text | length) %}
+                                        <button type="button" data-bs-target="#slide" data-bs-slide-to="{{ i }}"></button>
+                                    {% endfor %}
+                                </div>
+
+                            <div class="carousel-inner">
+                                {% for ind in range(success_text | length) %}
+                                    {% set letters = ['a','b','c','d'] %}
+                                    {% set active_text = 'active' if ind==0 else '' %}
+                                    <div class="carousel-item {{active_text}}">
+
+                                        <div class="row d-flex justify-content-center align-items-baseline">
+                                            <p class="h5">Q{{ ind + 1 }}:{{ questions[ind]['text']}}</p>
+                                        </div>
+
+                                        <div class="row d-flex justify-content-center">
+
+                                        <div class="form-check col-8">
+                                        {% for ind2 in range(questions[ind]['choices'] | length) %}
+                                            {% if not uses_images[ind] %}
+                                                <div class="form-group">
+                                            <input type="radio" class="q{{ind}}-choice form-check-input" id="q{{ind}}-{{letters[ind2]}}" name="mc-question" value="{{ letters[ind2] }}">
+                                            <label for="q{{ind}}-{{letters[ind2]}}" class="form-check-label">{{ questions[ind]['choices'][ind2] }}</label>
+                                                </div>
+                                            {% else %}
+                                            <div class="form-group">
+                                            <input type="radio"  class="q{{ind}}-choice form-check-input" id="q{{ind}}-{{letters[ind2] }}" name="mc-question" value="{{ letters[ind2] }}">
+                                            <label for="q{{ind}}-{{letters[ind2]}}" class="form-check-label"><img src=".{{ questions[ind]['choices'][ind2] }}" style="height: 150px; width:150px;"></label>
+                                            </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                        </div>
+
+                                        </div>
+                                        <p class="d-none">Correct choice: <span id="mc-correct-choice-{{ind}}">{{ questions[ind]['correct']}}</span></p>
+                                            <div class="btn btn-large btn-primary answer-mc" id="answer-mc-{{ind}}">Submit</div>
+                                        <p id="mc-success-text-{{ ind }}" class="d-none" style="color:palegreen">{{ success_text[ind] }}</p>
+                                        <p id="mc-failure-text-{{ ind }}" class="d-none" style="color:#ffb500">Wrong answer. Try again!</p>
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            <button class="carousel-control-prev" type="button" data-bs-target="#slide" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon"></span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#slide" data-bs-slide="next">
+                                <span class="carousel-control-next-icon"></span>
+                            </button>
+
+                        </div>
+
                 </div>
             </div>
 
@@ -297,5 +366,8 @@
     play_animation_spin(graphData,false);
     play_animation_signal(graphData2,false);
     </script>
+
+    <link rel="stylesheet" href="../static/styles/style_game5.css">
+
 
 {% endblock %}

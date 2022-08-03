@@ -1,4 +1,5 @@
 import numpy as np
+from models import *
 # Utility functions
 
 
@@ -48,3 +49,19 @@ def spherical_to_cartesian(theta,phi,m0):
     phi *= np.pi / 180
     M = m0*np.array([[np.sin(theta)*np.cos(phi)],[np.sin(theta)*np.sin(phi)],[np.cos(theta)]])
     return M
+
+def num_questions_of_game(num):
+    return len(MultipleChoice.query.filter_by(game_number=num).all())
+
+
+def new_progress_of_game(num):
+    # TODO connect to user id
+    # TODO connect to Instructions db table
+    if num not in [1,5]:
+        raise ValueError('Only games 1 and 5 are allowed for this function')
+
+    num_steps_dict = {1:4, 5:4}
+    num_mc = num_questions_of_game(num)
+    return Progress(game_number=num, num_stars=0,
+                    num_questions=num_mc, num_correct=0,
+                    num_steps_total=num_steps_dict[num],num_steps_complete=0) # No user id attached yet

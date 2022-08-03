@@ -30,7 +30,9 @@ def initialize_parameters():
     session['game3'] = {'options': 'T1', 'TR': 0.5, 'TE': 0.01, 'FA':90, 'P1_q': 'No', 'P2_q': 'No'}
     session['game5'] = {'b0_on': False, 'b0': 0.006,'coil_on': False, 'rot_frame_on': False, 'flip_angle': 90, 'rf_phase': 0.0,
                         'coil_dir': 'x', 'm_theta': 0.0, 'm_phi':0.0, 'm_size': 1,
-                        'M_init': np.array([[0],[0],[0]])}
+                        'M_init': np.array([[0],[0],[0]]),
+                        'progress': utils.new_progress_of_game(5), 'mc_status_list': utils.num_questions_of_game(5)*[False]}
+
     session['game7'] = {'model':'letterN', 'proj2d_axis': 'x', 'proj1d_angle': 90,
                         'plot3d_visible':False, 'plot2d_visible':False, 'plot1d_visible':False,
                         'lines_on': False}
@@ -46,6 +48,19 @@ def unauthorized():
 
 @app.route('/logout')
 def logout():
+    # Save user progress (Game 5 example)
+    prog = session['game5']['progress']
+    db.session.add(prog)
+    try:
+        db.session.commit()
+        print("Progress saved!")
+        print(prog)
+    except Exception as e:
+        print("Failed to save progress to database")
+        print(e)
+        db.session.rollback()
+
+
     logout_user()
     return redirect(url_for("login"))
 
@@ -75,6 +90,10 @@ def login():
             session['user']['id'] = user.id
             session['user']['username'] = user.username
             session['user']['date_joined'] = user.joined_at
+
+            session['game5']['progress'].user_id = user.id # Attach progress to user
+
+            session.modified = True
 
             return redirect('index')
         # If login fails, show error message

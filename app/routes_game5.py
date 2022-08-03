@@ -13,6 +13,7 @@ import plotly.express as px
 import pandas as pd
 import json
 import numpy as np
+from models import MultipleChoice
 from workers.game5_worker import simulate_RF_rotation, generate_static_plot,\
                                   animate_b0_turn_on, simulate_spin_precession,\
                                 generate_static_signals, generate_coil_signal
@@ -26,8 +27,8 @@ def game5_view():
     str
         HTML view of Game 5
     """
-
-
+    questions, success_text, uses_images_list = fetch_all_game5_questions()
+    print(questions)
     # Form for submitting data - current settings
     game_form = Game5Form()
     j1, j2 = make_default_graphs()
@@ -48,7 +49,8 @@ def game5_view():
     #         flash('Remember to turn on B0 before you perform the RF rotation.')
 
     return render_template('game5.html',template_title="Proton's got moves",template_intro_text="Can you follow on?",
-                           template_game_form=game_form, graphJSON_spin=j1, graphJSON_signal=j2)
+                           template_game_form=game_form, graphJSON_spin=j1, graphJSON_signal=j2,
+                           questions=questions,success_text=success_text,uses_images=uses_images_list)
 
 
 
@@ -260,5 +262,48 @@ def turn_on_rx_coil(info):
     socketio.emit('update spin animation', {'graph': j1, 'loop_on': False})
 
 
+# Get game 5 questions!
+def fetch_all_game5_questions():
+    all_Qs = MultipleChoice.query.filter_by(game_number=5).all()
+    print(all_Qs)
+    questions = []
+    uses_images_list = []
+    success_text = len(all_Qs)*['Correct! Move on to the next question.']
+    for Q in all_Qs:
+        print(Q)
+        qdata = Q.get_randomized_data()
+        uses_images_list.append(Q.uses_images)
 
+        corr_array = [l==qdata[2] for l in ['A','B','C','D']]
+        corr_array_new = []
+        qchoices = []
+        for ind in range(len(qdata[1])):
+            if len(qdata[1][ind])!=0:
+                qchoices.append(qdata[1][ind])
+                corr_array_new.append(corr_array[ind])
+
+        questions.append({'text': qdata[0],
+                          'choices':qchoices,
+                          'correct': corr_array_new.index(True)})
+
+    #success_text[0] = "You got the first answer correct!"
+
+    return questions, success_text, uses_images_list
+
+# TODO
+@socketio.on("question answered")
+def update_mc_progress(msg):
+    status = session['game5']['mc_status_list']
+    status[int(msg['ind'])] = bool(msg['correct'])
+    # Update current list
+    utils.update_session_subdict(session,'game5',
+                                 {'mc_status_list': status})
+    # Update progress
+    session['game5']['progress'].num_correct = sum(status)
+    session['game5']['progress'].update_stars()
+
+    print('Game 5 progress updated: ', session['game5']['progress'])
+
+    # Change stars display
+    socketio.emit('renew stars',{'stars': session['game5']['progress'].num_stars})
 
