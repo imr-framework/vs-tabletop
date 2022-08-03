@@ -5,8 +5,9 @@ from flask_login import login_required, login_user, logout_user
 import plotly
 import plotly.graph_objects as go
 import utils
+
 from forms import Game5Form
-from info import GAMES_DICT
+from info import GAMES_DICT, GAME5_INSTRUCTIONS
 from models import User, Calibration
 from __main__ import app, login_manager, db, socketio
 import plotly.express as px
@@ -50,8 +51,9 @@ def game5_view():
 
     return render_template('game5.html',template_title="Proton's got moves",template_intro_text="Can you follow on?",
                            template_game_form=game_form, graphJSON_spin=j1, graphJSON_signal=j2,
-                           questions=questions,success_text=success_text,uses_images=uses_images_list)
-
+                           questions=questions,success_text=success_text,uses_images=uses_images_list,
+                           instructions=GAME5_INSTRUCTIONS)
+                            #TODO use function to store/generate tasks
 
 
 def make_default_graphs():
@@ -90,6 +92,10 @@ def update_parameter(info):
     """
 
     # Special cases
+    if info['value'] in ['a','b','c','d']:
+        return
+
+
     if info['id'] == 'rx_dir_field-0':
         utils.update_session_subdict(session,'game5',{'coil_dir':'x'})
     elif info['id'] == 'rx_dir_field-1':
@@ -291,13 +297,17 @@ def fetch_all_game5_questions():
     return questions, success_text, uses_images_list
 
 # TODO
-@socketio.on("question answered")
+@socketio.on("game 5 question answered")
 def update_mc_progress(msg):
+    # Updates session multiple choice status & progress object
+    # Tells frontend to update # stars displayed.
+
     status = session['game5']['mc_status_list']
     status[int(msg['ind'])] = bool(msg['correct'])
     # Update current list
     utils.update_session_subdict(session,'game5',
                                  {'mc_status_list': status})
+
     # Update progress
     session['game5']['progress'].num_correct = sum(status)
     session['game5']['progress'].update_stars()

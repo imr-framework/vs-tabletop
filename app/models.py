@@ -80,7 +80,8 @@ class Progress(db.Model):
     def update_stars(self):
         correct_rate = self.num_correct / self.num_questions
         complete_rate = self.num_steps_complete / self.num_steps_total
-        self.num_stars = correct_rate * 2 + complete_rate * 3
+        self.num_stars = round(2*(correct_rate * 2 + complete_rate * 3))/2
+
 
     def __repr__(self):
         rep = f'Progress of User ID #{self.user_id} for Game {self.game_number}: \n'

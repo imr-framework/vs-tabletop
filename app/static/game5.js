@@ -319,16 +319,36 @@ $('.answer-mc').on('click', (event)=>{
         // Make success text visible
         $(`#mc-success-text-${q_ind}`).removeClass('d-none')
         $(`#mc-failure-text-${q_ind}`).addClass('d-none')
-        socket.emit('question answered',{'ind':q_ind, 'correct':true});
+        socket.emit('game 5 question answered',{'ind':q_ind, 'correct':true});
 
     }
     else{
         console.log("Answer is wrong! ")
         $(`#mc-success-text-${q_ind}`).addClass('d-none')
         $(`#mc-failure-text-${q_ind}`).removeClass('d-none')
-        socket.emit('question answered',{'ind':q_ind,'correct':false});
+        socket.emit('game 5 question answered',{'ind':q_ind,'correct':false});
 
         // Hide success text
     }
     console.log('Updating choice')
+})
+
+
+socket.on('renew stars',(msg)=>{
+    console.log('Stars should be updated now...')
+    num_stars = msg['stars'];
+    num_full = parseInt(Math.floor(num_stars));
+    num_half = parseInt(Math.round((num_stars-num_full)*2));
+    num_empty = 5 - num_full - num_half;
+
+
+    let stars_html = `<span> ${num_stars} / 5 stars earned</span> `
+    stars_html += '<i class="bi bi-star-fill"></i> '.repeat(num_full)
+    stars_html += '<i class="bi bi-star-half"></i> '.repeat(num_half)
+    stars_html += '<i class="bi bi-star"></i> '.repeat(num_empty)
+
+    $("#stars-display").html(stars_html);
+
+
+
 })
