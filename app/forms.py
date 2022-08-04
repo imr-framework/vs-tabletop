@@ -79,8 +79,10 @@ class Game5Form(FlaskForm):
     rot_frame_onoff_field = BooleanField("Rotating Frame", default=False)
 
     # RF
-    flip_angle_field = DecimalRangeField("Flip Angle (degrees)", validators=[InputRequired(), NumberRange(min=0,max=360)],default=90)
-    rf_phase_field = DecimalRangeField("Pulse direction (degrees)", validators=[InputRequired(),
+    tx_onoff_field = BooleanField("Coil",default=False)
+
+    flip_angle_field = DecimalRangeField("Flip Angle", validators=[InputRequired(), NumberRange(min=0,max=360)],default=90)
+    rf_phase_field = DecimalRangeField("Pulse dir.", validators=[InputRequired(),
                                                                                 NumberRange(min=0.0,max=360)],default=0.0)
     # Receive
     rx_onoff_field = BooleanField("Coil",default=False)

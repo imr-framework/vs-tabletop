@@ -28,8 +28,8 @@ def initialize_parameters():
                         'Min_scale': 0.0, 'Max_scale': 1.0, 'P1_q': 'No', 'P2_q': 'No'}
 
     session['game3'] = {'options': 'T1', 'TR': 0.5, 'TE': 0.01, 'FA':90, 'P1_q': 'No', 'P2_q': 'No'}
-    session['game5'] = {'b0_on': False, 'b0': 0.006,'coil_on': False, 'rot_frame_on': False, 'flip_angle': 90, 'rf_phase': 0.0,
-                        'coil_dir': 'x', 'm_theta': 0.0, 'm_phi':0.0, 'm_size': 1,
+    session['game5'] = {'b0_on': False, 'b0': 60.0,'coil_on': False, 'rot_frame_on': False, 'flip_angle': 90, 'rf_phase': 0.0,
+                        'coil_dir': 'x', 'm_theta': 0.0, 'm_phi':0.0, 'm_size': 1, 'tx_on': False,
                         'M_init': np.array([[0],[0],[0]]),
                         'progress': utils.new_progress_of_game(5), 'mc_status_list': utils.num_questions_of_game(5)*[False]}
 

@@ -105,6 +105,7 @@ def get_updated_plots():
     return j1, j2, j3
 
 
+
 def get_instructions_game7():
     instr = {
         'step1': ['Select a 3D model and load it',
@@ -116,15 +117,5 @@ def get_instructions_game7():
         'step3': ['d','e','f']
     }
     return instr
-#
-# #
-#
-# "        <ol>
-#                             <li>Select a 3D model and load it. </li>
-#                             <li></li>
-#                             <li>
-#                                 Change the 1D projection angle and hit "1D projection".
-#                                 How does changing the angle affect the 1D curve you see?
-#                             </li>
-#                             <li>Think about what each projection means. Then hit "proceed" to enter the guessing game!</li>
-#                         </ol>"
+
+
