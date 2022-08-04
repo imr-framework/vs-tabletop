@@ -21,7 +21,10 @@ from __main__ import app, login_manager, db, socketio
 def game3():
     form=Game3Form()
 
-    j1, j2 = game3_worker(session['game3']['TR'], session['game3']['TE'], session['game3']['FA'])
+
+
+    j1, j2 = game3_worker(session['game3']['TR'] / 1000, session['game3']['TE'] / 1000, session['game3']['FA'])
+    update_task_progress()
 
     if form.validate_on_submit():
         print('validate')
@@ -88,4 +91,25 @@ def update_parameter(info):
     print(session['game3'])
     session.modified = True
 
-    socketio.emit('G3 take session data', {'data': session['game3']})
+    session_game3 = {'TR': session['game3']['TR'], 'TE': session['game3']['TE'], 'FA': session['game3']['FA'],
+                     'options': session['game3']['options'], 'P1_q': session['game3']['P1_q'], 'P2_q': session['game3']['P2_q']}
+    socketio.emit('G3 take session data', {'data': session_game3})
+
+def update_task_progress():
+    if session['game3']['current_task'] == 1:
+        P1_q = session['game3']['P1_q']
+        print(session['game3']['completed_task'])
+        if(P1_q == 'T1'):
+            session['game3']['completed_task'] = 1
+            session['game3']['current_task'] = 2
+            print(session['game3']['completed_task'])
+        else:
+            print("task 1 failed")
+    elif session['game3']['current_task'] == 2:
+        P2_q = session['game3']['P2_q']
+        if(P2_q == 'Contrast Increases'):
+            session['game3']['completed_task'] = 2
+            session['game3']['current_task'] = 3
+        else:
+            print('task 2 failed')
+
