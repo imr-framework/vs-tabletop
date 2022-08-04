@@ -295,18 +295,27 @@
                 <div class="col-6 card">
                     <div class="card-header h3">Tasks</div>
                     <div class="card-body">
-
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar"
+                             style="width: {{ session['game5']['task_completed']*25 }}%"
+                             aria-valuenow="0" aria-valuemin="{{ session['game5']['task_completed']*25 }}" aria-valuemax="100"></div>
+                    </div>
                     <!-- Show tab for each lab procedure -->
-                    <ul class="nav nav-tabs" id="game5-tab" role="tablist">
+                    <ul class="nav nav-tabs nav-justified" id="game5-tab" role="tablist">
                         {% for tab in instructions['tabs'] %}
-                            {% if loop.index == 1 %}
+                            {% if loop.index == session['game5']['task_completed'] + 1 %}
                                 {% set active = 'active' %}
                             {% else %}
                                 {% set active = '' %}
                             {% endif %}
+
+                            {% set disabled = 'disabled' if loop.index > 1 + session['game5']['task_completed'] else '' %}
+                            {% set aria_disabled = (disabled == 'disabled') %}
+
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link {{ active }} text-info" id="task{{ loop.index }}" data-bs-toggle="tab" data-bs-target="#step{{ loop.index }}"
-                                        type="button" role="tab"  aria-controls="step{{ loop.index }}" aria-selected="{{ loop.index==1 }}">
+                                <button class="col nav-link {{ active }} {{ disabled }} text-info" id="task{{ loop.index }}-tab" data-bs-toggle="tab" data-bs-target="#step{{ loop.index }}"
+                                        type="button" role="tab"  aria-controls="step{{ loop.index }}"
+                                        aria-selected="{{ loop.index==1 }}" aria-disabled= "{{ aria_disabled }}">
                                     {{ tab }}
                                 </button>
                             </li>
@@ -316,24 +325,63 @@
                     <!-- Show content for each lab procedure -->
                     <div class="tab-content" id="game5-tab-content">
                         {% for task in instructions['tasks'] %}
-                            {% if loop.index == 1 %}
+                            {% if loop.index == session['game5']['task_completed'] + 1 %}
                                 {% set show_text = 'show' %}
                                 {% set active_text = 'active' %}
                             {% else %}
                                 {% set show_text = '' %}
                                 {% set active_text = '' %}
                             {% endif %}
+
+
+
                             <div class="tab-pane fade {{ show_text }} {{ active_text }}" id="step{{ loop.index }}" role="tabpanel" aria-labelledby="step{{ loop.index }}-tab">
                                 <div class="h4 text-info">{{ instructions['titles'][loop.index0] }}</div>
                                 <ul class="list-group">
+                                {% set task_index = loop.index %}
                                 {% for step in instructions['explorations'][loop.index0] %}
                                       <li class="list-group-item">
-                                        <input class="form-check-input" type="checkbox" value="" aria-label="">
+                                        <input class="form-check-input task-{{ task_index }}-check" type="checkbox" value="" aria-label="">
                                         {{ step }}
                                       </li>
-                                    {% endfor %}
+                                {% endfor %}
+
+                                {% if task_index == 3 %}
+                                    <li class="list-group-item text-info disabled">
+                                        <input class="form-check-input task-3-check" id='rf-rot-task-check' type="checkbox">
+                                        Hit the target magnetization.
+                                      </li>
+                                {% endif %}
+
+
                                 </ul>
                                 <p class="text-info">{{ task }}</p>
+
+                                <!-- Step 3 special button -->
+                                {% if task_index == 3 %}
+                                    <div class="row">
+                                        <div class="col" id="target-m-disp">Target M: (0, 0, 0)</div>
+                                        <div class="col d-none text-danger" id="try-again">Try again.</div>
+                                    </div>
+
+                                    <div class="btn btn-light btn-outline-primary" id="randomize">Randomize!</div>
+                                    <div class="btn btn-dark" id="check-answer">Check</div>
+
+                                {% endif %}
+
+                                <div class="btn btn-info task-next-button" id="task{{ loop.index }}-next">Next</div>
+
+                                <p class="d-none text-danger" id="task-message-{{ task_index }}">
+                                    Complete and check all steps to move on.
+                                </p>
+                                {% set dnone = '' if session['game5']['task_completed'] >= task_index else 'd-none' %}
+
+                                {% set success_message = 'This step has been completed' if task_index < 4 else
+                                        'All steps complete. Congratulations!' %}
+
+                                <p class="{{ dnone }} text-success" id="task-success-{{ task_index }}">
+                                    {{ success_message }}
+                                </p>
 
                             </div>
 

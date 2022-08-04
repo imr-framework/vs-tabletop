@@ -34,8 +34,11 @@ def initialize_parameters():
 
     session['game5'] = {'b0_on': False, 'b0': 60.0,'coil_on': False, 'rot_frame_on': False, 'flip_angle': 90, 'rf_phase': 0.0,
                         'coil_dir': 'x', 'm_theta': 0.0, 'm_phi':0.0, 'm_size': 1, 'tx_on': False,
-                        'M_init': np.array([[0],[0],[0]]),
-                        'progress': utils.new_progress_of_game(5), 'mc_status_list': utils.num_questions_of_game(5)*[False]}
+                        'M_init': np.array([[0],[0],[0]]), 'M_target': np.array(([0],[0],[0])),
+                        'M_target_on': False,
+                        'progress': utils.new_progress_of_game(5), 'mc_status_list': utils.num_questions_of_game(5)*[False],
+                        'task_completed': 0
+                        }
 
     session['game7'] = {'model':'letterN', 'proj2d_axis': 'x', 'proj1d_angle': 90,
                         'plot3d_visible':False, 'plot2d_visible':False, 'plot1d_visible':False,
