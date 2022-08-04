@@ -25,7 +25,9 @@ def initialize_parameters():
     session['user_name'] = None
 
     session['game1'] = {'FOV_scale': 0.128, 'Matrix_scale': 128, 'Voxel_scale': 0.001,'zero_fill': 128,
-                        'Min_scale': 0.0, 'Max_scale': 1.0, 'P1_q': 'No', 'P2_q': 'No'}
+                        'Min_scale': 0.1, 'Max_scale': 0.9, 'P1_q': 'No', 'P2_q': 'No',
+                        'progress': utils.new_progress_of_game(1), 'mc_status_list': utils.num_questions_of_game(1)*[False],
+                        'current_task': 1, 'completed_task': 0, 'star_count': 0}
 
     session['game3'] = {'options': 'T1', 'TR': 0.5, 'TE': 0.01, 'FA':90, 'P1_q': 'No', 'P2_q': 'No'}
     session['game5'] = {'b0_on': False, 'b0': 60.0,'coil_on': False, 'rot_frame_on': False, 'flip_angle': 90, 'rf_phase': 0.0,
@@ -49,16 +51,20 @@ def unauthorized():
 @app.route('/logout')
 def logout():
     # Save user progress (Game 5 example)
-    prog = session['game5']['progress']
-    db.session.add(prog)
-    try:
-        db.session.commit()
-        print("Progress saved!")
-        print(prog)
-    except Exception as e:
-        print("Failed to save progress to database")
-        print(e)
-        db.session.rollback()
+
+    nums = [1,5]
+
+    for num in nums:
+        prog = session[f'game{num}']['progress']
+        db.session.add(prog)
+        try:
+            db.session.commit()
+            print("Progress saved!")
+            print(prog)
+        except Exception as e:
+            print("Failed to save progress to database")
+            print(e)
+            db.session.rollback()
 
 
     logout_user()

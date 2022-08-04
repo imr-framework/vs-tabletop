@@ -111,9 +111,12 @@
                  <form action="/games/3" method="POST">
                      {{ G3Form.hidden_tag() }}
                  <div class="row card">
-                     <div class="card-header">Select TE, TR, or PD weighted scan</div>
+                     <div class="card-header">Select T1, T2, or PD weighted scan</div>
                      <div class="card-body">
                          {% for subfield in G3Form.options %}
+                         <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is T1?"
+                                    data-bs-content="longitudinal relaxation time tells us how long it takes for the z-component of the M vector to regrow from zero to about 63% of its maximum. Different tissues have different T1 values. ">
+                                <i class="bi bi-question-square"></i></button>
                                 {% if subfield.id == "options" %}
                                     {{ subfield(class="btn-check ", autocomplete="off",checked=session['game3']['options']=='T1') }}
                                 {% elif subfield.id == "options" %}
@@ -125,7 +128,7 @@
 
                             {% endfor %}
 
-                            <br>{{G3Form.submit(class="btn btn-primary")}}
+
 
 
                      </div>
@@ -135,7 +138,13 @@
                      <div class="class-header">Self-Input TR, TE, and FA values</div>
                      <div class="card-body">
                          <div class="row">
-                             <div class="col-4">{{ G3Form.TR.label }}
+                             <div class="col-4">
+                                 <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is TR?"
+                                data-bs-content="Repetition Time (TR) is the time difference between one set of RF pulses and the next set,
+                                                which we use to repeatedly excite the protons. This ensures that the signal is consistent as we build
+                                                up an MR image.">
+                                <i class="bi bi-question-square"></i></button>
+                                 {{ G3Form.TR.label }}
                              {{ session['game1']['TR'] }}
                              </div>
                              <div class="col-8">
@@ -143,27 +152,37 @@
                                      {{ G3Form.TR(class="form-range", id='TR', step=0.1, value=session['game3']['TR']) }}
                                  </div>
                                  <div class="ticks text-primary">
-                                     {% for angle in [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1] %}
+                                     {% for angle in [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000] %}
                                      <span class="tick">{{ angle }}</span>
                                      {% endfor %}
                                  </div>
                              </div>
                          </div>
                          <div class="row">
-                             <div class="col-4">{{ G3Form.TE.label }}</div>
+                             <div class="col-4">
+                                 <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is TE?"
+                                data-bs-content="Echo Time (TE) is the time difference between the time when the RF pulse arrives at the target
+                                                to the time when the signal bounces back and hits a peak">
+                                <i class="bi bi-question-square"></i></button>
+                                 {{ G3Form.TE.label }}</div>
                              <div class="col-8">
                                  <div class="row">
                                      {{ G3Form.TE(class="form-range", id="TE", step=0.1, value=session['game3']['TE']) }}
                                  </div>
                                  <div class="ticks text-primary">
-                                     {% for angle in [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1] %}
+                                     {% for angle in [0, 50, 100, 150, 200, 250, 300, 350, 400, 450] %}
                                      <span class="tick">{{ angle }}</span>
                                      {% endfor %}
                                  </div>
                              </div>
                          </div>
                          <div class="row">
-                             <div class="col-4">{{ G3Form. FA.label }}</div>
+                             <div class="col-4">
+                                 <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is FA?"
+                                data-bs-content="Flip Angle (FA) is the amount we tip the magnetization vector using an RF pulse.
+                                                    It can be measured in degrees or radians.">
+                                <i class="bi bi-question-square"></i></button>
+                                 {{ G3Form. FA.label }}</div>
                              <div class="col-8">
                                  <div class="row">
                                      {{ G3Form.FA(class="form-range", id="FA", step=5, value=session['game3']['FA']) }}
@@ -175,7 +194,6 @@
                                  </div>
                              </div>
                          </div>
-                         <br>{{G3Form.submit(class="btn btn-primary")}}
                      </div>
                      <div class="d-inline p-2 bg-primary text-white">TR Value: {{ session['game3']['TR'] }}</div>
                      <div class="d-inline p-2 bg-dark text-white">TE Value: {{ session['game3']['TE'] }}</div>
@@ -192,6 +210,7 @@
                  </div>
                      {% endif %}
                      {% endif %}
+                     <br>{{G3Form.submit(class="btn btn-primary")}}
                      <div class="row-card">
                          <div class="card-header">Panel Messages</div>
                          <div class="card-body">

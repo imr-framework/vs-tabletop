@@ -29,12 +29,13 @@ def game1():
     j1 = game1_worker(session['game1']['FOV_scale'], session['game1']['Matrix_scale'], session['game1']['zero_fill'],
                       session['game1']['Min_scale'], session['game1']['Max_scale'])
 
+    update_task_progress()
+
     if form.validate_on_submit():
         #TODO Update second Matrix scale with the zerofill field.
         print('validate')
         j1 = game1_worker(float(form.FOV_scale.data), int(form.Matrix_scale.data) , int(form.zero_fill.data), float(form.min_scale.data),
                           float(form.max_scale.data))
-
 
     return render_template('game1.html',template_title="What is in an image?",
                            template_intro_text="Voxels, field-of-views, and resolution ", G1Form = form,
@@ -45,7 +46,7 @@ def game1():
 def update_parameter(info):
     print(session)
     # Update corresponding entry in session
-    print(info['id'])
+    print(info['id'], 'id')
     if info['id'] in ['Matrix_scale', 'zero_fill']:
         info['value'] = int(info['value'])
 
@@ -99,84 +100,35 @@ def update_parameter(info):
             print("changing")
             session['game1']['zero_fill'] = session['game1']['Matrix_scale']
 
-        elif session['game1']['Matrix_scale'] < session['game1']['zero_fill']:
-            session['game1']['zero_fill'] = session['game1']['Matrix_scale']
 
     elif info['id'] == 'zero_fill':
+
         if session['game1']['Matrix_scale'] > session['game1']['zero_fill']:
             session['game1']['Matrix_scale'] = session['game1']['zero_fill']
 
-        elif session['game1']['Matrix_scale'] < session['game1']['zero_fill']:
-            session['game1']['Matrix_scale'] = session['game1']['zero_fill']
-
-
-
-
-    elif info['id'] in ['P1_q']:
-        print('changing p1')
-        info['id'] = info['id']
-        info['value'] = str(info['value'])
-
-    elif info['id'] in ['P1_q-0']:
-        print('changing p1-0')
-        info['id'] = info['id'][0:4]
-        info['value'] = str(info['value'])
-
-    elif info['id'] in ['P1_q-1']:
-        print('changing p1-1')
-        info['id'] = info['id'][0:4]
-        info['value'] = str(info['value'])
-
-    elif info['id'] in ['P1_q-2']:
-        print('changing p1-2')
-        info['id'] = info['id'][0:4]
-        print(info['id'])
-        info['value'] = str(info['value'])
-
-    elif info['id'] in ['P1_q-3']:
-        print('changing p1-2')
-        info['id'] = info['id'][0:4]
-        info['value'] = str(info['value'])
-
-    elif info['id'] in ['P2_q']:
-        info['id'] = info['id'][0:4]
-        info['value'] = str(info['value'])
-
-    elif info['id'] in ['P2_q-0']:
-        info['id'] = info['id'][0:4]
-        info['value'] = str(info['value'])
-
-    elif info['id'] in ['P2_q-1']:
-        info['id'] = info['id'][0:4]
-        info['value'] = str(info['value'])
-
-    elif info['id'] in ['P2_q-2']:
-        info['id'] = info['id'][0:4]
-        info['value'] = str(info['value'])
-
-    elif info['id'] in ['toSlider']:
+    elif info['id'] == 'toSlider':
         session['game1']['Max_scale'] = info['value'] / 100
-        print(session['game1']['Max_scale'])
 
-    elif info['id'] in ['fromSlider']:
+    elif info['id'] == 'fromSlider':
         session['game1']['Min_scale'] = info['value'] / 100
-
-    print(session['game1'], 'hi')
-
-    #session['game1'][info['id']] = info['value']
 
     session.modified = True
 
-    socketio.emit('G1 take session data', {'data': session['game1']})
 
-    print(info)
+    session_game1 = {'Matrix_scale': session['game1']['Matrix_scale'], 'FOV_scale': session['game1']['FOV_scale'], 'Voxel_scale': session['game1']['Voxel_scale'],
+                     'zero_fill':session['game1']['zero_fill'],'Min_scale': session['game1']['Min_scale'],'Max_scale': session['game1']['Max_scale']}
+
+    socketio.emit('G1 take session data', {'data': session_game1})
+
+    #socketio.emit('G1 take session data', {'data': session['game1']})
+
+
     
 
 def fetch_all_game1_questions():
     uses_images_list = []
     success_text = 10*['Correct! Move on to the next question.']
     for id in range(101,111):
-        print(id)
         Q = MultipleChoice.query.get(id)
 
         qdata = Q.get_randomized_data()
@@ -192,7 +144,8 @@ def fetch_all_game1_questions():
 
         questions.append({'text': qdata[0],
                           'choices':qchoices,
-                          'correct': corr_array_new.index(True)})
+                          'correct': corr_array_new.index(True),
+                          'main_image_path': Q.main_image_path})
 
     # TODO Rishi replace success text as needed
     success_text[0] = "You got the first answer correct!"
@@ -217,3 +170,72 @@ def update_Choice(info):
         socketio.emit("Correct")
     else:
         print("No")
+
+@socketio.on('Reset param for Game1')
+def reset():
+    session['game1']['Matrix_scale'] = 128
+    session['game1']['zero_fill'] = 128
+    session['game1']['Voxel_scale'] = 1.00
+    session['game1']['FOV_scale'] = .128
+    session.modified = True
+    print('reset')
+    print(session['game1'])
+
+
+    j1 = game1_worker(session['game1']['FOV_scale'], session['game1']['Matrix_scale'], session['game1']['zero_fill'],
+                      session['game1']['Min_scale'], session['game1']['Max_scale'])
+
+    socketio.emit('Recreate Image', {'data': j1})
+
+@socketio.on('game 1 question answered')
+def update_mc_progress(msg):
+    status = session['game1']['mc_status_list']
+    status[int(msg['ind'])] = bool(msg['correct'])
+
+    utils.update_session_subdict(session, 'game1', {'mc_status_list': status})
+
+    session['game1']['progress'].num_correct = sum(status)
+    session['game1']['progress'].update_stars()
+
+    print('Game 1 progress updated: ', session['game1']['progress'])
+
+    socketio.emit('renew stars', {'stars': session['game1']['progress'].num_stars})
+
+def update_task_progress():
+    if session['game1']['current_task'] == 1:
+        # check if task 1 is complete
+        fov = session['game1']['FOV_scale']
+        if (fov > 0.2 and fov < 0.3):
+            session['game1']['completed_task'] = 1
+            session['game1']['current_task'] = 2
+            print(session['game1']['completed_task'])
+        else:
+            print("task 1 failed")
+    elif session['game1']['current_task'] == 2:
+        if session['game1']['Matrix_scale'] > 300:
+            session['game1']['completed_task'] = 2
+            session['game1']['current_task'] = 3
+            print(session['game1']['completed_task'])
+        else:
+            print("Task 2 failed")
+    elif session['game1']['current_task'] == 3:
+        print('Updating Matrix size')
+
+        if session['game1']['zero_fill'] == 400:
+            session['game1']['completed_task'] = 3
+            session['game1']['current_task'] = 4
+            print(session['game1']['completed_task'])
+        else:
+            print("Task 3 failed")
+    elif session['game1']['current_task'] == 4:
+        if session['game1']['Min_scale'] < 0.02 and session['game1']['Max_scale'] > 0.98:
+            session['game1']['completed_task'] = 4
+            print(session['game1']['completed_task'])
+        else:
+            print("Task 4 failed")
+
+    session['game1']['progress'].num_steps_complete = session['game1']['completed_task']
+    print(session['game1']['progress'])
+    session['game1']['progress'].update_stars()
+    socketio.emit('renew stars', {'stars': session['game1']['progress'].num_stars})
+

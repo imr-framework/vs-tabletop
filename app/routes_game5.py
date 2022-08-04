@@ -7,7 +7,7 @@ import plotly.graph_objects as go
 import utils
 
 from forms import Game5Form
-from info import GAMES_DICT, GAME5_INSTRUCTIONS
+from info import GAMES_DICT
 from models import User, Calibration
 from __main__ import app, login_manager, db, socketio
 import plotly.express as px

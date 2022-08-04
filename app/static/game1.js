@@ -14,11 +14,7 @@ tabs.forEach((tab, index) => {
     });
 });
 
-$('.tabs__toggle').on('click', (event)=>{
-    $('#Matrix_scale').val(128);
-    $('#Voxel_scale').val(1.00);
-    $('#FOV_scale').val(128.00);
-})
+
 let socket = io();
 
 $(':input').on('change', (event)=>{
@@ -40,17 +36,30 @@ $('.answer-mc').on('click', (event)=>{
         console.log("Answer is correct! ")
         // Make success text visible
         $(`#mc-success-text-${q_ind}`).removeClass('d-none')
+        socket.emit('game 1 question answered',{'ind': q_ind, 'correct': true});
     }
     else{
         console.log("Answer is wrong! ")
         $(`#mc-success-text-${q_ind}`).addClass('d-none')
         // Hide success text
+        socket.emit('game 1 question answered',{'ind': q_ind, 'correct': false});
     }
 
 
     //choice="some choice"
     console.log('Updating choice')
     //socket.emit("Updating choice for Game 1", {'choice':choice});
+})
+
+$('.tabs__toggle').on('click', (event)=>{
+    console.log('reset')
+    $('#Matrix_scale').val(128);
+    $('#Voxel_scale').val(1.00);
+    $('#FOV_scale').val(128.00);
+    $('#zero_fill').val(128);
+    socket.emit('Reset param for Game1')
+    console.log('Reset request sent')
+
 })
 
 socket.on('G1 take session data', (msg)=>{
@@ -61,8 +70,6 @@ socket.on('G1 take session data', (msg)=>{
     $('#zero_fill').val(msg['data']['zero_fill']);
     $('#Min_scale').val(msg['data']['Min_scale']);
     $('#Max_scale').val(msg['data']['Max_scale']);
-    $('#P1_q').val(msg['data']['P1_q'])
-    $('#P2_q').val(msg['data']['P2_q'])
     console.log(msg['data'])
 })
 // a comment
@@ -159,3 +166,32 @@ $(document).ready(function(){
   $('[data-bs-toggle="popover"]').popover();
 });
 
+socket.on('Recreate Image', (payload)=>{
+    j1 = JSON.parse(payload['data']);
+    Plotly.newPlot('chart-G1', j1, {})
+})
+
+
+
+
+socket.on('renew stars',(msg)=>{
+    console.log('Stars should be updated now...')
+    num_stars = msg['stars'];
+    num_full = parseInt(Math.floor(num_stars));
+    num_half = parseInt(Math.round((num_stars-num_full)*2));
+    num_empty = 5 - num_full - num_half;
+
+
+    let stars_html = `<span> ${num_stars} / 5 stars earned</span> `
+    stars_html += '<i class="bi bi-star-fill"></i> '.repeat(num_full)
+    stars_html += '<i class="bi bi-star-half"></i> '.repeat(num_half)
+    stars_html += '<i class="bi bi-star"></i> '.repeat(num_empty)
+
+    $("#stars-display").html(stars_html);
+})
+
+socket.on("Reset Matrix Scale", (msg)=>{
+    $('#Matrix_scale').val(128);
+    $('#zero_fill').val(128);
+    socket.emit("Done Resetting Matrix Scale")
+})
