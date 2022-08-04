@@ -12,6 +12,16 @@ $(':input').on('change', (event)=>{
                                            'checked':event.target.checked});
 })
 
+$('#flip_angle').on('input',(event)=>{
+    $('#fa_deg').html(`${event.target.value} degrees`)
+})
+
+
+$('#rf_phase').on('input',(event)=>{
+    $('#rf_deg').html(`${event.target.value} degrees`)
+})
+
+
 // Shortcut settings for initial magnetization
 // Change spherical coordinates to make M0 point towards x
 $('#mag-x').on('click',()=>{
@@ -53,7 +63,7 @@ $('#mag-0').on('click',()=>{
 
 // Rotational frame
 $('#rot-frame-button').on('click',(event)=>{
-    socket.emit('rot frame toggled',{'rot_frame_on': event.target.checked})
+    socket.emit('rot frame toggled',{'rot_frame_on': event.target.checked, 'b0_on':$('#b0_on').is(':checked')})
 })
 
 // Signal to backend to reset magnetization in 3D plot
@@ -68,7 +78,8 @@ $('#b0_on').on('click',(event)=>{
 
 
 $('#start').on('click',()=>{
-    socket.emit('simulate precession')
+    socket.emit('simulate precession',{'b0_on': $('#b0_on').is(':checked'),
+                                      'coil_on':$('#rx-button').is(':checked')})
 })
 
 $('#tip').on('click',()=>{
@@ -80,6 +91,7 @@ $('#reset').on('click',()=>{
     socket.emit('reset everything');
     $('#b0_on').prop('checked',false);
     $('#rx-button').prop('checked',false);
+    $('#tx-button').prop('checked',false);
     $('#rot-frame-button').prop('checked',false);
 
 })
@@ -88,6 +100,12 @@ $('#stop').on('click',()=>{
     stop_animation_spin();
     stop_animation_signal();
 })
+
+$('#tx-button').on('click',(event)=>{
+    socket.emit('tx toggled',{'tx_on': event.target.checked})
+})
+
+
 
 $('#rx-button').on('click',(event)=>{
     let rx_direction;
@@ -100,6 +118,7 @@ $('#rx-button').on('click',(event)=>{
 
     socket.emit('rx toggled',{'rx_on': event.target.checked,'rx_dir': rx_direction});
 })
+
 
 
 // Update animation (general)
@@ -140,6 +159,7 @@ socket.on('message', (msg)=>{
 
 // Spin animation
 function play_animation_spin(graphData, loop){
+    console.log(graphData)
     let mx, my, mz;
     let time_ind = 0;
     let data_length = graphData.data[0].x.length;
@@ -156,7 +176,19 @@ function play_animation_spin(graphData, loop){
                 mode: 'lines',
                 line: graphData.data[0].line
         },
-            graphData.data[1], graphData.data[2], graphData.data[3], graphData.data[4]
+            {
+                type: 'scatter3d',
+                x: [graphData.data[0].x[0]],
+                y: [graphData.data[0].y[0]],
+                z: [graphData.data[0].z[0]],
+                mode: 'lines',
+                line: {   color:'darkorange',
+                          width: 8,
+                          dash: 'dot'
+                }
+            },
+
+            graphData.data[1], graphData.data[2], graphData.data[3], graphData.data[4], graphData.data[5]
             ],
         layout: graphData.layout
     }, layout);
@@ -167,6 +199,12 @@ function play_animation_spin(graphData, loop){
         mx = graphData.data[0].x[ind];
         my = graphData.data[0].y[ind];
         mz = graphData.data[0].z[ind];
+
+        mx_hist = graphData.data[0].x.slice(0,ind);
+        my_hist = graphData.data[0].y.slice(0,ind);
+        mz_hist = graphData.data[0].z.slice(0,ind);
+
+
     }
 
     // Animate plot with all succeeding points
@@ -181,7 +219,22 @@ function play_animation_spin(graphData, loop){
                     y: [0,my],
                     z: [0,mz],
                     mode: 'lines',
-                    line: graphData.data[0].line}],
+                    line: graphData.data[0].line},
+                  {
+                type: 'scatter3d',
+                    x: mx_hist,
+                      y: my_hist,
+                      z: mz_hist,
+                      mode: 'lines',
+                      line: {
+                        color:'darkorange',
+                          width: 8,
+                          dash: 'dot'
+                        }}
+
+            ],
+
+
                 // Layout
             layout: graphData.layout},
                 // B. Animation options
@@ -220,7 +273,7 @@ function stop_animation_spin(){
 function play_animation_signal(graphData,loop){
     // TODO make this proper animation
     //Plotly.newPlot('chart-signal', graphData, layout);
-    console.log(graphData);
+    //console.log(graphData);
 
 
     let time_ind = 0;
@@ -298,7 +351,6 @@ function stop_animation_signal(){
 }
 
 // Enable question mark popovers
-
 $(document).ready(function(){
   $('[data-bs-toggle="popover"]').popover();
 });

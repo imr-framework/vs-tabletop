@@ -30,7 +30,6 @@ socket.on('Deliver 3D model', (payload)=>{
     Plotly.newPlot('chart-G7-3D',graphData1,layout)
     Plotly.newPlot('chart-G7-2D',graphData2,layout)
     Plotly.newPlot('chart-G7-1D',graphData3,layout)
-
 })
 
 socket.on('Deliver 2D projection', (payload)=>{

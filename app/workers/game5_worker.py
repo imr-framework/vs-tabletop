@@ -7,10 +7,11 @@ import plotly.express as px
 import json
 from pypulseq.make_block_pulse import make_block_pulse
 from scipy.spatial.transform import Rotation as R
+import utils
 GAMMA_BAR = 42.58e6
 
 # Game 5
-def simulate_RF_rotation(M_first, FA, rf_phase_deg, b0, rot_frame=False,coil=None):
+def simulate_RF_rotation(M_first, FA, rf_phase_deg, b0, rot_frame=False,coil=None,tx=None):
     """Simulates RF nutation plot of single magnetization vector given settings
 
     Parameters
@@ -61,12 +62,12 @@ def simulate_RF_rotation(M_first, FA, rf_phase_deg, b0, rot_frame=False,coil=Non
     __, mags = spin.apply_rf_store(pulse_shape=pulse_shape, grads_shape=np.zeros((3,len(rf.signal))),dt=rfdt)
     mags = np.transpose(mags)
 
-    graphJSON = generate_static_plot(mags, coil)
+    graphJSON = generate_static_plot(mags, coil, tx)
     last_mag = mags[-1,:]
 
     return graphJSON, last_mag
 
-def simulate_spin_precession(M_first, b0, rot_frame=False, coil=None):
+def simulate_spin_precession(M_first, b0, rot_frame=False, coil=None, tx=None):
     """"Simulates spin precession plot of single magnetization vector given settings
 
     Parameters
@@ -108,11 +109,11 @@ def simulate_spin_precession(M_first, b0, rot_frame=False, coil=None):
         spin.delay(dt)
         mags[q,:] = np.squeeze(spin.get_m())
 
-    graphJSON = generate_static_plot(mags, coil)
+    graphJSON = generate_static_plot(mags, coil, tx)
 
     return graphJSON, dt, mags
 
-def animate_b0_turn_on(M_final=1, T1=1, coil=None):
+def animate_b0_turn_on(M_final=1, T1=1, coil=None, tx=None):
     """Simulates M0 growth when main field is turned on
 
     Parameters
@@ -131,7 +132,7 @@ def animate_b0_turn_on(M_final=1, T1=1, coil=None):
     """
 
     duration = 6*T1
-    spin = SpinGroup(pdt1t2=(M_final,T1,0))
+    spin = SpinGroup(pdt1t2=(1,T1,0))
     spin.m[2,0] = 0 # Set initial Mz to zero
     N_steps = 100
     mags = np.zeros((N_steps,3))
@@ -140,11 +141,12 @@ def animate_b0_turn_on(M_final=1, T1=1, coil=None):
     for q in range(N_steps):
         spin.delay(dt)
         mags[q,:] = np.squeeze(spin.get_m())
-    graphJSON = generate_static_plot(mags,coil)
+    mags *= M_final
+    graphJSON = generate_static_plot(mags,coil,tx)
 
     return graphJSON
 
-def generate_coil_signal(mags,coil_dir):
+def generate_coil_signal(mags,coil_dir,b0=100):
     """Converts magnetization to emf in receive coil
 
     Parameters
@@ -170,9 +172,15 @@ def generate_coil_signal(mags,coil_dir):
     if np.max(np.absolute(signals)) != 0:
         signals = signals / np.max(np.absolute(signals)) # Normalized to [-1,1]
 
+    print(mags[0,:])
+    sin_scale = np.linalg.norm(mags[0,0:2])/np.linalg.norm(mags[0,:])
+
+
+    signals *= sin_scale*((b0/100)**2) # Make more realistic by incorporating B0
+
     return signals
 
-def generate_static_plot(mags, coil=None):
+def generate_static_plot(mags, coil=None, tx=None):
     """Generates a static 3D plot of magnetization trajectory to be animated with Plotly.js
 
     Parameters
@@ -205,7 +213,7 @@ def generate_static_plot(mags, coil=None):
         zerolinecolor=None)
 
     fig = go.Figure(
-        data=[go.Scatter3d(x=mags[:,0], y=mags[:,1], z= mags[:,2],
+        data=[go.Scatter3d(x=mags[:,0], y=mags[:,1], z=mags[:,2],
                            mode='lines', line=dict(width=10, color=spincolor))],
         layout=go.Layout(
             paper_bgcolor='gainsboro',
@@ -232,10 +240,23 @@ def generate_static_plot(mags, coil=None):
         # Add coil shape!
         fig.add_trace(
             go.Scatter3d(x=coil_x,y=coil_y,z=coil_z,mode='lines',
-                         line=dict(color='red',width=12))
+                         line=dict(color='dodgerblue',width=12))
         )
     else:
         fig.add_trace(go.Scatter3d(x=[],y=[],z=[]))
+
+
+
+    # Add in transmit RF fields
+    if tx is not None:
+        rfv = utils.spherical_to_cartesian(90,tx,0.75)
+        fig.add_trace(
+            go.Scatter3d(x=[0,rfv[0,0]],y=[0,rfv[1,0]],z=[0,rfv[2,0]],mode='lines',
+                      line=dict(color='red',width=12))
+        )
+    else:
+        fig.add_trace(go.Scatter3d(x=[],y=[],z=[]))
+
 
     fig.update_traces(showlegend=False)
 
