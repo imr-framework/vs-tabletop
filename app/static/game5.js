@@ -188,7 +188,8 @@ function play_animation_spin(graphData, loop){
                 }
             },
 
-            graphData.data[1], graphData.data[2], graphData.data[3], graphData.data[4], graphData.data[5]
+            graphData.data[1], graphData.data[2], graphData.data[3], graphData.data[4], graphData.data[5],
+            graphData.data[6]
             ],
         layout: graphData.layout
     }, layout);
@@ -404,3 +405,100 @@ socket.on('renew stars',(msg)=>{
 
 
 })
+
+// Task completion tracking
+$(".task-next-button").click((event)=>{
+    let task_id = event.target.id.replace('task','').replace('-next','');
+    // Check if all checkboxes of task are selected
+    if ($(`input.task-${task_id}-check`).not(':checked').length === 0){
+        console.log('All boxes are checked! Moving on.')
+        // Update session progress
+        if (parseInt(task_id) !== 3){
+            socket.emit('game5 update progress',{'task': task_id});
+            $(`#task-message-${task_id}`).addClass('d-none');
+            $(`#task-success-${task_id}`).removeClass('d-none');
+            update_progress_bar(task_id);
+            go_to_next_tab(parseInt(task_id));
+
+        }
+        else{
+            //TODO step 3 additional logic
+            socket.emit('game5 update progress',{'task': task_id});
+            $(`#task-message-${task_id}`).addClass('d-none');
+            $(`#task-success-${task_id}`).removeClass('d-none');
+
+            update_progress_bar(task_id);
+            go_to_next_tab(parseInt(task_id));
+            // Account for special condition in task 3 to pass.
+        }
+    }
+    else{
+        // If this task hasn't been completed, print hint
+        // Use tab active status to judge
+        if (parseInt(task_id) === 4 || $(`#task${parseInt(task_id)+1}-tab`).hasClass('disabled')){
+            console.log('showing hint message')
+            console.log(`#task-message-${task_id}`);
+            $(`#task-message-${task_id}`).removeClass('d-none');
+
+        }
+        else{ // If step is already completed, just go to the next tab.
+            go_to_next_tab(parseInt(task_id));
+            // For the last step, display final success image
+        }
+    }
+})
+
+// Interactive task - generate random initial and target M's!
+$('#randomize').click(()=>{
+    // Turn on required things
+    $('#b0_on').prop('checked',true);
+    $('#b0').val(100);
+    $('#tx-button').prop('checked',true);
+    $('#rx-button').prop('checked',false);
+    $('#rot-frame-button').prop('checked',true);
+    socket.emit('request rf rotation task');
+})
+
+socket.on('set scene for rf rotation task',(msg)=>{
+    // Update displayed values
+    $('#m_theta').val(msg['theta']);
+    $('#m_phi').val(msg['phi']);
+    $('#m_size').val(1.0);
+
+    // Display target M
+    Mt = msg['M_target']
+    $('#target-m-disp').html(`Target M: (${Mt[0]},${Mt[1]},${Mt[2]})`);
+})
+
+$('#check-answer').click(()=>{
+    // Check answer against session variable
+    socket.emit('check M answer')
+})
+
+socket.on('send M correctness',(msg)=>{
+    if (msg['correctness']){
+        // Checkbox check!
+        $('#rf-rot-task-check').prop('checked',true);
+        $('#try-again').addClass("d-none")
+    }
+    else{
+        $('#rf-rot-task-check').prop('checked',false);
+        $('#try-again').removeClass("d-none");
+
+    }
+})
+
+function update_progress_bar(step) {
+    // Update progress bar only if new value is larger than existing value.
+    let current = parseInt($('.progress-bar').attr('style').replace('width: ', '').replace('%', ''));
+    if (step * 25 > current) {
+        $('.progress-bar').prop('style', `width: ${step * 25}%`).prop('aria-valuenow', `${step * 25}`);
+    }
+}
+
+function go_to_next_tab(step){
+    if (step<4){
+        $(`#task${step+1}-tab`).removeClass('disabled');
+        $(`#task${step+1}-tab`).tab('show');
+    }
+}

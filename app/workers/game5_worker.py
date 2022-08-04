@@ -11,7 +11,7 @@ import utils
 GAMMA_BAR = 42.58e6
 
 # Game 5
-def simulate_RF_rotation(M_first, FA, rf_phase_deg, b0, rot_frame=False,coil=None,tx=None):
+def simulate_RF_rotation(M_first, FA, rf_phase_deg, b0, rot_frame=False,coil=None,tx=None,target=None):
     """Simulates RF nutation plot of single magnetization vector given settings
 
     Parameters
@@ -62,12 +62,12 @@ def simulate_RF_rotation(M_first, FA, rf_phase_deg, b0, rot_frame=False,coil=Non
     __, mags = spin.apply_rf_store(pulse_shape=pulse_shape, grads_shape=np.zeros((3,len(rf.signal))),dt=rfdt)
     mags = np.transpose(mags)
 
-    graphJSON = generate_static_plot(mags, coil, tx)
+    graphJSON = generate_static_plot(mags, coil, tx, target)
     last_mag = mags[-1,:]
 
     return graphJSON, last_mag
 
-def simulate_spin_precession(M_first, b0, rot_frame=False, coil=None, tx=None):
+def simulate_spin_precession(M_first, b0, rot_frame=False, coil=None, tx=None, target=None):
     """"Simulates spin precession plot of single magnetization vector given settings
 
     Parameters
@@ -109,11 +109,11 @@ def simulate_spin_precession(M_first, b0, rot_frame=False, coil=None, tx=None):
         spin.delay(dt)
         mags[q,:] = np.squeeze(spin.get_m())
 
-    graphJSON = generate_static_plot(mags, coil, tx)
+    graphJSON = generate_static_plot(mags, coil, tx, target)
 
     return graphJSON, dt, mags
 
-def animate_b0_turn_on(M_final=1, T1=1, coil=None, tx=None):
+def animate_b0_turn_on(M_final=1, T1=1, coil=None, tx=None, target=None):
     """Simulates M0 growth when main field is turned on
 
     Parameters
@@ -142,7 +142,7 @@ def animate_b0_turn_on(M_final=1, T1=1, coil=None, tx=None):
         spin.delay(dt)
         mags[q,:] = np.squeeze(spin.get_m())
     mags *= M_final
-    graphJSON = generate_static_plot(mags,coil,tx)
+    graphJSON = generate_static_plot(mags,coil,tx,target)
 
     return graphJSON
 
@@ -180,7 +180,7 @@ def generate_coil_signal(mags,coil_dir,b0=100):
 
     return signals
 
-def generate_static_plot(mags, coil=None, tx=None):
+def generate_static_plot(mags, coil=None, tx=None, target=None):
     """Generates a static 3D plot of magnetization trajectory to be animated with Plotly.js
 
     Parameters
@@ -256,6 +256,17 @@ def generate_static_plot(mags, coil=None, tx=None):
         )
     else:
         fig.add_trace(go.Scatter3d(x=[],y=[],z=[]))
+
+    # Add in target display
+    if target is not None:
+        fig.add_trace(
+            go.Scatter3d(x=[0,target[0,0]],y=[0,target[1,0]],z=[0,target[2,0]],mode='lines',
+                         line=dict(color='lightsteelblue',width=10))
+        )
+    else:
+        fig.add_trace(go.Scatter3d(x=[],y=[],z=[]))
+
+
 
 
     fig.update_traces(showlegend=False)

@@ -5,9 +5,9 @@ from flask_login import login_required, login_user, logout_user
 import plotly
 import plotly.graph_objects as go
 import utils
-
+import random
 from forms import Game5Form
-from info import GAMES_DICT, GAME5_INSTRUCTIONS
+from info import GAMES_DICT, GAME5_INSTRUCTIONS, GAME5_M_INFO
 from models import User, Calibration
 from __main__ import app, login_manager, db, socketio
 import plotly.express as px
@@ -57,7 +57,7 @@ def game5_view():
 
 
 def make_default_graphs():
-    """Make default empty plots to dispaly when Game 5 is first loaded
+    """Make default empty plots to display when Game 5 is first loaded
 
     Returns
     -------
@@ -70,9 +70,8 @@ def make_default_graphs():
     game5 = session['game5']
     mags = np.zeros((1,3))
     graphJSON_spin = generate_static_plot(mags,coil=(game5['coil_dir'] if game5['coil_on'] else None),
-                                                     tx=(game5['rf_phase'] if game5['tx_on'] else None))
-
-
+                                                     tx=(game5['rf_phase'] if game5['tx_on'] else None),
+                                                     target=(game5['M_target'] if game5['M_target_on'] else None))
 
 
     #j1 = json.dumps(f1,cls=plotly.utils.PlotlyJSONEncoder)
@@ -120,9 +119,12 @@ def update_parameter(info):
         new_M_init = session['game5']['M_init'] * float(info['value']) / 100
         utils.update_session_subdict(session,'game5',{'b0': float(info['value']),'M_init': new_M_init}) # Convert from Gauss to Tesla
     else:
-        utils.update_session_subdict(session,'game5',{info['id']:float(info['value'])})
+        try:
+            utils.update_session_subdict(session,'game5',{info['id']:float(info['value'])})
+        except:
+            print('')
 
-    print(session['game5'])
+    #print(session['game5'])
 
 @socketio.on('Update params for Game5')
 def update_multiple_parameters(info):
@@ -143,23 +145,27 @@ def reset_everything():
     """Resets the following:
        - m
     """
-    reset_m()
     # Reset other things
     utils.update_session_subdict(session,'game5',
                                  { 'b0_on': False,
                                    'coil_on': False,
                                    'tx_on':False,
                                    'rot_frame_on': False,
-                                   'M_init': np.array([[0],[0],[0]])
+                                   'M_init': np.array([[0],[0],[0]]),
+                                   'M_target_on':False
                                  })
-    socketio.emit('message',{'text': 'Spin and hardware have been reset.','type':''})
+    reset_m()
+
     return
 
 def reset_m():
     # Reset spin plot
     game5=session['game5']
     mags_zero = np.zeros((1,3))
-    j0 = generate_static_plot(mags=mags_zero,coil=(game5['coil_dir'] if game5['coil_on'] else None))
+    j0 = generate_static_plot(mags=mags_zero,coil=(game5['coil_dir'] if game5['coil_on'] else None),
+                              tx=(game5['rf_phase'] if game5['tx_on'] else None),
+                              target=(game5['M_target'] if game5['M_target_on'] else None)
+                              )
     # Generate static plot and replace current plot with it
     socketio.emit('update spin animation', {'graph':j0,'loop_on':False})
     j1 = generate_static_signals(dt=1, signals=np.zeros(1))
@@ -179,7 +185,9 @@ def turn_on_b0(info):
         m_max = game5['b0']/100
         print(f'm_max is {m_max}')
         j0 = animate_b0_turn_on(M_final=m_max, T1=1, coil=(game5['coil_dir'] if game5['coil_on'] else None),
-                                                           tx=(game5['rf_phase'] if game5['tx_on'] else None))
+                                                           tx=(game5['rf_phase'] if game5['tx_on'] else None),
+                                                            target=(game5['M_target'] if game5['M_target_on'] else None)
+                                )
         utils.update_session_subdict(session,'game5',{'M_init':np.array([[0],[0],[m_max]])})
         socketio.emit('update spin animation',{'graph':j0,'loop_on':False})
         socketio.emit('message',{'text': 'B0 is turned on! ', 'type':'success'})
@@ -197,16 +205,20 @@ def set_M_init():
     m_max = game5['b0'] / 100
 
     # Set it
-    print("setting Mi")
+    #print("setting Mi")
+    #print(session['game5'])
     Mi = m_max * utils.spherical_to_cartesian(session['game5']['m_theta'],
                                  session['game5']['m_phi'],
                                  session['game5']['m_size'])
+    #print(Mi)
+
     utils.update_session_subdict(session, 'game5', {'M_init': Mi})
 
     # Make the static animation and send it over to frontend
     j1 = generate_static_plot(mags=np.transpose(Mi),
                               coil=(game5['coil_dir']) if game5['coil_on'] else None,
-                              tx=(game5['rf_phase']) if game5['tx_on'] else None)
+                              tx=(game5['rf_phase']) if game5['tx_on'] else None,
+                              target=(game5['M_target'] if game5['M_target_on'] else None))
     j2 = generate_static_signals(dt=1, signals=np.zeros(1))
 
     socketio.emit('update spin animation',{'graph' : j1,'loop_on':False})
@@ -219,7 +231,10 @@ def let_spin_precess(info):
     game5 = session['game5']
     if info['b0_on']:
         j1, dt, mags = simulate_spin_precession(M_first=game5['M_init'], b0=game5['b0'], rot_frame=game5['rot_frame_on'],
-                                      coil=(game5['coil_dir'] if game5['coil_on'] else None),tx=(game5['rf_phase'] if game5['tx_on'] else None))
+                                                coil=(game5['coil_dir'] if game5['coil_on'] else None),
+                                                tx=(game5['rf_phase'] if game5['tx_on'] else None),
+                                                target=(game5['M_target'] if game5['M_target_on'] else None)
+                                               )
         socketio.emit('update spin animation',{'graph':j1, 'loop_on':True})
 
         #TODO scale signal to sin(theta)
@@ -243,10 +258,11 @@ def tip_spin_with_rf(msg):
         j1, M_last = simulate_RF_rotation(M_first=game5['M_init'], FA=game5['flip_angle'],rf_phase_deg=game5['rf_phase'],
                                   b0=game5['b0'], rot_frame=game5['rot_frame_on'],
                                           coil=(game5['coil_dir'] if game5['coil_on'] else None),
-                                            tx=(game5['rf_phase'] if game5['tx_on'] else None))
+                                            tx=(game5['rf_phase'] if game5['tx_on'] else None),
+                                          target=(game5['M_target'] if game5['M_target_on'] else None)
+                                          )
         # Initial M was changed.
         utils.update_session_subdict(session,'game5',{'M_init':np.transpose(M_last)})
-
         socketio.emit('update spin animation',{'graph':j1, 'loop_on':False})
 
     else:
@@ -269,7 +285,9 @@ def turn_on_rot_frame(info):
     if info['b0_on']:
         j1, __, __ = simulate_spin_precession(M_first=game5['M_init'], b0=game5['b0'],
                                       rot_frame=info['rot_frame_on'],coil=(game5['coil_dir'] if game5['coil_on'] else None),
-                                                                           tx=(game5['rf_phase'] if game5['tx_on'] else None))
+                                                                           tx=(game5['rf_phase'] if game5['tx_on'] else None),
+                                                                            target=(game5['M_target'] if game5['M_target_on'] else None)
+                                                                          )
         socketio.emit('update spin animation', {'graph': j1, 'loop_on': True})
 
 @socketio.on('tx toggled')
@@ -285,7 +303,9 @@ def turn_on_tx_coil(info):
 
     j1 = generate_static_plot(mags=np.transpose(game5['M_init']),
                               coil=(game5['coil_dir']) if game5['coil_on'] else None,
-                              tx=(game5['rf_phase']) if info['tx_on'] else None)
+                              tx=(game5['rf_phase']) if info['tx_on'] else None,
+                              target=(game5['M_target'] if game5['M_target_on'] else None)
+                              )
     socketio.emit('update spin animation', {'graph': j1, 'loop_on': False})
 
 
@@ -304,7 +324,9 @@ def turn_on_rx_coil(info):
 
     j1 = generate_static_plot(mags=np.transpose(game5['M_init']),
                               coil=(info['rx_dir']) if info['rx_on'] else None,
-                              tx=(game5['rf_phase']) if game5['tx_on'] else None)
+                              tx=(game5['rf_phase']) if game5['tx_on'] else None,
+                              target=(game5['M_target'] if game5['M_target_on'] else None)
+                              )
 
     socketio.emit('update spin animation', {'graph': j1, 'loop_on': False})
 
@@ -359,4 +381,65 @@ def update_mc_progress(msg):
 
     # Change stars display
     socketio.emit('renew stars',{'stars': session['game5']['progress'].num_stars})
+
+@socketio.on('game5 update progress')
+def game5_update_progress(msg):
+    task = int(msg['task'])
+
+    # Only update if there is progress (no backtracking)
+    if task > session['game5']['task_completed']:
+        utils.update_session_subdict(session, 'game5', {'task_completed': task})
+        print('Task ', session['game5']['task_completed'],' completed for game 5')
+
+        # Update database object
+        session['game5']['progress'].num_steps_complete = task
+        session['game5']['progress'].update_stars()
+        print('Game 5 progress updated: ', session['game5']['progress'])
+        socketio.emit('renew stars',{'stars': session['game5']['progress'].num_stars})
+
+@socketio.on('request rf rotation task')
+def send_rf_rotation():
+    m_info = random.choice(GAME5_M_INFO)
+    print(m_info)
+
+    # Update session values
+
+    # Initial values
+    session['game5']['m_theta'] = m_info[0][0]
+    session['game5']['m_phi'] = m_info[0][1]
+    session['game5']['m_size'] = 1
+
+
+    # Target values
+    session['game5']['M_target'] = np.reshape(m_info[1], (3,1))
+    session['game5']['M_target_on'] = True
+
+
+    set_M_init()
+
+    # Others
+    session['game5']['rot_frame_on'] = True
+
+    socketio.emit('set scene for rf rotation task',
+                  {'theta': m_info[0][0],
+                   'phi': m_info[0][1],
+                   'M_target': m_info[1]
+                   })
+
+
+@socketio.on('check M answer')
+def check_answer_against_target():
+    vec1 = np.reshape(np.array(session['game5']['M_init'],dtype=float),(3,1))
+    vec2 = np.reshape(np.array(session['game5']['M_target'],dtype=float),(3,1))
+
+    print(vec1, vec2)
+
+    vec1 /= np.linalg.norm(vec1)
+    vec2 /= np.linalg.norm(vec2)
+
+    correct = bool(np.linalg.norm(vec1-vec2)<0.1)
+
+    print(f'The M answer is {correct}.')
+    socketio.emit('send M correctness',{'correctness':  correct})
+
 
