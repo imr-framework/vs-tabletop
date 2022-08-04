@@ -70,4 +70,11 @@ img{
 .chart{
     overflow: hidden
 }
+.form_control_container{
+    display: flex;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
 

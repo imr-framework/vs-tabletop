@@ -13,6 +13,9 @@ socket.on('G3 take session data', (msg)=>{
     $('#FA').val(msg['data']['FA']);
     console.log(msg['data'])
 })
+$(document).ready(function(){
+  $('[data-bs-toggle="popover"]').popover();
+});
 
 $('.carousel').carousel({
   interval: false,
