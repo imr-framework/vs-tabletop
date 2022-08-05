@@ -293,7 +293,7 @@ body {font-family: Arial;}
     </div>
                     <div class="row card">
                     <div class="card-header"><b>Select FOV, Matrix size, Voxel Size, and Zero-Fill Metrics</b></div>
-                    <div class="card-body">
+                    <div class="card-body" style="align: justified">
                         <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is FOV?"
                                 data-bs-content="Field-of-View. The real world size of your image in units of distance (meters, millimeters, etc..">
                                 <i class="bi bi-question-square"></i></button>
@@ -472,8 +472,7 @@ body {font-family: Arial;}
 
                                         <p class="d-none">Correct choice: <span id="mc-correct-choice-{{ind}}">{{ questions[ind]['correct']}}</span></p>
 
-                                        <br> <!-- {{ G1Form.submit_field_q(class="btn btn-primary") }}-->
-                                            <div class="btn btn-large btn-primary answer-mc" id="answer-mc-{{ind}}">Submit</div>
+                                            <br><div class="btn btn-large btn-primary answer-mc" id="answer-mc-{{ind}}">Submit</div>
                                         <br>
                                         <p id="mc-success-text-{{ind}}" class="d-none">{{ success_text[ind] }}</p>
                                     </div>

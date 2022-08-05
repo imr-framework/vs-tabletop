@@ -25,18 +25,19 @@ def initialize_parameters():
     session['user_name'] = None
 
     session['game1'] = {'FOV_scale': 0.128, 'Matrix_scale': 128, 'Voxel_scale': 0.001,'zero_fill': 128,
-                        'Min_scale': 0.1, 'Max_scale': 0.9, 'P1_q': 'No', 'P2_q': 'No',
+                        'Min_scale': 0.1, 'Max_scale': 0.9, 'P1_q': 'No', 'P2_q': 'No', 'P3_q': 'No',
                         'progress': utils.new_progress_of_game(1), 'mc_status_list': utils.num_questions_of_game(1)*[False],
                         'current_task': 1, 'completed_task': 0, 'star_count': 0}
 
-    session['game3'] = {'options': 'T1', 'TR': 0.5, 'TE': 0.01, 'FA':90, 'P1_q': 'No', 'P2_q': 'No'}
+    session['game3'] = {'options': 'T1', 'TR': 0.5, 'TE': 0.01, 'FA':90, 'P1_q': 'No', 'P2_q': 'No', 'progress': utils.new_progress_of_game(3),
+                        'mc_status_list': utils.num_questions_of_game(1)*[False], 'current_task': 1, 'completed_task': 0, 'star_count': 0}
+
     session['game5'] = {'b0_on': False, 'b0': 60.0,'coil_on': False, 'rot_frame_on': False, 'flip_angle': 90, 'rf_phase': 0.0,
                         'coil_dir': 'x', 'm_theta': 0.0, 'm_phi':0.0, 'm_size': 1, 'tx_on': False,
                         'M_init': np.array([[0],[0],[0]]), 'M_target': np.array(([0],[0],[0])),
                         'M_target_on': False,
                         'progress': utils.new_progress_of_game(5), 'mc_status_list': utils.num_questions_of_game(5)*[False],
-                        'task_completed': 0
-                        }
+                        'task_completed': 0}
 
     session['game7'] = {'model':'letterN', 'proj2d_axis': 'x', 'proj1d_angle': 90,
                         'plot3d_visible':False, 'plot2d_visible':False, 'plot1d_visible':False,
