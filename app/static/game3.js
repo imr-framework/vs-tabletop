@@ -49,6 +49,21 @@ $('.answer-mc').on('click', (event)=>{
     console.log('Updating choice')
 })
 
+socket.on('renew stars', (msg)=>{
+    console.log('Stars should be updated now...')
+    num_stars = msg['stars'];
+    num_full = parseInt(Math.floor(num_stars));
+    num_half = parseInt(Math.round((num_stars-num_full)*2));
+    num_empty = 5 - num_full - num_half;
+
+    let stars_html = `<span> ${num_stars} / 5 stars earned</span> `
+    stars_html += '<i class="bi bi-star-fill"></i> '.repeat(num_full)
+    stars_html += '<i class="bi bi-star-half"></i> '.repeat(num_half)
+    stars_html += '<i class="bi bi-star"></i> '.repeat(num_empty)
+
+    $("#stars-display").html(stars_html);
+})
+
 socket.on('G3 take session data', (msg)=>{
     console.log('Updating g3 data')
     $('#options').val(msg['data']['options']);
@@ -65,17 +80,4 @@ $('.carousel').carousel({
   interval: false,
 });
 
-socket.on('renew stars',(msg)=>{
-    console.log('Stars should be updated now...')
-    num_stars = msg['stars'];
-    num_full = parseInt(Math.floor(num_stars));
-    num_half = parseInt(Math.round((num_stars-num_full)*2));
-    num_empty = 5 - num_full - num_half;
 
-    let stars_html = `<span> ${num_stars} / 5 stars earned</span> `
-    stars_html += '<i class="bi bi-star-fill"></i> '.repeat(num_full)
-    stars_html += '<i class="bi bi-star-half"></i> '.repeat(num_half)
-    stars_html += '<i class="bi bi-star"></i> '.repeat(num_empty)
-
-    $("#stars-display").html(stars_html);
-})

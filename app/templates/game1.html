@@ -456,7 +456,7 @@ body {font-family: Arial;}
                                     {% set active_text = 'active' if ind==0 else '' %}
                                     <div class="carousel-item {{active_text}}">
                                         <h2>Question {{ ind+1 }}</h2>
-                                        <br>{{ questions[ind]['text']}}
+                                        <br>{{ questions[ind]['text']}}<br>
                                         {% if (questions[ind]['main_image_path']) | length > 0 %}
                                         <br><img src=".{{ questions[ind]['main_image_path']}}" style="height:100px; width:100px;">
                                         {% endif %}

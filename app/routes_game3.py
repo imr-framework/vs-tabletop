@@ -182,6 +182,8 @@ def update_mc_progress(msg):
 
     socketio.emit('renew stars', {'stars': session['game3']['progress'].num_stars})
 
+    print('star request sent')
+
 @socketio.on("Updating choice for Game 3")
 def update_choice(info):
     print(info)

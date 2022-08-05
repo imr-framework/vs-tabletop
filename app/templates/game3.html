@@ -15,6 +15,7 @@
     <link href='style.css' rel='stylesheet'>
 
 </head>
+
     <div class="container-fluid vh-100">
         <div class="row h-100">
             <div class="col-6 h-100">
@@ -81,21 +82,25 @@
         <div class="tabs__content {{ task1_status }}">
           <h2 class="tabs__title">Instructions</h2>
           <p class="tabs__text">
-              Explore each of the MR weighted scan types and take notes on how contrast changes with each of them.
+              Explore each of the MR weighted scan types on the first panel and take notes on how contrast changes with each of them. Refer to the Messages Panel for further directions.
           </p>
           <h2 class="tabs__title">Task</h2>
+            <form action="/games/3" method="POST">
             <p class="tabs_text">
-                Answer Question 1 to move onto the next task!
+                Answer the below question to test your knowledge and move on to the next task!
                 <br>Which scan highlights fat and proteins?
                 <br>{{ G3Form.P1_q() }}
+                <br>{{ G3Form.submit_questions(class="btn btn-primary") }}
             </p>
+            </form>
         </div>
         <div class="tabs__content {{ task2_status }}">
           <h2 class="tabs__title">Instructions</h2>
           <p class="tabs__text">
               Experiment with different TR, TE, and FA values to observe how each effects the image.
-              Test out the following TR, TE, and FA values on the second panel to observe effects.
+              Test out the following TR, TE, and FA values on the second panel to observe effects. Refer to the Messages Panel for further directions.
               <br><div class="form-check" style="font-size: .8em">
+                      <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
                       <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
                       <label class="form-check-label" for="flexCheckDefault">
                         A high TR (4000 - 5000) with low TE (0 - 150)
@@ -115,11 +120,14 @@
                     </div>
           </p>
           <h2 class="tabs__title">Task</h2>
+            <form action="/games/3" method="POST">
             <p class="tabs__text">
                 Answer the below question to continue to next task!
                 <br>What happens as the FA value increases?
                 {{ G3Form.P2_q() }}
+                <br>{{ G3Form.submit_questions(class="btn btn-primary") }}
             </p>
+            </form>
         </div>
         <div class="tabs__content {{ task3_status }}">
           <h2 class="tabs__title">Instructions</h2>
@@ -128,21 +136,38 @@
               CSF, GM, and WM change.
               <br> 2. Change each value on Panel 2(TR, TE, and FA) and observe how it changes the signal intensities of
               CSF, GM, and WM.
+              <br> 3. Refer to the Messages Panel for further directions.
+              <br> 4. To test your understanding of this module answer questions in the Questions panel to earn more stars!
           </p>
             <h2 class="tabs__title">Task</h2>
+            <form action="/games/3" method="POST">
             <p class="tabs__text">
                 1. Answer the below question
                 <br> In a T2 weighted scan, which tissue type results in the most signal intensity?
                 {{ G3Form.P3_q() }}
-
+                <br>{{ G3Form.submit_questions(class="btn btn-primary") }}
 
             </p>
+            </form>
         </div>
       </div>
     </div>
+                     <div class="row-card">
+                         <div class="card-header">Messages Panel</div>
+                         <div class="card-body">
+                             {% if session['game3']['current_task'] == 1 %}
+                             Panel 1: Click on T1, T2, or PD values to observe their impact on the scan! Click "Submit chosen parameters" to apply the scan type!
+                             {% elif session['game3']['current_task'] == 2 %}
+                             <br>Panel 2: Alter TR, TE, and FA values to observe their impact on the scan! Click "Submit chosen parameters" to apply the scan type!
+                             {% endif %}
+                             {% if session['game3']['current_task'] == 3 %}
+                             <br>Panel 3: Change specific TR, TE, and FA values and observe signal intensity changes on the bar graph!
+                             {% endif %}
+                         </div>
+                     </div>
 
                  <div class="row card">
-                     <div class="card-header">Select
+                     <div class="card-header">Panel 1: Select
                          <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is T1?"
                                     data-bs-content="longitudinal relaxation time tells us how long it takes for the z-component of the M vector to regrow from zero to about 63% of its maximum. Different tissues have different T1 values. Highlights fat and proteins">
                                 <i class="bi bi-question-square"></i></button>
@@ -176,7 +201,7 @@
                      </div>
                  </div>
                  <div class="row card">
-                     <div class="class-header">Self-Input TR, TE, and FA values</div>
+                     <div class="class-header">Panel 2: Self-Input TR, TE, and FA values</div>
                      <div class="card-body">
                          <div class="row">
                              <div class="col-4">
@@ -186,7 +211,6 @@
                                                 up an MR image.">
                                 <i class="bi bi-question-square"></i></button>
                                  {{ G3Form.TR.label }}
-                             {{ session['game3']['TR'] }}
                              </div>
                              <div class="col-8">
                                  <div class="row">
@@ -245,19 +269,6 @@
                          </div>
                      </div>
                  </div>
-
-                     <div class="row-card">
-                         <div class="card-header">Panel Messages</div>
-                         <div class="card-body">
-                             Panel 1: Click on T1, T2, or PD values to observe their impact on the scan!
-                             {% if session['game3']['P1_q'] == 'T1' %}
-                             <br>Panel 2: Alter TR, TE, and FA values to observe their impact on the scan!
-                             {% endif %}
-                             {% if session['game3']['P2_q'] == 'Contrast Increases' %}
-                             <br>Panel 3: Change specific TR, TE, and FA values and observe signal intensity changes on the bar graph!
-                             {% endif %}
-                         </div>
-                     </div>
                  </form>
             </div>
              <div class="col-6 h-100">
@@ -329,7 +340,7 @@
                      </div>
                  </div>
         <br><div class="row card">
-                    <div class="card header bg-light"><b>Star Count: Climb your way up to 5 black stars!</b></div>
+                    <div class="card header bg-light"><b>Star Count: 5 stars to <i>mastery!</i></b></div>
                         <div class="card body">
                                <p class="font-monospace" id="stars-display">
                                    {% set num_stars = session['game3']['progress'].num_stars %}
@@ -357,6 +368,9 @@
                                            <i class="bi bi-star"></i>
                                        {% endif %}
                                    {% endfor %}
+                                   {% if session['game3']['star_count'] == 5.0 %}
+                                    Continue to Game 3 to collect more stars!
+                                   {% endif %}
                                </p>
                         </div>
                     </div>

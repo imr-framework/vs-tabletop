@@ -29,7 +29,7 @@ def initialize_parameters():
                         'progress': utils.new_progress_of_game(1), 'mc_status_list': utils.num_questions_of_game(1)*[False],
                         'current_task': 1, 'completed_task': 0, 'star_count': 0}
 
-    session['game3'] = {'options': 'T1', 'TR': 0.5, 'TE': 0.01, 'FA':90, 'P1_q': 'No', 'P2_q': 'No', 'progress': utils.new_progress_of_game(3),
+    session['game3'] = {'options': 'T1', 'TR': 0.5, 'TE': 0.01, 'FA':90, 'P1_q': 'No', 'P2_q': 'No', 'P3_q': 'No', 'progress': utils.new_progress_of_game(3),
                         'mc_status_list': utils.num_questions_of_game(1)*[False], 'current_task': 1, 'completed_task': 0, 'star_count': 0}
 
     session['game5'] = {'b0_on': False, 'b0': 60.0,'coil_on': False, 'rot_frame_on': False, 'flip_angle': 90, 'rf_phase': 0.0,
