@@ -5,15 +5,18 @@ from flask import flash, render_template, session, redirect, url_for
 from flask_login import login_required, login_user, logout_user
 import utils
 from forms import *
-from info import GAMES_DICT
-from models import User, Calibration
+from info import GAMES_DICT, GAME7_INSTRUCTIONS
+from models import User, Calibration, MultipleChoice
 from __main__ import app, login_manager, db, socketio
+
 
 @app.route('/games/7', methods=["GET","POST"])
 def game7():
     # Viewing function for game 7
     form=Game7Form()
     j1, j2, j3 = game7_empty_plots_worker()
+
+    questions, success_text, uses_images = fetch_all_game7_questions()
 
     if form.validate_on_submit():
         print('validated')
@@ -27,8 +30,9 @@ def game7():
                                                  session['game7']['proj1d_angle'])
 
     return render_template('game7.html',G7Form=form, template_title="Projection Imaging",
-                           template_intro_text="Forward puzzle", instructions=get_instructions_game7(),
-                            graphJSON_3dimg = j1, graphJSON_2dimg = j2, graphJSON_1dimg = j3)
+                           template_intro_text="Forward puzzle", instructions=GAME7_INSTRUCTIONS,
+                            graphJSON_3dimg = j1, graphJSON_2dimg = j2, graphJSON_1dimg = j3,
+                           questions=questions, success_text=success_text, uses_images=uses_images)
 
 
 
@@ -106,16 +110,64 @@ def get_updated_plots():
 
 
 
-def get_instructions_game7():
-    instr = {
-        'step1': ['Select a 3D model and load it',
-                  'Change the 2D projection axis and hit "show/hide lines" each time ',
-                  'Press "2D projection after selecting each of the 3 axes. What do you observe?'
-                  'Using the "transparent" button, explore different views of the phantom. Can you replicate the 3 projections?',
-                  'If we cannot see the model, are 3 projections enough for us to figure out the complete 3D structure?'] ,
-        'step2': ['a','b','c'],
-        'step3': ['d','e','f']
-    }
-    return instr
+# Get game 7 questions!
+def fetch_all_game7_questions():
+    all_Qs = MultipleChoice.query.filter_by(game_number=7).all()
+    questions = []
+    uses_images_list = []
+    success_text = len(all_Qs)*['Correct! Move on to the next question.']
+    for Q in all_Qs:
+        print(Q)
+        qdata = Q.get_randomized_data()
+        uses_images_list.append(Q.uses_images)
+        corr_array = [l==qdata[2] for l in ['A','B','C','D']]
+        corr_array_new = []
+        qchoices = []
+        for ind in range(len(qdata[1])):
+            if len(qdata[1][ind])!=0:
+                qchoices.append(qdata[1][ind])
+                corr_array_new.append(corr_array[ind])
+
+        questions.append({'text': qdata[0],
+                          'choices':qchoices,
+                          'correct': corr_array_new.index(True)})
+
+    #success_text[0] = "You got the first answer correct!"
+
+    return questions, success_text, uses_images_list
 
 
+@socketio.on("game 7 question answered")
+def update_mc_progress(msg):
+    # Updates session multiple choice status & progress object
+    # Tells frontend to update # stars displayed.
+
+    status = session['game7']['mc_status_list']
+    status[int(msg['ind'])] = bool(msg['correct'])
+    # Update current list
+    utils.update_session_subdict(session,'game7',
+                                 {'mc_status_list': status})
+
+    # Update progress
+    session['game7']['progress'].num_correct = sum(status)
+    session['game7']['progress'].update_stars()
+
+    print('Game 7 progress updated: ', session['game7']['progress'])
+
+    # Change stars display
+    socketio.emit('renew stars',{'stars': session['game7']['progress'].num_stars})
+
+@socketio.on('game7 update progress')
+def game7_update_progress(msg):
+    task = int(msg['task'])
+
+    # Only update if there is progress (no backtracking)
+    if task > session['game7']['task_completed']:
+        utils.update_session_subdict(session, 'game7', {'task_completed': task})
+        print('Task ', session['game7']['task_completed'],' completed for game 7')
+
+        # Update database object
+        session['game7']['progress'].num_steps_complete = task
+        session['game7']['progress'].update_stars()
+        print('Game 7 progress updated: ', session['game7']['progress'])
+        socketio.emit('renew stars',{'stars': session['game7']['progress'].num_stars})

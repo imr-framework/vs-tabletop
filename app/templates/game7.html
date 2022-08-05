@@ -5,6 +5,13 @@
         <div class="row h-50">
                     <div class="col-4 card">
                         <div class="card-header">
+                                 <div type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left"
+                                      title='3D coordinates'
+                                data-bs-content="Any point in 3D space can be located with a position vector (x,y,z).
+                                                 A 3D model is defined by surfaces, which are defined by triangles,
+                                                 which are in turn defined by three vertices each. ">
+                                    <i class="bi bi-question-circle-fill"></i>
+                            </div>
                             <div class="btn btn-lg btn-info" id="button-3d-model">Load 3D model</div>
                         </div>
                         <div class="card-body">
@@ -14,6 +21,14 @@
 
                     <div class="col-4 card">
                         <div class="card-header">
+                                 <div type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left"
+                                      title='2D projection'
+                                data-bs-content="A 2D projection of a 3D function along an axis can be calculated by
+                                                 summing up the function f(x,y,z) across all values on that axis.
+                                                 For example, a projection along the z axis can be calculated by creating a function g(x,y), where
+                                                 g(x0,y0) = (sum of f(x0,y0,z) for all z between negative infinity and positive infinity) ">
+                                    <i class="bi bi-question-circle-fill"></i>
+                            </div>
                             <div class="btn btn-lg btn-success" id="button-2d-proj">2D projection</div>
                         </div>
 
@@ -24,6 +39,13 @@
 
                     <div class="col-4 card">
                         <div class="card-header">
+                            <div type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left"
+                                      title='1D projection'
+                                data-bs-content="A 2D image can be collapsed in the y direction (90 degrees) to create a 1D curve that shows
+                                                   how much total intensity there is for each y location. This can also be done along
+                                                   any direction such as x (0 degree), 45 degrees, etc. to have different views of the same object.">
+                                    <i class="bi bi-question-circle-fill"></i>
+                            </div>
                             <div class="btn btn-lg btn-success" id="button-1d-proj">1D projection</div>
                     </div>
                         <div class="card-body">
@@ -40,27 +62,58 @@
                         <div class="card-body">
                             <div class="row">
                             <div class="col-4">
-                                <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="top" title="3D Model" data-bs-content="">
-                                <i class="bi bi-question-square"></i></button>
+
+                            <!-- 3D model choice -->
                             <div class="form-group">
+                                  <div type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="top"
+                                      title='3D model'
+                                data-bs-content="Select among a list of pre-made 3D models with cutouts that fills with water which generate signal.">
+                                    <i class="bi bi-question-circle-fill"></i>
+                            </div>
+
                             {{ G7Form.phantom_type_field.label(class="form-label")}}
                             {{ G7Form.phantom_type_field(class="form-control",id='model')}}
                             </div>
 
+                            <!-- 2D projection axis -->
                             <div class="form-group pt-3">
-                            {{ G7Form.proj_2d_axis_field.label(class="form-label") }}
-                            {% for subfield in G7Form.proj_2d_axis_field %}
-                                <tr>
-                                    <td>{{ subfield(id='proj2d_axis',class='form-check-input') }}</td>
-                                    <td>{{ subfield.label(class='form-check-label') }}</td>
-                                </tr>
-                            {% endfor %}
+                                <div class="col">
+                                    <div type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="top"
+                                          title='2D projection axis'
+                                    data-bs-content="The axis along which the water-filled parts of the 3D volume is summed.">
+                                        <i class="bi bi-question-circle-fill"></i>
+                                    </div>
+
+                                    {{ G7Form.proj_2d_axis_field.label(class="form-label col") }}
+                                 </div>
+
+                                <div class="row">
+                                {% for subfield in G7Form.proj_2d_axis_field %}
+                                    <div class="form-control col">
+                                        {{ subfield(id='proj2d_axis',class='form-check-input') }}
+                                        {{ subfield.label(class='form-check-label') }}
+                                    </div>
+                                {% endfor %}
+                                </div>
                             </div>
 
+
+                            <!-- 1D projection angle -->
                                 <div class="form-group pt-3">
+                                    <div class="col">
+                                    <div type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="top"
+                                      title='1D projection angle'
+                                      data-bs-content="The angle at which we pass parallel rays through an 2D image.
+                                                        The total image intensity along each ray is summed to form the projection
+                                                       on a line/surface at a right angle to the rays.">
+                                    <i class="bi bi-question-circle-fill"></i>
+                                    </div>
                                 {{ G7Form.proj_1d_angle_field.label(class="form-label")}}
+                                </div>
                                 {{ G7Form.proj_1d_angle_field(class='form-control',id='proj1d_angle')}}
                             </div>
+
+                            <!-- Form submit button -->
                                 <div class="form-group pt-3">
                                     {{ G7Form.submit_field(class='btn btn-lg btn-success')}}
                                     <div class="btn btn-lg btn-info" id="lines-toggle">Show/hide lines</div>
@@ -84,23 +137,197 @@
                 </form>
 
                  </div>
+
+                <!-- Task panel -->
                 <div class="col-4 card">
-                    <div class="card-header">Tasks</div>
+                    <div class="card-header h3">Tasks</div>
                     <div class="card-body">
-                        <h3>Step 1</h3>
-                        <ul class="list-group">
-                            {% for instr in instructions['step1'] %}
-                                <li class="list-group-item">{{ instr }}</li>
-                            {% endfor %}
-                        </ul>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar"
+                             style="width: {{ session['game7']['task_completed']*25 }}%"
+                             aria-valuenow="0" aria-valuemin="{{ session['game7']['task_completed']*25 }}" aria-valuemax="100"></div>
+                    </div>
+                    <!-- Show tab for each lab procedure -->
+                    <ul class="nav nav-tabs nav-justified" id="7-tab" role="tablist">
+                        {% for tab in instructions['tabs'] %}
+                            {% if loop.index == session['game7']['task_completed'] + 1 %}
+                                {% set active = 'active' %}
+                            {% else %}
+                                {% set active = '' %}
+                            {% endif %}
+
+                            {% set disabled = 'disabled' if loop.index > 1 + session['game7']['task_completed'] else '' %}
+                            {% set aria_disabled = (disabled == 'disabled') %}
+
+                            <li class="nav-item" role="presentation">
+                                <button class="col nav-link {{ active }} {{ disabled }} text-info" id="task{{ loop.index }}-tab" data-bs-toggle="tab" data-bs-target="#step{{ loop.index }}"
+                                        type="button" role="tab"  aria-controls="step{{ loop.index }}"
+                                        aria-selected="{{ loop.index==1 }}" aria-disabled= "{{ aria_disabled }}">
+                                    {{ tab }}
+                                </button>
+                            </li>
+                        {% endfor %}
+                    </ul>
+
+                    <!-- Show content for each lab procedure -->
+                    <div class="tab-content" id="game7-tab-content">
+                        {% for task in instructions['tasks'] %}
+                            {% if loop.index == session['game7']['task_completed'] + 1 %}
+                                {% set show_text = 'show' %}
+                                {% set active_text = 'active' %}
+                            {% else %}
+                                {% set show_text = '' %}
+                                {% set active_text = '' %}
+                            {% endif %}
+
+
+
+                            <div class="tab-pane fade {{ show_text }} {{ active_text }}" id="step{{ loop.index }}" role="tabpanel" aria-labelledby="step{{ loop.index }}-tab">
+                                <div class="h4 text-info">{{ instructions['titles'][loop.index0] }}</div>
+                                <ul class="list-group">
+                                {% set task_index = loop.index %}
+                                {% for step in instructions['explorations'][loop.index0] %}
+                                      <li class="list-group-item">
+                                        <input class="form-check-input task-{{ task_index }}-check" type="checkbox" value="" aria-label="">
+                                        {{ step }}
+                                      </li>
+                                {% endfor %}
+
+                                </ul>
+                                <p class="text-info">{{ task }}</p>
+
+                                <!-- Step 3 special button -->
+                                {% if task_index == 3 %}
+                                    <div class="row">
+                                        <div class="col" id="target-m-disp">Target M: (0, 0, 0)</div>
+                                        <div class="col d-none text-danger" id="try-again">Try again.</div>
+                                    </div>
+
+                                    <div class="btn btn-light btn-outline-primary" id="randomize">Randomize!</div>
+                                    <div class="btn btn-dark" id="check-answer">Check</div>
+
+                                {% endif %}
+
+                                <div class="btn btn-info task-next-button" id="task{{ loop.index }}-next">Next</div>
+
+                                <p class="d-none text-danger" id="task-message-{{ task_index }}">
+                                    Complete and check all steps to move on.
+                                </p>
+                                {% set dnone = '' if session['game7']['task_completed'] >= task_index else 'd-none' %}
+
+                                {% set success_message = 'This step has been completed' if task_index < 4 else
+                                        'All steps complete. Congratulations!' %}
+
+                                <p class="{{ dnone }} text-success" id="task-success-{{ task_index }}">
+                                    {{ success_message }}
+                                </p>
+
+                            </div>
+
+
+
+                        {% endfor %}
+
+                      <div class="tab-pane fade" id="step2" role="tabpanel" aria-labelledby="profile-tab"></div>
+                      <div class="tab-pane fade" id="step3" role="tabpanel" aria-labelledby="contact-tab"></div>
+
+
+                    </div>
+
                     </div>
                 </div>
 
-            <div class="col-4 card">
-                <div class="card-header">Questions</div>
-                <div class="card-body">
-                    QUESTIONS ARE TO BE DISPLAYED HERE
+
+                    <!-- Questions panel -->
+                   <div class="col-4 card">
+                       <div class="card-header h3">Questions</div>
+
+                                <div id="slide" class="carousel slide card-body" data-bs-interval="false">
+                                <div class="carousel-indicators">
+                                    <button type="button" data-bs-target="#slide" data-bs-slide-to="0" class="active"></button>
+                                    {% for i in range(1, success_text | length) %}
+                                        <button type="button" data-bs-target="#slide" data-bs-slide-to="{{ i }}"></button>
+                                    {% endfor %}
+                                </div>
+
+                            <div class="carousel-inner">
+                                {% for ind in range(success_text | length) %}
+                                    {% set letters = ['a','b','c','d'] %}
+                                    {% set active_text = 'active' if ind==0 else '' %}
+                                    <div class="carousel-item {{active_text}}">
+
+                                        <div class="row d-flex justify-content-center align-items-baseline">
+                                            <p class="h5">Q{{ ind + 1 }}:{{ questions[ind]['text']}}</p>
+                                        </div>
+
+                                        <div class="row d-flex justify-content-center">
+
+                                        <div class="form-check col-8">
+                                        {% for ind2 in range(questions[ind]['choices'] | length) %}
+                                            {% if not uses_images[ind] %}
+                                                <div class="form-group">
+                                            <input type="radio" class="q{{ind}}-choice form-check-input" id="q{{ind}}-{{letters[ind2]}}" name="mc-question" value="{{ letters[ind2] }}">
+                                            <label for="q{{ind}}-{{letters[ind2]}}" class="form-check-label">{{ questions[ind]['choices'][ind2] }}</label>
+                                                </div>
+                                            {% else %}
+                                            <div class="form-group">
+                                            <input type="radio"  class="q{{ind}}-choice form-check-input" id="q{{ind}}-{{letters[ind2] }}" name="mc-question" value="{{ letters[ind2] }}">
+                                            <label for="q{{ind}}-{{letters[ind2]}}" class="form-check-label"><img src=".{{ questions[ind]['choices'][ind2] }}" style="height: 150px; width:150px;"></label>
+                                            </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                        </div>
+
+                                        </div>
+                                        <p class="d-none">Correct choice: <span id="mc-correct-choice-{{ind}}">{{ questions[ind]['correct']}}</span></p>
+                                            <div class="btn btn-large btn-primary answer-mc" id="answer-mc-{{ind}}">Submit</div>
+                                        <p id="mc-success-text-{{ ind }}" class="d-none" style="color:palegreen">{{ success_text[ind] }}</p>
+                                        <p id="mc-failure-text-{{ ind }}" class="d-none" style="color:#ffb500">Wrong answer. Try again!</p>
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            <button class="carousel-control-prev" type="button" data-bs-target="#slide" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon"></span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#slide" data-bs-slide="next">
+                                <span class="carousel-control-next-icon"></span>
+                            </button>
+
+                        </div>
+
+                           <p class="font-monospace" id="stars-display">
+                                   {% set num_stars = session['game7']['progress'].num_stars %}
+                                   {% set num_full = (num_stars | round(0,'floor') )| int %}
+                                   {% set num_half = ((2*(num_stars-num_full)) | round) | int %}
+                                   {% set num_empty = 5 - num_full - num_half %}
+                                   {% set star_array = [] %}
+                                    <span>{{ num_stars }}/5 stars earned</span>
+                                   {% for f in range(num_full) %}
+                                        {% set star_array = star_array.append(2) %}
+                                   {% endfor %}
+                                   {% for h in range(num_half) %}
+                                        {% set star_array = star_array.append(1) %}
+                                   {% endfor %}
+                                   {% for e in range(num_empty) %}
+                                       {% set star_array = star_array.append(0) %}
+                                    {% endfor %}
+                                   {% for star in star_array %}
+                                       {% if star == 2 %}
+                                            <i class="bi bi-star-fill"></i>
+                                       {% elif star == 1 %}
+                                           <i class="bi bi-star-half"></i>
+                                       {% else %}
+                                           <i class="bi bi-star"></i>
+                                       {% endif %}
+                                   {% endfor %}
+                               </p>
+
+
+
+
                 </div>
+
 
 
             </div>
@@ -134,5 +361,8 @@
         let img1d = {{ graphJSON_1dimg | safe}};
         Plotly.newPlot('chart-G7-1D', img1d, layout);
     </script>
+
+    <link rel="stylesheet" href="../static/styles/style_game7.css">
+
 
 {% endblock %}

@@ -284,6 +284,10 @@ def generate_projection_3d_2d(voxels,axis):
     """
     # Invert voxels so 1 in model => no signal (0); 0 in model => water signal (1)
     voxels = 1 - voxels
+
+    # Cut corners
+    voxels = cut_cylindrical_corners(voxels)
+
     proj2d = np.sum(voxels,'xyz'.index(axis))
     return proj2d
 
@@ -438,13 +442,26 @@ def game7_empty_plots_worker():
 
     return j2, j2, j3
 
-if __name__ == "__main__":
-    proj3d_axis = 'y' # Can only be x, y, or z
-    proj2d_angle = 45 # degrees
 
+def cut_cylindrical_corners(voxels):
+    # Get rid of corners so projection looks cleaner
+    r = voxels.shape[0]/2
+    cx,cy = voxels.shape[0]/2, voxels.shape[1]/2
+
+    indx, indy, indz = np.meshgrid(np.arange(voxels.shape[0]),np.arange(voxels.shape[1]),np.arange(voxels.shape[2]))
+    inside = np.sqrt(np.square(indx - cx) + np.square(indy - cy)) < r*0.95
+
+    # Generate bool matrix judging if a point is outside
+    return voxels * inside
+
+if __name__ == "__main__":
+    proj3d_axis = 'z' # Can only be x, y, or z
+    proj2d_angle = 90 # degrees
+
+    L = False
     # Replace name with any included in the /static/data/solids folde
-    j1, voxels = game7_prep3d_worker(name='letterC',lines=True,line_dir='y')
-    j2, j3 = game7_projection_worker(voxels, proj3d_axis, proj2d_angle,lines=True,lines_angle=45)
+    j1, voxels = game7_prep3d_worker(name='g7_set1_typeA',lines=L,line_dir='y')
+    j2, j3 = game7_projection_worker(voxels, proj3d_axis, proj2d_angle,lines=L,lines_angle=45)
 
     # j1, j2, and j3 are the 3D, 2D, and 1D plots, respectively.
 
