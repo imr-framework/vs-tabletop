@@ -11,6 +11,8 @@ import os
 import glob
 from skimage.transform import radon
 from scipy.spatial.transform import Rotation as R
+import matplotlib.pyplot as plt
+import matplotlib as mpl
 
 def game7_projection_worker(voxels, proj3d_axis, proj2d_angle, lines=False, lines_angle=90):
     """Generates 2D and 1D projections of the given raster representation of a 3D model
@@ -307,14 +309,13 @@ def generate_projection_2d_1d(img,angle):
     proj1d : np.ndarray
         1D normalized array of projection
     """
-    # TODO Null all voxels outside of cylinder
     # Use Radon transform
     # Generate 1D projection of 2D image
     proj1d = radon(img,[angle])
     # Normalize and make it 1D
     proj1d = proj1d.flatten() / np.max(proj1d)
 
-    return proj1d
+    return np.flip(proj1d)
 
 def plot_projection(proj,axes,lines=False,lines_angle=90):
     """Make 2D or 1D projection plot
@@ -453,6 +454,32 @@ def cut_cylindrical_corners(voxels):
 
     # Generate bool matrix judging if a point is outside
     return voxels * inside
+
+def get_2D_proj_graph(name,dir):
+    # Generate arrays for challenge answer options (2D)
+    voxels = np.load(f'./static/data/solids/{name}.npy')
+    proj2d = generate_projection_3d_2d(voxels,dir)
+    return proj2d
+
+def get_1D_proj_graph(name,dir,angle):
+    # Generate arrays for challenge answer options (1D)
+    voxels = np.load(f'./static/data/solids/{name}.npy')
+    proj2d = generate_projection_3d_2d(voxels,dir)
+    proj1d = generate_projection_2d_1d(proj2d,angle)
+    return proj1d
+
+def projections_to_images(g_list_2d, g_list_1d):
+    # Save numpy arrays to plots / images
+    print('Received g_list_2d')
+
+    plt.imsave('./static/img/game7/im2d-a.jpg', np.flipud(g_list_2d[0].T),cmap=mpl.cm.gray)
+    plt.imsave('./static/img/game7/im2d-b.jpg', np.flipud(g_list_2d[1].T),cmap=mpl.cm.gray)
+    plt.imsave('./static/img/game7/im2d-c.jpg', np.flipud(g_list_2d[2].T),cmap=mpl.cm.gray)
+
+    #plt.imsave('./static/img/game7/im1d-a.jpg', g_list_1d[1])
+    #plt.imsave('./static/img/game7/im1d-b.jpg', g_list_1d[2])
+    #plt.imsave('./static/img/game7/im1d-c.jpg', g_list_1d[3])
+
 
 if __name__ == "__main__":
     proj3d_axis = 'z' # Can only be x, y, or z

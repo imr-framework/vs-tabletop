@@ -83,14 +83,14 @@
                                     data-bs-content="The axis along which the water-filled parts of the 3D volume is summed.">
                                         <i class="bi bi-question-circle-fill"></i>
                                     </div>
-
                                     {{ G7Form.proj_2d_axis_field.label(class="form-label col") }}
                                  </div>
+
 
                                 <div class="row">
                                 {% for subfield in G7Form.proj_2d_axis_field %}
                                     <div class="form-control col">
-                                        {{ subfield(id='proj2d_axis',class='form-check-input') }}
+                                        {{ subfield(id='proj2d_axis',class='form-check-input proj-2d-xyz') }}
                                         {{ subfield.label(class='form-check-label') }}
                                     </div>
                                 {% endfor %}
@@ -110,12 +110,13 @@
                                     </div>
                                 {{ G7Form.proj_1d_angle_field.label(class="form-label")}}
                                 </div>
-                                {{ G7Form.proj_1d_angle_field(class='form-control',id='proj1d_angle')}}
+                                {{ G7Form.proj_1d_angle_field(class='form-control',id='proj1d_angle',disabled=true)}}
                             </div>
 
                             <!-- Form submit button -->
                                 <div class="form-group pt-3">
-                                    {{ G7Form.submit_field(class='btn btn-lg btn-success')}}
+                                    <!-- {{ G7Form.submit_field(class='btn btn-lg btn-success')}} -->
+
                                     <div class="btn btn-lg btn-info" id="lines-toggle">Show/hide lines</div>
                                 </div>
 
@@ -193,19 +194,54 @@
                                       </li>
                                 {% endfor %}
 
+                                {% if task_index == 4 %}
+                                    <li class="list-group-item">
+                                    <input class="form-check-input task-{{ task_index }}-check" id="task4-autocheck" type="checkbox" disabled>
+                                        Select the correct 2D projection below and press "submit".
+                                    </li>
+                                {% endif %}
+
                                 </ul>
                                 <p class="text-info">{{ task }}</p>
 
-                                <!-- Step 3 special button -->
-                                {% if task_index == 3 %}
-                                    <div class="row">
-                                        <div class="col" id="target-m-disp">Target M: (0, 0, 0)</div>
-                                        <div class="col d-none text-danger" id="try-again">Try again.</div>
+                                <!-- Step 4 special button -->
+                                {% if task_index == 4 %}
+                                    <!-- TODO display the 3 options -->
+                                    <div class="d-none form-check" id="image-opts">
+                                        <div class="row">
+                                            <div class="col d-flex justify-content-center">
+                                                <label for="choice_2d_a"><img src="../static/img/game7/im2d-a.jpg" class="task-img-2d" alt="2D challenge 1st option"></label>
+                                            </div>
+
+                                            <div class="col d-flex justify-content-center">
+                                                <label for="choice_2d_b"><img src="../static/img/game7/im2d-b.jpg" class="task-img-2d" alt="2D challenge 2nd option"></label>
+                                            </div>
+
+                                              <div class="col d-flex justify-content-center">
+                                                  <label for="choice_2d_c"><img src="../static/img/game7/im2d-c.jpg" class="task-img-2d" alt="2D challenge 3rd option"></label>
+                                              </div>
+
+                                              </div>
+                                        <div class="row">
+
+                                        <div class="col d-flex justify-content-center">
+                                            <input type="radio" class="form-check-input" name="choice-2d" id="choice_2d_a">
+                                        </div>
+                                        <div class="col d-flex justify-content-center">
+                                            <input type="radio" class="form-check-input" name="choice-2d" id="choice_2d_b">
+                                        </div>
+                                        <div class="col d-flex justify-content-center">
+                                            <input type="radio" class="form-check-input" name="choice-2d" id="choice_2d_c">
+                                        </div>
+                                        </div>
+
+
                                     </div>
 
-                                    <div class="btn btn-light btn-outline-primary" id="randomize">Randomize!</div>
-                                    <div class="btn btn-dark" id="check-answer">Check</div>
-
+                                    <div class="row">
+                                        <div class="col btn btn-light btn-outline-primary" id="randomize">Randomize!</div>
+                                        <div class="col btn btn-dark" id="check-answer-2d">Submit</div>
+                                    </div>
                                 {% endif %}
 
                                 <div class="btn btn-info task-next-button" id="task{{ loop.index }}-next">Next</div>

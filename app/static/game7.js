@@ -23,6 +23,13 @@ $('#lines-toggle').on('click',()=>{
     socket.emit("Toggle line display")
 })
 
+$('.proj-2d-xyz').on('input',(event)=>{
+    socket.emit("Update line direction",{'dir': event.target.value});
+
+})
+
+
+
 socket.on('Deliver 3D model', (payload)=>{
     graphData1 = JSON.parse(payload['graph1'])
     graphData2 = JSON.parse(payload['graph2'])
@@ -132,7 +139,48 @@ $(".task-next-button").click((event)=>{
 // Interactive task - generate random initial and target M's!
 $('#randomize').click(()=>{
     // TODO get random 3D model.
+    socket.emit('Pull random model')
+
+
 })
+
+let correct_ind_1d = -1
+let correct_ind_2d = -1
+
+socket.on('display new challenge',(msg)=>{
+    console.log('I am supposed to review the images now')
+    correct_ind_2d = msg['corr_2d'];
+    correct_ind_1d = msg['corr_1d'];
+    $('#image-opts').removeClass('d-none');
+
+    // Refresh each of the 3 images
+    $(".task-img-2d").each(()=>{
+        console.log(this);
+        let url = $(this).attr("src");
+        $(this).removeAttr("src").attr("src", url);
+    }
+    )
+
+
+})
+
+$('#check-answer-2d').click(()=>{
+    let answer = -1
+    if ($('#choice_2d_a').is(":checked")){
+        answer = 0;
+    }
+    else if ($('#choice_2d_b').is(":checked")){
+        answer = 1;
+    }
+    else if ($('#choice_2d_c').is(":checked")){
+        answer = 2;
+    }
+    console.log(`Correct answer is ${correct_ind_2d} and you answered ${answer}`);
+    $('#task4-autocheck').prop('checked',answer===correct_ind_2d);
+
+
+})
+
 
 
 function update_progress_bar(step) {

@@ -1,10 +1,10 @@
 import Interactive from "https://vectorjs.org/interactive.js";
 
 
+
+
 const W = 400;
 const H = 400;
-
-
 const cc = [W/2, H/2];
 const R = H/3;
 // Construct an interactive within the HTML element with the id "my-interactive"
@@ -17,15 +17,13 @@ myInteractive.originY = 0;
 myInteractive.border = true;
 
 //Define static elements
-// Text
+
 
 //Big circle
 let circle = myInteractive.circle(cc[0],cc[1], R);
-let biggerCircle = myInteractive.circle(cc[0],cc[1],R*5/4);
+
 //Center
 let center = myInteractive.circle(cc[0],cc[1],3);
-biggerCircle.style.fill='transparent';
-biggerCircle.stroek = ' transparent';
 circle.style.fill = 'transparent';
 circle.style.stroke = 'Gray';
 circle.style.strokeWidth = '3px';
@@ -56,6 +54,7 @@ projLine.style.strokeWidth='2px';
 projLine.style.stroke='DodgerBlue';
 
 
+
 projLine.update = function () {
     this.x1 = control.x;
     this.y1 = control.y;
@@ -75,10 +74,6 @@ thetaDisplay.update = function () {
 };
 thetaDisplay.update();
 
-// Loading eye.svg
-import { getScriptName } from 'https://vectorjs.org/index.js';
-import { getURL } from 'https://vectorjs.org/util/file.js';
-import { parseSVG } from 'https://vectorjs.org/util/svg.js';
 
 const svgSize = 32;
 const x0 = cc[0] - svgSize / 2;
@@ -100,6 +95,8 @@ class Eye {
       this.group = group;
   }
 }
+
+
 for (let q = 0; q < 8; q++) {
     const eye = new Eye(q*45, 'Gray');
 }
@@ -108,11 +105,25 @@ const blueEye = new Eye(0,'DodgerBlue');
 blueEye.group.root.setAttribute('id','blueEye');
 blueEye.group.update = function(){
     this.root.setAttribute('transform',`rotate(${-rad2Deg(getAngle())+90},${cc[0]},${cc[1]}) translate(${x0},${y0}) scale(2)`);
-    $('#proj1d_angle').val(rad2Deg(getAngle()));
-    $('#proj1d_angle').trigger('change');
+    // Changes value in input field
+    $('#proj1d_angle').val(rad2Deg(getAngle())).trigger('change');
 }
 blueEye.group.update();
 blueEye.group.addDependency(control)
+
+// TODO Change control location with input field
+$('#proj1d_angle_set').on('click',()=>{
+    let angle = $('#proj1d_angle').val();
+    console.log(`Input angle: ${angle}`);
+
+    let xy = getXY(angle)
+
+    control.x = xy[0];
+    control.y = xy[1];
+    projLine.update();
+    blueEye.group.update();
+})
+
 
 
 
@@ -153,6 +164,13 @@ function getAngle(){
     else {
         return Math.PI * 2 - Math.atan2(ry,rx);
     }
+}
+
+function getXY(angle){
+    let xy = [0,0];
+    xy[0] = cc[0] + R * Math.cos(deg2Rad(angle))
+    xy[1] = cc[1] + R * Math.sin(deg2Rad(angle))
+    return xy
 }
 
 
