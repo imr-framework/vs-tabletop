@@ -104,11 +104,16 @@ class Game7Form(FlaskForm):
                                                                 ('letterN', 'Letter N'),
                                                                 ('letterY', 'Letter Y'),
                                                                 ('letterC', 'Letter C'),
+                                                                ('center_ball', 'Ball'),
+                                                                ('double_cone','Double cone'),
+                                                                ('double_cone_rev', 'Double cone 2'),
+                                                                ('simple_cube','Cube'),
+                                                                ('two_holes', 'Dots')
                                                                ],default='letterN')
     proj_2d_axis_field = RadioField("2D proj. axis", choices=['x','y','z'],default='z')
-    proj_1d_angle_field = DecimalField("1D proj. angle (degrees)",validators=[NumberRange(min=0,max=360)],default=90)
+    proj_1d_angle_field = DecimalField("1D proj. angle (deg)",validators=[NumberRange(min=0,max=360)],default=90)
 
-    submit_field = SubmitField("Project!")
+    submit_field = SubmitField("Project all")
 
 
 # More user interaction through questions

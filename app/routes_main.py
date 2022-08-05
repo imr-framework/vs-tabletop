@@ -41,7 +41,10 @@ def initialize_parameters():
 
     session['game7'] = {'model':'letterN', 'proj2d_axis': 'x', 'proj1d_angle': 90,
                         'plot3d_visible':False, 'plot2d_visible':False, 'plot1d_visible':False,
-                        'lines_on': False}
+                        'lines_on': False,
+                        'progress': utils.new_progress_of_game(7),'mc_status_list': utils.num_questions_of_game(7)*[False],
+                        'task_completed': 0
+                        }
 
 # Login callback (required)
 @login_manager.user_loader

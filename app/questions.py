@@ -153,7 +153,6 @@ def initialize_game1_questions():
 
 def initialize_game3_questions():
     mcs = []
-
     mcs.append(MultipleChoice(
         id = 301,
         game_number=3,
@@ -304,6 +303,56 @@ def initialize_game5_questions():
 
     return mcs
 
+
+def initialize_game7_questions():
+    mcs = []
+
+    # Questions without images (conceptual)
+    mcs.append(MultipleChoice(
+        id = 701,
+        game_number = 7,
+        uses_images = False,
+        question_text = "How many numbers are needed to locate a point in space?",
+        choiceA = "9",
+        choiceB = "3",
+        choiceC = "42",
+        choiceD = "2",
+        correct_choice = "B",
+        difficulty = "easy"
+    ))
+
+    mcs.append(MultipleChoice(
+        id = 702,
+        game_number = 7,
+        uses_images = False,
+        question_text = "What of the following is true when you perform a 2D projection of a perfect 3D sphere?",
+        choiceA ="The projection will have the same gray value across the image",
+        choiceB = "The projection lines will bend to conform to the circular shape",
+        choiceC = "The projection will be the same from any angle",
+        choiceD = "The projection will be the same only when it’s pointing along the x, y, or z axis. ",
+        correct_choice = "C",
+        difficulty = "medium"
+    ))
+
+    mcs.append(MultipleChoice(
+        id = 703,
+        game_number = 7,
+        uses_images = False,
+        question_text = "What happens when you perform a 1D projection of a rectangle?",
+        choiceA = "The left, right, top, and bottom views are going to be the same",
+        choiceB = "The left/right views are the same, and the top/bottom views are the same",
+        choiceC = "The projection is always going to have right-angled corners",
+        choiceD = "The projection depends on how the rectangle is oriented in the x-y plane",
+        correct_choice = "D",
+        difficulty = "hard"
+    ))
+
+    # Questions with images
+
+
+    return mcs
+
+
 def refresh_database_and_add_questions(mcs):
     db.drop_all() # Gets rid of database structure as well
     db.create_all()# Re-create tables
@@ -338,6 +387,7 @@ if __name__ == "__main__":
     mc_list = initialize_game1_questions()
     mc_list += initialize_game3_questions()
     mc_list += initialize_game5_questions()
+    mc_list += initialize_game7_questions()
     refresh_database_and_add_questions(mc_list)
     initialize_users() # adds admin back into database
 
