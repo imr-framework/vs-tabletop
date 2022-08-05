@@ -64,6 +64,7 @@ class Game3Form(FlaskForm):
     submit = SubmitField("Submit")
     P1_q = RadioField('question1', choices=['T1', 'T2', 'PD'], validators=[InputRequired()])
     P2_q = RadioField('question2', choices=['Contrast Increases', 'Contrast Decreases'], validators=[InputRequired()])
+    P3_q = RadioField('question3', choices=['CSF', 'GM', 'WM'])
 # EXAMPLE
 class Game4Form(FlaskForm):
     thk_field = DecimalField('Slice thickness (mm)',places=1,validators=[DataRequired(),NumberRange(min=1.0,max=10.0)])

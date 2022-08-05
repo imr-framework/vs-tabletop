@@ -348,7 +348,7 @@ if __name__ == "__main__":
     #print(MultipleChoice.query.get(102).get_randomized_data())
 
 
-    print(MultipleChoice.query.filter_by(game_number=5).all())
+    print(MultipleChoice.query.filter_by(game_number=3).all())
 
     # Example querying of database
     # All Game 1 questions

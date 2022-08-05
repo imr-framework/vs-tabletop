@@ -13,6 +13,7 @@
     <meta name="viewport" content="width=Neo, initial-scale=1.0">
     <title>Tabs</title>
     <link href='style.css' rel='stylesheet'>
+
 </head>
     <div class="container-fluid vh-100">
         <div class="row h-100">
@@ -37,10 +38,12 @@
           {% set task2_status = 'is-active' %}
      {% elif session['game3']['current_task'] == 3 %}
           {% set task3_status = 'is-active' %}
+     {% elif session['game3']['current_task'] == 4 %}
+
 
     {% endif %}
     {% if session['game3']['current_task'] == 1 %}
-      <div class="tabs__head" style="width: 80%">
+      <div class="tabs__head" style="width: 40%">
         <div class="tabs__toggle {{ task1_status }}">
           <span class="tabs__name">T1, T2, and PD</span>
         </div>
@@ -129,7 +132,9 @@
             <h2 class="tabs__title">Task</h2>
             <p class="tabs__text">
                 1. Answer the below question
-                <br> Placeholder question
+                <br> In a T2 weighted scan, which tissue type results in the most signal intensity?
+                {{ G3Form.P3_q() }}
+
 
             </p>
         </div>
@@ -181,7 +186,7 @@
                                                 up an MR image.">
                                 <i class="bi bi-question-square"></i></button>
                                  {{ G3Form.TR.label }}
-                             {{ session['game1']['TR'] }}
+                             {{ session['game3']['TR'] }}
                              </div>
                              <div class="col-8">
                                  <div class="row">
@@ -267,10 +272,94 @@
                     </div>
                 </div>
 
+                <div class="row-card">
+                    <div class="card-header">Questions</div>
+                    <div class="card text-white bg-secondary mb-3" style="color: grey">
+                        <div id="slide" class="carousel slide" data-bs-interval="false">
+                            <div class="carousel-indicators"><button type="button" data-bs-target="#slide" data-bs-slide-to="0" class="active"></button>
+                                <button type="button" data-bs-target="#slide" data-bs-slide-to="1"></button>
+                                <button type="button" data-bs-target="#slide" data-bs-slide-to="2"></button>
+                                <button type="button" data-bs-target="#slide" data-bs-slide-to="3"></button>
+                                <button type="button" data-bs-target="#slide" data-bs-slide-to="4"></button>
+                                <button type="button" data-bs-target="#slide" data-bs-slide-to="5"></button>
+                                <button type="button" data-bs-target="#slide" data-bs-slide-to="6"></button>
+
+                            </div>
+                            <div class="carousel-inner">
+                                <form action="/games/3" method="POST">
+                                {% for ind in range(success_text | length) %}
+                                    {% set letters = ['a','b','c','d'] %}
+                                    {% set active_text = 'active' if ind==0 else '' %}
+                                    <div class="carousel-item {{active_text}}">
+                                        <h2>Question {{ ind+1 }}</h2>
+                                        <br>{{ questions[ind]['text'] }}
+                                        {% if (questions[ind]['main_image_path']) | length > 0 %}
+                                        <br><img src=".{{ questions[ind]['main_image_path']}}" style="height:100px; width:100px;">
+                                        {% endif %}
+                                        {% for ind2 in range(questions[ind]['choices'] | length) %}
+                                            {% if not uses_images[ind] %}
+                                            <br><input type="radio" class="q{{ind}}-choice" id="q{{ind}}-{{letters[ind2]}}" name="mc-question" value="{{ letters[ind2] }}">
+                                            <label for="q{{ind}}-{{letters[ind2]}}">{{ questions[ind]['choices'][ind2] }}</label>
+                                            {% else %}
+                                            <input type="radio"  class="q{{ind}}-choice" id="q{{ind}}-{{letters[ind2] }}" name="mc-question" value="{{ letters[ind2] }}">
+                                            <label for="q{{ind}}-{{letters[ind2]}}"><img src=".{{ questions[ind]['choices'][ind2] }}" style="height: 150px; width:150px;"></label>
+                                            {% endif %}
+                                        {% endfor %}
+
+                                        <p class="d-none">Correct choice: <span id="mc-correct-choice-{{ind}}">{{ questions[ind]['correct']}}</span></p>
+
+
+                                        <br><div class="btn btn-large btn-primary answer-mc" id="answer-mc-{{ind}}">Submit</div>
+                                        <p id="mc-success-text-{{ind}}" class="d-none">{{ success_text[ind] }}</p>
+                                    </div>
+
+                                {% endfor %}
+
+                                </form>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#slide" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon"></span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#slide" data-bs-slide="next">
+                                <span class="carousel-control-next-icon"></span>
+                            </button>
+                </div>
 
                 </form>
                      </div>
                  </div>
+        <br><div class="row card">
+                    <div class="card header bg-light"><b>Star Count: Climb your way up to 5 black stars!</b></div>
+                        <div class="card body">
+                               <p class="font-monospace" id="stars-display">
+                                   {% set num_stars = session['game3']['progress'].num_stars %}
+                                   {% set num_full = (num_stars | round(0,'floor') )| int %}
+                                   {% set num_half = ((2*(num_stars-num_full)) | round) | int %}
+                                   {% set num_empty = 5 - num_full - num_half %}
+                                   {% set star_array = [] %}
+                                    <span>{{ num_stars }}/5 stars earned</span>
+                                   {% for f in range(num_full) %}
+                                        {% set star_array = star_array.append(2) %}
+                                   {% endfor %}
+                                   {% for h in range(num_half) %}
+                                        {% set star_array = star_array.append(1) %}
+                                   {% endfor %}
+                                   {% for e in range(num_empty) %}
+                                       {% set star_array = star_array.append(0) %}
+                                    {% endfor %}
+
+                                   {% for star in star_array %}
+                                       {% if star == 2 %}
+                                            <i class="bi bi-star-fill"></i>
+                                       {% elif star == 1 %}
+                                           <i class="bi bi-star-half"></i>
+                                       {% else %}
+                                           <i class="bi bi-star"></i>
+                                       {% endif %}
+                                   {% endfor %}
+                               </p>
+                        </div>
+                    </div>
              </div>
 
 {% endblock %}
