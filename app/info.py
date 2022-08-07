@@ -15,32 +15,30 @@ GAME5_INSTRUCTIONS={
     'titles': ['The Equilibrating Move','The Circulating Move','The Tipping Move','The Electrifying Move'],
     'explorations':[
                     # Move 1
-                    ['Turn on the main magnet on and off. ',
-                    'Repeat with different main field values.'],
+                   {'Turn the main field (B0) on and off. ': 'Press the green magnet button to turn on B0.',
+                    'Experiment with different B0 values.': 'Press the button again to turn off B0. Then use the slider to change the strength of B0 and turn it on again. '},
                     # Move 2
-                    ['Turn off the rotating frame.',
-                     'Set the initial magnetization to theta = 45, phi = 135, M/M0 = 1. ',
-                     'Press "START". How do Mx, My, and Mz change in time? ',
-                     'Change the main field value and press "START" again. ',
-                     'Turn the rotating frame back on.'],
+                    {'Set up environment for precession': 'First, turn off the rotating frame. Then, on the Set Initial Magnetization panel, input theta = 45, phi = 135, M/M0 = 1 and press SET. ',
+                     'Let the magnetization precess':'Press "START". How would you describe this movement? ',
+                     'Experiment with different B0 values': 'Change the main field values with the slider and press START again. How does the movement change with B0?',
+                     'Experiment with different initial conditions': 'Set the initial magnetization to different thetas and phis, pressing SET and then START each time. How does the initial angle affect the trajectory of M?'},
                     # Move 3
-                    ['Press "RESET" to turn off everything and turn on B0 again at B0 = 100 Gauss.',
-                     'Turn on the rotating frame and the red transmit button to enable RF pulses. ',
-                     'Press "TIP" to play the default RF pulse (FA = 90, pulse along x).',
-                     'Experiment with different flip angles and pulse directions. '],
+                    {'Reset everything': 'Press "RESET" to turn off everything and turn on B0 again at B0 = 100 Gauss.',
+                     'Prepare RF pulse':'Turn on the rotating frame and the red transmit field (megaphone icon) to enable RF pulses. The red line indicates the direction of the RF magnetic field, also called B1. It can be in any direction on the x-y plane.',
+                     'Play RF pulse': 'Press "TIP" to play the default RF pulse (FA = 90 degrees, Pulse direction = 0 degree). After the movement is over, rotate the 3D display to see what happened. How would you describe what the RF pulse did to the magnetization vector? ',
+                     'Experiment with different flip angles. ': 'Turn off the RF field. Use the first slider to change the flip angle. Then turn it on again and press TIP. In your words, how does the flip angle affect the movement of M?',
+                     'Experiment with different pulse directions.': 'Set the initial magnetization to z and press SET. Turn off the RF field and change the flip angle to 90 degrees and the pulse directions to 0, 180, and 45 degrees in turn. Each time, reset initial M and use TIP to observe the RF in action. What role does the pulse direction play in the motion of M?'},
                     # Move 4
-                    ['Push the “RESET” button to turn off everything. Then turn on B0.',
-                    'Press on the ear button to turn on the receive coil.',
-                    'Set the magnetization to x or y and press "SET". Then hit “RUN”.',
-                     'Change field strengths and re-run to observe how signal changes.',
-                    'Reset M to have different theta angles and re-run to observe how signal changes.'],
-
+                    {'Set up environment for signal reception': 'Push the “RESET” button to turn off everything. Then turn on B0, set magnetization to x, and turn on the blue receive coil (ear icon). A blue coil should appear. You can re-orient it along x or y.',
+                     'Let the magnetization precess in the presence of a receive coil':'Set the magnetization to x or y and press "SET". Then hit START. A green signal should appear below. What does this signal look like? Press the question mark button next to "signal(emf) to learn more." ',
+                     'Experiment with field strengths': 'Change field strengths and press START each time to observe how signal changes with B0',
+                     'Experiment with initial M': 'Reset M to have different theta angles and press START each time to observe how signal changes with the orientation of M'},
                     ],
 
-    'tasks': ['The orange line is the net magnetziation vector (M). What will it look like at clinical MRI field strengths (1.5T, 3T)? (1T = 10000 Gauss)',
-              'What do we see if our rotating frame is going faster than the spin? What if we are going slower?',
-              'Press "Randomize!" to generate a new initial M and target M. Using up to 3 RF pulses, direct M to the target value displayed in gray. Then press "check" to check your answer.',
-              'List all the things we can do to maximize the signal range. ']
+    'tasks': {'Task 1: Where does M stand?': 'The orange line is the net magnetziation vector (M). What will it look like at clinical MRI field strengths (1.5T, 3T)? (1T = 10000 Gauss)',
+              'Task 2: Getting out of sync': 'What do we see if our rotating frame is going faster than the spin? What if we are going slower?',
+              'Task 3: Hit the target magnetization': 'Your task now is to conduct the magnetization to specified positions. Press "Randomize!" to generate a new initial M and target M. Using up to 3 RF pulses, direct the current M, shown in orange, to the target M, shown in gray. Then press "check" to check your answer.',
+              'Task 4: Turning it up': 'What can we do to maximize the signal range?'}
 }
 
 

@@ -116,7 +116,9 @@ def update_parameter(info):
     elif info['id'] == 'rot-frame-button':
         utils.update_session_subdict(session,'game5',{'rot_frame_on':info['checked']})
     elif info['id'] == 'b0':
-        new_M_init = session['game5']['M_init'] * float(info['value']) / 100
+        # Normalize
+        old_M_init = session['game5']['M_init']
+        new_M_init = (old_M_init / np.linalg.norm(old_M_init)) * float(info['value']) / 100
         utils.update_session_subdict(session,'game5',{'b0': float(info['value']),'M_init': new_M_init}) # Convert from Gauss to Tesla
     else:
         try:
@@ -277,9 +279,9 @@ def turn_on_rot_frame(info):
     game5 = session['game5']
     if info['rot_frame_on']:
         # Display message
-        socketio.emit('message',{'text':'Rotational frame is turned on.', 'type':'success'})
+        socketio.emit('message',{'text':'Rotating frame is turned on.', 'type':'success'})
     else:
-        socketio.emit('message',{'text':'Rotational frame is turned off.', 'type':''})
+        socketio.emit('message',{'text':'Rotating frame is turned off.', 'type':''})
 
     # Also: rerun precession sim
     if info['b0_on']:
