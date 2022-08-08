@@ -28,6 +28,10 @@ img{
     min-height: 400px;
 }
 
+.navbar{
+    z-index: 1000;
+}
+
 .nav-link{
     font-family: Arial sans-serif;
 }
@@ -179,6 +183,8 @@ canvas {
   left: 0;
   width: 100%;
 }
+
+
 
 .title {
   position: absolute;
