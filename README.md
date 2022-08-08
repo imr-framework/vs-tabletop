@@ -27,9 +27,6 @@ Screenshots are in-development previews of the games. They will be updated at th
 ### Login page
 ![login](https://user-images.githubusercontent.com/31249056/182999188-e8d9fca7-fd88-4c3a-9077-a3a264a22526.png)
 
-### Calibration page
-![calibration](https://user-images.githubusercontent.com/31249056/182999173-256f1fc9-5fb9-4ddc-8463-cbcdd4453405.png)
-
 ### Game 1: What's in an image?
 ![game1](https://user-images.githubusercontent.com/31249056/182999206-9d6b72dc-ecb1-46be-b69d-96f6066e7c3e.png)
 
@@ -41,5 +38,8 @@ Screenshots are in-development previews of the games. They will be updated at th
 
 ### Game 7: Puzzled by Projection I 
 ![game7](https://user-images.githubusercontent.com/31249056/183000280-cf68ab66-9e95-4a2a-b81c-de64d2136656.png)
+
+### Calibration page
+![calibration](https://user-images.githubusercontent.com/31249056/182999173-256f1fc9-5fb9-4ddc-8463-cbcdd4453405.png)
 
 

@@ -470,19 +470,29 @@ socket.on('set scene for rf rotation task',(msg)=>{
     $('#target-m-disp').html(`Target M: (${Mt[0]},${Mt[1]},${Mt[2]})`);
 })
 
+
 $('#check-answer').click(()=>{
     // Check answer against session variable
     socket.emit('check M answer')
 })
 
+$('.accordion-button.final-task-button').click((event)=>{
+    let target = event.target.getAttribute('data-bs-target');
+    let step = parseInt(target[target.length - 1]);
+    if (step !== 3){ // Step 3 does autocheck and it cannot be done by hand.
+        $(`#final-task-of-${step}`).prop('checked',true);
+    }
+
+})
+
 socket.on('send M correctness',(msg)=>{
     if (msg['correctness']){
         // Checkbox check!
-        $('#rf-rot-task-check').prop('checked',true);
+        $('#final-task-of-3').prop('checked',true);
         $('#try-again').addClass("d-none")
     }
     else{
-        $('#rf-rot-task-check').prop('checked',false);
+        $('#final-task-of-3').prop('checked',false);
         $('#try-again').removeClass("d-none");
 
     }

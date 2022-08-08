@@ -98,7 +98,7 @@ def update_proj2d_direction(msg):
     send_plots()
 
 @socketio.on('Pull random model')
-def get_random_mystery_model():
+def get_random_mystery_model(msg):
     print("Generating random model now")
     # Pull model
     name =  random.choice(GAME7_RANDOM_MODELS)
@@ -117,6 +117,9 @@ def get_random_mystery_model():
     # 1D
     ang0 = random.choice([0,45,90,135,180])
 
+    # Update session
+    utils.update_session_subdict(session,'game7',{'proj2d_axis':dir0, 'proj1d_angle':ang0})
+
     # Graphs ready to display (plotly, simpler style)
     g_list_2d = [get_2D_proj_graph(name,dir0)]
     g_list_1d = [get_1D_proj_graph(name,dir0,ang0)]
@@ -129,10 +132,11 @@ def get_random_mystery_model():
         dir_new = random.choice(['x','y','z'])
         if name_new != name or dir_new != dir0:
             g_temp_2d = get_2D_proj_graph(name_new,dir_new)
-            if np.linalg.norm(g_list_2d[0]-g_temp_2d) > 0.1:
-                g_list_2d.append(g_temp_2d)
-            else:
-                print("The graphs are too similar; redraw! 2D")
+            for g_list_2d_opt in g_list_2d:
+                if np.linalg.norm(g_list_2d_opt-g_temp_2d) > 0.1:
+                    g_list_2d.append(g_temp_2d)
+                else:
+                    print("The graphs are too similar; redraw! 2D")
     # 1D
     while len(g_list_1d)<3:
         # For 1D, choose any model
@@ -141,10 +145,11 @@ def get_random_mystery_model():
         ang_new = random.choice([0,45,90,135,180])
         if name_new != name or dir_new != dir0 or ang_new != ang0:
             g_temp_1d = get_1D_proj_graph(name_new,dir_new,ang_new)
-            if np.linalg.norm(g_list_1d[0]-g_temp_1d) > 0.1:
-                g_list_1d.append(g_temp_1d)
-            else:
-                print("The curves are too similar; redraw! 1D")
+            for g_list_1d_opt in g_list_1d:
+                if np.linalg.norm(g_list_1d_opt - g_temp_1d) > 0.1:
+                    g_list_1d.append(g_temp_1d)
+                else:
+                    print("The curves are too similar; redraw! 1D")
 
     # TODO Shuffle (the list, and the correct choice)
     perm2 = np.random.permutation(3)
@@ -163,6 +168,9 @@ def get_random_mystery_model():
     socketio.emit('display new challenge',{
         'corr_2d': corr_2d.index(True),
         'corr_1d': corr_1d.index(True),
+        'type': msg['type'],
+        'axis':  dir0,
+        'angle':  ang0
     })
 
 

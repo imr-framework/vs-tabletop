@@ -94,7 +94,7 @@ class Game5Form(FlaskForm):
     # Magnetization status
     m_theta_field = DecimalField("Theta (deg)",validators=[InputRequired(),NumberRange(min=0.0,max=180.0)],default=0.0)
     m_phi_field = DecimalField("Phi (deg)",validators=[InputRequired(),NumberRange(min=0.0,max=360.0)],default=0.0)
-    m_size_field = DecimalField('|M/M0|', validators=[InputRequired(),NumberRange(min=0.0,max=1.0)],default=1.0)
+    m_size_field = DecimalField('|M|/M0', validators=[InputRequired(),NumberRange(min=0.0,max=1.0)],default=1.0)
     # No use for submit field
     submit_field = SubmitField("Tip!")
 

@@ -137,9 +137,15 @@ $(".task-next-button").click((event)=>{
 })
 
 // Interactive task - generate random initial and target M's!
-$('#randomize').click(()=>{
+$('.randomize').click((event)=>{
     // TODO get random 3D model.
-    socket.emit('Pull random model')
+    let t = '2D';
+
+    if (event.target.id === 'randomize-2'){
+        t = '1D';
+    }
+
+    socket.emit('Pull random model',{'type':t})
 
 
 })
@@ -148,37 +154,133 @@ let correct_ind_1d = -1
 let correct_ind_2d = -1
 
 socket.on('display new challenge',(msg)=>{
-    console.log('I am supposed to review the images now')
+    console.log('I am supposed to be renewing the images now')
     correct_ind_2d = msg['corr_2d'];
     correct_ind_1d = msg['corr_1d'];
     $('#image-opts').removeClass('d-none');
+    $('#image-opts-2').removeClass('d-none');
+
+    $('#challenge-info-2d').text(`The projection axis is ${msg['axis']}`);
+    $('#challenge-info-1d').text(`The projection angle is ${msg['angle']}`);
+
+    for (u=0;u<3;u++){
+        insert_image_2d(u);
+        $(`#task-img-2d-${u}`).removeAttr('src').attr('src',`../static/img/game7/im2d-${u}.jpg?t=` + new Date().getTime());
+
+        insert_image_1d(u);
+        $(`#task-img-1d-${u}`).removeAttr('src').attr('src',`../static/img/game7/im1d-${u}.jpg?t=` + new Date().getTime());
+
+    }
+
+    if (msg['type'] === '1D'){
+        $('#button-2d-proj').trigger('click');
+    }
+
+
+    function insert_image_2d(u) {
+        const element = document.getElementById(`task-img-2d-${u}`);
+        if (!element) {
+            let img = document.createElement('img');
+            img.src = `../static/img/game7/im2d-${u}.jpg?t=` + new Date().getTime();
+            img.id = `task-img-2d-${u}`;
+            $(`#img2d-label-${u}`).append(img);
+        }
+    }
+
+    function insert_image_1d(u){
+        const element2 = document.getElementById(`task-img-1d-${u}`);
+        if (!element2){
+            let img = document.createElement('img');
+            img.src = `../static/img/game7/im1d-${u}.jpg?t=` + new Date().getTime();
+            img.id = `task-img-1d-${u}`;
+            img.width = 100;
+            $(`#img1d-label-${u}`).append(img);
+        }
+    }
+
+
+
 
     // Refresh each of the 3 images
-    $(".task-img-2d").each(()=>{
-        console.log(this);
-        let url = $(this).attr("src");
-        $(this).removeAttr("src").attr("src", url);
-    }
-    )
+    //
+    // for (u=0;u<3;u++) {
+    //     remove_image_2d(u);
+    //     setTimeout(200);
+    //     insert_image_2d(u);
+    // }
+    //
+    // function remove_image_2d(u){
+    //     const element = document.getElementById(`task-img-2d-${u}`);
+    //     if (element){
+    //         console.log(element);
+    //
+    //         element.remove();
+    //     }
+    //     const e2 = document.getElementById(`task-img-2d-${u}`);
+    //     console.log(e2);
+    //
+    // }
+    //
+    // function insert_image_2d(u){
+    //     let img = document.createElement('img');
+    //     img.src = `../static/img/game7/im2d-${u}.jpg`
+    //     img.id = `task-img-2d-${u}`;
+    //     $(`#img2d-label-${u}`).append(img);
+    // }
+    //
+    // for (u = 1; u<4; u++){
+    //     console.log(`renewing img ${u}`);
+    //     url = $().attr("src");
+    //     console.log(url);
+    //     $(`#task-img-2d-${u}`)F.attr("src","");
+    //     $(`#task-img-2d-${u}`).attr("src",url)
+    // }
+
+
 
 
 })
 
 $('#check-answer-2d').click(()=>{
-    let answer = -1
-    if ($('#choice_2d_a').is(":checked")){
-        answer = 0;
-    }
-    else if ($('#choice_2d_b').is(":checked")){
-        answer = 1;
-    }
-    else if ($('#choice_2d_c').is(":checked")){
-        answer = 2;
+    let answer = -1;
+    for (y=0;y<3;y++){
+        if ($(`#choice_2d_${y}`).is(":checked")){
+            answer = y;
+        }
     }
     console.log(`Correct answer is ${correct_ind_2d} and you answered ${answer}`);
-    $('#task4-autocheck').prop('checked',answer===correct_ind_2d);
+
+    if (answer===correct_ind_2d){
+        $('#challenge-feedback-2d').text('Correct!').removeClass('text-warning').addClass('text-success');
+    }
+    else{
+        $('#challenge-feedback-2d').text('Try again.').removeClass('text-success').addClass('text-warning');
+
+    }
+
+    $('#final-task-of-4').prop('checked',answer===correct_ind_2d);
+})
+
+$('#check-answer-1d').click(()=>{
+    let answer = -1;
+    for (x=0;x<3;x++){
+        if ($(`#choice_1d_${x}`).is(":checked")){
+            answer = x;
+        }
+    }
+    console.log(`Correct answer for 1D is ${correct_ind_1d} and you answered ${answer}`);
 
 
+    if (answer===correct_ind_1d){
+        $('#challenge-feedback-1d').text('Correct!').removeClass('text-warning').addClass('text-success');
+    }
+    else{
+        $('#challenge-feedback-1d').text('Try again.').removeClass('text-success').addClass('text-warning');
+
+    }
+
+
+    $('#final-task-of-5').prop('checked',answer===correct_ind_1d);
 })
 
 
@@ -187,13 +289,22 @@ function update_progress_bar(step) {
     // Update progress bar only if new value is larger than existing value.
     let current = parseInt($('.progress-bar').attr('style').replace('width: ', '').replace('%', ''));
     if (step * 25 > current) {
-        $('.progress-bar').prop('style', `width: ${step * 25}%`).prop('aria-valuenow', `${step * 25}`);
+        $('.progress-bar').prop('style', `width: ${step * 20}%`).prop('aria-valuenow', `${step * 20}`);
     }
 }
 
 function go_to_next_tab(step){
-    if (step<4){
+    if (step<5){
         $(`#task${step+1}-tab`).removeClass('disabled');
         $(`#task${step+1}-tab`).tab('show');
     }
 }
+
+$('.accordion-button.final-task-button').click((event)=>{
+    let target = event.target.getAttribute('data-bs-target');
+    let step = parseInt(target[target.length - 1]);
+    if (step < 4){ // Step 3 does autocheck and it cannot be done by hand.
+        $(`#final-task-of-${step}`).prop('checked',true);
+    }
+
+})

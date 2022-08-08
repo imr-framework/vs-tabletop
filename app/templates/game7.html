@@ -141,12 +141,20 @@
 
                 <!-- Task panel -->
                 <div class="col-4 card">
-                    <div class="card-header h3">Tasks</div>
+                    <div class="card-header h3">
+                        Tasks
+                     <div type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="top"
+                                      title="How to play"
+                                data-bs-content='Check off all tasks of each Move and press Next to move on. Complete all steps and answer the Questions on the right to earn five stars!'>
+                                    <i class="bi bi-question-circle-fill"></i>
+                                </div>
+
+                    </div>
                     <div class="card-body">
                     <div class="progress">
                         <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar"
-                             style="width: {{ session['game7']['task_completed']*25 }}%"
-                             aria-valuenow="0" aria-valuemin="{{ session['game7']['task_completed']*25 }}" aria-valuemax="100"></div>
+                             style="width: {{ session['game7']['task_completed']*20 }}%"
+                             aria-valuenow="0" aria-valuemin="{{ session['game7']['task_completed']*20 }}" aria-valuemax="100"></div>
                     </div>
                     <!-- Show tab for each lab procedure -->
                     <ul class="nav nav-tabs nav-justified" id="7-tab" role="tablist">
@@ -172,7 +180,7 @@
 
                     <!-- Show content for each lab procedure -->
                     <div class="tab-content" id="game7-tab-content">
-                        {% for task in instructions['tasks'] %}
+                        {% for task, task_details in instructions['tasks'].items() %}
                             {% if loop.index == session['game7']['task_completed'] + 1 %}
                                 {% set show_text = 'show' %}
                                 {% set active_text = 'active' %}
@@ -185,64 +193,116 @@
 
                             <div class="tab-pane fade {{ show_text }} {{ active_text }}" id="step{{ loop.index }}" role="tabpanel" aria-labelledby="step{{ loop.index }}-tab">
                                 <div class="h4 text-info">{{ instructions['titles'][loop.index0] }}</div>
-                                <ul class="list-group">
                                 {% set task_index = loop.index %}
-                                {% for step in instructions['explorations'][loop.index0] %}
-                                      <li class="list-group-item">
-                                        <input class="form-check-input task-{{ task_index }}-check" type="checkbox" value="" aria-label="">
-                                        {{ step }}
+
+                                <ul class="accordion" id="instructions-accordion-{{ task_index }}"> <!-- TODO make accordion work and add inside instructions -->
+                                {% for step, details in instructions['explorations'][loop.index0].items() %}
+                                      <li class="accordion-item">
+                                          <div class="accordion-header row d-flex justify-content-center" id="heading-{{ task_index }}-{{ loop.index }}">
+                                              <div class="col-1 d-flex align-items-center justify-content-center">
+                                              <input class="form-check-input task-{{ task_index }}-check" type="checkbox" value="" aria-label="">
+                                              </div>
+                                            <div class="col-11">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ task_index }}-{{ loop.index }}" aria-expanded="false" aria-controls="collapse-{{ task_index }}-{{ loop.index }}">
+                                                <strong>{{ step }}</strong>
+                                            </button>
+                                          </div>
+                                          </div>
+                                          <div class="accordion-collapse collapse" id="collapse-{{ task_index }}-{{ loop.index }}" aria-labelledby="heading-{{ task_index }}-{{ loop.index }}" data-bs-parent="#instructions-accordion-{{ task_index }}">
+                                              <div class="accordion-body">
+                                                    <span>{{ details }}</span>
+                                              </div>
+                                          </div>
                                       </li>
                                 {% endfor %}
+                                    <!-- Last task -->
+                                    <li class="accordion-item text-info">
+                                          <div class="accordion-header row d-flex justify-content-center" id="heading-final-{{ task_index }}">
 
-                                {% if task_index == 4 %}
-                                    <li class="list-group-item">
-                                    <input class="form-check-input task-{{ task_index }}-check" id="task4-autocheck" type="checkbox" disabled>
-                                        Select the correct 2D projection below and press "submit".
-                                    </li>
-                                {% endif %}
+                                              <div class="col-1 d-flex align-items-center justify-content-center">
+                                                <input class="form-check-input task-{{ task_index }}-check" id="final-task-of-{{ task_index }}" type="checkbox" disabled>
+                                              </div>
+
+                                            <div class="col-11">
+                                            <button class="accordion-button collapsed final-task-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-final-{{ task_index }}" aria-expanded="false" aria-controls="collapse-final-{{ loop.index }}">
+                                                <strong class="text-info">{{ task }}</strong>
+                                            </button>
+                                          </div>
+                                          </div>
+                                          <div class="accordion-collapse collapse" id="collapse-final-{{ task_index }}" aria-labelledby="heading-final-{{ task_index }}" data-bs-parent="#instructions-accordion-{{ task_index }}">
+                                              <div class="accordion-body">
+                                                    <span>{{ task_details }}</span>
+                                              </div>
+                                          </div>
+                                      </li>
 
                                 </ul>
-                                <p class="text-info">{{ task }}</p>
-
-                                <!-- Step 4 special button -->
+                                <!-- Step 4 special part -->
                                 {% if task_index == 4 %}
                                     <!-- TODO display the 3 options -->
                                     <div class="d-none form-check" id="image-opts">
+                                    <div class="row">
+                                        <div class="col" id="challenge-info-2d"></div>
+                                        <div class="col" id="challenge-feedback-2d"></div>
+                                    </div>
                                         <div class="row">
-                                            <div class="col d-flex justify-content-center">
-                                                <label for="choice_2d_a"><img src="../static/img/game7/im2d-a.jpg" class="task-img-2d" alt="2D challenge 1st option"></label>
-                                            </div>
-
-                                            <div class="col d-flex justify-content-center">
-                                                <label for="choice_2d_b"><img src="../static/img/game7/im2d-b.jpg" class="task-img-2d" alt="2D challenge 2nd option"></label>
-                                            </div>
-
-                                              <div class="col d-flex justify-content-center">
-                                                  <label for="choice_2d_c"><img src="../static/img/game7/im2d-c.jpg" class="task-img-2d" alt="2D challenge 3rd option"></label>
-                                              </div>
-
-                                              </div>
+                                            {% for q in range(3) %}
+                                                <div class="col d-flex justify-content-center">
+                                                    <label for='choice_2d_{{ q }}' id='img2d-label-{{ q }}'></label>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
                                         <div class="row">
-
-                                        <div class="col d-flex justify-content-center">
-                                            <input type="radio" class="form-check-input" name="choice-2d" id="choice_2d_a">
+                                            {% for p in range(3) %}
+                                            <div class="col d-flex justify-content-center">
+                                                <input type="radio" class="form-check-input" name="choice-2d" id='choice_2d_{{ p }}'>
+                                            </div>
+                                            {% endfor %}
                                         </div>
-                                        <div class="col d-flex justify-content-center">
-                                            <input type="radio" class="form-check-input" name="choice-2d" id="choice_2d_b">
-                                        </div>
-                                        <div class="col d-flex justify-content-center">
-                                            <input type="radio" class="form-check-input" name="choice-2d" id="choice_2d_c">
-                                        </div>
-                                        </div>
-
-
                                     </div>
 
                                     <div class="row">
-                                        <div class="col btn btn-light btn-outline-primary" id="randomize">Randomize!</div>
+                                        <div class="col btn btn-light btn-outline-primary randomize" id="randomize">Randomize!</div>
                                         <div class="col btn btn-dark" id="check-answer-2d">Submit</div>
                                     </div>
                                 {% endif %}
+
+ <div type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="top"
+                                      title="How to play"
+                                data-bs-content='Check off all tasks of each Move and press Next to move on. Complete all steps and answer the Questions on the right to earn five stars!'>
+                                    <i class="bi bi-question-circle-fill"></i>
+                                </div>
+                                <!-- Step 5 special part -->
+                                {% if task_index == 5 %}
+                                    <div class="d-none form-check" id="image-opts-2">
+                                    <div class="row">
+                                        <div class="col" id="challenge-info-1d"></div>
+                                        <div class="col" id="challenge-feedback-1d"></div>
+                                    </div>
+                                        <div class="row">
+                                            {% for q in range(3) %}
+                                                <div class="col d-flex justify-content-center">
+                                                    <label for='choice_1d_{{ q }}' id='img1d-label-{{ q }}'></label>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="row">
+                                            {% for p in range(3) %}
+                                            <div class="col d-flex justify-content-center">
+                                                <input type="radio" class="form-check-input" name="choice-1d" id='choice_1d_{{ p }}'>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col btn btn-light btn-outline-primary randomize" id="randomize-2">Randomize!</div>
+                                        <div class="col btn btn-dark" id="check-answer-1d">Submit</div>
+                                    </div>
+                                {% endif %}
+
+
+
 
                                 <div class="btn btn-info task-next-button" id="task{{ loop.index }}-next">Next</div>
 
@@ -263,10 +323,6 @@
 
 
                         {% endfor %}
-
-                      <div class="tab-pane fade" id="step2" role="tabpanel" aria-labelledby="profile-tab"></div>
-                      <div class="tab-pane fade" id="step3" role="tabpanel" aria-labelledby="contact-tab"></div>
-
 
                     </div>
 
@@ -376,12 +432,6 @@
 {% endblock %}
 
 {% block additional_imports %}
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alphal/css/bootstrap.min.css"
-          integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17SuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
-            integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js"
-        integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>
 
     <!-- vector.js -->
     <link rel="stylesheet" href="https://vectorjs.org/library.css">

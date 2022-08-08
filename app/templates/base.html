@@ -48,9 +48,14 @@
           </div>
         </li>
 
-
-
       </ul>
+
+        {% if template_title %}
+        <ul class="navbar-nav text-light">
+            <li>{{template_title}} : {{template_intro_text}}</li>
+        </ul>
+        {% endif %}
+
         <ul class="navbar-nav float-right">
           <li class="nav-item">
               <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userInfoModalCenter">
@@ -81,8 +86,7 @@
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></div>
             </div>
-            </div>
-
+            </div></div>
             <li class="nav-item">
               <a class="nav-link" href="/logout">Log out</a>
           </li>
@@ -91,12 +95,8 @@
     </div>
   </div>
 </nav>
-    <!-- Game title -->
-    {% if template_title %}
-    <div class="card bg-info d-flex align-items-center justify-content-center">
-      <p> {{template_title}}:{{template_intro_text}}</p>
-    </div>
-    {% endif %}
+
+
     <div class="card bg-light">
         {% with messages = get_flashed_messages() %}
             {% if messages %}

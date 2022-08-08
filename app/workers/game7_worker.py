@@ -472,13 +472,22 @@ def projections_to_images(g_list_2d, g_list_1d):
     # Save numpy arrays to plots / images
     print('Received g_list_2d')
 
-    plt.imsave('./static/img/game7/im2d-a.jpg', np.flipud(g_list_2d[0].T),cmap=mpl.cm.gray)
-    plt.imsave('./static/img/game7/im2d-b.jpg', np.flipud(g_list_2d[1].T),cmap=mpl.cm.gray)
-    plt.imsave('./static/img/game7/im2d-c.jpg', np.flipud(g_list_2d[2].T),cmap=mpl.cm.gray)
+    for q in range(3):
+        print('The true view of the data ...')
+        print(g_list_1d[q].shape)
 
-    #plt.imsave('./static/img/game7/im1d-a.jpg', g_list_1d[1])
-    #plt.imsave('./static/img/game7/im1d-b.jpg', g_list_1d[2])
-    #plt.imsave('./static/img/game7/im1d-c.jpg', g_list_1d[3])
+        # 1D
+        fig = plt.figure()
+        ax = plt.subplot(111)
+        ax.plot(g_list_1d[q])
+        ax.set_axis_off()
+        fig.savefig(f'./static/img/game7/im1d-{q}.jpg')
+
+        # 2D
+        plt.imsave(f'./static/img/game7/im2d-{q}.jpg', np.flipud(g_list_2d[q].T),cmap=mpl.cm.gray)
+
+
+
 
 
 if __name__ == "__main__":
