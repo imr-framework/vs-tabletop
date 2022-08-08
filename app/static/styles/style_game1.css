@@ -3,23 +3,23 @@
   display: flex;
   flex-direction: column;
   align: center;
-  width: 50%;
+  width: 100%;
 }
 
 .sliders_control {
   position: relative;
   min-height: 50px;
-  align: left;
+  align: center;
 }
 
-.form_control {
-  align: center;
-  position: relative;
-  display: flex;
-  justify-content: space-between;
-  font-size: 24px;
-  color: #635a5a;
-}
+/*.form_control {*/
+/*  align: center;*/
+/*  position: relative;*/
+/*  display: flex;*/
+/*  justify-content: space-between;*/
+/*  font-size: 24px;*/
+/*  color: #635a5a;*/
+/*}*/
 
 input[type=range]::-webkit-slider-thumb {
     align: center;
@@ -81,10 +81,16 @@ input[type="range"] {
 }
 
 #fromSlider {
-    align: center;
   height: 0;
   z-index: 1;
+  padding: 0;
 }
+
+
+#toSlider {
+  padding: 0;
+}
+
 
 ul {
   list-style: none;
@@ -93,7 +99,7 @@ ul {
 .tabs {
   display: flex;
   flex-direction: column;
-  max-width: 400px;
+  /*max-width: 400px;*/
   width: 100%;
 }
 

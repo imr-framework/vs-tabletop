@@ -89,10 +89,10 @@
           {% set task4_status = 'is-active' %}
 
     {% endif %}
-        <div class="tabs__content {{  task1_status }}" style="font-family: Georgia, serif">
+        <div class="tabs__content {{ task1_status }}" style="font-family: Georgia, serif">
           <h2 class="tabs__title">Instructions</h2>
           <p class="tabs__text" style="font-family: Georgia, serif">
-              1. Input the below values into the FOV field and observe how the image changes with increasing and decreasing values.
+              1. Input the below values into the FOV field and press "Run" on the right. Observe how the image changes with increasing and decreasing values.
               <ul style="font-family: Georgia, serif">
                 <li>1. FOV: 105mm</li>
                 <li>2. FOV: 150mm</li>
@@ -217,7 +217,7 @@
       </div>
     </div>
                     <div class="row-card">
-                        <div class="card-header">Messages Panel</div>
+                        <div class="card-header"><b>Messages</b></div>
                         <div class="card-body">
                             {% if session['game1']['current_task'] == 1 %}
                                 Change the "FOV metric" and click run below the image to observe changes!
@@ -232,39 +232,52 @@
 
                     </div>
                     <div class="row card">
-                    <div class="card-header"><b>Select FOV, Matrix size, Voxel Size, and Zero-Fill Metrics</b></div>
-                    <div class="card-body" style="align: justified">
-                        <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is FOV?"
+                    <div class="card-header"><b>Image settings</b></div>
+                    <div class="card-body row">  <!--style="align: justified"-->
+                        <div class="col-3 form-group">
+
+                            <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is FOV?"
                                 data-bs-content="Field-of-View. The real world size of your image in units of distance (meters, millimeters, etc..">
-                                <i class="bi bi-question-square"></i></button>
-                        <b>FOV Metric:</b>
+                                <i class="bi bi-question-circle-fill"></i></button>
+                        <b>FOV:</b>
 
-                        <input class="form-check-input" type="DecimalField" value="{{ session['game1']['FOV_scale']*1000}} " id="FOV_scale" style="width: 60px; height: 30px">
-                        {{G1Form.FOV_scale.label}}
+                        <input class="form-control" type="DecimalField" value="{{ session['game1']['FOV_scale']*1000}} " id="FOV_scale" style="">
+                        {{G1Form.FOV_scale.label(class="form-label")}}
+                        </div>
 
-                        <br><button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is Matrix Size?"
+                        <div class="col-3 form-group">
+                        <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is Matrix Size?"
                                 data-bs-content="The number of rows and columns of your image matrix.">
-                                <i class="bi bi-question-square"></i></button>
+                                <i class="bi bi-question-circle-fill"></i></button>
                         <b>Matrix Size:</b>
-                        <input class="form-check-input" type="DecimalField" value="{{ session['game1']['Matrix_scale']}} " id="Matrix_scale" style="width: 60px; height: 30px">
-                        {{ G1Form.Matrix_scale.label }}
+                        <input class="form-control" type="DecimalField" value="{{ session['game1']['Matrix_scale']}} " id="Matrix_scale" style="">
+                        {{ G1Form.Matrix_scale.label(class="form-label") }}
+                        </div>
 
-                        <br><button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is Voxel Size?"
+                        <div class="col-3 form-group">
+                        <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is Voxel Size?"
                                 data-bs-content="A voxel is cube and the smallest element that makes up an image. The voxel size is the length of each side of this cube.
                                  Voxel size = (FOV) / (matrix size)">
-                                <i class="bi bi-question-square"></i></button>
-                        <b>Voxel Size:</b>
-                        <input class="form-check-input" type="DecimalField" value="{{ session['game1']['Voxel_scale']*1000}} " id="Voxel_scale" style="width: 60px; height: 30px">
-                        {{ G1Form.Voxel_scale.label }}
+                                <i class="bi bi-question-circle-fill"></i></button>
 
-                        <br><button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is Zero-Fill?"
+                        <b>Voxel Size:</b>
+                        <input class="form-control" type="DecimalField" value="{{ session['game1']['Voxel_scale']*1000}} " id="Voxel_scale" style="">
+                            {{ G1Form.Voxel_scale.label(class="form-label") }}
+                        </div>
+
+                        <div class="col-3 form-group">
+
+                            <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is Zero-Fill?"
                                 data-bs-content="A higher matrix size than the original image’s. Any image can be zero-filled to have more voxels
                                 within the same FOV, but this operation does not add more information to the image.">
-                                <i class="bi bi-question-square"></i></button>
+                                <i class="bi bi-question-circle-fill"></i></button>
 
                         <b>Zero-fill:</b>
-                        <input class="form-check-input" type="DecimalField" value="128" id="zero_fill" style="width: 60px; height: 30px">
+
+                        <input class="form-control" type="DecimalField" value="128" id="zero_fill" style="">
+                            {{ G1Form.zero_fill.label }}
                         {{ G1Form.zero_fill.value }}
+                        </div>
 
                         <script>
                             var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
@@ -285,41 +298,51 @@
                 <div class="row card">
                     <div class="card-header"><b>Windowing</b></div>
                     <div class="card-body">
-                        <div class="range_container">
-                            <div class="sliders_control">
-                                {{ G1Form.from_slider_value(id="fromSlider", min="0", max="100", value=(session['game1']['Min_scale'])*100) }}
-                                {{ G1Form.to_slider_value(id="toSlider", min="0", max="100", value=(session['game1']['Max_scale'])*100) }}
-                            </div>
-
+                        <div class="range_container col">
                             <div class="form_control">
-                                <div class="form_control_container" style="text-align: center">
+                                <!-- Min part -->
+
+
+                                 <div class="row sliders_control d-flex justify-content-left">
+                                {{ G1Form.from_slider_value(id="fromSlider", class="", min="0", max="100", value=(session['game1']['Min_scale'])*100) }}
+                                {{ G1Form.to_slider_value(id="toSlider", class="",min="0", max="100", value=(session['game1']['Max_scale'])*100) }}
+                                     </div>
+
+
+                                <div class="row d-flex">
+                                <div class="col form_control_container" style="text-align: center">
                                     <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is Windowing(Min)?"
                                 data-bs-content="The low cutoff point. All grayscale values below it will be seen as black">
-                                <i class="bi bi-question-square"></i></button>
-                                    <div class="form_control_container__time">Min:</div>
-                                    {{ G1Form.min_value(class="form_control_container__time__input", id="fromInput", min="0", max="100", value=(session['game1']['Min_scale'] * 100)) }}
+                                <i class="bi bi-question-circle-fill"></i></button>
+                                    <div class="form_control_container__time">Min: </div>
+                                    {{ G1Form.min_value(class="form-control container__time__input", id="fromInput", min="0", max="100", value=(session['game1']['Min_scale'] * 100)) }}
                                 </div>
-                                <div class="form_control_container" style="position:relative; left:370px; top:2px">
+
+                                <!-- Max part -->
+                                <div class="col form_control_container">  <!--style="position:relative; left:370px; top:2px"-->
                                     <div class="form_control_container">
                                     <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is Windowing(Max)?"
-                                data-bs-content=" the high cutoff point. All grayscale values above it will be seen as white
+                                data-bs-content=" the high cutoff point. All grayscale values above it will be seen as white">
+                                <i class="bi bi-question-circle-fill"></i></button>
+                                    <div class="form_control_container__time d-flex justify-content-right">
+                                        Max: {{ G1Form.max_value(class="form-control container__time__input", id="toInput", min="0", max="100", value=(session['game1']['Max_scale'] * 100)) }}
 
-">
-                                <i class="bi bi-question-square"></i></button>
-                                    <div class="form_control_container__time">Max:</div>
-                                    {{ G1Form.max_value(class="form_control_container__time__input", id="toInput", min="0", max="100", value=(session['game1']['Max_scale'] * 100)) }}
+                                    </div>
+                                    </div>
+
                                 </div>
-
+                                </div>
                             </div>
+
+
                             <script>
-                    var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
-                    var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
-                      return new bootstrap.Popover(popoverTriggerEl)
-                    })
-                    </script>
-                    </div>
-                </div>
+                            var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+                            var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+                              return new bootstrap.Popover(popoverTriggerEl)
+                            })
+                            </script>
                         </div>
+                    </div>
                 </div>
 
                     <br><div class="row card">
@@ -363,15 +386,15 @@
             <form action="/games/1" method="POST">
             {{ G1Form.hidden_tag() }}
                 <div class="row card">
-                    <div class="card-header">Image</div>
+                    <div class="card-header"><b>Image</b></div>
                     <div class="card-body">
                         <div class="chart" id="chart-G1">
                         </div>
                     </div>
-                    <br>{{G1Form.submit_field(class="btn btn-primary")}}
+                    <br>{{G1Form.submit_field(class="btn btn-large btn-info")}}
                 </div>
                     <div class="row-card">
-                    <div class="card-header">Questions</div>
+                        <div class="card-header"><b>Questions</b></div>
                     <div class="card text-white bg-secondary mb-3" style="color: grey">
                         <div id="slide" class="carousel slide" data-bs-interval="false">
                             <div class="carousel-indicators"><button type="button" data-bs-target="#slide" data-bs-slide-to="0" class="active"></button>
