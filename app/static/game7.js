@@ -249,6 +249,15 @@ $('#check-answer-2d').click(()=>{
         }
     }
     console.log(`Correct answer is ${correct_ind_2d} and you answered ${answer}`);
+
+    if (answer===correct_ind_2d){
+        $('#challenge-feedback-2d').text('Correct!').removeClass('text-warning').addClass('text-success');
+    }
+    else{
+        $('#challenge-feedback-2d').text('Try again.').removeClass('text-success').addClass('text-warning');
+
+    }
+
     $('#final-task-of-4').prop('checked',answer===correct_ind_2d);
 })
 
@@ -260,6 +269,17 @@ $('#check-answer-1d').click(()=>{
         }
     }
     console.log(`Correct answer for 1D is ${correct_ind_1d} and you answered ${answer}`);
+
+
+    if (answer===correct_ind_1d){
+        $('#challenge-feedback-1d').text('Correct!').removeClass('text-warning').addClass('text-success');
+    }
+    else{
+        $('#challenge-feedback-1d').text('Try again.').removeClass('text-success').addClass('text-warning');
+
+    }
+
+
     $('#final-task-of-5').prop('checked',answer===correct_ind_1d);
 })
 

@@ -141,7 +141,15 @@
 
                 <!-- Task panel -->
                 <div class="col-4 card">
-                    <div class="card-header h3">Tasks</div>
+                    <div class="card-header h3">
+                        Tasks
+                     <div type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="top"
+                                      title="How to play"
+                                data-bs-content='Check off all tasks of each Move and press Next to move on. Complete all steps and answer the Questions on the right to earn five stars!'>
+                                    <i class="bi bi-question-circle-fill"></i>
+                                </div>
+
+                    </div>
                     <div class="card-body">
                     <div class="progress">
                         <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar"
@@ -185,22 +193,22 @@
 
                             <div class="tab-pane fade {{ show_text }} {{ active_text }}" id="step{{ loop.index }}" role="tabpanel" aria-labelledby="step{{ loop.index }}-tab">
                                 <div class="h4 text-info">{{ instructions['titles'][loop.index0] }}</div>
-
-                                <ul class="accordion" id="instructions-accordion"> <!-- TODO make accordion work and add inside instructions -->
                                 {% set task_index = loop.index %}
+
+                                <ul class="accordion" id="instructions-accordion-{{ task_index }}"> <!-- TODO make accordion work and add inside instructions -->
                                 {% for step, details in instructions['explorations'][loop.index0].items() %}
                                       <li class="accordion-item">
-                                          <div class="accordion-header row d-flex justify-content-center" id="heading{{ loop.index }}">
+                                          <div class="accordion-header row d-flex justify-content-center" id="heading-{{ task_index }}-{{ loop.index }}">
                                               <div class="col-1 d-flex align-items-center justify-content-center">
                                               <input class="form-check-input task-{{ task_index }}-check" type="checkbox" value="" aria-label="">
                                               </div>
                                             <div class="col-11">
-                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ loop.index }}" aria-expanded="false" aria-controls="collapse{{ loop.index }}">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ task_index }}-{{ loop.index }}" aria-expanded="false" aria-controls="collapse-{{ task_index }}-{{ loop.index }}">
                                                 <strong>{{ step }}</strong>
                                             </button>
                                           </div>
                                           </div>
-                                          <div class="accordion-collapse collapse" id="collapse{{ loop.index }}" aria-labelledby="heading{{ loop.index }}" data-bs-parent="#instructions-accordion">
+                                          <div class="accordion-collapse collapse" id="collapse-{{ task_index }}-{{ loop.index }}" aria-labelledby="heading-{{ task_index }}-{{ loop.index }}" data-bs-parent="#instructions-accordion-{{ task_index }}">
                                               <div class="accordion-body">
                                                     <span>{{ details }}</span>
                                               </div>
@@ -216,12 +224,12 @@
                                               </div>
 
                                             <div class="col-11">
-                                            <button class="accordion-button collapsed final-task-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-final-{{ task_index }}" aria-expanded="false" aria-controls="collapse{{ loop.index }}">
+                                            <button class="accordion-button collapsed final-task-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-final-{{ task_index }}" aria-expanded="false" aria-controls="collapse-final-{{ loop.index }}">
                                                 <strong class="text-info">{{ task }}</strong>
                                             </button>
                                           </div>
                                           </div>
-                                          <div class="accordion-collapse collapse" id="collapse-final-{{ task_index }}" aria-labelledby="heading-final-{{ task_index }}" data-bs-parent="#instructions-accordion">
+                                          <div class="accordion-collapse collapse" id="collapse-final-{{ task_index }}" aria-labelledby="heading-final-{{ task_index }}" data-bs-parent="#instructions-accordion-{{ task_index }}">
                                               <div class="accordion-body">
                                                     <span>{{ task_details }}</span>
                                               </div>
@@ -233,7 +241,10 @@
                                 {% if task_index == 4 %}
                                     <!-- TODO display the 3 options -->
                                     <div class="d-none form-check" id="image-opts">
-                                        <div class="row" id="challenge-info-2d"></div>
+                                    <div class="row">
+                                        <div class="col" id="challenge-info-2d"></div>
+                                        <div class="col" id="challenge-feedback-2d"></div>
+                                    </div>
                                         <div class="row">
                                             {% for q in range(3) %}
                                                 <div class="col d-flex justify-content-center">
@@ -256,11 +267,18 @@
                                     </div>
                                 {% endif %}
 
-
+ <div type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="top"
+                                      title="How to play"
+                                data-bs-content='Check off all tasks of each Move and press Next to move on. Complete all steps and answer the Questions on the right to earn five stars!'>
+                                    <i class="bi bi-question-circle-fill"></i>
+                                </div>
                                 <!-- Step 5 special part -->
                                 {% if task_index == 5 %}
                                     <div class="d-none form-check" id="image-opts-2">
-                                        <div class="row text-center" id="challenge-info-1d"></div>
+                                    <div class="row">
+                                        <div class="col" id="challenge-info-1d"></div>
+                                        <div class="col" id="challenge-feedback-1d"></div>
+                                    </div>
                                         <div class="row">
                                             {% for q in range(3) %}
                                                 <div class="col d-flex justify-content-center">
@@ -414,12 +432,6 @@
 {% endblock %}
 
 {% block additional_imports %}
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alphal/css/bootstrap.min.css"
-          integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17SuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
-            integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js"
-        integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>
 
     <!-- vector.js -->
     <link rel="stylesheet" href="https://vectorjs.org/library.css">

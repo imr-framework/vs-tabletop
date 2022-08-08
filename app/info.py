@@ -57,23 +57,28 @@ GAME7_INSTRUCTIONS = {
     'tabs': [f'Step {n}' for n in [1,2,3,4,5]],
     'titles': ['Exploring 3D models', '2D projection', '1D projection', 'Puzzle time! Part I', 'Puzzle time! Part II'],
     'explorations': [{'Explore 3D models': 'Press "Load 3D model" to visualize the default model. Rotate the model around. You may use the "transparent" button to see the internal structure too.',
-                     'Look at other models': 'Use the "Select model" dropdown to choose any model and load again. Look at a few different models and get familiar with their structures. In real life, the cylinders are placed in a tube and filled with water so only their internal cutouts generate signal. '},
-                     {'Select 2D projection axis': '',
-                      'Display 2D projected image':'',
-                      'Connecting the 3D model to its projection':'',
-                      'Repeat this exploration with x- and y-projections and other models':''},
-                     {'Generate a 2D projection using the 3D model letterN in the z direction':'',
-                      'Use the circle controller to select a projection angle of 90 degrees':'',
-                      'Display 1D projection.':'',
-                      'Repeat this with various axis, angles, and models':''},
-                     {'Now is the time for you to make out some projections! Press Randomize! to display a special cylinder.':''},
-                     {'1D projection time!': 'Hooray!'}
+                     'Look at other models': 'Use the "Select model" dropdown to choose any model and load again. Look at a few different models and get familiar with their structures. \
+                     In real life, the cylinders are fit tightly in a tube and filled with water so only the cutout parts generate signal. '},
+                     {'Select 2D projection axis': 'Choose an display a 3D model. Click on "show/hide lines". \
+                                                    On the left, select "x", "y", or "z" to see three different ways of projecting the 3D model. \
+                                                    The lines indicate the axis along which signal will accumulate.',
+                      'Display 2D projected image':'Choose the z axis. Then press "2D projection" to show the projected image. How does this compare with the original model? \
+                                                   Can you approximate the view by rotating the transparent 3D model?',
+                      'Experiment with different models and axes':'Try "x" and "y" projections; then, try other models. Can you predict the projections just by looking at the 3D models?'},
+                     {'Set up 2D projection':'Generate a 2D projection using the 3D model "Dots" in the z direction. You should see two circles on the 2D image.',
+                      'Select 1D projection axis': 'Use the circular eye controller to select a projection angle of 90 degrees. Show the lines. \
+                      The green lines indicate the direction along which the 2D image will be summed to make a 1D projection.',
+                      'Display 1D projection':'Press "1D projection" to show the projected image. What do you see? Can you connect this to the definition of 1D projections?',
+                      'Experiment with different angles': 'Use the circular eye controller to select a few different angles (0,45,135,...) and observe the 1D projections. At which angles can we tell the two circles apart? ',
+                      'Experiment with different modles': 'Explore the models and generate their 1D projections. How would you predict a 1D projection, given an angle and a 2D image?'},
+                     {'2D puzzle':'Now is the time for you to guess some 2D projections! Press "Randomize!" to display a special cylinder and projection angle.'},
+                     {'1D puzzle': 'Guess your 1D projection. Press Randomize! to display a special cylinder, a specified 2D projection, and a 1D projection angle.'}
             ],
     'tasks': {'Task 1: Thought experiment': 'How can you figure out the internal structure without the transparency button?',
               'Task 2: 2D projection ':'If you can take one 2D projection of yourself, which axis would you choose and what would you see on the image?',
               'Task 3: 1D projection':'If we perform enough 1D projections at various angles, can we figure out what the original 2D image is? How? ',
               'Task 4: Project 2D with your brain! ':'Select the correct projection and click "submit" to check your answer. ',
-              'Task 5: Project 1D with your brain!': 'Select the correct projection and click "submit" to check your answer.'}
+              'Task 5: Project 1D with your brain!': 'Select the correct projection and click "submit" to check your answer. '}
 }
 
 GAME7_RANDOM_MODELS = [
