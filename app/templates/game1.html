@@ -1,11 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
 <head>
-<title>Document</title>
+
 </head>
+
     <div class="container-fluid vh-100">
         <div class="row h-100">
             <div class="col-6 h-50">
+
                 <form action="/games/1" method="POST">
                     <div class="progress">
                       {% if session['game1']['completed_task'] == 0 %}
@@ -18,6 +20,8 @@
                     <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" style="width: 75%"></div>
                         {% elif session['game1']['completed_task'] == 4 %}
                     <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" style="width: 100%"></div>
+                        <div class="seperate"><canvas id="canvas"></canvas></div>
+
                         {% endif %}
                   </div>
 
@@ -210,7 +214,10 @@
                         <br><i class="bi bi-unlock"></i>
                         <i><b>Game 3 Unlocked</b></i>
                         <i class="bi bi-unlock"></i>
-                        <canvas id="canvas"></canvas>
+
+
+                    <br><a href="/games/3" class="btn btn-success btn-large">Continue to Game 3!</a>
+
                     </div>
                   {% endif %}
               </p>
@@ -228,6 +235,9 @@
                                 Change the "Zero-Fill" value and click run below the image to observe changes!
                             {% elif session['game1']['current_task'] == 4 %}
                                 Change the min and max values in the "Windowing" panel and click run below the image to observe how contrast changes!
+                                {% if session['game1']['completed_task'] == 4 %}
+                                    Complete the questions to get the rest of the stars!
+                                {% endif %}
                             {% endif %}
                         </div>
 
@@ -460,6 +470,7 @@
 
 
             </div>
+
 
 
 {% endblock %}

@@ -173,5 +173,25 @@ align-items:center;
 padding: 40px;
 }
 
+canvas {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+
+.title {
+  position: absolute;
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
+
+  font-family: 'Helvetica';
+  line-height: 100vh;
+  text-transform: uppercase;
+  font-weight: lighter;
+  color: #ccc;
+  text-align: center;
+}
 
 
