@@ -31,7 +31,7 @@ def game7():
         j2, j3 = game7_projection_worker(voxels, session['game7']['proj2d_axis'],
                                                  session['game7']['proj1d_angle'])
 
-    return render_template('game7.html',G7Form=form, template_title="Projection Imaging",
+    return render_template('game7.html',G7Form=form, template_title="Puzzled by Projection",
                            template_intro_text="Forward puzzle", instructions=GAME7_INSTRUCTIONS,
                             graphJSON_3dimg = j1, graphJSON_2dimg = j2, graphJSON_1dimg = j3,
                            questions=questions, success_text=success_text, uses_images=uses_images)
