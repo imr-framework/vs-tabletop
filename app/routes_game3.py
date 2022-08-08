@@ -33,7 +33,7 @@ def game3():
         j1, j2 = game3_worker(session['game3']['TR'] / 1000, session['game3']['TE'] / 1000, session['game3']['FA'])
 
     print(session['game3'])
-    return render_template('game3.html', template_title="Brains, please!", template_intro_text="Of mice and men",
+    return render_template('game3.html', template_title="Brains, please!", template_intro_text="",
                            G3Form=form, graphJSON_img = j1, graphJSON_bar = j2, questions = questions,
                            success_text=success_text, uses_images=uses_images)
 
@@ -53,18 +53,23 @@ def update_parameter(info):
         info['value'] = str(info['value'])
         session['game3']['TR'] = 500
         session['game3']['TE'] = 14
+        session['game3']['FA'] = 90
 
     elif info['id'] in ['options-1']:
         info['id'] = info['id'][0:7]
         info['value'] = str(info['value'])
         session['game3']['TR'] = 4000
-        session['game3']['TE'] = 90
+        session['game3']['TE'] = 100
+        session['game3']['FA'] = 90
+
 
     elif info['id'] in ['options-2']:
         info['id'] = info['id'][0:7]
         info['value'] = str(info['value'])
         session['game3']['TR'] = 9000
-        session['game3']['TE'] = 114
+        session['game3']['TE'] = 20
+        session['game3']['FA'] = 90
+
 
     elif info['id'] in ['P1_q']:
         info['id'] = info['id']
