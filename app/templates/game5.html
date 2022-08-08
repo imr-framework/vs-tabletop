@@ -2,7 +2,6 @@
 {% block content %}
     <div class="container-fluid vh-100">
         <form action="/games/5" method="POST">
-
     <div class="row h-100">
     <!-- Display panels on the left -->
         <div class="col-3 h-100" id="display-game5">
@@ -308,6 +307,9 @@
                              style="width: {{ session['game5']['task_completed']*25 }}%"
                              aria-valuenow="0" aria-valuemin="{{ session['game5']['task_completed']*25 }}" aria-valuemax="100"></div>
                     </div>
+
+
+
                     <!-- Show tab for each lab procedure -->
                     <ul class="nav nav-tabs nav-justified" id="game5-tab" role="tablist">
                         {% for tab in instructions['tabs'] %}
@@ -421,7 +423,11 @@
 
                                 <p class="{{ dnone }} text-success" id="task-success-{{ task_index }}">
                                     {{ success_message }}
+                                    {% if task_index == 4 %}
+                                        <a class="btn btn-large btn-success" href="/games/7"> Next game! </a>
+                                    {% endif %}
                                 </p>
+
 
                             </div>
 
