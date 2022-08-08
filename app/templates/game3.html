@@ -88,7 +88,19 @@
             <p class="tabs_text">
                 Answer the below question to test your knowledge and move on to the next task!
                 <br>Which scan highlights fat and proteins?
-                <br>{{ G3Form.P1_q() }}
+                <div class="card-body btn-group">
+                {% for subfield in G3Form.P1_q %}
+                                {% if subfield.id == "P1_q" %}
+                                    {{ subfield(class="btn-check ", autocomplete="off",checked=session['game3']['P1_q']=='T1') }}
+                                {% elif subfield.id == "P1_q-1" %}
+                                    {{ subfield(class="btn-check ", autocomplete="off",checked=session['game3']['P1_q']=='T2') }}
+                                {% else %}
+                                    {{ subfield(class="btn-check ", autocomplete="off", checked=session['game3']['P1_q']=='PD') }}
+                                {% endif %}
+                                {{ subfield.label(class="btn btn-outline-primary d-flex align-items-center justify-content-center") }}
+
+                            {% endfor %}
+            </div>
                 <br>{{ G3Form.submit_questions(class="btn btn-primary") }}
             </p>
             </form>
@@ -109,7 +121,17 @@
             <p class="tabs__text">
                 Answer the below question to continue to next task!
                 <br>What happens as the FA value increases?
-                {{ G3Form.P2_q() }}
+                <div class="card-body btn-group">
+                {% for subfield in G3Form.P2_q %}
+                                {% if subfield.id == "P2_q-0" %}
+                                    {{ subfield(class="btn-check ", autocomplete="off",checked=session['game3']['P2_q']=='Contrast Increases') }}
+                                {% elif subfield.id == "P2_q-1" %}
+                                    {{ subfield(class="btn-check ", autocomplete="off",checked=session['game3']['P2_q']=='Contrast Decreases') }}
+                                {% endif %}
+                                {{ subfield.label(class="btn btn-outline-primary d-flex align-items-center justify-content-center") }}
+
+                            {% endfor %}
+            </div>
                 <br>{{ G3Form.submit_questions(class="btn btn-primary") }}
             </p>
             </form>
@@ -129,7 +151,19 @@
             <p class="tabs__text">
                 Answer the below question:
                 <br> In a T2 weighted scan, which tissue type results in the most signal intensity?
-                {{ G3Form.P3_q() }}
+                <div class="card-body btn-group">
+                {% for subfield in G3Form.P3_q %}
+                                {% if subfield.id == "P3_q" %}
+                                    {{ subfield(class="btn-check ", autocomplete="off",checked=session['game3']['P3_q']=='CSF') }}
+                                {% elif subfield.id == "P3_q-1" %}
+                                    {{ subfield(class="btn-check ", autocomplete="off",checked=session['game3']['P3_q']=='GM') }}
+                                {% else %}
+                                    {{ subfield(class="btn-check ", autocomplete="off",checked=session['game3']['P3_q']=='WM') }}
+                                {% endif %}
+                                {{ subfield.label(class="btn btn-outline-primary d-flex align-items-center justify-content-center") }}
+
+                            {% endfor %}
+            </div>
                 <br>{{ G3Form.submit_questions(class="btn btn-primary") }}
 
             </p>
@@ -143,6 +177,7 @@
 
                              {% if session['game3']['completed_task'] == 3 %}
                                 Answer the questions to earn more stars!
+                                <br> or
                                 <br><a href="/games/5" class="btn btn-success btn-large">Continue to Game 5!</a>
                              {% elif session['game3']['current_task'] == 1 %}
                              Click on T1, T2, or PD values to observe their impact on the scan! Click "Submit chosen parameters" to apply the scan type!
