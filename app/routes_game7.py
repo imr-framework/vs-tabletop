@@ -98,7 +98,7 @@ def update_proj2d_direction(msg):
     send_plots()
 
 @socketio.on('Pull random model')
-def get_random_mystery_model():
+def get_random_mystery_model(msg):
     print("Generating random model now")
     # Pull model
     name =  random.choice(GAME7_RANDOM_MODELS)
@@ -116,6 +116,9 @@ def get_random_mystery_model():
     dir0 = random.choice(['x','y','z'])
     # 1D
     ang0 = random.choice([0,45,90,135,180])
+
+    # Update session
+    utils.update_session_subdict(session,'game7',{'proj2d_axis':dir0, 'proj1d_angle':ang0})
 
     # Graphs ready to display (plotly, simpler style)
     g_list_2d = [get_2D_proj_graph(name,dir0)]
@@ -163,6 +166,9 @@ def get_random_mystery_model():
     socketio.emit('display new challenge',{
         'corr_2d': corr_2d.index(True),
         'corr_1d': corr_1d.index(True),
+        'type': msg['type'],
+        'axis':  dir0,
+        'angle':  ang0
     })
 
 

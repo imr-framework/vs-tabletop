@@ -54,27 +54,26 @@ GAME5_M_INFO = [
 # Game 7 static text
 
 GAME7_INSTRUCTIONS = {
-    'tabs': [f'Step {n}' for n in [1,2,3,4]],
-    'titles': ['Exploring 3D models', '2D projection', '1D projection', 'Puzzle time!'],
-    'explorations': [['Select and load a 3D model',
-                     'Inspect the 3D model using rotation and transparency',
-                     'Repeat the same with other models'],
-                     ['Select 2D projection axis',
-                      'Display 2D projected image',
-                      'Connecting the 3D model to its projection',
-                      'Repeat this exploration with x- and y-projections and other models '],
-                     ['Generate a 2D projection using the 3D model letterN in the z direction',
-                      'Use the circle controller to select a projection angle of 90 degrees',
-                      'Display 1D projection.',
-                      'Repeat this with various axis, angles, and models'],
-                     ['Now is the time for you to suss out some projections! Press Randomize! to display a special cylinder.']
+    'tabs': [f'Step {n}' for n in [1,2,3,4,5]],
+    'titles': ['Exploring 3D models', '2D projection', '1D projection', 'Puzzle time! Part I', 'Puzzle time! Part II'],
+    'explorations': [{'Explore 3D models': 'Press "Load 3D model" to visualize the default model. Rotate the model around. You may use the "transparent" button to see the internal structure too.',
+                     'Look at other models': 'Use the "Select model" dropdown to choose any model and load again. Look at a few different models and get familiar with their structures. In real life, the cylinders are placed in a tube and filled with water so only their internal cutouts generate signal. '},
+                     {'Select 2D projection axis': '',
+                      'Display 2D projected image':'',
+                      'Connecting the 3D model to its projection':'',
+                      'Repeat this exploration with x- and y-projections and other models':''},
+                     {'Generate a 2D projection using the 3D model letterN in the z direction':'',
+                      'Use the circle controller to select a projection angle of 90 degrees':'',
+                      'Display 1D projection.':'',
+                      'Repeat this with various axis, angles, and models':''},
+                     {'Now is the time for you to make out some projections! Press Randomize! to display a special cylinder.':''},
+                     {'1D projection time!': 'Hooray!'}
             ],
-    'tasks': ['Can you know the 3D shape for sure if you have only viewed it from one angle?',
-             'In your words, what is 2D projection? If you can take one 2D projeciton of yourself, how would you do it? This is exactly what X-ray machines do!',
-              'If we do enough 1D projections at various angles,  we can figure out what the image looks like! This is how Computed Tomography or CAT scans work. Each new angle gives us a bit more information about the 2D slice.  Some types of MRI also make images in this way. ',
-              'Select the correct projection and click "submit" to check your answer. ']
-
-
+    'tasks': {'Task 1: Thought experiment': 'How can you figure out the internal structure without the transparency button?',
+              'Task 2: 2D projection ':'If you can take one 2D projection of yourself, which axis would you choose and what would you see on the image?',
+              'Task 3: 1D projection':'If we perform enough 1D projections at various angles, can we figure out what the original 2D image is? How? ',
+              'Task 4: Project 2D with your brain! ':'Select the correct projection and click "submit" to check your answer. ',
+              'Task 5: Project 1D with your brain!': 'Select the correct projection and click "submit" to check your answer.'}
 }
 
 GAME7_RANDOM_MODELS = [

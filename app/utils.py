@@ -59,7 +59,7 @@ def new_progress_of_game(num):
     if num not in [1,3,5,7]:
         raise ValueError('Only games 1,3,5,7 are allowed for this function now')
 
-    num_steps_dict = {1:4, 3:3, 5:4, 7:4}
+    num_steps_dict = {1:4, 3:3, 5:4, 7:5}
     num_mc = num_questions_of_game(num)
     return Progress(game_number=num, num_stars=0,
                     num_questions=num_mc, num_correct=0,
