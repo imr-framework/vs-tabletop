@@ -8,12 +8,17 @@ Virtual Scanner Tabletop is an extension to [Virtual Scanner](https://github.com
 
 ## Quickstart
 1. Clone the repository.
-2. Make virtual environment, activate it, and install everything specified in `requirements.txt`
+2. Make a virtual environment, activate it, and install everything specified in `requirements.txt`
 3. cd into the app directory and run `questions.py` to set up the database.
 4. Run the app in one of two ways:
    (a) Run app.py using Pycharm or other IDE, or on the command line with `python app.py`
    (b) On the command line, set the FLASK_APP variable (`set FLASK_APP=app` on Windows, or `export FLASK_APP=app` on non-Windows). Then run the app with: `flask run`
-5. Click into the link in the program output (example: http://127.0.0.1:5000/) or copy&paste it into the browser. Log in as admin using password `123456` and try game 1, 3, 5, or 7 for yourself! 
+5. Click into the link in the program output (example: http://127.0.0.1:5000/) or copy & paste it into the browser. Log in as admin using password `123456` and try game 1, 3, 5, 7 for yourself! 
+6. For each game, you could follow the instructions panel and perform steps to fill the progress bar. This portion gets you 3 out of 5 stars. You can opt to answer the multiple choice questions for up to two additional stars. You could play freely with the inputs too. 
+
+
+Please provide feedback here :smile:: https://forms.gle/HMby4NHcmrTLi5Ai7
+
 
 ## Tabletop Games
 The eight tabletop games are grouped into 4 pairs, each containing a "beginner" game and an "advanced" game. 
