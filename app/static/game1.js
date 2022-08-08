@@ -50,6 +50,12 @@ $('.answer-mc').on('click', (event)=>{
     console.log('Updating choice')
     //socket.emit("Updating choice for Game 1", {'choice':choice});
 })
+socket.on('Check if checked', ()=>{
+    var checkBox = game1.getElementById("flexCheckChecked1");
+    if (checkBox.checked == true){
+        $('#checked') = 1;
+    }
+})
 
 $('.tabs__toggle').on('click', (event)=>{
     console.log('reset')
@@ -72,7 +78,8 @@ socket.on('G1 take session data', (msg)=>{
     $('#Max_scale').val(msg['data']['Max_scale']);
     console.log(msg['data'])
 })
-// a comment
+
+
 
 function controlFromInput(fromSlider, fromInput, toInput, controlSlider) {
     const [from, to] = getParsed(fromInput, toInput);
