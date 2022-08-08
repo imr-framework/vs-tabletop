@@ -55,6 +55,8 @@ def update_parameter(info):
 
     elif info['id'] in ['FOV_scale', 'Voxel_scale']:
         info['value'] = float(info['value']) / 1000
+    elif info['id'] in ['flexCheckChecked1', 'flexCheckChecked2', 'flexCheckChecked3', 'flexCheckChecked4']:
+        info['value']
     else:
         info['value'] = float(info['value'])
 
@@ -110,6 +112,12 @@ def update_parameter(info):
         session['game1']['Max_scale'] = info['value'] / 100
 
     elif info['id'] == 'fromSlider':
+        session['game1']['Min_scale'] = info['value'] / 100
+
+    elif info['id'] == "toInput":
+        session['game1']['Max_scale'] = info['value'] / 100
+
+    elif info['id'] == "fromInput":
         session['game1']['Min_scale'] = info['value'] / 100
 
     session.modified = True
@@ -205,7 +213,9 @@ def update_task_progress():
     if session['game1']['current_task'] == 1:
         # check if task 1 is complete
         fov = session['game1']['FOV_scale']
-        if (fov > 0.2 and fov < 0.3):
+        socketio.emit('Check if checked')
+        if (fov >= 0.2 and fov <= 0.3):
+            session['game1']['Matrix_scale'] = 128
             session['game1']['completed_task'] = 1
             session['game1']['current_task'] = 2
             print(session['game1']['completed_task'])
