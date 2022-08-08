@@ -39,34 +39,34 @@
 
     {% endif %}
     {% if session['game3']['current_task'] == 1 %}
-      <div class="tabs__head" style="width: 40%">
-        <div class="tabs__toggle {{ task1_status }}">
+      <div class="row tabs__head" style="width: 100%">
+        <div class="col-4 tabs__toggle {{ task1_status }}">
           <span class="tabs__name">T1, T2, and PD</span>
         </div>
       </div>
     {% elif session['game3']['current_task'] == 2 %}
-        <div class="tabs__head" style="width: 120%">
-        <div class="tabs__toggle {{ task1_status }}">
+        <div class="row tabs__head" style="width: 100%">
+        <div class="col-4 tabs__toggle {{ task1_status }}">
           <span class="tabs__name">T1, T2, and PD</span>
         </div>
-            <div class="tabs__toggle {{ task2_status }}">
+            <div class="col-4 tabs__toggle {{ task2_status }}">
           <span class="tabs__name">TR, TE, and FA</span>
         </div>
         </div>
     {% elif session['game3']['current_task'] == 3 %}
-        <div class="tabs__head" style="width: 185%">
-        <div class="tabs__toggle {{ task1_status }}">
+        <div class="row tabs__head" style="">
+        <div class="col-4 tabs__toggle {{ task1_status }}">
           <span class="tabs__name">T1, T2, and PD</span>
         </div>
-            <div class="tabs__toggle {{ task2_status }}">
+            <div class="col-4 tabs__toggle {{ task2_status }}">
           <span class="tabs__name">TR, TE, and FA</span>
         </div>
-        <div class="tabs__toggle {{ task3_status }}">
+        <div class="col-4 tabs__toggle {{ task3_status }}">
           <span class="tabs__name">CSF, GM, and WM</span>
         </div>
         </div>
     {% endif %}
-      <div class="tabs__body" style="width: 185%">
+      <div class="tabs__body" style="">
           {% if session['game3']['current_task'] == 1 %}
           {% set task1_status = 'is-active' %}
      {% elif session['game3']['current_task'] == 2 %}

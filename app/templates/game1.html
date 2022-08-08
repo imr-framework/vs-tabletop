@@ -35,50 +35,50 @@
     {% endif %}
 
     {% if session['game1']['current_task'] == 1 %}
-          <div class="tabs__head" style="width: 40%">
-        <div class="tabs__toggle {{ task1_status }}">
+          <div class="row tabs__head" style="">
+        <div class="col-3 tabs__toggle {{ task1_status }}">
           <span class="tabs__name">Task 1: FOV</span>
         </div>
           </div>
     {% elif session['game1']['current_task'] == 2 %}
-          <div class="tabs__head" style="width: 105%">
-        <div class="tabs__toggle {{ task1_status }}">
+          <div class="row tabs__head" style="">
+        <div class="col-3 tabs__toggle {{ task1_status }}">
           <span class="tabs__name">Task 1: FOV</span>
         </div>
-        <div class="tabs__toggle {{ task2_status }}">
+        <div class="col-3 tabs__toggle {{ task2_status }}">
           <span class="tabs__name">Task 2: Matrix Size</span>
         </div>
           </div>
     {% elif session['game1']['current_task'] == 3 %}
-          <div class="tabs__head" style="width: 145%">
-          <div class="tabs__toggle {{ task1_status }}">
+          <div class="row tabs__head" style="">
+          <div class="col-3 tabs__toggle {{ task1_status }}">
           <span class="tabs__name">Task 1: FOV</span>
         </div>
-        <div class="tabs__toggle {{ task2_status }}">
+        <div class="col-3 tabs__toggle {{ task2_status }}">
           <span class="tabs__name">Task 2: Matrix Size</span>
         </div>
-        <div class="tabs__toggle {{ task3_status }}">
+        <div class="col-3 tabs__toggle {{ task3_status }}">
           <span class="tabs__name">Task 3: Zero-Fill</span>
         </div>
           </div>
     {% elif session['game1']['current_task'] == 4 %}
-          <div class="tabs__head" style="width: 185%">
-          <div class="tabs__toggle {{ task1_status }}">
+          <div class="row tabs__head" style="">
+          <div class="col-3 tabs__toggle {{ task1_status }}">
           <span class="tabs__name">Task 1: FOV</span>
         </div>
-        <div class="tabs__toggle {{ task2_status }}">
+        <div class="col-3 tabs__toggle {{ task2_status }}">
           <span class="tabs__name">Task 2: Matrix Size</span>
         </div>
-        <div class="tabs__toggle {{ task3_status }}">
+        <div class="col-3 tabs__toggle {{ task3_status }}">
           <span class="tabs__name">Task 3: Zero-Fill</span>
         </div>
-          <div class="tabs__toggle {{ task4_status }}">
+          <div class="col-3 tabs__toggle {{ task4_status }}">
               <span class="tabs__name">Task 4: Windowing</span>
           </div>
           </div>
           {% endif %}
 
-      <div class="tabs__body" style="width: 185%">
+      <div class="tabs__body" style="">
           {% if session['game1']['current_task'] == 1 %}
           {% set task1_status = 'is-active' %}
      {% elif session['game1']['current_task'] == 2 %}

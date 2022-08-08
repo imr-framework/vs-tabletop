@@ -103,21 +103,10 @@ ul {
   width: 100%;
 }
 
-.tabs__head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #fff;
-  width: 100%;
-  box-shadow: 0px 4px 5px rgba(0,0,0,.1);
-  border-radius: 30px;
-  padding: 10px 5px;
-  margin-bottom: 20px;
-}
 
 .tabs__toggle {
-  margin: 0 5px;
-  padding: 7px 25px;
+  margin: 0px;
+  padding: 7px 7px;
   background: #fff;
   border-radius: 20px;
   cursor: pointer;
@@ -136,7 +125,7 @@ ul {
   border-radius: 25px;
   padding: 30px;
   position: relative;
-  width: 150%
+  width: 100%
 }
 
 .tabs__title {
