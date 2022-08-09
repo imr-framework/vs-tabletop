@@ -136,13 +136,14 @@ def update_task_progress():
             session['game3']['current_task'] = 3
         else:
             print('task 2 failed')
-    elif session['game3']['current_task'] == 3:
-        P3_q = session['game3']['P3_q']
-        if (P3_q == 'CSF'):
-            print('correct ans for 3rd')
-            session['game3']['completed_task'] = 3
-        else:
-            print('task 3 failed')
+    elif session['game3']['P3_q'] == "CSF":
+        if session['game3']['current_task'] == 3:
+            P3_q = session['game3']['P3_q']
+            if (P3_q == 'CSF'):
+                print('correct ans for 3rd')
+                session['game3']['completed_task'] = 3
+            else:
+                print('task 3 failed')
 
     session['game3']['progress'].num_steps_complete = session['game3']['completed_task']
     print(session['game3']['progress'])
