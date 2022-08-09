@@ -44,7 +44,7 @@ def launch_virtualscanner():
     import routes_game3
     import routes_game7
     #app.run()
-    socketio.run(app,debug=True)
+    socketio.run(app,debug=True,host="0.0.0.0")
 
 if __name__ == '__main__':
     launch_virtualscanner()

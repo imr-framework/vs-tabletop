@@ -140,7 +140,7 @@ def initialize_game1_questions():
         game_number=1,
         uses_images=False,
         question_text="What does zero-filling this reduced matrix size image of a pineapple do?",
-        main_image_path="./static/img/pineapples.png",
+        main_image_path="./static/img/game1/pineapples.png",
         choiceA="It makes each pixel represent a smaller section of space.",
         choiceB="It makes the fruit more delicious.",
         choiceC="It sets the background values to zero and makes the pineapple stand out.",
