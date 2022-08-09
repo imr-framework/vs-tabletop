@@ -13,7 +13,9 @@
 
     <div class="container-fluid vh-100">
         {% if session['game3']['completed_task'] == 3 %}
-        <div class="seperate"><canvas id="canvas"></canvas></div>
+            {% if session['game3']['P3_q'] == "CSF" %}
+            <div class="seperate"><canvas id="canvas"></canvas></div>
+            {% endif %}
         {% endif %}
         <div class="row h-100">
             <div class="col-6 h-100">

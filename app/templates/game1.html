@@ -41,43 +41,43 @@
     {% if session['game1']['current_task'] == 1 %}
           <div class="row tabs__head" style="">
         <div class="col-3 tabs__toggle {{ task1_status }}">
-          <span class="tabs__name">Task 1: FOV</span>
+            <span class="tabs__name"><b>Task 1: FOV</b></span>
         </div>
           </div>
     {% elif session['game1']['current_task'] == 2 %}
           <div class="row tabs__head" style="">
         <div class="col-3 tabs__toggle {{ task1_status }}">
-          <span class="tabs__name">Task 1: FOV</span>
+          <span class="tabs__name"><b>Task 1: FOV</b></span>
         </div>
         <div class="col-3 tabs__toggle {{ task2_status }}">
-          <span class="tabs__name">Task 2: Matrix Size</span>
+          <span class="tabs__name"><b>Task 2: Matrix Size</b></span>
         </div>
           </div>
     {% elif session['game1']['current_task'] == 3 %}
           <div class="row tabs__head" style="">
-          <div class="col-3 tabs__toggle {{ task1_status }}">
-          <span class="tabs__name">Task 1: FOV</span>
+          <div class="col-3 tabs__toggle {{ task1_status }}" style="">
+          <span class="tabs__name"><b>Task 1: FOV</b></span>
         </div>
         <div class="col-3 tabs__toggle {{ task2_status }}">
-          <span class="tabs__name">Task 2: Matrix Size</span>
+          <span class="tabs__name"><b>Task 2: Matrix Size</b></span>
         </div>
         <div class="col-3 tabs__toggle {{ task3_status }}">
-          <span class="tabs__name">Task 3: Zero-Fill</span>
+          <span class="tabs__name"><b>Task 3: Zero-Fill</b></span>
         </div>
           </div>
     {% elif session['game1']['current_task'] == 4 %}
           <div class="row tabs__head" style="">
           <div class="col-3 tabs__toggle {{ task1_status }}">
-          <span class="tabs__name">Task 1: FOV</span>
+          <span class="tabs__name"><b>Task 1: FOV</b></span>
         </div>
         <div class="col-3 tabs__toggle {{ task2_status }}">
-          <span class="tabs__name">Task 2: Matrix Size</span>
+          <span class="tabs__name"><b>Task 2: Matrix Size</b></span>
         </div>
         <div class="col-3 tabs__toggle {{ task3_status }}">
-          <span class="tabs__name">Task 3: Zero-Fill</span>
+          <span class="tabs__name"><b>Task 3: Zero-Fill</b></span>
         </div>
           <div class="col-3 tabs__toggle {{ task4_status }}">
-              <span class="tabs__name">Task 4: Windowing</span>
+              <span class="tabs__name"><b>Task 4: Windowing</b></span>
           </div>
           </div>
           {% endif %}
@@ -137,7 +137,7 @@
           </p>
             <h2 class="tabs__title">Task: Finding the perfect Matrix Size</h2>
                 <p class="tabs__text">
-                    <i>Change the Matrix Sizes to find the perfect Matrix Size that allows the image to be seen the most clearly.</i>
+                    <i>Change the Matrix Sizes to find the perfect Matrix Size that allows the image to be seen the most clearly(when you can't see individual pixels).</i>
                 {% if session['game1']['Matrix_scale'] < 300  %}
                     <div class="row" style="color:red">
                     <br><b><i>Continue to increase the Matrix Size. You are close.</i></b>
@@ -326,7 +326,7 @@
                                 data-bs-content="The low cutoff point. All grayscale values below it will be seen as black">
                                 <i class="bi bi-question-circle-fill"></i></button>
                                     <div class="form_control_container__time">Min: </div>
-                                    {{ G1Form.min_value(class="form-control container__time__input", id="fromInput", min="0", max="100", value=(session['game1']['Min_scale'] * 100)) }}
+                                    {{ G1Form.min_value(class="form-control container__time__input", id="fromInput", min="0", max="100", value=(session['game1']['Min_scale'] * 100)), width="30px" }}
                                 </div>
 
                                 <!-- Max part -->
