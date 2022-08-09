@@ -57,6 +57,7 @@ phantominator==0.6.4
 Pillow==9.2.0
 plotly==5.9.0
 protobuf==3.19.4
+protobuf==3.19.4
 psycopg2==2.9.3
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
@@ -103,3 +104,4 @@ wrapt==1.14.1
 wsproto==1.1.0
 WTForms==3.0.1
 zipp==3.8.0
+
