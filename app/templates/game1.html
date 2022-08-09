@@ -245,23 +245,74 @@
                     <div class="row card">
                     <div class="card-header"><b>Image settings</b></div>
                     <div class="card-body row">  <!--style="align: justified"-->
+                        {% if session['game1']['current_task'] == 1 %}
+                        <div class="col form-group">
+
+                            <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is FOV?"
+                                data-bs-content="Field-of-View. The real world size of your image in units of distance (meters, millimeters, etc..">
+                                <i class="bi bi-question-circle-fill"></i></button>
+                        <b>FOV:</b>
+                        <div class="d-flex justify-content-center">
+                        <input class="form-control" type="DecimalField" value="{{ session['game1']['FOV_scale']*1000}} " id="FOV_scale" style="">
+                        </div>
+                        mm
+                        </div>
+
+                        {% elif session['game1']['current_task'] == 2 %}
+                        <div class="col-4 form-group">
+
+                            <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is FOV?"
+                                data-bs-content="Field-of-View. The real world size of your image in units of distance (meters, millimeters, etc..">
+                                <i class="bi bi-question-circle-fill"></i></button>
+                        <b>FOV:</b>
+                        <div class="d-flex justify-content-center">
+                        <input class="form-control" type="DecimalField" value="{{ session['game1']['FOV_scale']*1000}} " id="FOV_scale" style="">
+                        </div>
+                        {{G1Form.FOV_scale.label(class="form-label")}}
+                        </div>
+                        <div class="col-4 form-group">
+                        <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is Matrix Size?"
+                                data-bs-content="The number of rows and columns of your image matrix.">
+                                <i class="bi bi-question-circle-fill"></i></button>
+                        <b>Matrix Size:</b>
+                            <div class="d-flex justify-content-center">
+                        <input class="form-control" type="DecimalField" value="{{ session['game1']['Matrix_scale']}} " id="Matrix_scale" style="">
+                            </div>
+                        {{ G1Form.Matrix_scale.label(class="form-label") }}
+                        </div>
+
+                        <div class="col-4 form-group">
+                        <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is Voxel Size?"
+                                data-bs-content="A voxel is cube and the smallest element that makes up an image. The voxel size is the length of each side of this cube.
+                                 Voxel size = (FOV) / (matrix size)">
+                                <i class="bi bi-question-circle-fill"></i></button>
+
+                        <b>Voxel Size:</b>
+                            <div class="d-flex justify-content-center">
+                        <input class="form-control" type="DecimalField" value="{{ session['game1']['Voxel_scale']*1000}} " id="Voxel_scale" style="">
+                            </div>
+                            {{ G1Form.Voxel_scale.label(class="form-label") }}
+                        </div>
+                    {% else %}
                         <div class="col-3 form-group">
 
                             <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is FOV?"
                                 data-bs-content="Field-of-View. The real world size of your image in units of distance (meters, millimeters, etc..">
                                 <i class="bi bi-question-circle-fill"></i></button>
                         <b>FOV:</b>
-
+                        <div class="d-flex justify-content-center">
                         <input class="form-control" type="DecimalField" value="{{ session['game1']['FOV_scale']*1000}} " id="FOV_scale" style="">
+                        </div>
                         {{G1Form.FOV_scale.label(class="form-label")}}
                         </div>
-
                         <div class="col-3 form-group">
                         <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is Matrix Size?"
                                 data-bs-content="The number of rows and columns of your image matrix.">
                                 <i class="bi bi-question-circle-fill"></i></button>
                         <b>Matrix Size:</b>
+                            <div class="d-flex justify-content-center">
                         <input class="form-control" type="DecimalField" value="{{ session['game1']['Matrix_scale']}} " id="Matrix_scale" style="">
+                            </div>
                         {{ G1Form.Matrix_scale.label(class="form-label") }}
                         </div>
 
@@ -272,7 +323,9 @@
                                 <i class="bi bi-question-circle-fill"></i></button>
 
                         <b>Voxel Size:</b>
+                            <div class="d-flex justify-content-center">
                         <input class="form-control" type="DecimalField" value="{{ session['game1']['Voxel_scale']*1000}} " id="Voxel_scale" style="">
+                            </div>
                             {{ G1Form.Voxel_scale.label(class="form-label") }}
                         </div>
 
@@ -284,11 +337,13 @@
                                 <i class="bi bi-question-circle-fill"></i></button>
 
                         <b>Zero-fill:</b>
-
+                        <div class="d-flex justify-content-center">
                         <input class="form-control" type="DecimalField" value="128" id="zero_fill" style="">
+                        </div>
                             {{ G1Form.zero_fill.label }}
                         {{ G1Form.zero_fill.value }}
                         </div>
+                        {% endif %}
 
                         <script>
                             var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
@@ -305,7 +360,7 @@
                     </div>
                         </div>
 
-
+{% if session['game1']['current_task'] == 4 %}
                 <div class="row card">
                     <div class="card-header"><b>Windowing</b></div>
                     <div class="card-body">
@@ -326,8 +381,10 @@
                                 data-bs-content="The low cutoff point. All grayscale values below it will be seen as black">
                                 <i class="bi bi-question-circle-fill"></i></button>
                                     <div class="form_control_container__time">Min: </div>
-                                    {{ G1Form.min_value(class="form-control container__time__input", id="fromInput", min="0", max="100", value=(session['game1']['Min_scale'] * 100)), width="30px" }}
-                                </div>
+
+                                    {{ G1Form.min_value(class="form-control container__time__input", id="fromInput", min="0", max="100", value=(session['game1']['Min_scale'] * 100)) }}
+
+                                    </div>
 
                                 <!-- Max part -->
                                 <div class="col form_control_container">  <!--style="position:relative; left:370px; top:2px"-->
@@ -355,6 +412,7 @@
                         </div>
                     </div>
                 </div>
+                    {% endif %}
 
                     <br><div class="row card">
                     <div class="card header bg-light"><b>Star Count: Climb your way up to 5 black stars!</b></div>

@@ -13,7 +13,9 @@ tabs.forEach((tab, index) => {
         tabs[index].classList.add('is-active');
     });
 });
-
+$(document).ready(function(){
+  $('[data-bs-toggle="popover"]').popover();
+});
 
 let socket = io();
 
@@ -169,9 +171,7 @@ toSlider.oninput = () => controlToSlider(fromSlider, toSlider, toInput);
 fromInput.oninput = () => controlFromInput(fromSlider, fromInput, toInput, toSlider);
 toInput.oninput = () => controlToInput(toSlider, fromInput, toInput, toSlider);
 
-$(document).ready(function(){
-  $('[data-bs-toggle="popover"]').popover();
-});
+
 
 socket.on('Recreate Image', (payload)=>{
     j1 = JSON.parse(payload['data']);

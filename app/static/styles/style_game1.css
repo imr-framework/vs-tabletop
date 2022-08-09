@@ -178,3 +178,28 @@ canvas {
   color: #ccc;
   text-align: center;
 }
+
+#fromInput{
+    width: 90px;
+}
+
+#toInput{
+    width: 90px;
+}
+
+#FOV_scale{
+
+    width:90px;
+}
+
+#Matrix_scale{
+    width:90px;
+}
+
+#Voxel_scale{
+    width:90px;
+}
+
+#zero_fill{
+    width:90px;
+}
