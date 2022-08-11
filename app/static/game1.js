@@ -92,6 +92,12 @@ function controlFromInput(fromSlider, fromInput, toInput, controlSlider) {
     } else {
         fromSlider.value = from;
     }
+    if(from < 0){
+        fromInput.value = 0
+    }
+    if(to > 100){
+        toInput.value = 100
+    }
 }
 
 function controlToInput(toSlider, fromInput, toInput, controlSlider) {
@@ -106,7 +112,7 @@ function controlToInput(toSlider, fromInput, toInput, controlSlider) {
     }
 }
 
-function controlFromSlider(fromSlider, toSlider, fromInput) {
+function controlFromSlider(fromSlider, toSlider, fromInput, toInput) {
   const [from, to] = getParsed(fromSlider, toSlider);
   fillSlider(fromSlider, toSlider, '#C6C6C6', '#25daa5', toSlider);
   if (from > to) {
@@ -115,6 +121,13 @@ function controlFromSlider(fromSlider, toSlider, fromInput) {
   } else {
     fromInput.value = from;
   }
+
+  if(from < 0){
+        fromInput.value = 0
+    }
+
+
+
 }
 
 function controlToSlider(fromSlider, toSlider, toInput) {
@@ -128,6 +141,14 @@ function controlToSlider(fromSlider, toSlider, toInput) {
     toInput.value = from;
     toSlider.value = from;
   }
+  if(to > 100){
+    console.log(toInput.value)
+    toInput.value = 100
+  }
+  if(toInput.value > 100){
+    toInput.value = 100
+  }
+
 }
 
 function getParsed(currentFrom, currentTo) {
@@ -166,7 +187,7 @@ const toInput = document.querySelector('#toInput');
 fillSlider(fromSlider, toSlider, '#C6C6C6', '#25daa5', toSlider);
 setToggleAccessible(toSlider);
 
-fromSlider.oninput = () => controlFromSlider(fromSlider, toSlider, fromInput);
+fromSlider.oninput = () => controlFromSlider(fromSlider, toSlider, fromInput, toInput);
 toSlider.oninput = () => controlToSlider(fromSlider, toSlider, toInput);
 fromInput.oninput = () => controlFromInput(fromSlider, fromInput, toInput, toSlider);
 toInput.oninput = () => controlToInput(toSlider, fromInput, toInput, toSlider);

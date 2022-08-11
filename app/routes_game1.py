@@ -46,7 +46,7 @@ def game1():
 def update_parameter(info):
     print(session)
     # Update corresponding entry in session
-    print(info['id'], 'id')
+    print(info['id'], 'id', info['value'], 'value')
     if info['id'] in ['Matrix_scale', 'zero_fill']:
         info['value'] = int(info['value'])
 
@@ -115,6 +115,8 @@ def update_parameter(info):
         session['game1']['Min_scale'] = info['value'] / 100
 
     elif info['id'] == "toInput":
+        if(info['value'] > 100):
+            info['value'] = 100
         session['game1']['Max_scale'] = info['value'] / 100
 
     elif info['id'] == "fromInput":
@@ -198,6 +200,7 @@ def reset():
 @socketio.on('game 1 question answered')
 def update_mc_progress(msg):
     status = session['game1']['mc_status_list']
+    print(status, "status")
     status[int(msg['ind'])] = bool(msg['correct'])
 
     utils.update_session_subdict(session, 'game1', {'mc_status_list': status})

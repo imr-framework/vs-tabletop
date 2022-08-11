@@ -1,7 +1,27 @@
 {% extends "base.html" %}
 {% block content %}
 <head>
+ <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+    <link rel="stylesheet"
+          href=
+"https://code.jquery.com/ui/1.11.3/themes/hot-sneaks/jquery-ui.css" />
+    <script src=
+"https://code.jquery.com/jquery-2.1.3.js">
+    </script>
+    <script src=
+"https://code.jquery.com/ui/1.11.2/jquery-ui.js">
+    </script>
+    <script>
+        $(document).ready(function() {
 
+            // Setting jquery accordion active property to false
+            $("#accordionExample").accordion({
+                collapsible: true,
+                active: false
+            });
+        });
+    </script>
 </head>
 
     <div class="container-fluid vh-100">
@@ -93,6 +113,35 @@
 
     {% endif %}
         <div class="tabs__content {{ task1_status }}" style="font-family: Georgia, serif">
+            <div class="accordion" id="accordionExample">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="font-size: .5em">
+                            Key Term Definitions
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        <div class="accordion-body" style="font-size: .8em">
+                            1.<b>Pixels/Voxels</b>: It is a metric defining <b>each unit in a picture/scan</b>. A <b>pixel</b> defines space in a scan with <b>two dimensions</b>, while the <b>voxel</b> defines a space in <b>three dimensions</b>. MR images are made up of voxels as they always have a third dimension or thickness.
+                            <br>2. <b>Resolution</b>: Refers to how sharp an image is. It is related to the size of the individual pixel(2D) or voxel(3D). The smaller the pixel or voxelthe greater the resolution. Voxels segment continuous space into discrete units. The signal in each voxel is an <b>average of all sub-signals within it</b>. The smaller you make the voxels, the more closely spaced details you see because they tend to be assigned to different voxels. You <b>cannot see the details</b> when using very large voxels because the spatial details are averaged out and any locational information at smaller scales than the voxel is lost.
+                            <br>3. <b>The relationship between FOV, Voxel Size, and Matrix Size</b>: Since the following three variables are dependent on each other, they cannot all be freely set. This is similar to a simple y=mx+z function. You can set two of the three variables freely and solve for the other but you cannot set the value for all three variables and have the equation be true everytime. Similar to that, we can change two of either FOV, Voxel size, or Matrix Size and solve for the other variable. The equation relating all three variables is: Field-of-View = Matrix Size x Voxel Size.
+                            <br>4. <b>Voxel size vs. true resolution</b>: Voxel size is often representative of resolution, but not always. One definition of  true spatial resolution is how close together (say, in millimeters) two thin lines can get before they can no longer be told apart. In fact, with a technique called zero-filling, we can generate images of very large matrix sizes from images of smaller matrix sizes. In this process, the voxel size is reduced, but true resolution is not improved because the new image contains no more information than the old, pixelated image.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            Basics
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordian-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            There are two main types of digital images: monochrome and color.  Color images can be represented with three components: Red, Green, and Blue (RGB). It is the layering of these three colors that make up the final image. Monochrome images are made up of different gray levels. MR images are examples of monochrome images: each voxel has one number, called the image magnitude or intensity, that indicates its brightness.
+                        </div>
+                    </div>
+                </div>
+            </div>
           <h2 class="tabs__title">Instructions</h2>
           <p class="tabs__text" style="font-family: Georgia, serif">
               1. Input the below values into the FOV field and press "Run" on the right. Observe how the image changes with increasing and decreasing values.
@@ -130,6 +179,35 @@
             </p>
         </div>
         <div class="tabs__content {{  task2_status }}">
+            <div class="accordion" id="accordionExample">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="font-size: .5em">
+                            Key Term Definitions
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        <div class="accordion-body" style="font-size: .8em">
+                            1.<b>Pixels/Voxels</b>: It is a metric defining <b>each unit in a picture/scan</b>. A <b>pixel</b> defines space in a scan with <b>two dimensions</b>, while the <b>voxel</b> defines a space in <b>three dimensions</b>. MR images are made up of voxels as they always have a third dimension or thickness.
+                            <br>2. <b>Resolution</b>: Refers to how sharp an image is. It is related to the size of the individual pixel(2D) or voxel(3D). The smaller the pixel or voxelthe greater the resolution. Voxels segment continuous space into discrete units. The signal in each voxel is an <b>average of all sub-signals within it</b>. The smaller you make the voxels, the more closely spaced details you see because they tend to be assigned to different voxels. You <b>cannot see the details</b> when using very large voxels because the spatial details are averaged out and any locational information at smaller scales than the voxel is lost.
+                            <br>3. <b>The relationship between FOV, Voxel Size, and Matrix Size</b>: Since the following three variables are dependent on each other, they cannot all be freely set. This is similar to a simple y=mx+z function. You can set two of the three variables freely and solve for the other but you cannot set the value for all three variables and have the equation be true everytime. Similar to that, we can change two of either FOV, Voxel size, or Matrix Size and solve for the other variable. The equation relating all three variables is: Field-of-View = Matrix Size x Voxel Size.
+                            <br>4. <b>Voxel size vs. true resolution</b>: Voxel size is often representative of resolution, but not always. One definition of  true spatial resolution is how close together (say, in millimeters) two thin lines can get before they can no longer be told apart. In fact, with a technique called zero-filling, we can generate images of very large matrix sizes from images of smaller matrix sizes. In this process, the voxel size is reduced, but true resolution is not improved because the new image contains no more information than the old, pixelated image.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            Basics
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordian-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            There are two main types of digital images: monochrome and color.  Color images can be represented with three components: Red, Green, and Blue (RGB). It is the layering of these three colors that make up the final image. Monochrome images are made up of different gray levels. MR images are examples of monochrome images: each voxel has one number, called the image magnitude or intensity, that indicates its brightness.
+                        </div>
+                    </div>
+                </div>
+            </div>
           <h2 class="tabs__title">Instructions</h2>
           <p class="tabs__text">1. Experiment with multiple Matrix sizes and observe how the image changes with increasing and decreasing values.
                             <br>2. After you are done, answer Question 2 and continue to the task!
@@ -154,6 +232,35 @@
             </p>
         </div>
         <div class="tabs__content {{  task3_status }}">
+            <div class="accordion" id="accordionExample">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="font-size: .5em">
+                            Key Term Definitions
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        <div class="accordion-body" style="font-size: .8em">
+                            1.<b>Pixels/Voxels</b>: It is a metric defining <b>each unit in a picture/scan</b>. A <b>pixel</b> defines space in a scan with <b>two dimensions</b>, while the <b>voxel</b> defines a space in <b>three dimensions</b>. MR images are made up of voxels as they always have a third dimension or thickness.
+                            <br>2. <b>Resolution</b>: Refers to how sharp an image is. It is related to the size of the individual pixel(2D) or voxel(3D). The smaller the pixel or voxelthe greater the resolution. Voxels segment continuous space into discrete units. The signal in each voxel is an <b>average of all sub-signals within it</b>. The smaller you make the voxels, the more closely spaced details you see because they tend to be assigned to different voxels. You <b>cannot see the details</b> when using very large voxels because the spatial details are averaged out and any locational information at smaller scales than the voxel is lost.
+                            <br>3. <b>The relationship between FOV, Voxel Size, and Matrix Size</b>: Since the following three variables are dependent on each other, they cannot all be freely set. This is similar to a simple y=mx+z function. You can set two of the three variables freely and solve for the other but you cannot set the value for all three variables and have the equation be true everytime. Similar to that, we can change two of either FOV, Voxel size, or Matrix Size and solve for the other variable. The equation relating all three variables is: Field-of-View = Matrix Size x Voxel Size.
+                            <br>4. <b>Voxel size vs. true resolution</b>: Voxel size is often representative of resolution, but not always. One definition of  true spatial resolution is how close together (say, in millimeters) two thin lines can get before they can no longer be told apart. In fact, with a technique called zero-filling, we can generate images of very large matrix sizes from images of smaller matrix sizes. In this process, the voxel size is reduced, but true resolution is not improved because the new image contains no more information than the old, pixelated image.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            Basics
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordian-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            There are two main types of digital images: monochrome and color.  Color images can be represented with three components: Red, Green, and Blue (RGB). It is the layering of these three colors that make up the final image. Monochrome images are made up of different gray levels. MR images are examples of monochrome images: each voxel has one number, called the image magnitude or intensity, that indicates its brightness.
+                        </div>
+                    </div>
+                </div>
+            </div>
           <h2 class="tabs__title">Instructions</h2>
           <p class="tabs__text">1. Experiment with different Zero-Fill values and observe how the image changes
                             <br>2. After you are done, answer Question 3 and continue to the task!
@@ -173,6 +280,35 @@
             </p>
         </div>
           <div class="tabs__content {{  task4_status }}">
+              <div class="accordion" id="accordionExample">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="font-size: .5em">
+                            Key Term Definitions
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        <div class="accordion-body" style="font-size: .8em">
+                            1.<b>Pixels/Voxels</b>: It is a metric defining <b>each unit in a picture/scan</b>. A <b>pixel</b> defines space in a scan with <b>two dimensions</b>, while the <b>voxel</b> defines a space in <b>three dimensions</b>. MR images are made up of voxels as they always have a third dimension or thickness.
+                            <br>2. <b>Resolution</b>: Refers to how sharp an image is. It is related to the size of the individual pixel(2D) or voxel(3D). The smaller the pixel or voxelthe greater the resolution. Voxels segment continuous space into discrete units. The signal in each voxel is an <b>average of all sub-signals within it</b>. The smaller you make the voxels, the more closely spaced details you see because they tend to be assigned to different voxels. You <b>cannot see the details</b> when using very large voxels because the spatial details are averaged out and any locational information at smaller scales than the voxel is lost.
+                            <br>3. <b>The relationship between FOV, Voxel Size, and Matrix Size</b>: Since the following three variables are dependent on each other, they cannot all be freely set. This is similar to a simple y=mx+z function. You can set two of the three variables freely and solve for the other but you cannot set the value for all three variables and have the equation be true everytime. Similar to that, we can change two of either FOV, Voxel size, or Matrix Size and solve for the other variable. The equation relating all three variables is: Field-of-View = Matrix Size x Voxel Size.
+                            <br>4. <b>Voxel size vs. true resolution</b>: Voxel size is often representative of resolution, but not always. One definition of  true spatial resolution is how close together (say, in millimeters) two thin lines can get before they can no longer be told apart. In fact, with a technique called zero-filling, we can generate images of very large matrix sizes from images of smaller matrix sizes. In this process, the voxel size is reduced, but true resolution is not improved because the new image contains no more information than the old, pixelated image.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            Basics
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordian-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            There are two main types of digital images: monochrome and color.  Color images can be represented with three components: Red, Green, and Blue (RGB). It is the layering of these three colors that make up the final image. Monochrome images are made up of different gray levels. MR images are examples of monochrome images: each voxel has one number, called the image magnitude or intensity, that indicates its brightness.
+                        </div>
+                    </div>
+                </div>
+            </div>
               <h2 class="tabs__title">Instructions</h2>
               <p class="tabs__text">Input the following values into the Windowing Slider and observe contrast changes in the image
                     <div class="form-check" style="font-size: .8em">
@@ -360,7 +496,15 @@
 
 {% if session['game1']['current_task'] == 4 %}
                 <div class="row card">
-                    <div class="card-header"><b>Windowing</b></div>
+                    <div class="card-header"><b>Windowing:
+                        <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is Windowing (Min)?"
+                                data-bs-content="The low cutoff point. All grayscale values below it will be seen as black">
+                                <i class="bi bi-question-circle-fill"></i></button>
+                        Min and
+                        <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is Windowing (Max)?"
+                                data-bs-content="The high cutoff point. All grayscale values above it will be seen as white">
+                                <i class="bi bi-question-circle-fill"></i></button>
+                        Max</b></div>
                     <div class="card-body">
                         <div class="range_container col">
                             <div class="form_control">
@@ -375,9 +519,6 @@
 
                                 <div class="row d-flex">
                                 <div class="col form_control_container" style="text-align: center">
-                                    <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is Windowing(Min)?"
-                                data-bs-content="The low cutoff point. All grayscale values below it will be seen as black">
-                                <i class="bi bi-question-circle-fill"></i></button>
                                     <div class="form_control_container__time">Min: </div>
 
                                     {{ G1Form.min_value(class="form-control container__time__input", id="fromInput", min="0", max="100", value=(session['game1']['Min_scale'] * 100)) }}
@@ -387,9 +528,6 @@
                                 <!-- Max part -->
                                 <div class="col form_control_container">  <!--style="position:relative; left:370px; top:2px"-->
                                     <div class="form_control_container">
-                                    <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is Windowing(Max)?"
-                                data-bs-content=" the high cutoff point. All grayscale values above it will be seen as white">
-                                <i class="bi bi-question-circle-fill"></i></button>
                                     <div class="form_control_container__time d-flex justify-content-right">
                                         Max: {{ G1Form.max_value(class="form-control container__time__input", id="toInput", min="0", max="100", value=(session['game1']['Max_scale'] * 100)) }}
 
@@ -458,8 +596,8 @@
                     <div class="card-body">
                         <div class="chart" id="chart-G1">
                         </div>
+                        <br>{{G1Form.submit_field(class="btn btn-lg btn-success")}}
                     </div>
-                    <br>{{G1Form.submit_field(class="btn btn-large btn-info")}}
                 </div>
                     <div class="row-card">
                         <div class="card-header"><b>Questions</b></div>
