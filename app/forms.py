@@ -64,7 +64,7 @@ class Game3Form(FlaskForm):
     submit = SubmitField("Submit chosen parameters")
     submit_questions = SubmitField("Submit Answer")
     P1_q = RadioField('question1', choices=['T1', 'T2', 'PD'], validators=[InputRequired()])
-    P2_q = RadioField('question2', choices=['Contrast Increases', 'Contrast Decreases'], validators=[InputRequired()])
+    P2_q = RadioField('question2', choices=['Contrast Decreases', 'Contrast Increases'], validators=[InputRequired()])
     P3_q = RadioField('question3', choices=['CSF', 'GM', 'WM'])
 # EXAMPLE
 class Game4Form(FlaskForm):

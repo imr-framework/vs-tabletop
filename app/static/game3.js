@@ -12,7 +12,11 @@ tabs.forEach((tab, index) => {
         contents[index].classList.add('is-active');
         tabs[index].classList.add('is-active');
     });
-});
+})
+
+$(document).ready(function(){
+  $('[data-bs-toggle="popover"]').popover();
+})
 
 let socket = io();
 
@@ -49,6 +53,7 @@ $('.answer-mc').on('click', (event)=>{
     console.log('Updating choice')
 })
 
+
 socket.on('renew stars', (msg)=>{
     console.log('Stars should be updated now...')
     num_stars = msg['stars'];
@@ -63,6 +68,7 @@ socket.on('renew stars', (msg)=>{
 
     $("#stars-display").html(stars_html);
 })
+
 const canvasEl = document.querySelector('#canvas');
 
 const w = canvasEl.width = window.innerWidth;
@@ -131,6 +137,7 @@ const confs = new Array(confNum).fill().map(_ => new Confetti());
 
 loop();
 
+
 socket.on('G3 take session data', (msg)=>{
     console.log('Updating g3 data')
     $('#options').val(msg['data']['options']);
@@ -139,9 +146,6 @@ socket.on('G3 take session data', (msg)=>{
     $('#FA').val(msg['data']['FA']);
     console.log(msg['data'])
 })
-$(document).ready(function(){
-  $('[data-bs-toggle="popover"]').popover();
-});
 
 $('.carousel').carousel({
   interval: false,

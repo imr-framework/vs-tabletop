@@ -126,9 +126,9 @@
                 <div class="card-body btn-group">
                 {% for subfield in G3Form.P2_q %}
                                 {% if subfield.id == "P2_q-0" %}
-                                    {{ subfield(class="btn-check ", autocomplete="off",checked=session['game3']['P2_q']=='Contrast Increases') }}
-                                {% elif subfield.id == "P2_q-1" %}
                                     {{ subfield(class="btn-check ", autocomplete="off",checked=session['game3']['P2_q']=='Contrast Decreases') }}
+                                {% elif subfield.id == "P2_q-1" %}
+                                    {{ subfield(class="btn-check ", autocomplete="off",checked=session['game3']['P2_q']=='Contrast Increases') }}
                                 {% endif %}
                                 {{ subfield.label(class="btn btn-outline-primary d-flex align-items-center justify-content-center") }}
 
@@ -194,9 +194,10 @@
 
                  <div class="row card">
                      <div class="card-header">
+                         <form action="/games/3" method="POST">
                          <b> Panel 1:
                          <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is T1?"
-                                    data-bs-content="longitudinal relaxation time tells us how long it takes for the z-component of the M vector to regrow from zero to about 63% of its maximum. Different tissues have different T1 values. Highlights fat and proteins">
+                                    data-bs-content="longitudinal relaxation time tells us how long it takes for the z-component of the M vector to regrow from zero to about 63% of its maximum. Highlights fat and proteins">
                                 <i class="bi bi-question-circle-fill"></i></button>
                          T1,
                          <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is T2?"
@@ -289,7 +290,19 @@
                      </div>
                  </div>
                  <div class="row card">
-                     <div class="card-header"> <b>Panel 3: Signal by Tissue Type </b></div>
+                     <div class="card-header"> <b>Panel 3:
+                         <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is CSF?"
+                                    data-bs-content="Cerebrospinal fluid is the liquid content of brain ventricles. It flows in and around the brain to absorb impact from injuries to the skull and provide nutrients.">
+                                <i class="bi bi-question-circle-fill"></i></button>
+                         CSF,
+                         <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is GM?"
+                                    data-bs-content="Gray matter is distributed on the surface (cortex) of and also deep within (subcortical nuclei) the brain and has a high concentration of neuronal cell bodies.">
+                                <i class="bi bi-question-circle-fill"></i></button>
+                         GM,
+                         <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is WM?"
+                                    data-bs-content="White matter consists of neuronal axons covered in a protective fatty sheath and helps conduct signals between brain regions.">
+                                <i class="bi bi-question-circle-fill"></i></button>
+                         WM </b></div>
                      <div class="card-body">
                          <div class="chart" id="chart-G3-bar">
                          </div>
