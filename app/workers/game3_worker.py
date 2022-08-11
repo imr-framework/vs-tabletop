@@ -124,6 +124,8 @@ def get_image_json(TR,TE,FA):
         JSON string for Plotly.js
     """
 
+
+
     # Load brainweb model
     brainweb = loadmat('static/data/bw.mat')
     type_slice = brainweb['typemap'][:,:,87]
@@ -177,13 +179,16 @@ def get_bargraph_json(TR,TE,FA,tissue_names):
     names = [nl[0] for nl in brainweb['names'][0]]
     names_for_plot = [full_names[u] for u in [names.index(name) for name in tissue_names]]
 
+
+
     pdict = {names[i]:p[i] for i in range(len(names))}
     signals = [signal_model(pdict[t][3], pdict[t][0]/1e3, pdict[t][1]/1e3,TR,TE,FA) for t in tissue_names]
 
     # Plot
     fig = go.Figure(go.Bar(x=names_for_plot,y=signals,marker=dict(color=np.arange(len(names)),colorscale="Viridis")))
-    fig.update_layout(xaxis=dict(tickfont=dict(size=48)),yaxis=dict(tickfont=dict(size=48)))
-
+    fig.update_layout(xaxis=dict(tickfont=dict(size=36)),yaxis=dict(tickfont=dict(size=36)))
+    fig.update_yaxes(title='Relative signal',titlefont=dict(size=36))
+    fig.update_xaxes(title='Tissue type',titlefont=dict(size=36))
     #fig.show()
 
     graphJSON = json.dumps(fig,cls=plotly.utils.PlotlyJSONEncoder)

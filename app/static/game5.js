@@ -93,6 +93,7 @@ $('#reset').on('click',()=>{
     $('#rx-button').prop('checked',false);
     $('#tx-button').prop('checked',false);
     $('#rot-frame-button').prop('checked',false);
+    $('#b0').val(100);
 
 })
 

@@ -150,6 +150,7 @@ def reset_everything():
     # Reset other things
     utils.update_session_subdict(session,'game5',
                                  { 'b0_on': False,
+                                   'b0': 100.0,
                                    'coil_on': False,
                                    'tx_on':False,
                                    'rot_frame_on': False,

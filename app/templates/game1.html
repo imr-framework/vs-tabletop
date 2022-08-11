@@ -41,7 +41,6 @@
                         {% elif session['game1']['completed_task'] == 4 %}
                     <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" style="width: 100%"></div>
                         <div class="seperate"><canvas id="canvas"></canvas></div>
-
                         {% endif %}
                   </div>
 
@@ -629,7 +628,7 @@
                                         <h2>Question {{ ind+1 }}</h2>
                                         <br>{{ questions[ind]['text']}}<br>
                                         {% if (questions[ind]['main_image_path']) | length > 0 %}
-                                        <br><img src=".{{ questions[ind]['main_image_path']}}" style="height:100px; width:100px;">
+                                        <br><img src=".{{ questions[ind]['main_image_path']}}" style="max-height:120px; max-width:400px ">
                                         {% endif %}
                                         {% for ind2 in range(questions[ind]['choices'] | length) %}
                                             {% if not uses_images[ind] %}
