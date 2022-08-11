@@ -21,7 +21,6 @@
                         {% elif session['game1']['completed_task'] == 4 %}
                     <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" style="width: 100%"></div>
                         <div class="seperate"><canvas id="canvas"></canvas></div>
-
                         {% endif %}
                   </div>
 
@@ -326,7 +325,7 @@
                                 data-bs-content="The low cutoff point. All grayscale values below it will be seen as black">
                                 <i class="bi bi-question-circle-fill"></i></button>
                                     <div class="form_control_container__time">Min: </div>
-                                    {{ G1Form.min_value(class="form-control container__time__input", id="fromInput", min="0", max="100", value=(session['game1']['Min_scale'] * 100)), width="30px" }}
+                                    {{ G1Form.min_value(class="form-control container__time__input", id="fromInput", min="0", max="100", value=(session['game1']['Min_scale'] * 100), width="30px")}}
                                 </div>
 
                                 <!-- Max part -->
@@ -433,7 +432,7 @@
                                         <h2>Question {{ ind+1 }}</h2>
                                         <br>{{ questions[ind]['text']}}<br>
                                         {% if (questions[ind]['main_image_path']) | length > 0 %}
-                                        <br><img src=".{{ questions[ind]['main_image_path']}}" style="height:100px; width:100px;">
+                                        <br><img src=".{{ questions[ind]['main_image_path']}}" style="max-height:120px; max-width:400px ">
                                         {% endif %}
                                         {% for ind2 in range(questions[ind]['choices'] | length) %}
                                             {% if not uses_images[ind] %}

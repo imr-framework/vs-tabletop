@@ -1,24 +1,60 @@
 {% extends "base.html" %}
 {% block content %}
+    <div class="container-fluid vh-100">
+        <div class="row h-25 d-flex justify-content-center align-content-center">
+            <div class="col-4 text-info">
+                <span class="h1 font-weight-bold">Welcome to Virtual Scanner Tabletop!</span>
+            </div>
+        </div>
+        <div class="row h-50 d-flex justify-content-center">
+            <div class="col-4">
 
-<h3>Register here</h3>
-    <form action="/register" method="POST">
-        {{ template_form.hidden_tag()}}
 
-{{template_form.username_field(size=27,placeholder="Enter username")}}
 
-    {% for error in template_form.username_field.errors %}
-<span class="error">[{{error}}]</span>
-{% endfor %}
+            <form action="/register" method="POST">
 
-{{template_form.password_field.label}}
-{{template_form.password_field()}}
+                     <div class="card row h-50">
+                <span class="h3 card-header">Register here</span>
+            <div class="card-body">
+            {{ template_form.hidden_tag()}}
+            {{ template_form.username_field.label(class="form-label") }}
+            {{template_form.username_field(size=27,class="form-control col", placeholder="Enter username")}}
 
-{{template_form.password2_field.label}}
-{{template_form.password2_field()}}
-    {{ template_form.submit_field() }}
-</form>
+                {{template_form.password_field.label(class="form-label")}}
+                {{template_form.password_field(class="form-control")}}
+                {{template_form.password2_field.label(class="form-label")}}
+                {{template_form.password2_field(class="form-control")}}
+
+
+            <div class="form-group">
+                {{ template_form.submit_field(class="btn btn-info") }}
+            </div>
+
+            </div>
+
+
+     </div>
+
+                <div class="card bg-primary row h-25">
+                        {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                                {%  for message in messages %}
+                                    <p class="text-light">{{ message }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+                </div>
+
+
+
+
+            </form>
+
+
    <div class="row text-center">
           <a href="/login">Return to Login Page</a>
       </div>
+</div
+</div>
+    </div>
 {% endblock %}

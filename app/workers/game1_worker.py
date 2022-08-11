@@ -37,6 +37,12 @@ def get_image(fov,n,n_zf,min_level,max_level):
     n_first = int(np.ceil(0.5*(n / fov_portion)))*2
     img, _, _ = shepp_logan((n_first, n_first, 1), MR=True, zlims=(-.25, .25))
     img = np.squeeze(img)
+
+    # Normalize before anything else
+    # Normalize to between (0,1)
+    img = (img - np.min(img)) / (np.max(img)-np.min(img))
+
+
     # If larger, zerofill
     print(n,n_first)
     if fov_portion > 1:
@@ -65,9 +71,6 @@ def get_image(fov,n,n_zf,min_level,max_level):
         kspace_zf[ind1:ind2,ind1:ind2] = kspace
         final_image = np.absolute(np.fft.ifft2(np.fft.fftshift(kspace_zf)))
 
-    # Normalize to between (0,1)
-    final_image = (final_image - np.min(final_image)) / (np.max(final_image)-np.min(final_image))
-
     # Windowing: Normalize levels between (min,max) to (0,1)
     if max_level <= min_level:
         max_level = 1
@@ -94,7 +97,7 @@ def generate_plot(img):
         Plotly figure of image display
     """
 
-    fig = px.imshow(img,binary_string=True)
+    fig = px.imshow(img,zmin=0.0, zmax=1.0,binary_string=True)
     fig.update(layout_coloraxis_showscale=False)
     fig.update_xaxes(showticklabels=False)
     fig.update_yaxes(showticklabels=False)
