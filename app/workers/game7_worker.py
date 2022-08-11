@@ -153,8 +153,8 @@ def get_3d_model_plot(model_info,lines=False,line_dir='z'):
     layout = go.Layout(paper_bgcolor='gainsboro',
                        title_x=0.5,
                        font_color='black',
-                       width=500,
-                       height=350,
+                      # width=500,
+                     #  height=350,
                        scene_camera=dict(eye=dict(x=1.25, y=-1.25, z=1)),
                        scene_xaxis_visible=False,
                        scene_yaxis_visible=False,
@@ -344,8 +344,8 @@ def plot_projection(proj,axes,lines=False,lines_angle=90):
         #fig = px.imshow(proj, binary_string=True)
 
         fig = go.Figure(go.Heatmap(z=proj,colorscale='gray',showscale=False))
-        fig.update_layout(yaxis=dict(scaleanchor='x'),plot_bgcolor='rgba(0,0,0,0)',
-                          width=500,height=350)
+        fig.update_layout(yaxis=dict(scaleanchor='x'),plot_bgcolor='rgba(0,0,0,0)')
+#                          width=500,height=350)
         if lines:
             theta = lines_angle * np.pi / 180
             # Add projection lines!
@@ -370,7 +370,7 @@ def plot_projection(proj,axes,lines=False,lines_angle=90):
         fig.add_trace(go.Scatter(y=proj,mode='lines',line=dict(width=3,color='darkslateblue')))
         fig.update_xaxes(title=axes[0])
         fig.update_yaxes(title='Relative amplitude')
-        fig.update_layout(dict(width=500, height=350))
+        #fig.update_layout(dict(width=500, height=350))
 
     else:
         fig = go.Figure()
