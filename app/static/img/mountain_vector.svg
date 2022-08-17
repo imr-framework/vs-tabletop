@@ -1,10 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="50%" height="50%" viewBox="0 0 581 581">
     <script>
-        function displayName(n){
-            console.log(n);
+        function activate(n){
+            let myCircNum = document.getElementById(`circ-num-${n}`);
+            let myCirc = document.getElementById(`circ${n}`);
+            myCircNum.setAttribute('transform-origin',`${myCirc.getAttribute('cx')} ${myCirc.getAttribute('cy')}`);
+            myCircNum.setAttribute('transform','scale(1.2)');
+
+
+
+        }
+        function deactivate(n){
+            let myCircNum = document.getElementById(`circ-num-${n}`);
+            myCircNum.setAttribute('transform','');
         }
     </script>
+
+
+
+
     <defs>
         <style>
             .cls-1,.cls-2{fill:none;}.cls-1,.cls-3,.cls-4,.cls-5,.cls-6,.cls-7{stroke-miterlimit:10;}.cls-1,.cls-5,.cls-6,.cls-7{stroke:#46454b;}.cls-8{fill:#5da4c0;}.cls-9{fill:#628068;}.cls-10{fill:#9f7573;}.cls-11{fill:#9ece95;}.cls-12,.cls-13{fill:#3051ff;}.cls-2{stroke:#85b5ff;stroke-linecap:round;stroke-linejoin:round;stroke-width:3.5px;}.cls-14{fill:#223647;}.cls-15,.cls-5{fill:#fcc624;}.cls-15,.cls-13{font-family:SnapITC-Regular, 'Snap ITC';font-size:36px;}.cls-16{fill:#749962;}.cls-17{fill:#968886;}.cls-18{fill:#c4c0cb;}.cls-19{fill:#f16552;}.cls-20{fill:#85b5ff;}.cls-21{fill:#5c8056;}.cls-22,.cls-7{fill:#46454b;}.cls-3{stroke:#3051ff;}.cls-3,.cls-4{fill:#fff;stroke-width:5px;}.cls-4{stroke:#fcc624;}.cls-23{fill:#315a7e;}.cls-24{fill:#aebac5;}.cls-25{fill:#364739;}.cls-26{fill:#999;}.cls-27{fill:#5a484d;}.cls-28{fill:#fbffc0;}.cls-29{fill:#a1998e;}.cls-6{fill:#ac7840;}.cls-30{fill:#804b44;}.cls-31{fill:#e6e6de;}.cls-32{fill:#87764d;}.cls-33{fill:#db759f;}.cls-34{fill:#26272a;}
@@ -23,45 +37,63 @@
         <path class="cls-2" d="M436,515.86c.68-2.19,1.52-4.07,2.41-4.05,1.85,.03,2.78,8.15,3.62,8.11,.88-.04,.21-8.85,1.21-8.92,1.22-.09,3.79,13.04,4.83,12.97,.76-.05-.68-11.3,0-11.35,.58-.04,1.86,8.11,3.62,8.11,1.57,0,2.52-6.54,3.62-6.48,1.07,.05,.66,6.29,2.41,6.48,1.62,.18,3.4-5.02,4.83-4.86,1.28,.14,2.61,4.67,0,8.11-4.24,5.58-16.94,5.68-18.1,5.67"/>
     </g>
     <g id="Circles">
-        <a xlink:href="/games/8" target="_top">
-            <circle id="circ8" onmouseover="displayName(8)" class="cls-3" cx="261.25" cy="77.25" r="25.25" fill="white"/>
-            <text class="cls-13" transform="translate(246.35 89.66)"><tspan x="0" y="0">8</tspan></text>
-        </a>
 
         <a xlink:href="/games/2" target="_top">
-            <circle id="circ2" onmouseover="displayName(2)" class="cls-3" cx="201.31" cy="370.54" r="25.25"/>
-            <text class="cls-13" transform="translate(188.13 382.55)"><tspan x="0" y="0">2</tspan></text>
-
+            <g id="circ-num-2" onmouseover="activate(2)" onmouseout="deactivate(2)">
+                <circle id="circ2"  class="cls-3" cx="201.31" cy="370.54" r="25.25"/>
+                <text class="cls-13" transform="translate(188.13 382.55)"><tspan x="0" y="0">2</tspan></text>
+            </g>
         </a>
 
+
+        <a xlink:href="/games/8" target="_top">
+            <g id="circ-num-8" onmouseover="activate(8)" onmouseout="deactivate(8)" >
+                <circle id="circ8" class="cls-3" cx="261.25" cy="77.25" r="25.25"/>
+                <text class="cls-13" transform="translate(246.35 89.66)"><tspan x="0" y="0">8</tspan></text>
+            </g>
+        </a>
+
+
         <a xlink:href="/games/4" target="_top">
-            <circle id="circ4" onmouseover="displayName(4)" class="cls-3" cx="417.31" cy="313.54" r="25.25"/>
-            <text class="cls-13" transform="translate(401.12 324.55)"><tspan x="0" y="0">4</tspan></text>
+            <g id="circ-num-4" onmouseover="activate(4)" onmouseout="deactivate(4)">
+                <circle id="circ4" class="cls-3" cx="417.31" cy="313.54" r="25.25"/>
+                <text class="cls-13" transform="translate(401.12 324.55)"><tspan x="0" y="0">4</tspan></text>
+            </g>
         </a>
 
         <a xlink:href="/games/6" target="_top">
-            <circle id="circ6" onmouseover="displayName(6)" class="cls-3" cx="251.31" cy="203.54" r="25.25"/>
-            <text class="cls-13" transform="translate(235.41 215.49)"><tspan x="0" y="0">6</tspan></text>
+            <g id="circ-num-6" onmouseover="activate(6)" onmouseout="deactivate(6)">
+                <circle id="circ6" class="cls-3" cx="251.31" cy="203.54" r="25.25"/>
+                <text class="cls-13" transform="translate(235.41 215.49)"><tspan x="0" y="0">6</tspan></text>
+            </g>
         </a>
 
         <a xlink:href="/games/3" target="_top">
-            <circle id="circ3" onmouseover="displayName(3)" class="cls-4" cx="316.31" cy="356.54" r="25.25"/>
-            <text class="cls-15" transform="translate(302.58 368.55)"><tspan x="0" y="0">3</tspan></text>
+            <g id="circ-num-3" onmouseover="activate(3)" onmouseout="deactivate(3)">
+                <circle id="circ3" class="cls-4" cx="316.31" cy="356.54" r="25.25"/>
+                <text class="cls-15" transform="translate(302.58 368.55)"><tspan x="0" y="0">3</tspan></text>
+            </g>
         </a>
 
         <a xlink:href="/games/5" target="_top">
-            <circle id="circ5" onmouseover="displayName(5)" class="cls-4" cx="291.31" cy="270.54" r="25.25"/>
-            <text class="cls-15" transform="translate(276.05 282.55)"><tspan x="0" y="0">5</tspan></text>
+            <g id="circ-num-5" onmouseover="activate(5)" onmouseout="deactivate(5)">
+                <circle id="circ5" class="cls-4" cx="291.31" cy="270.54" r="25.25"/>
+                <text class="cls-15" transform="translate(276.05 282.55)"><tspan x="0" y="0">5</tspan></text>
+            </g>
         </a>
 
         <a xlink:href="/games/7" target="_top">
-            <circle id="circ7" onmouseover="displayName(7)" class="cls-4" cx="329.31" cy="138.54" r="25.25"/>
-            <text class="cls-15" transform="translate(313.19 151.49)"><tspan x="0" y="0">7</tspan></text>
+            <g id="circ-num-7" onmouseover="activate(7)" onmouseout="deactivate(7)">
+                <circle id="circ7" class="cls-4" cx="329.31" cy="138.54" r="25.25"/>
+                <text class="cls-15" transform="translate(313.19 151.49)"><tspan x="0" y="0">7</tspan></text>
+            </g>
         </a>
 
         <a xlink:href="/games/1" target="_top">
-            <circle id="circ1" onmouseover="displayName(1)" class="cls-4" cx="130.31" cy="464.86" r="25.25"/>
-            <text class="cls-15" transform="translate(120.83 477.5)"><tspan x="0" y="0">1</tspan></text>
+            <g id="circ-num-1" onmouseover="activate(1)" onmouseout="deactivate(1)">
+                <circle id="circ1" class="cls-4" cx="130.31" cy="464.86" r="25.25"/>
+                <text class="cls-15" transform="translate(120.83 477.5)"><tspan x="0" y="0">1</tspan></text>
+            </g>
         </a>
     </g>
 </svg>

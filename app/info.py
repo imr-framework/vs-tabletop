@@ -2,11 +2,23 @@
 
 # Game names
 GAMES = ['What is in an image?',
-          'k-space magik', 'Brains please', 'Fresh Blood',
+          'k-space magik', 'Brains, please!', 'Fresh Blood',
          'Proton\'s got moves','Relaxation Station','Puzzled by Projection I','Puzzled by Projection II']
+INTRO = ['Learn about imaging basics!',
+         'Travel around k-space and map it out!',
+         'Look inside your head - with filters!',
+         'A clever trick to image flow',
+         'You can make the magnetization dance',
+         'Measure the T1 and T2 of anything',
+         'Make images with your brain',
+         'Reconstruct objects with your brain']
+
 GAMES_DICT = {}
+GAMES_INFO = {}
+
 for u in range(len(GAMES)):
     GAMES_DICT[u] = GAMES[u]
+    GAMES_INFO[u] = INTRO[u]
 
 
 # Game 5 instructions

@@ -1,31 +1,45 @@
 {% extends "base.html" %}
 {% block content %}
     <div class="container-fluid">
-        <div  class="row h-25">
 
-        {% for game_code, game in template_dict_games.items() %}
-            {% if (game_code + 1) == 5 %}
-            </div><div class="row">
-            {% endif %}
 
-        <h3 class="card col bg-info mh-100" href="./games/{{game_code+1}}">
-            <div class="card-header text-black font-monospace">Game {{game_code+1}}</div>
-            <div class="card-body">
-                <a class="card-title text-white font-monospace stretched-link" href="./games/{{game_code+1}}">{{game}}</a>
-                <p class="card-body text-black font-monospace">game-specific introduction text.</p>
+
+
+        <div class="row h-75 d-flex justify-content-center">
+            <div class="col-3">
+                {% for num in [7,5,3,1] %}
+                <div class="row h-25">
+
+                    <h3 id='game-card-{{ num }}' class="card col bg-secondary mh-100" href="./games/1">
+                        <div class="card-header text-white font-monospace">Game {{ num }}</div>
+                        <div class="card-body">
+                            <a class="card-title text-white font-monospace stretched-link" href="./games/1">{{template_dict_games[num-1]}}</a>
+                            <p class="card-body text-white font-monospace">{{ template_dict_info[num-1] }}</p>
+                        </div>
+                    </h3>
+                </div>
+                {% endfor %}
             </div>
-        </h3>
+            <div class="col-6">
+                <object id="the_mountain" style="height:800px ;width:800px;"  data="../static/img/mountain_vector.svg" type="image/svg+xml">
 
-        {% endfor %}
+                </object>
+            </div>
+            <div class="col-3">
+                {% for num in [8,6,4,2] %}
+                <div class="row h-25">
 
+                    <h3 id='game-card-{{ num }}' class="card col bg-secondary mh-100" href="./games/1">
+                        <div class="card-header text-white font-monospace">Game {{ num }}</div>
+                        <div class="card-body">
+                            <a class="card-title text-white font-monospace stretched-link" href="./games/1">{{template_dict_games[num-1]}}</a>
+                            <p class="card-body text-white font-monospace">{{ template_dict_info[num-1] }}</p>
+                        </div>
+                    </h3>
+                </div>
+                {% endfor %}
+            </div>
 
-        </div>
-        <script type="text/javascript">
-
-        </script>
-
-        <div class="row h-25 d-flex justify-content-center">
-            <object style="height:600px ;width:600px;"  data="../static/img/mountain_vector.svg" type="image/svg+xml"></object>
         </div>
 
 
@@ -39,5 +53,8 @@
 {% endblock %}
 
 {% block additional_imports %}
+
+
+
         <script src="../static/index.js"></script>
 {% endblock %}

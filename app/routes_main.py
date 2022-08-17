@@ -7,7 +7,7 @@ from flask import flash, render_template, session, redirect, url_for, request
 from flask_login import login_required, login_user, logout_user
 import utils
 from forms import *
-from info import GAMES_DICT
+from info import GAMES_DICT, GAMES_INFO
 from models import User, Calibration
 from fake_data_generator import get_fake_calibration_plots, SignalPlotsThread, FlipAnglePlotThread, get_empty_calibration_plots
 from __main__ import app, login_manager, db, socketio
@@ -81,7 +81,7 @@ def logout():
 @app.route('/index')
 @login_required
 def index():
-    return render_template("index.html",template_dict_games=GAMES_DICT)
+    return render_template("index.html",template_dict_games=GAMES_DICT,template_dict_info=GAMES_INFO)
 
 
 # Login page
