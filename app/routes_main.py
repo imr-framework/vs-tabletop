@@ -21,7 +21,7 @@ def initialize_parameters():
                               'autoscale':True, 'show_prev':False,
                               'TR':1, 'readout_dur':0.03, 'N_avg': 1, 'N_rep':1}
     session['display'] = {'autoscale':True, 'show_prev':False}
-    session['user'] = {'id':None, 'username':None, 'date_joined':None, 'role':'administrator'}
+    session['user'] = {'id':None, 'username':None, 'date_joined':None, 'role':'None'}
     session['user_name'] = None
 
     session['game1'] = {'FOV_scale': 0.128, 'Matrix_scale': 128, 'Voxel_scale': 0.001,'zero_fill': 128,
@@ -53,7 +53,7 @@ def load_user(user_id):
 
 @login_manager.unauthorized_handler
 def unauthorized():
-    return "You must be logged in to view this page"
+    return redirect(url_for('login'))
 
 @app.route('/logout')
 def logout():
@@ -103,6 +103,9 @@ def login():
             session['user']['id'] = user.id
             session['user']['username'] = user.username
             session['user']['date_joined'] = user.joined_at
+            session['user']['role'] = 'student'
+            if user.username == 'admin':
+                session['user']['role'] = 'administrator'
 
             session['game5']['progress'].user_id = user.id # Attach progress to user
 

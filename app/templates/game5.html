@@ -11,7 +11,7 @@
             <div class="row card bg-light">
                 <div class="card-header">
                     <span>Magnetization</span>
-                        <div type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="right"
+                        <div type="button" class="btn btn-sm btn-link" data-bs-toggle="popover" data-bs-placement="right"
                                       title="Magnetization (M)"
                                 data-bs-content="Net magnetic dipole moment that develops when protons are placed in the main magnetic field.
                                                  At equilibrium, M is parallel to B0. Both are along the z (top-down) direction in this graph.">
@@ -49,7 +49,7 @@
                         <div class="row h-25 card">
                                  <div class="card-header">
                                      <span class="h3">Main field (Gauss)</span>
-                                      <div type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="right"
+                                      <div type="button" class="btn btn-sm btn-link" data-bs-toggle="popover" data-bs-placement="right"
                                               title="Main field" data-bs-content="Also called B0, it is a strong magnetic field that generates a net magnetization in the imaged subject. The main field needs to stay on throughout the experiment.">
                                             <i class="bi bi-question-circle-fill"></i>
                                       </div>
@@ -90,7 +90,7 @@
                                 <span>RF pulse</span>
 
 
-                             <div type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="bottom"
+                             <div type="button" class="btn btn-sm btn-link" data-bs-toggle="popover" data-bs-placement="bottom"
                                       title="Radiofrequency Pulse"
                                   data-bs-content="The RF pulses are a short-lived and high frequency magnetic fields that sit within the x-y plane. They can rotate the magnetization to different degrees.">
                                     <i class="bi bi-question-circle-fill"></i>
@@ -105,11 +105,16 @@
                                         {{ template_game_form.flip_angle_field.label }}
                                             <p id="fa_deg">{{ session['game5']['flip_angle'] }} degrees</p>
                                         </div>
-                                         <button type="button" class="col-4 btn btn-sm d-flex justify-content-evenly" data-bs-toggle="popover" data-bs-placement="top"
-                                              title="Flip Angle"
-                                              data-bs-content="The change in the magnetization's angle relative to the z-axis caused by an RF pulse">
+                                        <div class="col-4">
+                                         <button type="button" class="btn btn-sm btn-link d-flex justify-content-evenly"
+                                                 data-mdb-container="body"
+                                                 data-mdb-toggle="popover"
+                                                 data-mdb-placement="top"
+                                                 title="Flip Angle"
+                                                 data-mdb-content="The change in the magnetization's angle relative to the z-axis caused by an RF pulse">
                                             <i class="bi bi-question-circle-fill"></i>
                                         </button>
+                                            </div>
                                     </div>
 
                                     <div class="row h-50">
@@ -118,9 +123,15 @@
                                             <p id="rf_deg">{{ session['game5']['rf_phase'] }} degrees</p>
                                         </div>
 
-                                         <div type="button" class="col-4 btn btn-sm d-flex justify-content-evenly" data-bs-toggle="popover" data-bs-placement="top"
-                                              title="Pulse direction" data-bs-content="The angle the RF field (also called B1 field, which lies in the x-y plane) makes with the positive x-axis. ">
+                                        <div class="col-4">
+                                         <button type="button" class="btn btn-sm btn-link d-flex justify-content-evenly"
+                                              data-mdb-container="body"
+                                              data-mdb-toggle="popover"
+                                              data-mdb-placement="bottom"
+                                              title="Pulse direction"
+                                              data-mdb-content="The angle the RF field (also called B1 field, which lies in the x-y plane) makes with the positive x-axis. ">
                                             <i class="bi bi-question-circle-fill"></i>
+                                        </button>
                                         </div>
                                     </div>
                                 </div>
@@ -296,10 +307,13 @@
                 <div class="col-6 card">
                     <div class="card-header h3">
                         Tasks
-                                  <div type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="top"
+                                  <div type="button" class="btn btn-sm btn-link"
+                                       data-mdb-container="body"
+                                       data-mdb-toggle="popover"
+                                       data-mdb-placement="top"
                                       title="How to play"
-                                data-bs-content='Check off all tasks of each Move and press Next to move on. Complete all steps and answer the Questions on the right to earn five stars!'>
-                                    <i class="bi bi-question-circle-fill"></i>
+                                data-mdb-content='Check off all tasks of each Move and press Next to move on. Complete all steps and answer the Questions on the right to earn five stars!'>
+                                    <i class="bi bi-wquestion-circle-fill"></i>
                                 </div>
 
                     </div>

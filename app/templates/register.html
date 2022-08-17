@@ -2,30 +2,32 @@
 {% block content %}
     <div class="container-fluid vh-100">
         <div class="row h-25 d-flex justify-content-center align-content-center">
-            <div class="col-4 text-info">
-                <span class="h1 font-weight-bold">Welcome to Virtual Scanner Tabletop!</span>
+            <div class="col text-info">
+                <div class="row h-50 d-flex align-content-center">
+                    <span class="h1 font-weight-bold" style="font-family:monospace; font-size:60px">Welcome to Virtual Scanner Tabletop</span>
+                </div>
+                <div class="row h-50 d-flex align-content-center">
+                    <i class="bi bi-controller fa-5x"></i>
+                </div>
             </div>
         </div>
         <div class="row h-50 d-flex justify-content-center">
             <div class="col-4">
-
-
-
             <form action="/register" method="POST">
 
-                     <div class="card row h-50">
-                <span class="h3 card-header">Register here</span>
+                     <div class="card row h-50 bg-info">
+                <span class="h2 card-header text-light">Register here</span>
             <div class="card-body">
             {{ template_form.hidden_tag()}}
-            {{ template_form.username_field.label(class="form-label") }}
+            {{ template_form.username_field.label(class="form-label text-light") }}
             {{template_form.username_field(size=27,class="form-control col", placeholder="Enter username")}}
 
-                {{template_form.password_field.label(class="form-label")}}
+                {{template_form.password_field.label(class="form-label text-light")}}
                 {{template_form.password_field(class="form-control")}}
-                {{template_form.password2_field.label(class="form-label")}}
+                {{template_form.password2_field.label(class="form-label text-light")}}
                 {{template_form.password2_field(class="form-control")}}
 
-
+            <br>
             <div class="form-group">
                 {{ template_form.submit_field(class="btn btn-info") }}
             </div>
@@ -34,16 +36,6 @@
 
 
      </div>
-
-                <div class="card bg-primary row h-25">
-                        {% with messages = get_flashed_messages() %}
-                            {% if messages %}
-                                {%  for message in messages %}
-                                    <p class="text-light">{{ message }}</p>
-                                {% endfor %}
-                            {% endif %}
-                        {% endwith %}
-                </div>
 
 
 

@@ -162,20 +162,20 @@ section{
     padding: 60px;
 }
 
-.popover{
-position: fixed;
-top:50%;
-left: 50%;
-transform: translate(-50%, -50%);
-background: #fff;
-width: 450px;
-height: 300px;
-box-shadow: 0 25px 50px rgba(0,0,0,0.1), 0 0 0 1000px rgba(255,255, 255,0.95);
-display: flex;
-justify-content: center;
-align-items:center;
-padding: 40px;
-}
+/*.popover{*/
+/*position: fixed;*/
+/*top:50%;*/
+/*left: 50%;*/
+/*transform: translate(-50%, -50%);*/
+/*background: #fff;*/
+/*width: 450px;*/
+/*height: 300px;*/
+/*box-shadow: 0 25px 50px rgba(0,0,0,0.1), 0 0 0 1000px rgba(255,255, 255,0.95);*/
+/*display: flex;*/
+/*justify-content: center;*/
+/*align-items:center;*/
+/*padding: 40px;*/
+/*}*/
 
 canvas {
   position: fixed;

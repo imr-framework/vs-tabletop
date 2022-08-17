@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
     <div class="container-fluid">
-        <div  class="row">
+        <div  class="row h-25">
+
         {% for game_code, game in template_dict_games.items() %}
             {% if (game_code + 1) == 5 %}
-            </div>                <div class="row">
-
+            </div><div class="row">
             {% endif %}
 
         <h3 class="card col bg-info mh-100" href="./games/{{game_code+1}}">
@@ -15,10 +15,29 @@
                 <p class="card-body text-black font-monospace">game-specific introduction text.</p>
             </div>
         </h3>
+
         {% endfor %}
+
+
         </div>
+        <script type="text/javascript">
+
+        </script>
+
+        <div class="row h-25 d-flex justify-content-center">
+            <object style="height:600px ;width:600px;"  data="../static/img/mountain_vector.svg" type="image/svg+xml"></object>
+        </div>
+
+
+
     </div>
+
+
+
 
 
 {% endblock %}
 
+{% block additional_imports %}
+        <script src="../static/index.js"></script>
+{% endblock %}
