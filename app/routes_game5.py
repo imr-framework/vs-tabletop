@@ -20,6 +20,7 @@ from workers.game5_worker import simulate_RF_rotation, generate_static_plot,\
                                 generate_static_signals, generate_coil_signal
 
 @app.route('/games/5',methods=["GET","POST"])
+@login_required
 def game5_view():
     """View function for the main route to Game 5
 
@@ -52,7 +53,7 @@ def game5_view():
     return render_template('game5.html',template_title="Proton's got moves",template_intro_text="Can you follow on?",
                            template_game_form=game_form, graphJSON_spin=j1, graphJSON_signal=j2,
                            questions=questions,success_text=success_text,uses_images=uses_images_list,
-                           instructions=GAME5_INSTRUCTIONS)
+                           instructions=GAME5_INSTRUCTIONS, game_num=5)
                             #TODO use function to store/generate tasks
 
 

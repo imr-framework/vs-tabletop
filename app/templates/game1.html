@@ -113,7 +113,8 @@
 
     {% endif %}
         <div class="tabs__content {{ task1_status }}" style="font-family: Georgia, serif">
-            <div class="accordion" id="accordionExample">
+
+        <!--    <div class="accordion" id="accordionExample">
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="headingOne">
                         <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="font-size: .5em">
@@ -142,6 +143,8 @@
                     </div>
                 </div>
             </div>
+        -->
+
           <h2 class="tabs__title">Instructions</h2>
           <p class="tabs__text" style="font-family: Georgia, serif">
               1. Input the below values into the FOV field and press "Run" on the right. Observe how the image changes with increasing and decreasing values.
@@ -179,35 +182,6 @@
             </p>
         </div>
         <div class="tabs__content {{  task2_status }}">
-            <div class="accordion" id="accordionExample">
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingOne">
-                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="font-size: .5em">
-                            Key Term Definitions
-                        </button>
-                    </h2>
-                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                        <div class="accordion-body" style="font-size: .8em">
-                            1.<b>Pixels/Voxels</b>: It is a metric defining <b>each unit in a picture/scan</b>. A <b>pixel</b> defines space in a scan with <b>two dimensions</b>, while the <b>voxel</b> defines a space in <b>three dimensions</b>. MR images are made up of voxels as they always have a third dimension or thickness.
-                            <br>2. <b>Resolution</b>: Refers to how sharp an image is. It is related to the size of the individual pixel(2D) or voxel(3D). The smaller the pixel or voxelthe greater the resolution. Voxels segment continuous space into discrete units. The signal in each voxel is an <b>average of all sub-signals within it</b>. The smaller you make the voxels, the more closely spaced details you see because they tend to be assigned to different voxels. You <b>cannot see the details</b> when using very large voxels because the spatial details are averaged out and any locational information at smaller scales than the voxel is lost.
-                            <br>3. <b>The relationship between FOV, Voxel Size, and Matrix Size</b>: Since the following three variables are dependent on each other, they cannot all be freely set. This is similar to a simple y=mx+z function. You can set two of the three variables freely and solve for the other but you cannot set the value for all three variables and have the equation be true everytime. Similar to that, we can change two of either FOV, Voxel size, or Matrix Size and solve for the other variable. The equation relating all three variables is: Field-of-View = Matrix Size x Voxel Size.
-                            <br>4. <b>Voxel size vs. true resolution</b>: Voxel size is often representative of resolution, but not always. One definition of  true spatial resolution is how close together (say, in millimeters) two thin lines can get before they can no longer be told apart. In fact, with a technique called zero-filling, we can generate images of very large matrix sizes from images of smaller matrix sizes. In this process, the voxel size is reduced, but true resolution is not improved because the new image contains no more information than the old, pixelated image.
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingTwo">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                            Basics
-                        </button>
-                    </h2>
-                    <div id="collapseTwo" class="accordian-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                        <div class="accordion-body">
-                            There are two main types of digital images: monochrome and color.  Color images can be represented with three components: Red, Green, and Blue (RGB). It is the layering of these three colors that make up the final image. Monochrome images are made up of different gray levels. MR images are examples of monochrome images: each voxel has one number, called the image magnitude or intensity, that indicates its brightness.
-                        </div>
-                    </div>
-                </div>
-            </div>
           <h2 class="tabs__title">Instructions</h2>
           <p class="tabs__text">1. Experiment with multiple Matrix sizes and observe how the image changes with increasing and decreasing values.
                             <br>2. After you are done, answer Question 2 and continue to the task!
@@ -232,35 +206,6 @@
             </p>
         </div>
         <div class="tabs__content {{  task3_status }}">
-            <div class="accordion" id="accordionExample">
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingOne">
-                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="font-size: .5em">
-                            Key Term Definitions
-                        </button>
-                    </h2>
-                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                        <div class="accordion-body" style="font-size: .8em">
-                            1.<b>Pixels/Voxels</b>: It is a metric defining <b>each unit in a picture/scan</b>. A <b>pixel</b> defines space in a scan with <b>two dimensions</b>, while the <b>voxel</b> defines a space in <b>three dimensions</b>. MR images are made up of voxels as they always have a third dimension or thickness.
-                            <br>2. <b>Resolution</b>: Refers to how sharp an image is. It is related to the size of the individual pixel(2D) or voxel(3D). The smaller the pixel or voxelthe greater the resolution. Voxels segment continuous space into discrete units. The signal in each voxel is an <b>average of all sub-signals within it</b>. The smaller you make the voxels, the more closely spaced details you see because they tend to be assigned to different voxels. You <b>cannot see the details</b> when using very large voxels because the spatial details are averaged out and any locational information at smaller scales than the voxel is lost.
-                            <br>3. <b>The relationship between FOV, Voxel Size, and Matrix Size</b>: Since the following three variables are dependent on each other, they cannot all be freely set. This is similar to a simple y=mx+z function. You can set two of the three variables freely and solve for the other but you cannot set the value for all three variables and have the equation be true everytime. Similar to that, we can change two of either FOV, Voxel size, or Matrix Size and solve for the other variable. The equation relating all three variables is: Field-of-View = Matrix Size x Voxel Size.
-                            <br>4. <b>Voxel size vs. true resolution</b>: Voxel size is often representative of resolution, but not always. One definition of  true spatial resolution is how close together (say, in millimeters) two thin lines can get before they can no longer be told apart. In fact, with a technique called zero-filling, we can generate images of very large matrix sizes from images of smaller matrix sizes. In this process, the voxel size is reduced, but true resolution is not improved because the new image contains no more information than the old, pixelated image.
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingTwo">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                            Basics
-                        </button>
-                    </h2>
-                    <div id="collapseTwo" class="accordian-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                        <div class="accordion-body">
-                            There are two main types of digital images: monochrome and color.  Color images can be represented with three components: Red, Green, and Blue (RGB). It is the layering of these three colors that make up the final image. Monochrome images are made up of different gray levels. MR images are examples of monochrome images: each voxel has one number, called the image magnitude or intensity, that indicates its brightness.
-                        </div>
-                    </div>
-                </div>
-            </div>
           <h2 class="tabs__title">Instructions</h2>
           <p class="tabs__text">1. Experiment with different Zero-Fill values and observe how the image changes
                             <br>2. After you are done, answer Question 3 and continue to the task!
@@ -371,7 +316,7 @@
                             {% elif session['game1']['current_task'] == 4 %}
                                 Change the min and max values in the "Windowing" panel and click run below the image to observe how contrast changes!
                                 {% if session['game1']['completed_task'] == 4 %}
-                                    Complete the questions to get the rest of the stars!
+                                        Complete the questions to get the rest of the stars!
                                 {% endif %}
                             {% endif %}
                         </div>
@@ -380,70 +325,35 @@
                     <div class="row card">
                     <div class="card-header"><b>Image settings</b></div>
                     <div class="card-body row">  <!--style="align: justified"-->
-                        {% if session['game1']['current_task'] == 1 %}
-                        <div class="col form-group">
 
-                            <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is FOV?"
-                                data-bs-content="Field-of-View. The real world size of your image in units of distance (meters, millimeters, etc..">
-                                <i class="bi bi-question-circle-fill"></i></button>
-                        <b>FOV:</b>
-                        <div class="d-flex justify-content-center">
-                        <input class="form-control" type="DecimalField" value="{{ session['game1']['FOV_scale']*1000}} " id="FOV_scale" style="">
-                        </div>
-                        mm
-                        </div>
-
-                        {% elif session['game1']['current_task'] == 2 %}
-                        <div class="col-4 form-group">
-                            <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is FOV?"
-                                data-bs-content="Field-of-View. The real world size of your image in units of distance (meters, millimeters, etc..">
-                                <i class="bi bi-question-circle-fill"></i></button>
-                        <b>FOV:</b>
-                        <div class="d-flex justify-content-center">
-                        <input class="form-control" type="DecimalField" value="{{ session['game1']['FOV_scale']*1000}} " id="FOV_scale" style="">
-                        </div>
-                        {{G1Form.FOV_scale.label(class="form-label")}}
-                        </div>
-                        <div class="col-4 form-group">
-                        <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is Matrix Size?"
-                                data-bs-content="The number of rows and columns of your image matrix.">
-                                <i class="bi bi-question-circle-fill"></i></button>
-                        <b>Matrix Size:</b>
-                            <div class="d-flex justify-content-center">
-                        <input class="form-control" type="DecimalField" value="{{ session['game1']['Matrix_scale']}} " id="Matrix_scale" style="">
-                            </div>
-                        {{ G1Form.Matrix_scale.label(class="form-label") }}
-                        </div>
-
-                        <div class="col-4 form-group">
-                        <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is Voxel Size?"
-                                data-bs-content="A voxel is cube and the smallest element that makes up an image. The voxel size is the length of each side of this cube.
-                                 Voxel size = (FOV) / (matrix size)">
-                                <i class="bi bi-question-circle-fill"></i></button>
-
-                        <b>Voxel Size:</b>
-                            <div class="d-flex justify-content-center">
-                        <input class="form-control" type="DecimalField" value="{{ session['game1']['Voxel_scale']*1000}} " id="Voxel_scale" style="">
-                            </div>
-                            {{ G1Form.Voxel_scale.label(class="form-label") }}
-                        </div>
-                    {% else %}
                         <div class="col-3 form-group">
 
-                            <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is FOV?"
-                                data-bs-content="Field-of-View. The real world size of your image in units of distance (meters, millimeters, etc..">
-                                <i class="bi bi-question-circle-fill"></i></button>
-                        <b>FOV:</b>
+
+                        <b>FOV</b>
+                            <button type="button" class="btn btn-sm shadow-none"
+                                    data-mdb-container="body"
+                                    data-mdb-toggle="popover"
+                                    data-mdb-placement="left"
+                                    title="What is FOV?"
+                                    data-mdb-content="Field-of-View. The real world size of your image in units of distance (meters, millimeters, etc..">
+                                <i class="bi bi-question-circle-fill"></i>
+                            </button>
                         <div class="d-flex justify-content-center">
                         <input class="form-control" type="DecimalField" value="{{ session['game1']['FOV_scale']*1000}} " id="FOV_scale" style="">
                         </div>
                         {{G1Form.FOV_scale.label(class="form-label")}}
                         </div>
                         <div class="col-3 form-group">
-                        <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is Matrix Size?"
-                                data-bs-content="The number of rows and columns of your image matrix.">
+
+                        <b>Matrix Size</b>
+                             <button type="button" class="btn btn-sm shadow-none"
+                                data-mdb-container="body"
+                                data-mdb-toggle="popover"
+                                data-mdb-placement="left"
+                                title="What is Matrix Size?"
+                                data-mdb-content="The number of rows and columns of your image matrix.">
                                 <i class="bi bi-question-circle-fill"></i></button>
-                        <b>Matrix Size:</b>
+
                             <div class="d-flex justify-content-center">
                         <input class="form-control" type="DecimalField" value="{{ session['game1']['Matrix_scale']}} " id="Matrix_scale" style="">
                             </div>
@@ -451,12 +361,18 @@
                         </div>
 
                         <div class="col-3 form-group">
-                        <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is Voxel Size?"
-                                data-bs-content="A voxel is cube and the smallest element that makes up an image. The voxel size is the length of each side of this cube.
-                                 Voxel size = (FOV) / (matrix size)">
-                                <i class="bi bi-question-circle-fill"></i></button>
 
-                        <b>Voxel Size:</b>
+                        <b>Voxel Size</b>
+                            <button type="button" class="btn btn-sm shadow-none"
+                                data-mdb-container="body"
+                                data-mdb-toggle="popover"
+                                data-mdb-placement="left"
+                                title="What is Voxel Size?"
+                                data-mdb-content="A voxel is cube and the smallest element that makes up an image. The voxel size is the length of each side of this cube.
+                                 Voxel size = (FOV) / (matrix size)">
+                                <i class="bi bi-question-circle-fill"></i>
+                            </button>
+
                             <div class="d-flex justify-content-center">
                         <input class="form-control" type="DecimalField" value="{{ session['game1']['Voxel_scale']*1000}} " id="Voxel_scale" style="">
                             </div>
@@ -465,19 +381,24 @@
 
                         <div class="col-3 form-group">
 
-                            <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is Zero-Fill?"
-                                data-bs-content="A higher matrix size than the original image’s. Any image can be zero-filled to have more voxels
+
+                        <b>Zero-fill</b>
+                            <button type="button" class="btn btn-sm shadow-none"
+                                    data-mdb-container="body"
+                                    data-mdb-toggle="popover"
+                                    data-mdb-placement="top"
+                                    title="What is Zero-Fill?"
+                                    data-mdb-content="A higher matrix size than the original image’s. Any image can be zero-filled to have more voxels
                                 within the same FOV, but this operation does not add more information to the image.">
-                                <i class="bi bi-question-circle-fill"></i></button>
+                                <i class="bi bi-question-circle-fill"></i>
+                            </button>
 
-                        <b>Zero-fill:</b>
                         <div class="d-flex justify-content-center">
                         <input class="form-control" type="DecimalField" value="128" id="zero_fill" style="">
                         </div>
                             {{ G1Form.zero_fill.label }}
                         {{ G1Form.zero_fill.value }}
                         </div>
-                        {% endif %}
 
                         <script>
                             var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
@@ -494,17 +415,10 @@
                     </div>
                         </div>
 
-{% if session['game1']['current_task'] == 4 %}
                 <div class="row card">
-                    <div class="card-header"><b>Windowing:
-                        <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is Windowing (Min)?"
-                                data-bs-content="The low cutoff point. All grayscale values below it will be seen as black">
-                                <i class="bi bi-question-circle-fill"></i></button>
-                        Min and
-                        <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is Windowing (Max)?"
-                                data-bs-content="The high cutoff point. All grayscale values above it will be seen as white">
-                                <i class="bi bi-question-circle-fill"></i></button>
-                        Max</b></div>
+                    <div class="card-header"><b>Windowing</b>
+
+                       </div>
                     <div class="card-body">
                         <div class="range_container col">
                             <div class="form_control">
@@ -519,7 +433,14 @@
 
                                 <div class="row d-flex">
                                 <div class="col form_control_container" style="text-align: center">
-                                    <div class="form_control_container__time">Min: </div>
+                                    <div class="form_control_container__time">Min </div>
+                                    <button type="button" class="btn btn-sm shadow-none"
+                                data-mdb-container="body"
+                                data-mdb-toggle="popover"
+                                data-mdb-placement="left"
+                                title="Min Level"
+                                data-mdb-content="The low cutoff point. All grayscale values below it will be seen as black">
+                                <i class="bi bi-question-circle-fill"></i></button>
 
                                     {{ G1Form.min_value(class="form-control container__time__input", id="fromInput", min="0", max="100", value=(session['game1']['Min_scale'] * 100)) }}
 
@@ -529,7 +450,18 @@
                                 <div class="col form_control_container">  <!--style="position:relative; left:370px; top:2px"-->
                                     <div class="form_control_container">
                                     <div class="form_control_container__time d-flex justify-content-right">
-                                        Max: {{ G1Form.max_value(class="form-control container__time__input", id="toInput", min="0", max="100", value=(session['game1']['Max_scale'] * 100)) }}
+                                        Max
+
+                                        <button type="button" class="btn btn-sm shadow-none"
+                                                data-mdb-container="body"
+                                                data-mdb-toggle="popover"
+                                                data-mdb-placement="left"
+                                                title="Max Level?"
+                                                data-mdb-content="The high cutoff point. All grayscale values above it will be seen as white">
+                                                <i class="bi bi-question-circle-fill"></i>
+                                        </button>
+
+                                        {{ G1Form.max_value(class="form-control container__time__input", id="toInput", min="0", max="100", value=(session['game1']['Max_scale'] * 100)) }}
 
                                     </div>
                                     </div>
@@ -548,7 +480,6 @@
                         </div>
                     </div>
                 </div>
-                    {% endif %}
 
                     <br><div class="row card">
                     <div class="card header bg-light"><b>Star Count: Climb your way up to 5 black stars!</b></div>
@@ -596,7 +527,7 @@
                     <div class="card-body">
                         <div class="chart" id="chart-G1">
                         </div>
-                        <br>{{G1Form.submit_field(class="btn btn-lg btn-success")}}
+                        <button type="submit" class="btn btn-lg btn-success">Run</button>
                     </div>
                 </div>
                     <div class="row-card">

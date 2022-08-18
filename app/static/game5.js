@@ -1,4 +1,5 @@
 // Game 5 Javascript functions
+$('#link-to-game5').addClass('text-success');
 
 // Initialize socket
 let socket = io();

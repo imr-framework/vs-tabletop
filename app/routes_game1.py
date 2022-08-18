@@ -17,6 +17,7 @@ from models import MultipleChoice
 questions = []
 
 @app.route('/games/1',methods=["GET","POST"])
+@login_required
 def game1():
     form=Game1Form()
 
@@ -39,7 +40,8 @@ def game1():
 
     return render_template('game1.html',template_title="What is in an image?",
                            template_intro_text="Voxels, field-of-views, and resolution ", G1Form = form,
-                           graphJSON_img = j1, questions=questions, success_text=success_text, uses_images=uses_images)
+                           graphJSON_img = j1, questions=questions, success_text=success_text, uses_images=uses_images,
+                           game_num = 1)
 
 
 @socketio.on('Update param for Game1')
@@ -70,7 +72,6 @@ def update_parameter(info):
         print('FOV changed')
         print('Old:',session['game1'])
         session['game1']['Matrix_scale'] = int(np.round(float(session['game1']['FOV_scale'])/(float(session['game1']['Voxel_scale']))))
-
         session['game1']['Voxel_scale'] = session['game1']['FOV_scale']/session['game1']['Matrix_scale']
 
         if session['game1']['Matrix_scale'] > session['game1']['zero_fill']:
@@ -104,7 +105,6 @@ def update_parameter(info):
 
 
     elif info['id'] == 'zero_fill':
-
         if session['game1']['Matrix_scale'] > session['game1']['zero_fill']:
             session['game1']['Matrix_scale'] = session['game1']['zero_fill']
 
@@ -216,7 +216,6 @@ def update_task_progress():
     if session['game1']['current_task'] == 1:
         # check if task 1 is complete
         fov = session['game1']['FOV_scale']
-        socketio.emit('Check if checked')
         if (fov >= 0.2 and fov <= 0.3):
             session['game1']['Matrix_scale'] = 128
             session['game1']['completed_task'] = 1

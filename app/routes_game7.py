@@ -12,6 +12,7 @@ from __main__ import app, login_manager, db, socketio
 import random
 
 @app.route('/games/7', methods=["GET","POST"])
+@login_required
 def game7():
     # Viewing function for game 7
     form=Game7Form()
@@ -34,7 +35,7 @@ def game7():
     return render_template('game7.html',G7Form=form, template_title="Puzzled by Projection",
                            template_intro_text="Forward puzzle", instructions=GAME7_INSTRUCTIONS,
                             graphJSON_3dimg = j1, graphJSON_2dimg = j2, graphJSON_1dimg = j3,
-                           questions=questions, success_text=success_text, uses_images=uses_images)
+                           questions=questions, success_text=success_text, uses_images=uses_images,game_num=7)
 
 
 

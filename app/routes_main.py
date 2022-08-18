@@ -21,30 +21,30 @@ def initialize_parameters():
                               'autoscale':True, 'show_prev':False,
                               'TR':1, 'readout_dur':0.03, 'N_avg': 1, 'N_rep':1}
     session['display'] = {'autoscale':True, 'show_prev':False}
-    session['user'] = {'id':None, 'username':None, 'date_joined':None, 'role':'None'}
-    session['user_name'] = None
-
+    session['user'] = {'id':None, 'username':None, 'date_joined':None, 'role':'None', 'game_status':4*[0]}
+    session['username_display'] = 'admin'
     session['game1'] = {'FOV_scale': 0.128, 'Matrix_scale': 128, 'Voxel_scale': 0.001,'zero_fill': 128,
                         'Min_scale': 0.1, 'Max_scale': 0.9, 'P1_q': 'No', 'P2_q': 'No', 'P3_q': 'No',
                         'progress': utils.new_progress_of_game(1), 'mc_status_list': utils.num_questions_of_game(1)*[False],
                         'current_task': 1, 'completed_task': 0, 'star_count': 0, 'checked': 0}
-
+    session['game2'] = {}
     session['game3'] = {'options': 'T1', 'TR': 500, 'TE': 10, 'FA':90, 'P1_q': 'No', 'P2_q': 'No', 'P3_q': 'No', 'progress': utils.new_progress_of_game(3),
                         'mc_status_list': utils.num_questions_of_game(1)*[False], 'current_task': 1, 'completed_task': 0, 'star_count': 0}
-
+    session['game4'] = {}
     session['game5'] = {'b0_on': False, 'b0': 100.0,'coil_on': False, 'rot_frame_on': False, 'flip_angle': 90, 'rf_phase': 0.0,
                         'coil_dir': 'x', 'm_theta': 0.0, 'm_phi':0.0, 'm_size': 1, 'tx_on': False,
                         'M_init': np.array([[0],[0],[0]]), 'M_target': np.array(([0],[0],[0])),
                         'M_target_on': False,
                         'progress': utils.new_progress_of_game(5), 'mc_status_list': utils.num_questions_of_game(5)*[False],
                         'task_completed': 0}
-
+    session['game6'] = {}
     session['game7'] = {'model':'letterN', 'proj2d_axis': 'z', 'proj1d_angle': 90,
                         'plot3d_visible':False, 'plot2d_visible':False, 'plot1d_visible':False,
                         'lines_on': False,
                         'progress': utils.new_progress_of_game(7),'mc_status_list': utils.num_questions_of_game(7)*[False],
                         'task_completed': 0
                         }
+    session['game8'] = {}
 
 # Login callback (required)
 @login_manager.user_loader
@@ -75,7 +75,7 @@ def logout():
 
 
     logout_user()
-    return redirect(url_for("login"))
+    return redirect(url_for("landing"))
 
 # Home
 @app.route('/index')
@@ -86,20 +86,26 @@ def index():
 
 # Login page
 @app.route('/',methods=["GET","POST"])
+def landing():
+    initialize_parameters()
+    return render_template('landing.html')
+
+
 @app.route('/login',methods=["GET","POST"])
 def login():
-    initialize_parameters()
     login_form = Login_Form()
 
     if login_form.validate_on_submit():
         print('login validated')
+        session['username_display'] = login_form.username_field.data
+        session.modified = True
         # If login successful, redirect to main page
         # Check login against database
         user = User.query.filter_by(username=login_form.username_field.data).first()
         if user is not None and user.check_password(login_form.password_field.data):
             login_user(user)
             print('login success')
-            flash("Login successful!")
+            flash("Login successful, welcome!")
             session['user']['id'] = user.id
             session['user']['username'] = user.username
             session['user']['date_joined'] = user.joined_at
@@ -143,7 +149,9 @@ def register():
             db.session.commit()
         except:
             db.session.rollback()
+        return redirect(url_for('login'))
     else:
+        print("Failed to validate")
         flash('Form is not validated; check your passwords!')
 
     return render_template('register.html', title='Register', template_form=reg_form)
@@ -197,7 +205,7 @@ def calibration():
     # Default plots with no content to be displayed initially
     j1, j2, j3 = get_empty_calibration_plots()
 
-    return render_template("calibration.html",template_title="Calibration", template_intro_text="Let's calibrate the scanner!",
+    return render_template("calibration.html", template_intro_text="Let's calibrate the scanner!",
                            template_calibration_form=calib_form, template_disp_form=display_opts_form,
                            graphJSON_left=j1, graphJSON_center=j2,graphJSON_right=j3)
 

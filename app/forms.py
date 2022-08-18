@@ -13,7 +13,7 @@ class Register_Form(FlaskForm):
     submit_field = SubmitField("Register!")
 
 class Login_Form(FlaskForm):
-    username_field = StringField("Username",validators=[DataRequired()],default='admin')
+    username_field = StringField("Username",validators=[DataRequired()])
     password_field = PasswordField("Password",validators=[DataRequired()])
     submit_field = SubmitField("Log in")
 
@@ -58,9 +58,9 @@ class Game1Form(FlaskForm):
     max_value = IntegerField(label='max', validators=[DataRequired(), NumberRange(min=0, max=100)],default=90)
 class Game3Form(FlaskForm):
     options = RadioField('options', choices=['T1', 'T2', 'PD'],validators=[InputRequired()],default='T1')
-    TR = DecimalRangeField(label='TR (ms):', validators= [DataRequired(), NumberRange(min=500, max=5000)],default=2750)
-    TE = DecimalRangeField(label='TE (ms):', validators= [DataRequired(), NumberRange(min=10, max=450)],default=235)
-    FA = DecimalRangeField(label='FA (deg):', validators= [DataRequired(), NumberRange(min=0.0, max=360)],default=90)
+    TR = DecimalRangeField(label='TR (ms)', validators= [DataRequired(), NumberRange(min=500, max=5000)],default=2750)
+    TE = DecimalRangeField(label='TE (ms)', validators= [DataRequired(), NumberRange(min=10, max=450)],default=235)
+    FA = DecimalRangeField(label='FA (deg)', validators= [DataRequired(), NumberRange(min=0.0, max=360)],default=90)
     submit = SubmitField("Submit chosen parameters")
     submit_questions = SubmitField("Submit Answer")
     P1_q = RadioField('question1', choices=['T1', 'T2', 'PD'], validators=[InputRequired()])
@@ -111,7 +111,7 @@ class Game7Form(FlaskForm):
                                                                 ('two_holes', 'Dots')
                                                                ],default='letterN')
     proj_2d_axis_field = RadioField("2D proj. axis", choices=['x','y','z'],default='z')
-    proj_1d_angle_field = DecimalField("1D proj. angle (deg)",validators=[NumberRange(min=0,max=360)],default=90)
+    proj_1d_angle_field = DecimalField("1D proj. angle",validators=[NumberRange(min=0,max=360)],default=90)
 
     submit_field = SubmitField("Project all")
 

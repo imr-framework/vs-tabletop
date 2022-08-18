@@ -1,27 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
 
-<!-- TODO include input fields using FORM -->
-<form action="/games/4" method="POST">
-    <div class="col-4">
+<div class="container-fluid vh-100">
 
-    {{template_game_form.hidden_tag()}}
-    <div class="row">
-        {{template_game_form.thk_field.label}}
-        {{template_game_form.thk_field()}}
-    </div>
-
-        <div class="row">
-    {{template_game_form.flip_field.label}}
-    {{template_game_form.flip_field()}}</div>
-        <div class="row">
-    {{template_game_form.tr_field.label}}
-    {{template_game_form.tr_field()}}</div>
-    </div>
-    <div class="row">
-        {{template_game_form.submit_field()}}
-    </div>
-</form>
+</div>
 
 
+{% endblock %}
+
+
+{% block additional_imports %}
+    <script src="../static/game4.js"></script>
 {% endblock %}

@@ -1,3 +1,5 @@
+$('#link-to-game1').addClass('text-success');
+
 let tabs = document.querySelectorAll('.tabs__toggle'),
     contents = document.querySelectorAll('.tabs__content');
 
@@ -52,12 +54,8 @@ $('.answer-mc').on('click', (event)=>{
     console.log('Updating choice')
     //socket.emit("Updating choice for Game 1", {'choice':choice});
 })
-socket.on('Check if checked', ()=>{
-    var checkBox = game1.getElementById("flexCheckChecked1");
-    if (checkBox.checked == true){
-        $('#checked') = 1;
-    }
-})
+
+
 
 $('.tabs__toggle').on('click', (event)=>{
     console.log('reset')
@@ -290,3 +288,4 @@ const confNum = Math.floor(w / 4);
 const confs = new Array(confNum).fill().map(_ => new Confetti());
 
 loop();
+

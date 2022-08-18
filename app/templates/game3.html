@@ -99,11 +99,13 @@
                                 {% else %}
                                     {{ subfield(class="btn-check ", autocomplete="off", checked=session['game3']['P1_q']=='PD') }}
                                 {% endif %}
+
                                 {{ subfield.label(class="btn btn-outline-primary d-flex align-items-center justify-content-center") }}
 
                             {% endfor %}
             </div>
-                <br>{{ G3Form.submit_questions(class="btn btn-primary") }}
+                <br>
+                <button type="submit" class="btn btn-primary">Submit</button>
             </p>
             </form>
         </div>
@@ -134,7 +136,9 @@
 
                             {% endfor %}
             </div>
-                <br>{{ G3Form.submit_questions(class="btn btn-primary") }}
+                <br>
+                <button type="submit" class="btn btn-primary">Submit</button>
+
             </p>
             </form>
         </div>
@@ -166,7 +170,9 @@
 
                             {% endfor %}
             </div>
-                <br>{{ G3Form.submit_questions(class="btn btn-primary") }}
+                <br>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+
 
             </p>
             </form>
@@ -199,20 +205,31 @@
                      <div class="col-6">
                              <div class="row h-25 card">
                                  <div class="card-header">
-                                     <b> Panel 1:
-                                     <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is T1?"
-                                                data-bs-content="longitudinal relaxation time tells us how long it takes for the z-component of the M vector to regrow from zero to about 63% of its maximum. Highlights fat and proteins">
+                                     <b> Panel 1: </b>
+                                     <b>T1</b>
+
+                                     <button type="button" class="btn btn-sm shadow-none"
+                                             data-mdb-container="body"
+                                             data-mdb-toggle="popover"
+                                             data-mdb-placement="left" title="What is T1"
+                                             data-mdb-content="longitudinal relaxation time tells us how long it takes for the z-component of the M vector to regrow from zero to about 63% of its maximum. Highlights fat and proteins">
                                             <i class="bi bi-question-circle-fill"></i></button>
-                                     T1,
-                                     <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is T2?"
-                                                data-bs-content="transverse relaxation time tells us how long it takes for the xy-component of the M vector to decay from 100% to about 37%. Different tissues have different T2 values.">
+                                    <b>T2</b>
+                                     <button type="button" class="btn btn-sm shadow-none"
+                                             data-mdb-container="body"
+                                             data-mdb-toggle="popover"
+                                             data-mdb-placement="left" title="What is T2?"
+                                             data-mdb-content="transverse relaxation time tells us how long it takes for the xy-component of the M vector to decay from 100% to about 37%. Different tissues have different T2 values.">
                                             <i class="bi bi-question-circle-fill"></i></button>
-                                     T2, or
-                                     <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is PD?"
-                                                data-bs-content="proton density tells us how many protons there are in a unit volume tissue. More signal is generated from tissues with higher PD.">
+                                     <b>or PD</b>
+                                         <button type="button" class="btn btn-sm shadow-none"
+                                             data-mdb-container="body"
+                                             data-mdb-toggle="popover"
+                                             data-mdb-placement="left"
+                                             title="What is PD?"
+                                             data-mdb-content="proton density tells us how many protons there are in a unit volume tissue. More signal is generated from tissues with higher PD.">
                                             <i class="bi bi-question-circle-fill"></i></button>
-                                     PD weighted scan
-                                     </b>
+                                     <b>weighted scan</b>
                                  </div>
 
 
@@ -235,12 +252,15 @@
                                  <div class="card-body pe-5">
                                      <div class="row">
                                          <div class="col-3">
-                                             <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is TR?"
-                                            data-bs-content="Repetition Time (TR) is the time difference between one set of RF pulses and the next set,
+                                             <b>{{ G3Form.TR.label(class="form-label") }}</b>
+                                             <button type="button" class="btn btn-sm shadow-none"
+                                                     data-mdb-container="body"
+                                                     data-mdb-toggle="popover"
+                                                     data-mdb-placement="left" title="Repetition Time (TR)?"
+                                                     data-mdb-content="TR is the time difference between one set of RF pulses and the next set,
                                                             which we use to repeatedly excite the protons. This ensures that the signal is consistent as we build
                                                             up an MR image.">
                                             <i class="bi bi-question-circle-fill"></i></button>
-                                             {{ G3Form.TR.label(class="form-label") }}
                                          </div>
 
                                          <div class="col-9">
@@ -256,11 +276,16 @@
                                      </div>
                                      <div class="row">
                                          <div class="col-3">
-                                             <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is TE?"
-                                            data-bs-content="Echo Time (TE) is the time difference between the time when the RF pulse arrives at the target
+                                             <b>{{ G3Form.TE.label(class="form-label") }}</b>
+                                             <button type="button" class="btn btn-sm shadow-none"
+                                                     data-mdb-container="body"
+                                                     data-mdb-toggle="popover"
+                                                     data-mdb-placement="left"
+                                                     title="Echo Time (TE)"
+                                                     data-mdb-content="TE is the time difference between the time when the RF pulse arrives at the target
                                                             to the time when the signal bounces back and hits a peak">
                                             <i class="bi bi-question-circle-fill"></i></button>
-                                             {{ G3Form.TE.label(class="form-label") }}</div>
+                                         </div>
                                          <div class="col-9">
                                              <div class="row">
                                                  {{ G3Form.TE(class="form-range", id="TE", step=0.1, value=session['game3']['TE']) }}
@@ -274,11 +299,15 @@
                                      </div>
                                      <div class="row">
                                          <div class="col-3">
-                                             <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is FA?"
-                                            data-bs-content="Flip Angle (FA) is the amount we tip the magnetization vector using an RF pulse.
+                                             <b>{{ G3Form.FA.label(class="form-label") }}</b>
+                                             <button type="button" class="btn btn-sm shadow-none"
+                                                     data-mdb-container="body"
+                                                     data-mdb-toggle="popover"
+                                                     data-mdb-placement="left" title="Flip Angle (FA)"
+                                                     data-mdb-content="FA is the amount we tip the magnetization vector using an RF pulse.
                                                                 It can be measured in degrees or radians.">
                                             <i class="bi bi-question-circle-fill"></i></button>
-                                             {{ G3Form.FA.label(class="form-label") }}</div>
+                                         </div>
                                          <div class="col-9">
                                              <div class="row">
                                                  {{ G3Form.FA(class="form-range", id="FA", step=5, value=session['game3']['FA']) }}
@@ -295,18 +324,37 @@
                      </div>
                      <div class="col-6 card">
                      <div class="card-header"> <b>Panel 3:
-                         <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is CSF?"
-                                    data-bs-content="Cerebrospinal fluid is the liquid content of brain ventricles. It flows in and around the brain to absorb impact from injuries to the skull and provide nutrients.">
+
+                         <b>CSF</b>
+                         <button type="button" class="btn btn-sm shadow-none"
+                                 data-mdb-container="body"
+                                 data-mdb-toggle="popover"
+                                 data-mdb-placement="top" title="Cerebrospinal Fluid (CSF)?"
+                                 data-mdb-content="CSF is the liquid content of brain ventricles. It flows in and around the brain to absorb impact from injuries to the skull and provide nutrients.">
                                 <i class="bi bi-question-circle-fill"></i></button>
-                         CSF,
-                         <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is GM?"
-                                    data-bs-content="Gray matter is distributed on the surface (cortex) of and also deep within (subcortical nuclei) the brain and has a high concentration of neuronal cell bodies.">
+
+
+                         <b>GM</b>
+
+                         <button type="button" class="btn btn-sm shadow-none"
+                                 data-mdb-container="body"
+                                 data-mdb-toggle="popover"
+                                 data-mdb-placement="top"
+                                 title="Gray Matter (GM)"
+                                 data-mdb-content="Gray matter is distributed on the surface (cortex) of and also deep within (subcortical nuclei) the brain and has a high concentration of neuronal cell bodies.">
                                 <i class="bi bi-question-circle-fill"></i></button>
-                         GM,
-                         <button type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left" title="What is WM?"
-                                    data-bs-content="White matter consists of neuronal axons covered in a protective fatty sheath and helps conduct signals between brain regions.">
+
+                         <b>WM</b>
+                              <button type="button" class="btn btn-sm shadow-none"
+                                      data-mdb-container="body"
+                                      data-mdb-toggle="popover"
+                                      data-mdb-placement="top"
+                                      title="White Matter (WM)"
+                                      data-mdb-content="White matter consists of neuronal axons covered in a protective fatty sheath and helps conduct signals between brain regions.">
                                 <i class="bi bi-question-circle-fill"></i></button>
-                         WM </b></div>
+                     </b>
+
+                     </div>
                      <div class="card-body">
                          <div class="chart" id="chart-G3-bar">
                          </div>

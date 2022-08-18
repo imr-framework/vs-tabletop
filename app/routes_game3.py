@@ -18,6 +18,7 @@ questions = []
 
 
 @app.route('/games/3',methods=["GET","POST"])
+@login_required
 def game3():
     form=Game3Form()
 
@@ -35,7 +36,7 @@ def game3():
     print(session['game3'])
     return render_template('game3.html', template_title="Brains, please!", template_intro_text="",
                            G3Form=form, graphJSON_img = j1, graphJSON_bar = j2, questions = questions,
-                           success_text=success_text, uses_images=uses_images)
+                           success_text=success_text, uses_images=uses_images, game_num=3)
 
 @socketio.on('Update param for Game3')
 def update_parameter(info):

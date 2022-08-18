@@ -1,3 +1,6 @@
+$('#link-to-game7').addClass('text-success');
+
+
 let socket = io();
 let layout = {autosize: true};
 

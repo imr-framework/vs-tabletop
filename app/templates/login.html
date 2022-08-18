@@ -1,33 +1,35 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="container-fluid">
-<div id="logo" class="row align-content-center">
-  <img src="../static/img/virtual_scanner_logo.png" class="mx-auto d-block w-25" alt="Virtual Scanner Logo">
-</div>
-  <div class="row"><h3 class="text-center">Login</h3></div>
-  <div class="row justify-content-center">
-  <div class="col-4">
-
-
-<form action="/login" method="POST">
-    {{ template_login_form.csrf_token }}
-  {{ template_login_form.hidden_tag() }}
-  {{template_login_form.username_field.label}}
-  {{template_login_form.username_field(class="form-control")}}
-    {% for error in template_login_form.username_field.errors %}
-<span class="error">[{{error}}]</span>
-{% endfor %}
-  {{template_login_form.password_field.label}}
-  {{template_login_form.password_field(class="form-control")}}
-  {{template_login_form.submit_field()}}
-</form>
-
+<div class="container-fluid vh-100">
+  <div class="row d-flex justify-content-center align-items-center">
+            <div id="logo" class="row align-content-center">
+            <img src="../static/img/virtual_scanner_logo.png" class="mx-auto d-block w-25" alt="Virtual Scanner Logo">
+            </div>
+            <div class="col-6 card bg-light">
+            <div class="card-header h3 font-monospace">Login here!</div>
+            <div class="card-body">
+                <form action="/login" method="POST">
+                    {{ template_login_form.csrf_token }}
+                  {{ template_login_form.hidden_tag() }}
+                  {{template_login_form.username_field.label(class="form-label")}}
+                  {{template_login_form.username_field(class="form-control",value=session['username_display'])}}
+                  {{template_login_form.password_field.label(class="form-label")}}
+                  {{template_login_form.password_field(class="form-control")}}
+                    <br>
+                  {{template_login_form.submit_field()}}
+                      <div class="row text-center">
+                          <a href="/register">Register here</a>
+                      </div>
+                </form>
+            </div>
+            </div>
   </div>
-      <div class="row text-center">
-          <a href="/register">Register here</a>
-      </div>
-    </div>
 </div>
+
+{% endblock %}
+
+{% block additional_imports %}
+    <!-- Script to hide user info -->
 
 {% endblock %}

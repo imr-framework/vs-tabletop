@@ -197,9 +197,9 @@ def initialize_game3_questions():
         game_number=3,
         question_text="What are T1-weighted images most useful for?",
         choiceA = "Assessing the relative densities of brain tissues",
-        choiceB = "Detecting breakdown in the blood-brain barrier",
+        choiceB = "Visualizing brain tissue boundaries",
         choiceC = "Detecting deoxygenated hemoglobin",
-        choiceD = "Visualizing the ankle joint",
+        choiceD = "Highlighting cerebrospinal fluid",
         correct_choice="B",
         difficulty="easy"
     ))

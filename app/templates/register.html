@@ -10,43 +10,34 @@
                     <i class="bi bi-controller fa-5x"></i>
                 </div>
             </div>
+
         </div>
         <div class="row h-50 d-flex justify-content-center">
             <div class="col-4">
             <form action="/register" method="POST">
 
-                     <div class="card row h-50 bg-info">
-                <span class="h2 card-header text-light">Register here</span>
+                     <div class="card row h-50 bg-light">
+                <span class="h3 font-monospace card-header text-primary">Register here</span>
             <div class="card-body">
             {{ template_form.hidden_tag()}}
-            {{ template_form.username_field.label(class="form-label text-light") }}
+            {{ template_form.username_field.label(class="form-label text-primary") }}
             {{template_form.username_field(size=27,class="form-control col", placeholder="Enter username")}}
 
-                {{template_form.password_field.label(class="form-label text-light")}}
+                {{template_form.password_field.label(class="form-label text-primary")}}
                 {{template_form.password_field(class="form-control")}}
-                {{template_form.password2_field.label(class="form-label text-light")}}
+                {{template_form.password2_field.label(class="form-label text-primary")}}
                 {{template_form.password2_field(class="form-control")}}
 
             <br>
-            <div class="form-group">
-                {{ template_form.submit_field(class="btn btn-info") }}
+                {{ template_form.submit_field() }}
             </div>
-
-            </div>
-
-
      </div>
-
-
-
-
             </form>
 
-
-   <div class="row text-center">
+<div class="row text-center">
           <a href="/login">Return to Login Page</a>
       </div>
-</div
+</div>
 </div>
     </div>
 {% endblock %}

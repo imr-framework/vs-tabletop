@@ -6,14 +6,18 @@
         <div class="row h-50">
                     <div class="col-4 card">
                         <div class="card-header">
-                                 <div type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left"
+
+                            <div class="btn btn-lg btn-info" id="button-3d-model">Load 3D model</div>
+                            <div type="button" class="btn btn-sm shadow-none"
+                                      data-mdb-container="body"
+                                      data-mdb-toggle="popover"
+                                      data-mdb-placement="right"
                                       title='3D coordinates'
-                                data-bs-content="Any point in 3D space can be located with a position vector (x,y,z).
+                                      data-mdb-content="Any point in 3D space can be located with a position vector (x,y,z).
                                                  A 3D model is defined by surfaces, which are defined by triangles,
                                                  which are in turn defined by three vertices each. ">
                                     <i class="bi bi-question-circle-fill"></i>
                             </div>
-                            <div class="btn btn-lg btn-info" id="button-3d-model">Load 3D model</div>
                         </div>
                         <div class="card-body">
                             <div class="chart" id="chart-G7-3D"></div>
@@ -22,15 +26,19 @@
 
                     <div class="col-4 card">
                         <div class="card-header">
-                                 <div type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left"
-                                      title='2D projection'
-                                data-bs-content="A 2D projection of a 3D function along an axis can be calculated by
+
+                            <div class="btn btn-lg btn-success" id="button-2d-proj">2D projection</div>
+                            <div type="button" class="btn btn-sm shadow-none"
+                                 data-mdb-container="body"
+                                 data-mdb-toggle="popover"
+                                 data-mdb-placement="left"
+                                 title='2D projection'
+                                 data-mdb-content="A 2D projection of a 3D function along an axis can be calculated by
                                                  summing up the function f(x,y,z) across all values on that axis.
                                                  For example, a projection along the z axis can be calculated by creating a function g(x,y), where
                                                  g(x0,y0) = (sum of f(x0,y0,z) for all z between negative infinity and positive infinity) ">
-                                    <i class="bi bi-question-circle-fill"></i>
+                                 <i class="bi bi-question-circle-fill"></i>
                             </div>
-                            <div class="btn btn-lg btn-success" id="button-2d-proj">2D projection</div>
                         </div>
 
                         <div class="card-body">
@@ -40,14 +48,18 @@
 
                     <div class="col-4 card">
                         <div class="card-header">
-                            <div type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="left"
-                                      title='1D projection'
-                                data-bs-content="A 2D image can be collapsed in the y direction (90 degrees) to create a 1D curve that shows
+
+                            <div class="btn btn-lg btn-success" id="button-1d-proj">1D projection</div>
+                            <div type="button" class="btn btn-sm shadow-none"
+                                 data-mdb-container="body"
+                                 data-mdb-toggle="popover"
+                                 data-mdb-placement="left"
+                                 title='1D projection'
+                                 data-mdb-content="A 2D image can be collapsed in the y direction (90 degrees) to create a 1D curve that shows
                                                    how much total intensity there is for each y location. This can also be done along
                                                    any direction such as x (0 degree), 45 degrees, etc. to have different views of the same object.">
-                                    <i class="bi bi-question-circle-fill"></i>
+                                 <i class="bi bi-question-circle-fill"></i>
                             </div>
-                            <div class="btn btn-lg btn-success" id="button-1d-proj">1D projection</div>
                     </div>
                         <div class="card-body">
                             <div class="chart" id="chart-G7-1D"></div>
@@ -66,25 +78,33 @@
 
                             <!-- 3D model choice -->
                             <div class="form-group">
-                                  <div type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="top"
-                                      title='3D model'
-                                data-bs-content="Select among a list of pre-made 3D models with cutouts that fills with water which generate signal.">
-                                    <i class="bi bi-question-circle-fill"></i>
-                            </div>
+
 
                             {{ G7Form.phantom_type_field.label(class="form-label")}}
+                                <div type="button" class="btn btn-sm shadow-none"
+                                     data-mdb-container="body"
+                                     data-mdb-toggle="popover"
+                                     data-mdb-placement="top"
+                                     title='3D model'
+                                     data-mdb-content="Select among a list of pre-made 3D models with cutouts that fills with water which generate signal.">
+                                    <i class="bi bi-question-circle-fill"></i>
+                                </div>
                             {{ G7Form.phantom_type_field(class="form-control",id='model')}}
                             </div>
 
                             <!-- 2D projection axis -->
                             <div class="form-group pt-3">
                                 <div class="col">
-                                    <div type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="top"
-                                          title='2D projection axis'
-                                    data-bs-content="The axis along which the water-filled parts of the 3D volume is summed.">
+
+                                    {{ G7Form.proj_2d_axis_field.label(class="form-label col") }}
+                                    <div type="button" class="btn btn-sm shadow-none"
+                                         data-mdb-container="body"
+                                         data-mdb-toggle="popover"
+                                         data-mdb-placement="top"
+                                         title='2D projection axis'
+                                         data-mdb-content="The axis along which the water-filled parts of the 3D volume is summed.">
                                         <i class="bi bi-question-circle-fill"></i>
                                     </div>
-                                    {{ G7Form.proj_2d_axis_field.label(class="form-label col") }}
                                  </div>
 
 
@@ -98,21 +118,28 @@
                                 </div>
                             </div>
 
-
                             <!-- 1D projection angle -->
-                                <div class="form-group pt-3">
-                                    <div class="col">
-                                    <div type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="top"
-                                      title='1D projection angle'
-                                      data-bs-content="The angle at which we pass parallel rays through an 2D image.
+
+                                {{ G7Form.proj_1d_angle_field.label(class="form-label")}}
+                                    <div type="button" class="btn btn-sm shadow-none"
+                                         data-mdb-container="body"
+                                         data-mdb-toggle="popover"
+                                         data-mdb-placement="bottom"
+                                         title='1D projection angle'
+                                         data-mdb-content="The angle at which we pass parallel rays through an 2D image.
                                                         The total image intensity along each ray is summed to form the projection
                                                        on a line/surface at a right angle to the rays.">
-                                    <i class="bi bi-question-circle-fill"></i>
+                                         <i class="bi bi-question-circle-fill"></i>
                                     </div>
-                                {{ G7Form.proj_1d_angle_field.label(class="form-label")}}
-                                </div>
+
+                                <div class="form-group row">
+                                    <div class="col-8">
                                 {{ G7Form.proj_1d_angle_field(class='form-control',id='proj1d_angle',disabled=true)}}
-                            </div>
+                                    </div>
+                                    <div class="col-4">
+                                        deg.
+                                    </div>
+                                </div>
 
                             <!-- Form submit button -->
                                 <div class="form-group pt-3">
@@ -268,11 +295,6 @@
                                     </div>
                                 {% endif %}
 
- <div type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="top"
-                                      title="How to play"
-                                data-bs-content='Check off all tasks of each Move and press Next to move on. Complete all steps and answer the Questions on the right to earn five stars!'>
-                                    <i class="bi bi-question-circle-fill"></i>
-                                </div>
                                 <!-- Step 5 special part -->
                                 {% if task_index == 5 %}
                                     <div class="d-none form-check" id="image-opts-2">

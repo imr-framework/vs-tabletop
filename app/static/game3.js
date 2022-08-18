@@ -1,3 +1,6 @@
+$('#link-to-game3').addClass('text-success');
+
+
 let tabs = document.querySelectorAll('.tabs__toggle'),
     contents = document.querySelectorAll('.tabs__content');
 

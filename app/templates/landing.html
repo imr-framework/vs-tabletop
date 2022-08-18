@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <!-- Hide navbar -->
+
+
+    <div class="container-fluid vh-100">
+        <div class="row h-50 d-flex justify-content-center align-items-center">
+            <div class="col-4">
+                <div class="row d-flex justify-content-center">
+                    <img style="height:150px; width:auto" src="../static/img/vs-tabletop-icon.svg" alt="vs tabletop icon">
+                </div>
+                <div class="row">
+                    <p class="font-monospace text-primary h3">Virtual Scanner Tabletop</p>
+                    <ul class="list-group list-group-info list-group-small">
+                        <li class="list-group-item">
+                            <i class="fas fa-gamepad text-danger"></i>
+                            <span>Let's play some games about Magnetic Resonance Imaging</span>
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-mountain text-info"></i>
+                            <span>You can climb up Mt. Resonance in up to 8 steps</span>
+                        </li>
+
+                        <li class="list-group-item">
+                            <i class="fas fa-flag text-primary"></i>
+                            <span>Earn three stars on each game to unlock the next step </span>
+                        </li>
+
+                        <li class="list-group-item">
+                            <i class="fas fa-star text-warning"></i>
+                            <span>Earn five stars on at least 4 games to get a prize</span>
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-puzzle-piece"></i>
+                            <span>Solve puzzles and have fun along the way!</span>
+                        </li>
+
+                    </ul>
+                </div>
+
+
+
+                <div class="row">
+                        <a href="/login" class="text-primary btn btn-lg btn-success">Let's go!</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block additional_imports%}
+    <script type="text/javascript">
+        $('#base-navbar').hide();
+        $('#base-message-board').hide();
+    </script>
+{% endblock %}

@@ -30,71 +30,103 @@
   </head>
   <body>
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-  <div class="container-fluid">
+    <nav id="base-navbar" class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <!-- icon -->
+            <a class="navbar-brand" href="/index">
+                <img style="height:60px; width:auto" src="../static/img/vs-tabletop-icon.png" alt="vs tabletop icon" width="76">
+            </a>
 
-    <a class="navbar-brand" href="/index">
-        <img style="height:60px; width:auto" src="../static/img/vs-tabletop-icon.png" alt="vs tabletop icon" width="76">
-    </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarColor01" data-toggle="buttons">
+              <ul class="navbar-nav me-auto">
+
+                  <li class="nav-item">
+                  <a class="nav-link" href="/index">Home
+                    <span class="visually-hidden">(current)</span>
+                  </a>
+                </li>
+
+                <li class="nav-item">
+                  <a class="nav-link" href="/calibration">Calibration</a>
+                </li>
+
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" id="navbarDropdown" role="button"
+                     aria-haspopup="true" aria-expanded="false">Games</a>
 
 
-        <!--<span>Virtual Scanner Tabletop</span>-->
+                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="/games/1" id="link-to-game1">Game 1: What's in an image?</a>
+                    <a class="dropdown-item" href="/games/2" id="link-to-game2">Game 2: K-space magik </a>
+                    <a class="dropdown-item" href="/games/3" id="link-to-game3">Game 3: Brains, please!</a>
+                    <a class="dropdown-item" href="/games/4" id="link-to-game4">Game 4: Fresh blood</a>
+                    <a class="dropdown-item" href="/games/5" id="link-to-game5">Game 5: Proton's got moves</a>
+                    <a class="dropdown-item" href="/games/6" id="link-to-game6">Game 6: Relaxation Station</a>
+                    <a class="dropdown-item" href="/games/7" id="link-to-game7">Game 7: Puzzled by Projection I</a>
+                    <a class="dropdown-item" href="/games/8" id="link-to-game8">Game 8: Puzzled by Projection II</a>
+                  </div>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
 
-    <div class="collapse navbar-collapse" id="navbarColor01" data-toggle="buttons">
-      <ul class="navbar-nav me-auto">
 
-          <li class="nav-item">
-          <a class="nav-link" href="/index">Home
-            <span class="visually-hidden">(current)</span>
-          </a>
-        </li>
+                </li>
 
-        <li class="nav-item">
-          <a class="nav-link" href="/calibration">Calibration</a>
-        </li>
+              </ul>
 
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" id="navbarDropdown" role="button"
-             aria-haspopup="true" aria-expanded="false">Games</a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="/games/1" id="link-to-game1">Game 1: What's in an image?</a>
-            <a class="dropdown-item" href="/games/2" id="link-to-game2">Game 2: K-space magik </a>
-            <a class="dropdown-item" href="/games/3" id="link-to-game3">Game 3: Brains, please!</a>
-            <a class="dropdown-item" href="/games/4" id="link-to-game4">Game 4: Fresh blood</a>
-            <a class="dropdown-item" href="/games/5" id="link-to-game5">Game 5: Proton's got moves</a>
-            <a class="dropdown-item" href="/games/6" id="link-to-game6">Game 6: Relaxation Station</a>
-            <a class="dropdown-item" href="/games/7" id="link-to-game7">Game 7: Puzzled by Projection I</a>
-            <a class="dropdown-item" href="/games/8" id="link-to-game8">Game 8: Puzzled by Projection II</a>
-          </div>
-        </li>
 
-      </ul>
+            </div>
 
-        {% if template_title %}
-        <ul class="navbar-nav text-light">
-            <li>{{template_title}}</li>
-        </ul>
-        {% endif %}
 
-        <ul class="navbar-nav float-right">
-              <li class="nav-item d-flex align-content-center">
-                 <div class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userInfoModalCenter">
-                   User: {{ session['user']['username'] }}
-                </div>
+
+            <div class="collapse navbar-collapse justify-content-center" id="navbarColor01" data-toggle="buttons">
+            {% if template_title %}
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle"
+                           href="#"
+                           id="gameDropdown"
+                           role="button"
+                           data-mdb-toggle="dropdown"
+                           aria-expanded="false"
+                           >
+                            Game {{ game_num }} : {{ template_title }}
+                        </a>
+                            <ul class="dropdown-menu" aria-labelledby="gameDropdown">
+                                <li>
+                                    <a class="dropdown-item" href="#">How to play</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#">Definitions</a>
+                                </li>
+                            </ul>
+                    </li>
+                </ul>
+            {% endif %}
+            </div>
+
+
+            <div class="collapse navbar-collapse" id="navbarColor01" data-toggle="buttons">
+            {% if session['user']['username'] %}
+
+            <ul class="navbar-nav ms-auto">
+                  <li class="nav-item d-flex align-content-center">
+                     <div class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userInfoModalCenter">
+                       User: {{ session['user']['username'] }}
+                    </div>
+                  </li>
+                  <!-- Button trigger modal -->
+                <li class="nav-item">
+                  <a class="nav-link" href="/logout">Log out</a>
               </li>
-              <!-- Button trigger modal -->
-            <li class="nav-item">
-              <a class="nav-link" href="/logout">Log out</a>
-          </li>
+            </ul>
+            {% endif %}
+            </div>
 
-        </ul>
-    </div>
-  </div>
-</nav>
+        </div>
+    </nav>
 
     <!-- Modal: user profile -->
     <div class="modal fade" id="userInfoModalCenter" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -125,10 +157,8 @@
             </div>
             </div>
 
-
-
-
-    <div class="card bg-light">
+    <!-- Message board -->
+    <div id="base-message-board" class="card bg-info">
         {% with messages = get_flashed_messages() %}
             {% if messages %}
                 {%  for message in messages %}

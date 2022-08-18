@@ -11,10 +11,13 @@
             <div class="row card bg-light">
                 <div class="card-header">
                     <span>Magnetization</span>
-                        <div type="button" class="btn btn-sm btn-link" data-bs-toggle="popover" data-bs-placement="right"
-                                      title="Magnetization (M)"
-                                data-bs-content="Net magnetic dipole moment that develops when protons are placed in the main magnetic field.
-                                                 At equilibrium, M is parallel to B0. Both are along the z (top-down) direction in this graph.">
+                        <div type="button" class="btn btn-sm shadow-none"
+                             data-mdb-container="body"
+                             data-mdb-toggle="popover"
+                             data-mdb-placement="right"
+                             title="Magnetization (M)"
+                             data-mdb-content="Net magnetic dipole moment that develops when protons are placed in the main magnetic field.
+                                              At equilibrium, M is parallel to B0. Both are along the z (top-down) direction in this graph.">
                                     <i class="bi bi-question-circle-fill"></i>
                                 </div>
 
@@ -27,9 +30,12 @@
             <div class="row card">
                 <div class="card-header">
                     <span>Signal (emf)</span>
-                        <div type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="right"
-                                      title="Electromotive Force (emf)"
-                             data-bs-content="Voltage that develops across the wire loop when the magnetic flux that passes through it changes in time;
+                        <div type="button" class="btn btn-sm shadow-none"
+                             data-mdb-container="body"
+                             data-mdb-toggle="popover"
+                             data-mdb-placement="right"
+                             title="Electromotive Force (emf)"
+                             data-mdb-content="Voltage that develops across the wire loop when the magnetic flux that passes through it changes in time;
                                               this change can be caused by rotating / precessing magnetization. The voltage waveform is the raw signal that
                                               will be converted to an MR image.">
                                     <i class="bi bi-question-circle-fill"></i>
@@ -49,8 +55,12 @@
                         <div class="row h-25 card">
                                  <div class="card-header">
                                      <span class="h3">Main field (Gauss)</span>
-                                      <div type="button" class="btn btn-sm btn-link" data-bs-toggle="popover" data-bs-placement="right"
-                                              title="Main field" data-bs-content="Also called B0, it is a strong magnetic field that generates a net magnetization in the imaged subject. The main field needs to stay on throughout the experiment.">
+                                      <div type="button" class="btn btn-sm shadow-none"
+                                           data-mdb-container="body"
+                                           data-mdb-toggle="popover"
+                                           data-mdb-placement="right"
+                                           title="Main field"
+                                           data-mdb-content="Also called B0, it is a strong magnetic field that generates a net magnetization in the imaged subject. The main field needs to stay on throughout the experiment.">
                                             <i class="bi bi-question-circle-fill"></i>
                                       </div>
                                  </div>
@@ -90,11 +100,14 @@
                                 <span>RF pulse</span>
 
 
-                             <div type="button" class="btn btn-sm btn-link" data-bs-toggle="popover" data-bs-placement="bottom"
-                                      title="Radiofrequency Pulse"
-                                  data-bs-content="The RF pulses are a short-lived and high frequency magnetic fields that sit within the x-y plane. They can rotate the magnetization to different degrees.">
-                                    <i class="bi bi-question-circle-fill"></i>
-                                </div>
+                             <div type="button" class="btn btn-sm shadow-none"
+                                  data-mdb-container="body"
+                                  data-mdb-toggle="popover"
+                                  data-mdb-placement="bottom"
+                                  title="Radiofrequency Pulse"
+                                  data-mdb-content="The RF pulses are a short-lived and high frequency magnetic fields that sit within the x-y plane. They can rotate the magnetization to different degrees.">
+                                  <i class="bi bi-question-circle-fill"></i>
+                             </div>
                             </h3>
                             <!-- TODO fix this! -->
                             <div class="card-body row">
@@ -103,10 +116,10 @@
 
                                         <div class="col-8">
                                         {{ template_game_form.flip_angle_field.label }}
-                                            <p id="fa_deg">{{ session['game5']['flip_angle'] }} degrees</p>
+                                            <p id="fa_deg" class="text-info">{{ session['game5']['flip_angle'] }} degrees</p>
                                         </div>
                                         <div class="col-4">
-                                         <button type="button" class="btn btn-sm btn-link d-flex justify-content-evenly"
+                                         <button type="button" class="btn btn-sm shadow-none d-flex justify-content-evenly"
                                                  data-mdb-container="body"
                                                  data-mdb-toggle="popover"
                                                  data-mdb-placement="top"
@@ -120,11 +133,11 @@
                                     <div class="row h-50">
                                         <div class="col-8">
                                         {{ template_game_form.rf_phase_field.label }}
-                                            <p id="rf_deg">{{ session['game5']['rf_phase'] }} degrees</p>
+                                            <p id="rf_deg" class="text-info">{{ session['game5']['rf_phase'] }} degrees</p>
                                         </div>
 
                                         <div class="col-4">
-                                         <button type="button" class="btn btn-sm btn-link d-flex justify-content-evenly"
+                                         <button type="button" class="btn btn-sm shadow-none d-flex justify-content-evenly"
                                               data-mdb-container="body"
                                               data-mdb-toggle="popover"
                                               data-mdb-placement="bottom"
@@ -161,9 +174,12 @@
                         <div class="row h-25 card">
                             <h3 class="card-header">
                             <span>Receive coil</span>
-                                 <div type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="right"
+                                 <div type="button" class="btn btn-sm shadow-none"
+                                      data-mdb-container="body"
+                                      data-mdb-toggle="popover"
+                                      data-mdb-placement="right"
                                       title="Receive Coil"
-                                      data-bs-content="A loop of conductive wire is placed vertically so that the processing magnetization vectors pierce through it. ">
+                                      data-mdb-content="A loop of conductive wire is placed vertically so that the processing magnetization vectors pierce through it. ">
                                     <i class="bi bi-question-circle-fill"></i>
                                 </div>
                             </h3>
@@ -184,9 +200,12 @@
                                     {{ template_game_form.rot_frame_onoff_field(class="btn-check",id="rot-frame-button",autocomplete="off",
                                                                                 checked=session['game5']['rot_frame_on']) }}
                                     <label class="btn btn-outline-info" for="rot-frame-button">Rotating frame </label>
-                                        <div type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="bottom"
-                                      title="Rotating frame of reference"
-                                             data-bs-content="We can make the precessing magnetization look still if we are on a merry-go-round at the same speed;
+                                        <div type="button" class="btn btn-sm shadow-none"
+                                             data-mdb-container="body"
+                                             data-mdb-toggle="popover"
+                                             data-mdb-placement="bottom"
+                                             title="Rotating frame of reference"
+                                             data-mdb-content="We can make the precessing magnetization look still if we are on a merry-go-round at the same speed;
                                                               that is, if we are in a rotating frame of reference. Turn it on and see for yourself!">
                                     <i class="bi bi-question-circle-fill"></i>
                                 </div>
@@ -307,7 +326,7 @@
                 <div class="col-6 card">
                     <div class="card-header h3">
                         Tasks
-                                  <div type="button" class="btn btn-sm btn-link"
+                                  <div type="button" class="btn btn-sm shadow-none"
                                        data-mdb-container="body"
                                        data-mdb-toggle="popover"
                                        data-mdb-placement="top"
