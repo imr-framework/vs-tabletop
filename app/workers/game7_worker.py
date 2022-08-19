@@ -137,7 +137,10 @@ def get_3d_model_plot(model_info,lines=False,line_dir='z'):
         JSON representation of 3D model Plotly figure
 
     """
-    x,y,z,I,J,K = load_3d_model(model_info)
+    if model_info is None:
+        x,y,z,I,J,K = [],[],[],[],[],[]
+    else:
+        x,y,z,I,J,K = load_3d_model(model_info)
 
     colorscale = [[0, 'lightblue'], [1, 'lightblue']]
     mesh3D = go.Mesh3d(
@@ -153,8 +156,6 @@ def get_3d_model_plot(model_info,lines=False,line_dir='z'):
     layout = go.Layout(paper_bgcolor='gainsboro',
                        title_x=0.5,
                        font_color='black',
-                        width=500,
-                       height=350,
                        scene_camera=dict(eye=dict(x=1.25, y=-1.25, z=1)),
                        scene_xaxis_visible=False,
                        scene_yaxis_visible=False,
@@ -173,10 +174,10 @@ def get_3d_model_plot(model_info,lines=False,line_dir='z'):
     # Transparency buttons
     fig.update_layout(
         margin=dict(
-            l=10,
-            r=10,
-            b=10,
-            t=10,
+            l=5,
+            r=5,
+            b=5,
+            t=5,
             pad=0
         ),
         updatemenus=[
@@ -344,7 +345,14 @@ def plot_projection(proj,axes,lines=False,lines_angle=90):
         #fig = px.imshow(proj, binary_string=True)
 
         fig = go.Figure(go.Heatmap(z=proj,colorscale='gray',showscale=False))
-        fig.update_layout(yaxis=dict(scaleanchor='x'),plot_bgcolor='rgba(0,0,0,0)')
+        fig.update_layout(yaxis=dict(scaleanchor='x'),
+                          plot_bgcolor='rgba(0,0,0,0)',
+                          margin=go.layout.Margin(
+                              l=0,
+                              r=0,
+                              b=0,
+                              t=0
+                          ))
 #                          width=500,height=350)
         if lines:
             theta = lines_angle * np.pi / 180
@@ -370,7 +378,12 @@ def plot_projection(proj,axes,lines=False,lines_angle=90):
         fig.add_trace(go.Scatter(y=proj,mode='lines',line=dict(width=3,color='darkslateblue')))
         fig.update_xaxes(title=axes[0])
         fig.update_yaxes(title='Relative amplitude')
-        #fig.update_layout(dict(width=500, height=350))
+        fig.update_layout( margin=go.layout.Margin(
+                              l=0,
+                              r=0,
+                              b=0,
+                              t=0
+                          ))
 
     else:
         fig = go.Figure()
@@ -434,14 +447,11 @@ def convert_stl_to_voxels(input_file_path, resolution=100):
     return vol
 
 def game7_empty_plots_worker():
-    j1 = go.Figure()
-    j1.add_trace(go.Scatter(x=[],y=[]))
-    j1.update_layout(width=500, height=350,paper_bgcolor='gainsboro')
-
+    j1 = get_3d_model_plot(None, False, 'z')
     j2 = plot_projection(np.zeros((256,256)),['',''],lines=False)
     j3 = plot_projection([],['r'],lines=False)
 
-    return j2, j2, j3
+    return j1, j2, j3
 
 
 def cut_cylindrical_corners(voxels):

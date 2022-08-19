@@ -2,12 +2,11 @@
 {% block content %}
     <div class="seperate"><canvas id="canvas"></canvas></div>
 
-    <div class="container-fluid vh-100">
-        <div class="row h-50">
-                    <div class="col-4 card">
+    <div class="row g-0 w-100 h-50">
+        <div class="col-4">
+            <div class="card h-100">
                         <div class="card-header">
-
-                            <div class="btn btn-lg btn-info" id="button-3d-model">Load 3D model</div>
+                            <button class="btn btn-lg btn-info" id="button-3d-model">Load 3D model</button>
                             <div type="button" class="btn btn-sm shadow-none"
                                       data-mdb-container="body"
                                       data-mdb-toggle="popover"
@@ -20,11 +19,12 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <div class="chart" id="chart-G7-3D"></div>
+                            <div class="chart h-100" id="chart-G7-3D"></div>
                         </div>
                     </div>
-
-                    <div class="col-4 card">
+        </div>
+        <div class="col-4">
+            <div class="card h-100">
                         <div class="card-header">
 
                             <div class="btn btn-lg btn-success" id="button-2d-proj">2D projection</div>
@@ -40,13 +40,13 @@
                                  <i class="bi bi-question-circle-fill"></i>
                             </div>
                         </div>
-
                         <div class="card-body">
-                            <div class="chart" id="chart-G7-2D"></div>
+                            <div class="chart h-100" id="chart-G7-2D"></div>
                         </div>
                     </div>
-
-                    <div class="col-4 card">
+        </div>
+        <div class="col-4">
+            <div class="card h-100">
                         <div class="card-header">
 
                             <div class="btn btn-lg btn-success" id="button-1d-proj">1D projection</div>
@@ -62,24 +62,23 @@
                             </div>
                     </div>
                         <div class="card-body">
-                            <div class="chart" id="chart-G7-1D"></div>
+                            <div class="chart h-100" id="chart-G7-1D"></div>
                         </div>
                     </div>
         </div>
+        </div>
 
-            <div class="row h-50">
-                 <div class="col-4 card">
+    <div class="row g-0 w-100 h-50">
+        <div class="col-4 mh-100">
+            <div class="card h-100">
                 <form action="/games/7" method="POST">
                     {{ G7Form.hidden_tag() }}
                         <div class="card-header">Projection settings</div>
                         <div class="card-body">
-                            <div class="row">
+                            <div class="row h-100">
                             <div class="col-4">
-
-                            <!-- 3D model choice -->
+                                <!-- 3D model choice -->
                             <div class="form-group">
-
-
                             {{ G7Form.phantom_type_field.label(class="form-label")}}
                                 <div type="button" class="btn btn-sm shadow-none"
                                      data-mdb-container="body"
@@ -166,9 +165,10 @@
                 </form>
 
                  </div>
-
+        </div>
                 <!-- Task panel -->
-                <div class="col-4 card">
+        <div class="col-4 mh-100">
+            <div class="card h-100">
                     <div class="card-header h3">
                         Tasks
                      <div type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="top"
@@ -351,106 +351,105 @@
 
                     </div>
                 </div>
+        </div>
+        <div class="col-4 mh-100">
+          <!-- Questions panel -->
+          <div class="card h-100">
+           <div class="card-header h3">Questions</div>
 
+                    <div id="slide" class="carousel slide card-body h-100" data-bs-interval="false">
+                    <div class="carousel-indicators">
+                        <button type="button" data-bs-target="#slide" data-bs-slide-to="0" class="active"></button>
+                        {% for i in range(1, success_text | length) %}
+                            <button type="button" data-bs-target="#slide" data-bs-slide-to="{{ i }}"></button>
+                        {% endfor %}
+                    </div>
 
-                    <!-- Questions panel -->
-                   <div class="col-4 card">
-                       <div class="card-header h3">Questions</div>
+                <div class="carousel-inner">
+                    {% for ind in range(success_text | length) %}
+                        {% set letters = ['a','b','c','d'] %}
+                        {% set active_text = 'active' if ind==0 else '' %}
+                        <div class="carousel-item {{active_text}}">
 
-                                <div id="slide" class="carousel slide card-body" data-bs-interval="false">
-                                <div class="carousel-indicators">
-                                    <button type="button" data-bs-target="#slide" data-bs-slide-to="0" class="active"></button>
-                                    {% for i in range(1, success_text | length) %}
-                                        <button type="button" data-bs-target="#slide" data-bs-slide-to="{{ i }}"></button>
-                                    {% endfor %}
-                                </div>
-
-                            <div class="carousel-inner">
-                                {% for ind in range(success_text | length) %}
-                                    {% set letters = ['a','b','c','d'] %}
-                                    {% set active_text = 'active' if ind==0 else '' %}
-                                    <div class="carousel-item {{active_text}}">
-
-                                        <div class="row d-flex justify-content-center align-items-baseline">
-                                            <p class="h5">Q{{ ind + 1 }}:{{ questions[ind]['text']}}</p>
-                                        </div>
-
-                                        <div class="row d-flex justify-content-center">
-
-                                        <div class="form-check col-8">
-                                        {% for ind2 in range(questions[ind]['choices'] | length) %}
-                                            {% if not uses_images[ind] %}
-                                                <div class="form-group">
-                                            <input type="radio" class="q{{ind}}-choice form-check-input" id="q{{ind}}-{{letters[ind2]}}" name="mc-question" value="{{ letters[ind2] }}">
-                                            <label for="q{{ind}}-{{letters[ind2]}}" class="form-check-label">{{ questions[ind]['choices'][ind2] }}</label>
-                                                </div>
-                                            {% else %}
-                                            <div class="form-group">
-                                            <input type="radio"  class="q{{ind}}-choice form-check-input" id="q{{ind}}-{{letters[ind2] }}" name="mc-question" value="{{ letters[ind2] }}">
-                                            <label for="q{{ind}}-{{letters[ind2]}}" class="form-check-label"><img src=".{{ questions[ind]['choices'][ind2] }}" style="height: 150px; width:150px;"></label>
-                                            </div>
-                                            {% endif %}
-                                        {% endfor %}
-                                        </div>
-
-                                        </div>
-                                        <p class="d-none">Correct choice: <span id="mc-correct-choice-{{ind}}">{{ questions[ind]['correct']}}</span></p>
-                                            <div class="btn btn-large btn-primary answer-mc" id="answer-mc-{{ind}}">Submit</div>
-                                        <p id="mc-success-text-{{ ind }}" class="d-none" style="color:palegreen">{{ success_text[ind] }}</p>
-                                        <p id="mc-failure-text-{{ ind }}" class="d-none" style="color:#ffb500">Wrong answer. Try again!</p>
-                                    </div>
-                                {% endfor %}
+                            <div class="row d-flex justify-content-center align-items-baseline">
+                                <p class="h5">Q{{ ind + 1 }}:{{ questions[ind]['text']}}</p>
                             </div>
 
-                            <button class="carousel-control-prev" type="button" data-bs-target="#slide" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon"></span>
-                            </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#slide" data-bs-slide="next">
-                                <span class="carousel-control-next-icon"></span>
-                            </button>
+                            <div class="row d-flex justify-content-center">
 
+                            <div class="form-check col-8">
+                            {% for ind2 in range(questions[ind]['choices'] | length) %}
+                                {% if not uses_images[ind] %}
+                                    <div class="form-group">
+                                <input type="radio" class="q{{ind}}-choice form-check-input" id="q{{ind}}-{{letters[ind2]}}" name="mc-question" value="{{ letters[ind2] }}">
+                                <label for="q{{ind}}-{{letters[ind2]}}" class="form-check-label">{{ questions[ind]['choices'][ind2] }}</label>
+                                    </div>
+                                {% else %}
+                                <div class="form-group">
+                                <input type="radio"  class="q{{ind}}-choice form-check-input" id="q{{ind}}-{{letters[ind2] }}" name="mc-question" value="{{ letters[ind2] }}">
+                                <label for="q{{ind}}-{{letters[ind2]}}" class="form-check-label"><img src=".{{ questions[ind]['choices'][ind2] }}" style="height: 150px; width:150px;"></label>
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                            </div>
+
+                            </div>
+                            <p class="d-none">Correct choice: <span id="mc-correct-choice-{{ind}}">{{ questions[ind]['correct']}}</span></p>
+                                <div class="btn btn-large btn-primary answer-mc" id="answer-mc-{{ind}}">Submit</div>
+                            <p id="mc-success-text-{{ ind }}" class="d-none" style="color:palegreen">{{ success_text[ind] }}</p>
+                            <p id="mc-failure-text-{{ ind }}" class="d-none" style="color:#ffb500">Wrong answer. Try again!</p>
                         </div>
-
-                           <p class="font-monospace" id="stars-display">
-                                   {% set num_stars = session['game7']['progress'].num_stars %}
-                                   {% set num_full = (num_stars | round(0,'floor') )| int %}
-                                   {% set num_half = ((2*(num_stars-num_full)) | round) | int %}
-                                   {% set num_empty = 5 - num_full - num_half %}
-                                   {% set star_array = [] %}
-                                    <span>{{ num_stars }}/5 stars earned</span>
-                                   {% for f in range(num_full) %}
-                                        {% set star_array = star_array.append(2) %}
-                                   {% endfor %}
-                                   {% for h in range(num_half) %}
-                                        {% set star_array = star_array.append(1) %}
-                                   {% endfor %}
-                                   {% for e in range(num_empty) %}
-                                       {% set star_array = star_array.append(0) %}
-                                    {% endfor %}
-                                   {% for star in star_array %}
-                                       {% if star == 2 %}
-                                            <i class="bi bi-star-fill"></i>
-                                       {% elif star == 1 %}
-                                           <i class="bi bi-star-half"></i>
-                                       {% else %}
-                                           <i class="bi bi-star"></i>
-                                       {% endif %}
-                                   {% endfor %}
-                               </p>
-
-
-
-
+                    {% endfor %}
                 </div>
 
-
+                <button class="carousel-control-prev" type="button" data-bs-target="#slide" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#slide" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </button>
 
             </div>
 
+               <p class="font-monospace" id="stars-display">
+                       {% set num_stars = session['game7']['progress'].num_stars %}
+                       {% set num_full = (num_stars | round(0,'floor') )| int %}
+                       {% set num_half = ((2*(num_stars-num_full)) | round) | int %}
+                       {% set num_empty = 5 - num_full - num_half %}
+                       {% set star_array = [] %}
+                        <span>{{ num_stars }}/5 stars earned</span>
+                       {% for f in range(num_full) %}
+                            {% set star_array = star_array.append(2) %}
+                       {% endfor %}
+                       {% for h in range(num_half) %}
+                            {% set star_array = star_array.append(1) %}
+                       {% endfor %}
+                       {% for e in range(num_empty) %}
+                           {% set star_array = star_array.append(0) %}
+                        {% endfor %}
+                       {% for star in star_array %}
+                           {% if star == 2 %}
+                                <i class="bi bi-star-fill"></i>
+                           {% elif star == 1 %}
+                               <i class="bi bi-star-half"></i>
+                           {% else %}
+                               <i class="bi bi-star"></i>
+                           {% endif %}
+                       {% endfor %}
+                   </p>
 
 
-            </div>
+
+
     </div>
+
+        </div>
+
+
+            </div>
+
+
+
 
 {% endblock %}
 
@@ -463,12 +462,20 @@
 
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script type="text/javascript">
+        const layout = {
+            autosize: true
+        };
+        const config = {
+            responsive: true,
+            displayModeBar: false
+        };
+
         let img3d = {{ graphJSON_3dimg | safe }};
-        Plotly.newPlot('chart-G7-3D', img3d, layout);
+        Plotly.newPlot('chart-G7-3D', img3d, layout, config);
         let img2d = {{ graphJSON_2dimg | safe }};
-        Plotly.newPlot('chart-G7-2D', img2d, layout);
+        Plotly.newPlot('chart-G7-2D', img2d, layout, config);
         let img1d = {{ graphJSON_1dimg | safe}};
-        Plotly.newPlot('chart-G7-1D', img1d, layout);
+        Plotly.newPlot('chart-G7-1D', img1d, layout, config);
     </script>
 
     <link rel="stylesheet" href="../static/styles/style_game7.css">

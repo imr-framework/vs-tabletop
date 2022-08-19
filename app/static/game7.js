@@ -2,7 +2,7 @@ $('#link-to-game7').addClass('text-success');
 
 
 let socket = io();
-let layout = {autosize: true};
+
 
 $(':input').on('change', (event)=>{
     socket.emit("Update param for Game7", {'id': event.target.id, 'value': event.target.value});

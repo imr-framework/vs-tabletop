@@ -2,8 +2,7 @@
 {% block content %}
     <div class="seperate"><canvas id="canvas"></canvas></div>
 
-    <div class="container-fluid vh-100">
-        <form action="/games/5" method="POST">
+    <form action="/games/5" method="POST">
     <div class="row h-100">
     <!-- Display panels on the left -->
         <div class="col-3 h-100" id="display-game5">
@@ -52,9 +51,9 @@
             <div class="row h-50" id="fields-game5">
                     {{ template_game_form.hidden_tag() }}
                     <div class="col col-6">
-                        <div class="row h-25 card">
+                        <div class="row card">
                                  <div class="card-header">
-                                     <span class="h3">Main field (Gauss)</span>
+                                     <span class="h4">Main field (Gauss)</span>
                                       <div type="button" class="btn btn-sm shadow-none"
                                            data-mdb-container="body"
                                            data-mdb-toggle="popover"
@@ -64,7 +63,6 @@
                                             <i class="bi bi-question-circle-fill"></i>
                                       </div>
                                  </div>
-
                                  <div class="card-body row">
                                      <div class="col-4">
                                         {{ template_game_form.b0_onoff_field(class="btn-check",id="b0_on",autocomplete="off",
@@ -88,7 +86,7 @@
                                  </div>
                             </div>
                         <div class="row h-50 card">
-                            <h3 class="card-header">
+                            <h4 class="card-header">
                                 {{ template_game_form.tx_onoff_field(class="btn-check",id="tx-button",autocomplete="off",
                                                                      checked=session['game5']['tx_on']) }}
 
@@ -108,7 +106,7 @@
                                   data-mdb-content="The RF pulses are a short-lived and high frequency magnetic fields that sit within the x-y plane. They can rotate the magnetization to different degrees.">
                                   <i class="bi bi-question-circle-fill"></i>
                              </div>
-                            </h3>
+                            </h4>
                             <!-- TODO fix this! -->
                             <div class="card-body row">
                                 <div class="col-4">
@@ -171,8 +169,8 @@
 
                             </div>
                     </div>
-                        <div class="row h-25 card">
-                            <h3 class="card-header">
+                        <div class="row card">
+                            <h4 class="card-header">
                             <span>Receive coil</span>
                                  <div type="button" class="btn btn-sm shadow-none"
                                       data-mdb-container="body"
@@ -182,7 +180,7 @@
                                       data-mdb-content="A loop of conductive wire is placed vertically so that the processing magnetization vectors pierce through it. ">
                                     <i class="bi bi-question-circle-fill"></i>
                                 </div>
-                            </h3>
+                            </h4>
                             <div class="card-body row">
                             <div class="col-4">
                                 <!-- input type="checkbox" class="btn-check" name="options-outlined" id="rx-button" autocomplete="off" -->
@@ -211,12 +209,12 @@
                                 </div>
                                 </div>
 
-                                <div class="btn-group col-4">
+                                <div class="btn-group shadow-none col-4">
                                     {% for subfield in template_game_form.rx_dir_field %}
                                         {% if subfield.id == "rx_dir_field-0" %}
-                                            {{ subfield(class="btn-check ", autocomplete="off",checked=session['game5']['coil_dir']=='x') }}
+                                            {{ subfield(class="btn-check shadow-none", autocomplete="off",checked=session['game5']['coil_dir']=='x') }}
                                         {% else %}
-                                            {{ subfield(class="btn-check ", autocomplete="off", checked=session['game5']['coil_dir']=='y') }}
+                                            {{ subfield(class="btn-check shadow-none", autocomplete="off", checked=session['game5']['coil_dir']=='y') }}
                                         {% endif %}
                                         {{ subfield.label(class="btn btn-outline-primary d-flex align-items-center justify-content-center") }}
                                     {% endfor %}
@@ -227,11 +225,11 @@
                     </div>
                     <div class="col col-6">
                             <div class="row h-50 card bg-light">
-                                <h3 class="card-header">Set initial magnetization</h3>
+                                <h4 class="card-header">Set initial magnetization</h4>
                                 <div class="card-body">
                                     <!-- Add in options to set initial magnetization value. -->
                                     <div class="row">
-                                <div class="col-8 btn-group">
+                                <div class="col-8 btn-group shadow-none">
                                     <input type="radio" class="btn-check" name="mag-options" id="mag-x" autocomplete="off">
                                     <label class="btn btn-outline-primary" for="mag-x">x</label>
 
@@ -271,10 +269,18 @@
                             <div class="row h-25 card bg-light" id="game5-button-region">
                                 <div class="col">
                                     <div class="row h-100">
-                                    <div class="btn btn-info btn-lg col-3 d-flex align-items-center justify-content-center" id="start">START</div>
-                                    <div class="btn btn-danger btn-lg col-3 d-flex align-items-center justify-content-center" id="stop">STOP</div>
-                                    <div class="btn btn-success btn-lg col-3 d-flex align-items-center justify-content-center" id="tip">TIP!</div>
-                                    <div class="btn btn-light btn-outline-primary btn-lg col-3 d-flex align-items-center justify-content-center" id="reset">RESET</div>
+                                        <div class="col-3 p-0">
+                                            <div class="h-100 btn btn-info d-flex align-items-center justify-content-center" id="start">START</div>
+                                        </div>
+                                        <div class="col-3 p-0">
+                                            <div class="h-100 btn btn-danger btn-lg d-flex align-items-center justify-content-center" id="stop">STOP</div>
+                                        </div>
+                                        <div class="col-3 p-0">
+                                            <div class="h-100 btn btn-success btn-lg d-flex align-items-center justify-content-center" id="tip">TIP!</div>
+                                        </div>
+                                        <div class="col-3 p-0">
+                                            <div class="h-100 btn btn-light btn-outline-primary btn-lg d-flex align-items-center justify-content-center" id="reset">RESET</div>
+                                        </div>
                                     </div>
                                 </div>
                                 <!-- Saving current parameters, loading previous ones -->
@@ -324,7 +330,7 @@
 
                 <!-- Instructions panel -->
                 <div class="col-6 card">
-                    <div class="card-header h3">
+                    <div class="card-header h4">
                         Tasks
                                   <div type="button" class="btn btn-sm shadow-none"
                                        data-mdb-container="body"
@@ -544,8 +550,6 @@
     </div>
 
         </form>
-
-    </div>
      <!-- Javascript for Plotly integration (required)-->
 
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>

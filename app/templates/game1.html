@@ -24,7 +24,6 @@
     </script>
 </head>
 
-    <div class="container-fluid vh-100">
         <div class="row h-100">
             <div class="col-6 h-50">
 
@@ -555,7 +554,7 @@
 
                                     {% set active_text = 'active' if ind==0 else '' %}
                                     <div class="carousel-item {{active_text}}">
-                                        <h2>Question {{ ind+1 }}</h2>
+                                        <h2>Question {{ ind + 1 }}</h2>
                                         <br>{{ questions[ind]['text']}}<br>
                                         {% if (questions[ind]['main_image_path']) | length > 0 %}
                                         <br><img src=".{{ questions[ind]['main_image_path']}}" style="max-height:120px; max-width:400px ">
@@ -595,7 +594,7 @@
 
 
             </div>
-
+        </div>
 
 
 {% endblock %}
@@ -610,4 +609,6 @@
         let graphs_picture = {{ graphJSON_img | safe }};
         Plotly.plot('chart-G1',  graphs_picture, {});
      </script>
+
+
 {% endblock %}

@@ -53,6 +53,7 @@ def update_parameter(info):
 
 @socketio.on('Request 3D model')
 def update_3d_model():
+    print('3D model requested')
     # Generate the 3D model
     j1, __, __ = get_updated_plots()
     __, j2, j3 = game7_empty_plots_worker()

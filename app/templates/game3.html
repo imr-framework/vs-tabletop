@@ -11,12 +11,11 @@
 
 </head>
 
-    <div class="container-fluid vh-100">
-        {% if session['game3']['completed_task'] == 3 %}
-            {% if session['game3']['P3_q'] == "CSF" %}
-            <div class="seperate"><canvas id="canvas"></canvas></div>
-            {% endif %}
-        {% endif %}
+{% if session['game3']['completed_task'] == 3 %}
+    {% if session['game3']['P3_q'] == "CSF" %}
+    <div class="seperate"><canvas id="canvas"></canvas></div>
+    {% endif %}
+{% endif %}
         <div class="row h-100">
             <div class="col-7 h-100">
                  <div action="/games/3" method="POST">
@@ -398,7 +397,7 @@
                                     {% set letters = ['a','b','c','d'] %}
                                     {% set active_text = 'active' if ind==0 else '' %}
                                     <div class="carousel-item {{active_text}}">
-                                        <h2> Question {{ ind+1 }}</h2>
+                                        <h2> Question {{ ind + 1 }}</h2>
                                         {{ questions[ind]['text'] }}
                                         {% if (questions[ind]['main_image_path']) | length > 0 %}
                                         <br><img src=".{{ questions[ind]['main_image_path']}}" style="height:100px; width:100px;">
@@ -470,7 +469,6 @@
                                </p>
                         </div>
                     </div>
-             </div>
 
 {% endblock %}
 
