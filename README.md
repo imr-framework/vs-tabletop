@@ -16,13 +16,11 @@ Virtual Scanner Tabletop is an extension to [Virtual Scanner](https://github.com
 5. Click into the link in the program output (example: http://127.0.0.1:5000/) or copy & paste it into the browser. Log in as admin using password `123456` and try game 1, 3, 5, 7 for yourself! 
 6. For each game, you could follow the instructions panel and perform steps to fill the progress bar. This portion gets you 3 out of 5 stars. You can opt to answer the multiple choice questions for up to two additional stars. You could play freely with the inputs too. 
 
-
-Please provide feedback here :smile:: https://forms.gle/HMby4NHcmrTLi5Ai7
-
+Please provide feedback here after you've tried all the beginner games:smile:: https://forms.gle/HMby4NHcmrTLi5Ai7
 
 ## Tabletop Games
 The eight tabletop games are grouped into 4 pairs, each containing a "beginner" game and an "advanced" game. 
-Games 1, 3, 5, 7 are beginner games and the rest are advanced games. 
+Games 1, 3, 5, 7 are beginner games and the games 2, 4, 6, 8 are advanced games. 
 
 | # | Game          | Conceptsr |
 | --- | ------------- | ------------- |
@@ -39,21 +37,20 @@ Games 1, 3, 5, 7 are beginner games and the rest are advanced games.
 Screenshots are in-development previews of the games. They will be updated at the first release. 
 
 ### Login page
-![login](https://user-images.githubusercontent.com/31249056/182999188-e8d9fca7-fd88-4c3a-9077-a3a264a22526.png)
+![login](https://user-images.githubusercontent.com/31249056/186200814-f0abacb0-a4ad-490d-9b64-76e72f4bb6a9.png)
 
-### Game 1: What's in an image?
-![game1](https://user-images.githubusercontent.com/31249056/182999206-9d6b72dc-ecb1-46be-b69d-96f6066e7c3e.png)
+### Game navigation
+![index](https://user-images.githubusercontent.com/31249056/186200755-38525e6b-4196-49d0-a23d-320a164ff2b4.png)
 
-### Game 3: Brains, please!
-![game3](https://user-images.githubusercontent.com/31249056/183000184-f444908d-5611-49cc-b616-c94e85421724.png)
+### Module 1 (beginner): What's in an image?
+![game1](https://user-images.githubusercontent.com/31249056/186200870-c4d1a934-bf80-4f34-95e4-698a1fe6dee5.png)
 
-### Game 5: Proton's got moves
-![game5](https://user-images.githubusercontent.com/31249056/183000235-c765a29a-6dac-4dde-9bd0-64d5f732d566.png)
+### Module 2 (beginner): Brains, please!
+![game3](https://user-images.githubusercontent.com/31249056/186200887-3504892c-3367-4fe4-a222-fc35fb869f8e.png)
 
-### Game 7: Puzzled by Projection I 
-![game7](https://user-images.githubusercontent.com/31249056/183000280-cf68ab66-9e95-4a2a-b81c-de64d2136656.png)
+### Module 3 (beginner): Proton's got moves
+![game5](https://user-images.githubusercontent.com/31249056/186201062-cae3af09-749e-4e0a-a254-b803f7e22772.png)
 
-### Calibration page
-![calibration](https://user-images.githubusercontent.com/31249056/182999173-256f1fc9-5fb9-4ddc-8463-cbcdd4453405.png)
-
+### Module 4 (beginner): Puzzled by Projection I 
+![game7](https://user-images.githubusercontent.com/31249056/186201082-00fc2dad-a9b1-4911-8862-99fbd73cccdc.png)
 
