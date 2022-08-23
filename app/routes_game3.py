@@ -150,8 +150,8 @@ def update_task_progress():
     print(session['game3']['progress'])
     session['game3']['progress'].update_stars()
     socketio.emit('renew stars', {'stars': session['game3']['progress'].num_stars})
-def fetch_all_game3_questions():
 
+def fetch_all_game3_questions():
     uses_images_list = []
     all_Qs = MultipleChoice.query.filter_by(game_number=3).all()
     success_text = len(all_Qs) * ['Correct! Move on to the next question.']
@@ -169,7 +169,8 @@ def fetch_all_game3_questions():
 
         questions.append({'text': qdata[0],
                           'choices': qchoices,
-                          'correct': corr_array_new.index(True)})
+                          'correct': corr_array_new.index(True),
+                          'main_image_path': Q.main_image_path})
 
         # success_text[0] = "You got the first answer correct!"
         print(questions, 'printing questions')

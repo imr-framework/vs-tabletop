@@ -341,12 +341,10 @@ def turn_on_rx_coil(info):
 # Get game 5 questions!
 def fetch_all_game5_questions():
     all_Qs = MultipleChoice.query.filter_by(game_number=5).all()
-    print(all_Qs)
     questions = []
     uses_images_list = []
     success_text = len(all_Qs)*['Correct! Move on to the next question.']
     for Q in all_Qs:
-        print(Q)
         qdata = Q.get_randomized_data()
         uses_images_list.append(Q.uses_images)
 

@@ -13,20 +13,12 @@
     {% endif %}
 {% endif %}
         <div class="row h-100">
-            <div class="col-7 h-100">
-                 <div action="/games/3" method="POST">
-                     {{ G3Form.hidden_tag() }}
+            <div class="col-5 h-100">
+                <div class="row">
                  <div class="progress">
-                     {% if session['game3']['completed_task'] == 0 %}
-                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
-                      {% elif session['game3']['completed_task'] == 1 %}
-                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" style="width: 33.333333%" aria-valuenow="33.33333" aria-valuemin="0" aria-valuemax="100">33.33%</div>
-                        {% elif session['game3']['completed_task'] == 2 %}
-                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" style="width: 66.6666666%" aria-valuenow="66.6666" aria-valuemin="0" aria-valuemax="100">66.66%</div>
-                        {% elif session['game3']['completed_task'] == 3 %}
-                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">100%</div>
-
-                        {% endif %}
+                 {% set perc = session['game3']['completed_task']*100/3 %}
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-info"
+                         style="width: {{ perc }}%" aria-valuenow="{{ perc }}" aria-valuemin="0" aria-valuemax="100"></div>
                  </div>
                 <div class="tabs">
        {% if session['game3']['current_task'] == 1 %}
@@ -78,12 +70,12 @@
         <div class="tabs__content {{ task1_status }}">
           <h2 class="tabs__title">Instructions</h2>
           <p class="tabs__text">
-              Explore each of the MR weighted scan types on the first panel. Hit "Submit chosen parameters" and note how contrast changes with each of them. Refer to the Messages Panel for further directions.
+              Explore each of the MR weighted scan types on Panel 1 on the right. Hit "RUN" and note how contrast changes with each of them. Refer to the Messages Panel for further directions.
           </p>
           <h2 class="tabs__title">Task</h2>
             <form action="/games/3" method="POST">
             <p class="tabs_text">
-                Answer the below question to test your knowledge and move on to the next task!
+                Answer the question below to test your knowledge and move on to the next task!
                 <br>Which scan makes CSF look dark?
                 <div class="card-body btn-group">
                 {% for subfield in G3Form.P1_q %}
@@ -108,19 +100,19 @@
         <div class="tabs__content {{ task2_status }}">
           <h2 class="tabs__title">Instructions</h2>
           <p class="tabs__text">
-              Experiment with different TR, TE, and FA values to observe how each effects the image.
-              Test out the following TR, TE, and FA values on the second panel to observe effects. Refer to the Messages Panel for further directions.
+              Experiment with different TR, TE, and FA values to observe how each changes the contrast.
+              Test out the following TR, TE, and FA values on the second panel.
               <ul>
-                    <li>1. A high TR (4000 - 5000) with low TE (0 - 150)</li>
-                    <li>2. A low TR (500 - 1500) with a low TE (0 - 150)</li>
-                    <li>3. A high TR (4000 - 5000) with a high TE (350 - 450)</li>
+                    <li>1. A high TR (4000 - 5000 ms) with a low TE (0 - 150 ms)</li>
+                    <li>2. A low TR (500 - 1500 ms) with a low TE (0 - 150 ms)</li>
+                    <li>3. A high TR (4000 - 5000 ms) with a high TE (350 - 450 ms)</li>
               </ul>
           </p>
           <h2 class="tabs__title">Task</h2>
             <form action="/games/3" method="POST">
             <p class="tabs__text">
-                Answer the below question to continue to next task!
-                <br>What happens as the FA value increases?
+                Answer the question below to continue to next task!
+                <br>At TR = 500 ms, TE = 0 ms, what happens as the flip angle approaches 90 degrees?
                 <div class="card-body btn-group">
                 {% for subfield in G3Form.P2_q %}
                                 {% if subfield.id == "P2_q-0" %}
@@ -141,17 +133,16 @@
         <div class="tabs__content {{ task3_status }}">
           <h2 class="tabs__title">Instructions</h2>
           <p class="tabs__text">
-              1. Click through pre-set T1, T2, and PD weighted scans on the first panel to observe how signal intensities of
-              CSF, GM, and WM change.
-              <br> 2. Change each value on Panel 2(TR, TE, and FA) and observe how it changes the signal intensities of
-              CSF, GM, and WM.
-              <br> 3. Refer to the Messages Panel for further directions.
-              <br> 4. To test your understanding of this module answer questions in the Questions panel to earn more stars!
+              1. Click through preset T1w, T2w, and PDw scans on the first panel and hit "RUN" to observe how signal intensities of
+              CSF, GM, and WM change in Panel 3.
+              <br> 2. Change each value on Panel 2, hit "RUN", and observe how it changes the signal intensities of
+              CSF, GM, and WM in Panel 3.
+              <br> 3. Answer the queries in the Question panel to earn up to five stars!
           </p>
             <h2 class="tabs__title">Task</h2>
             <form action="/games/3" method="POST">
             <p class="tabs__text">
-                Answer the below question:
+                Answer the question below:
                 <br> In a T2 weighted scan, which tissue type results in the most signal intensity?
                 <div class="card-body btn-group">
                 {% for subfield in G3Form.P3_q %}
@@ -175,7 +166,7 @@
         </div>
       </div>
     </div>
-
+                </div>
                  <div class="card row bg-info">
                          <div class="card-header text-light"><b>Messages</b></div>
                          <div class="card-body text-light">
@@ -185,9 +176,9 @@
                                 <br> or
                                 <br><a href="/games/5" class="btn btn-success btn-large">Continue to Game 5!</a>
                              {% elif session['game3']['current_task'] == 1 %}
-                             Click on T1, T2, or PD values to observe their impact on the scan! Click "Submit chosen parameters" to apply the scan type!
+                             Click on T1, T2, or PD values to observe their impact on the scan! Click "RUN" to apply the scan type!
                              {% elif session['game3']['current_task'] == 2 %}
-                             Alter TR, TE, and FA values to observe their impact on the scan! Click "Submit chosen parameters" to apply the scan type!
+                             Alter TR, TE, and FA values to observe their impact on the scan! Click "RUN" to apply the scan type!
                              {% elif session['game3']['current_task'] == 3 %}
                              Change specific TR, TE, and FA values and observe signal intensity changes on the bar graph!
 
@@ -195,186 +186,6 @@
                          </div>
                      </div>
 
-                 <form action="/games/3" method="POST">
-                 <div class="row">
-
-                     <div class="col-6">
-                             <div class="row h-25 card">
-                                 <div class="card-header">
-                                     <b> Panel 1: </b>
-                                     <b>T1</b>
-
-                                     <button type="button" class="btn btn-sm shadow-none"
-                                             data-mdb-container="body"
-                                             data-mdb-toggle="popover"
-                                             data-mdb-placement="left" title="T1"
-                                             data-mdb-content="T1 tells us how long it takes for the z-component of the M vector to regrow from zero to about 63% of its maximum. Highlights fat and proteins">
-                                            <i class="bi bi-question-circle-fill"></i></button>
-                                    <b>T2</b>
-                                     <button type="button" class="btn btn-sm shadow-none"
-                                             data-mdb-container="body"
-                                             data-mdb-toggle="popover"
-                                             data-mdb-placement="left" title="T2"
-                                             data-mdb-content="T2 tells us how long it takes for the xy-component of the M vector to decay from 100% to about 37%. Different tissues have different T2 values.">
-                                            <i class="bi bi-question-circle-fill"></i></button>
-                                     <b>or PD</b>
-                                         <button type="button" class="btn btn-sm shadow-none"
-                                             data-mdb-container="body"
-                                             data-mdb-toggle="popover"
-                                             data-mdb-placement="left"
-                                             title="Proton density"
-                                             data-mdb-content="Proton density tells us how many protons there are in a unit volume tissue. More signal is generated from tissues with higher PD.">
-                                            <i class="bi bi-question-circle-fill"></i></button>
-                                     <b>weighted scan</b>
-                                 </div>
-
-
-                                 <div class="card-body btn-group">
-                                     {% for subfield in G3Form.options %}
-                                            {% if subfield.id == "options" %}
-                                                {{ subfield(class="btn-check", autocomplete="off",checked=session['game3']['options']=='T1') }}
-                                            {% elif subfield.id == "options-1" %}
-                                                {{ subfield(class="btn-check", autocomplete="off",checked=session['game3']['options']=='T2') }}
-                                            {% else %}
-                                                {{ subfield(class="btn-check ", autocomplete="off", checked=session['game3']['options']=='PD') }}
-                                            {% endif %}
-                                            {{ subfield.label(class="btn btn-outline-primary d-flex align-items-center justify-content-center") }}
-
-                                        {% endfor %}
-                                 </div>
-                             </div>
-                             <div class="row h-75 card">
-                                 <div class="card-header"><b>Panel 2: Sequence Parameters</b></div>
-                                 <div class="card-body pe-5">
-                                     <div class="row">
-                                         <div class="col-3">
-                                             <b>{{ G3Form.TR.label(class="form-label") }}</b>
-                                             <button type="button" class="btn btn-sm shadow-none"
-                                                     data-mdb-container="body"
-                                                     data-mdb-toggle="popover"
-                                                     data-mdb-placement="left" title="Repetition Time (TR)"
-                                                     data-mdb-content="TR is the time difference between one set of RF pulses and the next set,
-                                                            which we use to repeatedly excite the protons. This ensures that the signal is consistent as we build
-                                                            up an MR image.">
-                                            <i class="bi bi-question-circle-fill"></i></button>
-                                         </div>
-
-                                         <div class="col-9">
-                                             <div class="row">
-                                                 {{ G3Form.TR(class="form-range", id='TR', step=0.1, value=session['game3']['TR']) }}
-                                             </div>
-                                             <div class="ticks text-primary">
-                                                 {% for angle in [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000] %}
-                                                 <span class="tick">{{ angle }}</span>
-                                                 {% endfor %}
-                                             </div>
-                                         </div>
-                                     </div>
-                                     <div class="row">
-                                         <div class="col-3">
-                                             <b>{{ G3Form.TE.label(class="form-label") }}</b>
-                                             <button type="button" class="btn btn-sm shadow-none"
-                                                     data-mdb-container="body"
-                                                     data-mdb-toggle="popover"
-                                                     data-mdb-placement="left"
-                                                     title="Echo Time (TE)"
-                                                     data-mdb-content="TE is the time difference between the time when the RF pulse arrives at the target
-                                                            to the time when the signal bounces back and hits a peak">
-                                            <i class="bi bi-question-circle-fill"></i></button>
-                                         </div>
-                                         <div class="col-9">
-                                             <div class="row">
-                                                 {{ G3Form.TE(class="form-range", id="TE", step=0.1, value=session['game3']['TE']) }}
-                                             </div>
-                                             <div class="ticks text-primary">
-                                                 {% for angle in [0, 50, 100, 150, 200, 250, 300, 350, 400, 450] %}
-                                                 <span class="tick">{{ angle }}</span>
-                                                 {% endfor %}
-                                             </div>
-                                         </div>
-                                     </div>
-                                     <div class="row">
-                                         <div class="col-3">
-                                             <b>{{ G3Form.FA.label(class="form-label") }}</b>
-                                             <button type="button" class="btn btn-sm shadow-none"
-                                                     data-mdb-container="body"
-                                                     data-mdb-toggle="popover"
-                                                     data-mdb-placement="left" title="Flip Angle (FA)"
-                                                     data-mdb-content="FA is the amount we tip the magnetization vector using an RF pulse.
-                                                                It can be measured in degrees or radians.">
-                                            <i class="bi bi-question-circle-fill"></i></button>
-                                         </div>
-                                         <div class="col-9">
-                                             <div class="row">
-                                                 {{ G3Form.FA(class="form-range", id="FA", step=5, value=session['game3']['FA']) }}
-                                             </div>
-                                             <div class="ticks text-primary">
-                                                 {% for angle in [0,45,90,135,180,225,270,315,360] %}
-                                                 <span class="tick">{{ angle }}</span>
-                                            {% endfor %}
-                                             </div>
-                                         </div>
-                                     </div>
-                                 </div>
-                             </div>
-                     </div>
-                     <div class="col-6 card">
-                     <div class="card-header"> <b>Panel 3:
-
-                         <b>CSF</b>
-                         <button type="button" class="btn btn-sm shadow-none"
-                                 data-mdb-container="body"
-                                 data-mdb-toggle="popover"
-                                 data-mdb-placement="top" title="Cerebrospinal Fluid (CSF)"
-                                 data-mdb-content="CSF is the liquid content of brain ventricles. It flows in and around the brain to absorb impact from injuries to the skull and provide nutrients.">
-                                <i class="bi bi-question-circle-fill"></i></button>
-
-
-                         <b>GM</b>
-
-                         <button type="button" class="btn btn-sm shadow-none"
-                                 data-mdb-container="body"
-                                 data-mdb-toggle="popover"
-                                 data-mdb-placement="top"
-                                 title="Gray Matter (GM)"
-                                 data-mdb-content="Gray matter is distributed on the surface (cortex) of and also deep within (subcortical nuclei) the brain and has a high concentration of neuronal cell bodies.">
-                                <i class="bi bi-question-circle-fill"></i></button>
-
-                         <b>WM</b>
-                              <button type="button" class="btn btn-sm shadow-none"
-                                      data-mdb-container="body"
-                                      data-mdb-toggle="popover"
-                                      data-mdb-placement="top"
-                                      title="White Matter (WM)"
-                                      data-mdb-content="White matter consists of neuronal axons covered in a protective fatty sheath and helps conduct signals between brain regions.">
-                                <i class="bi bi-question-circle-fill"></i></button>
-                     </b>
-
-                     </div>
-                     <div class="card-body">
-                         <div class="chart" id="chart-G3-bar">
-                         </div>
-                     </div>
-                 </div>
-                </div>
-
-                 </form>
-
-
-                 </div>
-            </div>
-
-             <div class="col-5 h-100">
-                 <form action="/games/3" method="POST">
-                    {{ G3Form.hidden_tag() }}
-                <div class="row card">
-                    <div class="card-header"><b>Image</b></div>
-                    <div class="card-body">
-                        <div class="chart" id="chart-G3">
-                        </div>
-                        <button type="submit" class="btn btn-large btn-success">RUN</button>
-                    </div>
-                </div>
 
                 <div class="row-card">
                     <div class="card-header"><b>Questions</b></div>
@@ -389,9 +200,11 @@
                                     <br>
                                         <span> Q{{ ind + 1 }}:</span>
                                         {{ questions[ind]['text'] }}
+
                                         {% if (questions[ind]['main_image_path']) | length > 0 %}
-                                        <br><img src=".{{ questions[ind]['main_image_path']}}" alt="question image" style="height:100px; width:auto">
+                                        <br><img src=".{{ questions[ind]['main_image_path']}}" alt="question image" style="height:150px; width:auto">
                                         {% endif %}
+
                                         {% for ind2 in range(questions[ind]['choices'] | length) %}
                                             {% if not uses_images[ind] %}
                                             <br><input type="radio" class="q{{ind}}-choice" id="q{{ind}}-{{letters[ind2]}}" name="mc-question" value="{{ letters[ind2] }}">
@@ -424,9 +237,189 @@
                             </button>
                 </div>
 
-                </form>
-             </div>
+
+
+
+
                  </div>
+            </div>
+            </div>
+             <div class="col-7 mh-100">
+
+                 <form action="/games/3" method="POST">
+                    {{ G3Form.hidden_tag() }}
+                 <div class="row">
+                <div class="card">
+                    <div class="card-header"><b>Image</b></div>
+                    <div class="card-body">
+                        <div class="chart" id="chart-G3">
+                        </div>
+                        <button type="submit" class="btn btn-large btn-success">RUN</button>
+                    </div>
+                </div>
+                 </div>
+                 <div class="row">
+                 <div class="card">
+                     <div class="card-header">
+                         <b>Panel 1:</b>
+                         <b>T1</b>
+                         <button type="button" class="btn btn-sm shadow-none"
+                                 data-mdb-container="body"
+                                 data-mdb-toggle="popover"
+                                 data-mdb-placement="left" title="T1"
+                                 data-mdb-content="T1 tells us how long it takes for the z-component of the M vector to regrow from zero to about 63% of its maximum. Highlights fat and proteins">
+                                <i class="bi bi-question-circle-fill"></i></button>
+                        <b>T2</b>
+                         <button type="button" class="btn btn-sm shadow-none"
+                                 data-mdb-container="body"
+                                 data-mdb-toggle="popover"
+                                 data-mdb-placement="left" title="T2"
+                                 data-mdb-content="T2 tells us how long it takes for the xy-component of the M vector to decay from 100% to about 37%. Different tissues have different T2 values.">
+                                <i class="bi bi-question-circle-fill"></i></button>
+                         <b>or PD</b>
+                             <button type="button" class="btn btn-sm shadow-none"
+                                 data-mdb-container="body"
+                                 data-mdb-toggle="popover"
+                                 data-mdb-placement="left"
+                                 title="Proton density"
+                                 data-mdb-content="Proton density tells us how many protons there are in a unit volume tissue. More signal is generated from tissues with higher PD.">
+                                <i class="bi bi-question-circle-fill"></i></button>
+                         <b>weighted scan</b>
+                     </div>
+                     <div class="card-body h-50">
+                     <div class="btn-group">
+                         {% for subfield in G3Form.options %}
+                                {% if subfield.id == "options" %}
+                                    {{ subfield(class="btn-check", autocomplete="off",checked=session['game3']['options']=='T1') }}
+                                {% elif subfield.id == "options-1" %}
+                                    {{ subfield(class="btn-check", autocomplete="off",checked=session['game3']['options']=='T2') }}
+                                {% else %}
+                                    {{ subfield(class="btn-check ", autocomplete="off", checked=session['game3']['options']=='PD') }}
+                                {% endif %}
+                                {{ subfield.label(class="btn btn-outline-primary d-flex align-items-center justify-content-center") }}
+
+                            {% endfor %}
+                     </div>
+                     </div>
+                 </div>
+                 </div>
+                <div class="row">
+                 <div class="card">
+                     <div class="card-header"><b>Panel 2: Sequence Parameters</b></div>
+                     <div class="card-body pe-5">
+                         <div class="row">
+                             <div class="col-3">
+                                 <b>{{ G3Form.TR.label(class="form-label") }}</b>
+                                 <button type="button" class="btn btn-sm shadow-none"
+                                         data-mdb-container="body"
+                                         data-mdb-toggle="popover"
+                                         data-mdb-placement="left" title="Repetition Time (TR)"
+                                         data-mdb-content="TR is the time difference between one set of RF pulses and the next set,
+                                                which we use to repeatedly excite the protons. This ensures that the signal is consistent as we build
+                                                up an MR image.">
+                                <i class="bi bi-question-circle-fill"></i></button>
+                             </div>
+
+                             <div class="col-9">
+                                 <div class="row">
+                                     {{ G3Form.TR(class="form-range", id='TR', step=0.1, value=session['game3']['TR']) }}
+                                 </div>
+                                 <div class="ticks text-primary">
+                                     {% for angle in [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000] %}
+                                     <span class="tick">{{ angle }}</span>
+                                     {% endfor %}
+                                 </div>
+                             </div>
+                         </div>
+                         <div class="row">
+                             <div class="col-3">
+                                 <b>{{ G3Form.TE.label(class="form-label") }}</b>
+                                 <button type="button" class="btn btn-sm shadow-none"
+                                         data-mdb-container="body"
+                                         data-mdb-toggle="popover"
+                                         data-mdb-placement="left"
+                                         title="Echo Time (TE)"
+                                         data-mdb-content="TE is the time difference between the time when the RF pulse arrives at the target
+                                                to the time when the signal bounces back and hits a peak">
+                                <i class="bi bi-question-circle-fill"></i></button>
+                             </div>
+                             <div class="col-9">
+                                 <div class="row">
+                                     {{ G3Form.TE(class="form-range", id="TE", step=0.1, value=session['game3']['TE']) }}
+                                 </div>
+                                 <div class="ticks text-primary">
+                                     {% for angle in [0, 50, 100, 150, 200, 250, 300, 350, 400, 450] %}
+                                     <span class="tick">{{ angle }}</span>
+                                     {% endfor %}
+                                 </div>
+                             </div>
+                         </div>
+                         <div class="row">
+                             <div class="col-3">
+                                 <b>{{ G3Form.FA.label(class="form-label") }}</b>
+                                 <button type="button" class="btn btn-sm shadow-none"
+                                         data-mdb-container="body"
+                                         data-mdb-toggle="popover"
+                                         data-mdb-placement="left" title="Flip Angle (FA)"
+                                         data-mdb-content="FA is the amount we tip the magnetization vector using an RF pulse.
+                                                    It can be measured in degrees or radians.">
+                                <i class="bi bi-question-circle-fill"></i></button>
+                             </div>
+                             <div class="col-9">
+                                 <div class="row">
+                                     {{ G3Form.FA(class="form-range", id="FA", step=5, value=session['game3']['FA']) }}
+                                 </div>
+                                 <div class="ticks text-primary">
+                                     {% for angle in [0,45,90,135,180,225,270,315,360] %}
+                                     <span class="tick">{{ angle }}</span>
+                                {% endfor %}
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+                </div>
+                <div class="row">
+                 <div class="card">
+         <div class="card-header">
+             <b>Panel 3: Signal levels for</b>
+             <b>CSF</b>
+             <button type="button" class="btn btn-sm shadow-none"
+                     data-mdb-container="body"
+                     data-mdb-toggle="popover"
+                     data-mdb-placement="top" title="Cerebrospinal Fluid (CSF)"
+                     data-mdb-content="CSF is the liquid content of brain ventricles. It flows in and around the brain to absorb impact from injuries to the skull and provide nutrients.">
+                    <i class="bi bi-question-circle-fill"></i></button>
+
+
+             <b>GM</b>
+
+             <button type="button" class="btn btn-sm shadow-none"
+                     data-mdb-container="body"
+                     data-mdb-toggle="popover"
+                     data-mdb-placement="top"
+                     title="Gray Matter (GM)"
+                     data-mdb-content="Gray matter is distributed on the surface (cortex) of and also deep within (subcortical nuclei) the brain and has a high concentration of neuronal cell bodies.">
+                    <i class="bi bi-question-circle-fill"></i></button>
+
+             <b>and WM</b>
+                  <button type="button" class="btn btn-sm shadow-none"
+                          data-mdb-container="body"
+                          data-mdb-toggle="popover"
+                          data-mdb-placement="top"
+                          title="White Matter (WM)"
+                          data-mdb-content="White matter consists of neuronal axons covered in a protective fatty sheath and helps conduct signals between brain regions.">
+                    <i class="bi bi-question-circle-fill"></i></button>
+
+         </div>
+         <div class="card-body">
+             <div class="chart" id="chart-G3-bar">
+             </div>
+         </div>
+     </div>
+                </div>
+                 </form>
+             </div>
 
 {% endblock %}
 

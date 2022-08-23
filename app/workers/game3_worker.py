@@ -140,7 +140,7 @@ def get_image_json(TR,TE,FA):
     mr_image = np.transpose(mr_image)
     mr_image = np.flipud(mr_image)
     # Generate image
-    fig = px.imshow(mr_image, binary_string=True)
+    fig = px.imshow(mr_image, zmin=0.0, zmax=1.0, binary_string=True)
     fig.update_xaxes(showticklabels=False)
     fig.update_yaxes(showticklabels=False)
 

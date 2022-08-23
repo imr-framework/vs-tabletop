@@ -320,7 +320,7 @@
                                 {% set dnone = '' if session['game7']['task_completed'] >= task_index else 'd-none' %}
 
                                 {% set success_message = 'This step has been completed' if task_index < 4 else
-                                        'All steps complete. Congratulations!' %}
+                                        'All steps complete. Congratulations! Now, you can answer the multiple choice questions to earn more stars.' %}
 
                                 <p class="{{ dnone }} text-success" id="task-success-{{ task_index }}">
                                     {{ success_message }}
@@ -337,26 +337,17 @@
                     </div>
                 </div>
         </div>
-        <div class="col-4 mh-100">
+        <div class="col-4">
           <!-- Questions panel -->
-          <div class="card h-100">
+          <div class="card">
           <div class="card-header h3">Questions</div>
 
           <div id="slide" class="carousel slide card-body h-75" data-bs-interval="false">
-                   <!--
-                    <div class="carousel-indicators">
-                        <button type="button" data-bs-target="#slide" data-bs-slide-to="0" class="active"></button>
-                        {% for i in range(1, success_text | length) %}
-                            <button type="button" data-bs-target="#slide" data-bs-slide-to="{{ i }}"></button>
-                        {% endfor %}
-                    </div>
-                    -->
-
-                <div class="carousel-inner h-100">
+                <div class="carousel-inner">
                     {% for ind in range(success_text | length) %}
                         {% set letters = ['a','b','c','d'] %}
                         {% set active_text = 'active' if ind==0 else '' %}
-                        <div class="carousel-item {{active_text}} mh-100">
+                        <div class="carousel-item {{active_text}}">
                             <div class="row d-flex justify-content-center align-items-baseline">
                                 <p class="h5">Q{{ ind + 1 }}:{{ questions[ind]['text']}}</p>
                             </div>
@@ -366,7 +357,7 @@
                             <div class="form-check col-8">
                             {% for ind2 in range(questions[ind]['choices'] | length) %}
                                 {% if not uses_images[ind] %}
-                                    <div class="form-group">
+                                <div class="form-group">
                                 <input type="radio" class="q{{ind}}-choice form-check-input" id="q{{ind}}-{{letters[ind2]}}" name="mc-question" value="{{ letters[ind2] }}">
                                 <label for="q{{ind}}-{{letters[ind2]}}" class="form-check-label">{{ questions[ind]['choices'][ind2] }}</label>
                                     </div>
@@ -380,10 +371,18 @@
                             </div>
 
                             </div>
+                            <div class="row d-flex justify-content-center">
+                                <div class="col-4">
+                                    <div class="btn btn-large btn-primary answer-mc" id="answer-mc-{{ind}}">Submit</div>
+                                </div>
+                                <div class="col-8">
+                                <p id="mc-success-text-{{ ind }}" class="d-none" style="color:palegreen">{{ success_text[ind] }}</p>
+                                <p id="mc-failure-text-{{ ind }}" class="d-none" style="color:#ffb500">Wrong answer. Try again!</p>
+                                </div>
+                            </div>
+
                             <p class="d-none">Correct choice: <span id="mc-correct-choice-{{ind}}">{{ questions[ind]['correct']}}</span></p>
-                                <div class="btn btn-large btn-primary answer-mc" id="answer-mc-{{ind}}">Submit</div>
-                            <p id="mc-success-text-{{ ind }}" class="d-none" style="color:palegreen">{{ success_text[ind] }}</p>
-                            <p id="mc-failure-text-{{ ind }}" class="d-none" style="color:#ffb500">Wrong answer. Try again!</p>
+
                         </div>
                     {% endfor %}
                 </div>

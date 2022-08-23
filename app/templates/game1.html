@@ -121,7 +121,7 @@
           </p>
             <h2 class="tabs__title">Task: Finding the perfect Matrix Size</h2>
                 <p class="tabs__text">
-                    <i>Change the Matrix Sizes to find the perfect Matrix Size that allows the image to be seen the most clearly(when you can't see individual pixels).</i>
+                    <i>Find a large enough matrix size so that when you can't see individual pixels.</i>
                 {% if session['game1']['Matrix_scale'] < 300  %}
                     <div class="row" style="color:red">
                     <br><b><i>Continue to increase the Matrix Size. You are close.</i></b>
@@ -140,11 +140,12 @@
         </div>
         <div class="tabs__content {{  task3_status }}">
           <h2 class="tabs__title">Instructions</h2>
-          <p class="tabs__text">1. Experiment with different Zero-Fill values and observe how the image changes
+          <p class="tabs__text">1. Set Matrix Size = 32. Experiment with different Zero-Fill values and observe how the image changes.
                             <br>2. After you are done, answer Question 3 and continue to the task!
           </p>
             <h2 class="tabs__title">Task: What does the zero-fill do? </h2>
-            <p class="tabs__text">Change the Zero-Fill from 128 to 400 and observe how the image changes.
+            <p class="tabs__text">
+                <i>Change the Zero-Fill from 32 to 400 and observe how the image changes.</i>
                 {% if session['game1']['completed_task'] == 3 %}
                     <div class="success" style="color:green">
                     <br><i class="bi bi-clipboard-check-fill"></i>
@@ -158,7 +159,7 @@
         </div>
           <div class="tabs__content {{  task4_status }}">
               <h2 class="tabs__title">Instructions</h2>
-              <p class="tabs__text">Input the following values into the Windowing Slider and observe contrast changes in the image
+              <p class="tabs__text">Input the following values into the Windowing Slider and observe contrast changes in the image:
                     <div class="form-check" style="font-size: .8em">
                       <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
                       <label class="form-check-label" for="flexCheckDefault">
@@ -180,7 +181,7 @@
 
               <h2 class="tabs__title">Task: Manipulating Intensity Values</h2>
               <p class="tabs__text">
-                  <i>1. Select intensity values to produce the most contrast</i>
+                  <i>Select intensity values to produce the most contrast!</i>
                     {% if session['game1']['Min_scale'] > 0.02 %}
                     <div class="row" style="color: red">
                     <br><b><i>Decrease Minimum value</i></b>
@@ -210,15 +211,15 @@
                         <div class="card-header"><b>Messages</b></div>
                         <div class="card-body">
                             {% if session['game1']['current_task'] == 1 %}
-                                Change the "FOV metric" and click run below the image to observe changes!
+                                Change the "FOV" value and click "RUN" to acquire a new image and observe changes.
                             {% elif session['game1']['current_task'] == 2 %}
-                                Change the "Matrix Size" value and click run below the image to observe changes!
+                                Change the "Matrix Size" value and click "RUN" to acquire a new image and observe changes!
                             {% elif session['game1']['current_task'] == 3 %}
-                                Change the "Zero-Fill" value and click run below the image to observe changes!
+                                Change the "Zero-fill matrix size" value and click "RUN" to acquire a new image and observe changes!
                             {% elif session['game1']['current_task'] == 4 %}
-                                Change the min and max values in the "Windowing" panel and click run below the image to observe how contrast changes!
+                                Change the min and max values in the Windowing panel and "RUN" to observe how contrast changes!
                                 {% if session['game1']['completed_task'] == 4 %}
-                                        Complete the questions to get the rest of the stars!
+                                        Complete the remaining multiple-choice questions to earn up to five stars!
                                 {% endif %}
                             {% endif %}
                         </div>
@@ -306,8 +307,8 @@
                                     data-mdb-container="body"
                                     data-mdb-toggle="popover"
                                     data-mdb-placement="left"
-                                    title="What is FOV?"
-                                    data-mdb-content="Field-of-View. The real world size of your image in units of distance (meters, millimeters, etc..">
+                                    title="Field-of-View (FOV)"
+                                    data-mdb-content="The real-world size of your image in units of distance (meters, millimeters, etc..">
                                 <i class="bi bi-question-circle-fill"></i>
                             </button>
                         <div class="d-flex justify-content-center">
@@ -322,8 +323,8 @@
                                 data-mdb-container="body"
                                 data-mdb-toggle="popover"
                                 data-mdb-placement="left"
-                                title="What is Matrix Size?"
-                                data-mdb-content="The number of rows and columns of your image matrix.">
+                                title="Matrix Size (original)"
+                                data-mdb-content="The number of rows and columns of your originally acquired image matrix.">
                                 <i class="bi bi-question-circle-fill"></i></button>
 
                             <div class="d-flex justify-content-center">
@@ -339,8 +340,8 @@
                                 data-mdb-container="body"
                                 data-mdb-toggle="popover"
                                 data-mdb-placement="left"
-                                title="What is Voxel Size?"
-                                data-mdb-content="A voxel is cube and the smallest element that makes up an image. The voxel size is the length of each side of this cube.
+                                title="Voxel Size"
+                                data-mdb-content="A voxel is a cuboid and the smallest element that makes up an image. The voxel size is the length of each side of the cuboid.
                                  Voxel size = (FOV) / (matrix size)">
                                 <i class="bi bi-question-circle-fill"></i>
                             </button>
@@ -354,13 +355,13 @@
                         <div class="col-3 form-group">
 
 
-                        <b>Zero-fill</b>
+                        <b>Zero-fill matrix size</b>
                             <button type="button" class="btn btn-sm shadow-none"
                                     data-mdb-container="body"
                                     data-mdb-toggle="popover"
                                     data-mdb-placement="top"
-                                    title="What is Zero-Fill?"
-                                    data-mdb-content="A higher matrix size than the original image’s. Any image can be zero-filled to have more voxels
+                                    title="Zero-Fill"
+                                    data-mdb-content="An equal or higher matrix size than the original image’s. Any image can be zero-filled to have more voxels
                                 within the same FOV, but this operation does not add more information to the image.">
                                 <i class="bi bi-question-circle-fill"></i>
                             </button>
