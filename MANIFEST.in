@@ -1,0 +1,6 @@
+# Include HTML templates and static assets
+recursive-include app/templates *
+recursive-include app/static *
+
+# Include initialized database file
+include app/myDB.db
