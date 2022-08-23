@@ -5,7 +5,7 @@ from flask import flash, render_template, session, redirect, url_for
 from flask_login import login_required, login_user, logout_user
 import utils
 from forms import *
-from info import GAMES_DICT
+from info import GAMES_DICT, GAME1_BACKGROUND
 from models import User, Calibration
 
 
@@ -41,7 +41,7 @@ def game1():
     return render_template('game1.html',template_title="What is in an image?",
                            template_intro_text="Voxels, field-of-views, and resolution ", G1Form = form,
                            graphJSON_img = j1, questions=questions, success_text=success_text, uses_images=uses_images,
-                           game_num = 1)
+                           game_num = 1, background=GAME1_BACKGROUND)
 
 
 @socketio.on('Update param for Game1')

@@ -6,7 +6,7 @@ from flask import flash, render_template, session, redirect, url_for
 from flask_login import login_required, login_user, logout_user
 import utils
 from forms import *
-from info import GAMES_DICT, GAME7_INSTRUCTIONS, GAME7_RANDOM_MODELS
+from info import GAMES_DICT, GAME7_INSTRUCTIONS, GAME7_RANDOM_MODELS, GAME7_BACKGROUND
 from models import User, Calibration, MultipleChoice
 from __main__ import app, login_manager, db, socketio
 import random
@@ -23,7 +23,7 @@ def game7():
 
     if form.validate_on_submit():
         print('validated')
-        print(form)
+        #print(form)
         if form.phantom_type_field.data == 'random':
             j1, voxels = game7_prep3d_worker(difficulty="all")
         else:
@@ -35,7 +35,8 @@ def game7():
     return render_template('game7.html',G7Form=form, template_title="Puzzled by Projection",
                            template_intro_text="Forward puzzle", instructions=GAME7_INSTRUCTIONS,
                             graphJSON_3dimg = j1, graphJSON_2dimg = j2, graphJSON_1dimg = j3,
-                           questions=questions, success_text=success_text, uses_images=uses_images,game_num=7)
+                           questions=questions, success_text=success_text, uses_images=uses_images,
+                           game_num=7, background=GAME7_BACKGROUND)
 
 
 
@@ -48,7 +49,6 @@ def update_parameter(info):
     elif info['id'] == 'model':
         info['value'] = str(info['value'])
     utils.update_session_subdict(session, 'game7', {info['id']:info['value']})
-    print(session['game7'])
 
 
 @socketio.on('Request 3D model')
@@ -244,7 +244,7 @@ def update_mc_progress(msg):
     session['game7']['progress'].num_correct = sum(status)
     session['game7']['progress'].update_stars()
 
-    print('Game 7 progress updated: ', session['game7']['progress'])
+    #print('Game 7 progress updated: ', session['game7']['progress'])
 
     # Change stars display
     socketio.emit('renew stars',{'stars': session['game7']['progress'].num_stars})
@@ -256,10 +256,15 @@ def game7_update_progress(msg):
     # Only update if there is progress (no backtracking)
     if task > session['game7']['task_completed']:
         utils.update_session_subdict(session, 'game7', {'task_completed': task})
-        print('Task ', session['game7']['task_completed'],' completed for game 7')
+        #print('Task ', session['game7']['task_completed'],' completed for game 7')
 
         # Update database object
         session['game7']['progress'].num_steps_complete = task
         session['game7']['progress'].update_stars()
-        print('Game 7 progress updated: ', session['game7']['progress'])
+        #print('Game 7 progress updated: ', session['game7']['progress'])
         socketio.emit('renew stars',{'stars': session['game7']['progress'].num_stars})
+
+@socketio.on('Eye control changed')
+def eye_control_changed():
+    print('Eye control released! ')
+    send_plots()

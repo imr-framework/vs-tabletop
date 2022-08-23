@@ -153,7 +153,7 @@ socket.on('message', (msg)=>{
     else{
         added_class = 'text-primary';
     }
-    $('#message-game5').text(msg['text']).removeClass('text-success text-danger text-primary').addClass(added_class);
+    $('#message-region').text(msg['text']).removeClass('text-success text-danger text-primary').addClass(added_class);
     $('#megaphone').removeClass('text-success text-danger text-primary').addClass(added_class)
 })
 
@@ -397,10 +397,10 @@ socket.on('renew stars',(msg)=>{
     num_empty = 5 - num_full - num_half;
 
 
-    let stars_html = `<span> ${num_stars} / 5 stars earned</span> `
-    stars_html += '<i class="bi bi-star-fill"></i> '.repeat(num_full)
-    stars_html += '<i class="bi bi-star-half"></i> '.repeat(num_half)
-    stars_html += '<i class="bi bi-star"></i> '.repeat(num_empty)
+    let stars_html = ""
+    stars_html += '<i class="bi bi-star-fill text-warning"></i> '.repeat(num_full)
+    stars_html += '<i class="bi bi-star-half text-warning"></i> '.repeat(num_half)
+    stars_html += '<i class="bi bi-star text-warning"></i> '.repeat(num_empty)
 
     $("#stars-display").html(stars_html);
 
@@ -487,6 +487,8 @@ $('.accordion-button.final-task-button').click((event)=>{
 
 })
 
+$('#final-task-of-3').prop('disabled',true);
+
 socket.on('send M correctness',(msg)=>{
     if (msg['correctness']){
         // Checkbox check!
@@ -514,10 +516,12 @@ function go_to_next_tab(step){
     if (step<4){
         $(`#task${step+1}-tab`).removeClass('disabled');
         $(`#task${step+1}-tab`).tab('show');
+        $(`#step${step}`).removeClass('show active');
+        $(`#step${step+1}`).addClass('show active');
     }
     else{
+        // Play confetti
         loop();
-
     }
 }
 

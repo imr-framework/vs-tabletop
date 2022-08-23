@@ -50,8 +50,8 @@
         <div class="col col-9">
             <div class="row h-50" id="fields-game5">
                     {{ template_game_form.hidden_tag() }}
-                    <div class="col col-6">
-                        <div class="row card">
+                    <div class="col col-6 h-100">
+                        <div class="row h-25 card">
                                  <div class="card-header">
                                      <span class="h4">Main field (Gauss)</span>
                                       <div type="button" class="btn btn-sm shadow-none"
@@ -65,9 +65,10 @@
                                  </div>
                                  <div class="card-body row">
                                      <div class="col-4">
-                                        {{ template_game_form.b0_onoff_field(class="btn-check",id="b0_on",autocomplete="off",
-                                                                             checked=session['game5']['b0_on']) }}
-                                        <label class="btn btn-outline-success" for="b0_on">
+                                        {{ template_game_form.b0_onoff_field(class="btn-check",id="b0_on",autocomplete="off",checked=session['game5']['b0_on']) }}
+                                        <label class="btn btn-outline-success"  data-mdb-toggle="tooltip"
+                                                                             data-mdb-placement="top"
+                                                                             title="Button to turn B0 on or off!" for="b0_on">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" fill="currentColor" class="bi bi-magnet-fill" viewBox="0 0 16 16">
                                           <path d="M15 12h-4v3h4v-3ZM5 12H1v3h4v-3ZM0 8a8 8 0 1 1 16 0v8h-6V8a2 2 0 1 0-4 0v8H0V8Z"/>
                                         </svg>
@@ -108,10 +109,9 @@
                              </div>
                             </h4>
                             <!-- TODO fix this! -->
-                            <div class="card-body row">
+                            <div class="card-body row h-50">
                                 <div class="col-4">
                                     <div class="row h-50">
-
                                         <div class="col-8">
                                         {{ template_game_form.flip_angle_field.label }}
                                             <p id="fa_deg" class="text-info">{{ session['game5']['flip_angle'] }} degrees</p>
@@ -169,7 +169,7 @@
 
                             </div>
                     </div>
-                        <div class="row card">
+                        <div class="row h-25 card">
                             <h4 class="card-header">
                             <span>Receive coil</span>
                                  <div type="button" class="btn btn-sm shadow-none"
@@ -181,8 +181,8 @@
                                     <i class="bi bi-question-circle-fill"></i>
                                 </div>
                             </h4>
-                            <div class="card-body row">
-                            <div class="col-4">
+                            <div class="card-body row h-50">
+                            <div class="col-4 h-100">
                                 <!-- input type="checkbox" class="btn-check" name="options-outlined" id="rx-button" autocomplete="off" -->
                                 {{ template_game_form.rx_onoff_field(class="btn-check",id="rx-button",autocomplete="off",
                                                                      checked=session['game5']['coil_on']) }}
@@ -194,10 +194,11 @@
 
                                  </label>
                             </div>
-                                <div class="col-4">
+                            <div class="col-4 h-100">
                                     {{ template_game_form.rot_frame_onoff_field(class="btn-check",id="rot-frame-button",autocomplete="off",
                                                                                 checked=session['game5']['rot_frame_on']) }}
-                                    <label class="btn btn-outline-info" for="rot-frame-button">Rotating frame </label>
+                                    <label class="btn btn-outline-info" for="rot-frame-button">
+                                        Rotating frame
                                         <div type="button" class="btn btn-sm shadow-none"
                                              data-mdb-container="body"
                                              data-mdb-toggle="popover"
@@ -207,9 +208,14 @@
                                                               that is, if we are in a rotating frame of reference. Turn it on and see for yourself!">
                                     <i class="bi bi-question-circle-fill"></i>
                                 </div>
-                                </div>
 
-                                <div class="btn-group shadow-none col-4">
+                                    </label>
+
+                            </div>
+
+
+
+                                <div class="btn-group shadow-none col-4 h-100">
                                     {% for subfield in template_game_form.rx_dir_field %}
                                         {% if subfield.id == "rx_dir_field-0" %}
                                             {{ subfield(class="btn-check shadow-none", autocomplete="off",checked=session['game5']['coil_dir']=='x') }}
@@ -287,40 +293,14 @@
 
                             </div>
 
-                           <div class="row h-25 card bsg-light d-flex justify-content-center align-content-center" id="message-region">
-                               <i class="bi bi-megaphone" id="megaphone"></i>
-                               <p class="font-monospace" id="message-game5"></p>
-
-
-                               <p class="font-monospace" id="stars-display">
-
-                                   {% set num_stars = session['game5']['progress'].num_stars %}
-                                   {% set num_full = (num_stars | round(0,'floor') )| int %}
-                                   {% set num_half = ((2*(num_stars-num_full)) | round) | int %}
-                                   {% set num_empty = 5 - num_full - num_half %}
-                                   {% set star_array = [] %}
-                                    <span>{{ num_stars }}/5 stars earned</span>
-                                   {% for f in range(num_full) %}
-                                        {% set star_array = star_array.append(2) %}
-                                   {% endfor %}
-                                   {% for h in range(num_half) %}
-                                        {% set star_array = star_array.append(1) %}
-                                   {% endfor %}
-                                   {% for e in range(num_empty) %}
-                                       {% set star_array = star_array.append(0) %}
-                                    {% endfor %}
-
-                                   {% for star in star_array %}
-                                       {% if star == 2 %}
-                                            <i class="bi bi-star-fill"></i>
-                                       {% elif star == 1 %}
-                                           <i class="bi bi-star-half"></i>
-                                       {% else %}
-                                           <i class="bi bi-star"></i>
-                                       {% endif %}
-                                   {% endfor %}
-                               </p>
-
+                           <div class="row h-25 card bg-light">
+                               <div class="card-header">Messages</div>
+                               <div class="card-body d-flex justify-content-center align-content-center">
+                                   <div class="col-44">
+                                        <i class="bi bi-megaphone" id="megaphone"></i>
+                                   </div>
+                                   <div class="font-monospace col-8" id="message-region"></div>
+                                </div>
                            </div>
 
 
@@ -332,15 +312,6 @@
                 <div class="col-6 card">
                     <div class="card-header h4">
                         Tasks
-                                  <div type="button" class="btn btn-sm shadow-none"
-                                       data-mdb-container="body"
-                                       data-mdb-toggle="popover"
-                                       data-mdb-placement="top"
-                                      title="How to play"
-                                data-mdb-content='Check off all tasks of each Move and press Next to move on. Complete all steps and answer the Questions on the right to earn five stars!'>
-                                    <i class="bi bi-wquestion-circle-fill"></i>
-                                </div>
-
                     </div>
                     <div class="card-body">
                     <div class="progress">
@@ -348,13 +319,10 @@
                              style="width: {{ session['game5']['task_completed']*25 }}%"
                              aria-valuenow="0" aria-valuemin="{{ session['game5']['task_completed']*25 }}" aria-valuemax="100"></div>
                     </div>
-
-
-
                     <!-- Show tab for each lab procedure -->
                     <ul class="nav nav-tabs nav-justified" id="game5-tab" role="tablist">
                         {% for tab in instructions['tabs'] %}
-                            {% if loop.index == session['game5']['task_completed'] + 1 %}
+                            {% if loop.index == ([session['game5']['task_completed'] + 1,4] | min) %}
                                 {% set active = 'active' %}
                             {% else %}
                                 {% set active = '' %}
@@ -377,7 +345,7 @@
                     <!-- Show content for each lab procedure -->
                     <div class="tab-content" id="game5-tab-content">
                         {% for task, task_details in instructions['tasks'].items() %}
-                            {% if loop.index == session['game5']['task_completed'] + 1 %}
+                            {% if loop.index == ([session['game5']['task_completed']+1,4] | min) %}
                                 {% set show_text = 'show' %}
                                 {% set active_text = 'active' %}
                             {% else %}
@@ -387,15 +355,15 @@
                             <div class="tab-pane fade {{ show_text }} {{ active_text }}" id="step{{ loop.index }}" role="tabpanel" aria-labelledby="step{{ loop.index }}-tab">
                                 <div class="h4 text-info">{{ instructions['titles'][loop.index0] }}</div>
 
-                                <ul class="accordion" id="instructions-accordion"> <!-- TODO make accordion work and add inside instructions -->
+                                <ul class="accordion" id="instructions-accordion">
                                 {% set task_index = loop.index %}
                                 {% for step, details in instructions['explorations'][loop.index0].items() %}
                                       <li class="accordion-item">
                                           <div class="accordion-header row d-flex justify-content-center" id="heading{{ loop.index }}">
-                                              <div class="col-1 d-flex align-items-center justify-content-center">
+                                              <div class="col-2 d-flex align-items-center justify-content-center">
                                               <input class="form-check-input task-{{ task_index }}-check" type="checkbox" value="" aria-label="">
                                               </div>
-                                            <div class="col-11">
+                                            <div class="col-10">
                                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ loop.index }}" aria-expanded="false" aria-controls="collapse{{ loop.index }}">
                                                 <strong>{{ step }}</strong>
                                             </button>
@@ -409,16 +377,15 @@
                                       </li>
                                 {% endfor %}
 
-                                <!-- Task 3 special item -->
-
+                                <!-- Special item -->
                                     <li class="accordion-item text-info">
                                           <div class="accordion-header row d-flex justify-content-center" id="heading-final-{{ task_index }}">
 
-                                              <div class="col-1 d-flex align-items-center justify-content-center">
-                                                <input class="form-check-input task-{{ task_index }}-check" id="final-task-of-{{ task_index }}" type="checkbox" disabled>
+                                              <div class="col-2 d-flex align-items-center justify-content-center">
+                                                <input class="form-check-input task-{{ task_index }}-check" id="final-task-of-{{ task_index }}" type="checkbox">
                                               </div>
 
-                                            <div class="col-11">
+                                            <div class="col-10">
                                             <button class="accordion-button collapsed final-task-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-final-{{ task_index }}" aria-expanded="false" aria-controls="collapse{{ loop.index }}">
                                                 <strong class="text-info">{{ task }}</strong>
                                             </button>
@@ -430,14 +397,7 @@
                                               </div>
                                           </div>
                                       </li>
-
-
-
-
-
                                 </li>
-
-
                                 </ul>
 
                                 <!-- Step 3 special button -->
@@ -446,10 +406,8 @@
                                         <div class="col" id="target-m-disp">Target M: (0, 0, 0)</div>
                                         <div class="col d-none text-danger" id="try-again">Try again.</div>
                                     </div>
-
                                     <div class="btn btn-light btn-outline-primary" id="randomize">Randomize!</div>
                                     <div class="btn btn-dark" id="check-answer">Check</div>
-
                                 {% endif %}
 
                                 <div class="btn btn-info task-next-button" id="task{{ loop.index }}-next">Next</div>
@@ -490,12 +448,6 @@
                    <div class="col-6 card">
                             <div class="card-header h3">Questions</div>
                                 <div id="slide" class="carousel slide card-body" data-bs-interval="false">
-                                <div class="carousel-indicators">
-                                    <button type="button" data-bs-target="#slide" data-bs-slide-to="0" class="active"></button>
-                                    {% for i in range(1, success_text | length) %}
-                                        <button type="button" data-bs-target="#slide" data-bs-slide-to="{{ i }}"></button>
-                                    {% endfor %}
-                                </div>
 
                             <div class="carousel-inner">
                                 {% for ind in range(success_text | length) %}

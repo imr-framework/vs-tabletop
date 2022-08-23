@@ -1,0 +1,6 @@
+.carousel-control-next-icon,.carousel-control-prev-icon {
+    background-image: none;
+}
+.form-check-input:checked[type=checkbox] {
+    background-image: none;
+}

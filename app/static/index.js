@@ -50,3 +50,25 @@ window.onload = function(){
 
 
 }
+
+for (let num=1;num<=8;num++) {
+       let highlight;
+        if (num % 2 === 0){
+            highlight = 'bg-info';
+        }
+        else {
+            highlight = 'bg-warning';
+        }
+    $(`#game-card-${num}`).hover(
+        // "IN" function
+        () => {
+            console.log('in');
+            $(`#game-card-${num}`).removeClass("bg-secondary").addClass(highlight);
+        },
+        // "OUT" function
+        () =>{
+            console.log('out')
+            $(`#game-card-${num}`).removeClass(highlight).addClass('bg-secondary');
+        }
+    )
+}

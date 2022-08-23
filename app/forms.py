@@ -57,13 +57,13 @@ class Game1Form(FlaskForm):
     min_value = IntegerField(label='min', validators=[DataRequired(), NumberRange(min=0, max=100)],default=10)
     max_value = IntegerField(label='max', validators=[DataRequired(), NumberRange(min=0, max=100)],default=90)
 class Game3Form(FlaskForm):
-    options = RadioField('options', choices=['T1', 'T2', 'PD'],validators=[InputRequired()],default='T1')
+    options = RadioField('options', choices=['T1w', 'T2w', 'PDw'],validators=[InputRequired()],default='T1')
     TR = DecimalRangeField(label='TR (ms)', validators= [DataRequired(), NumberRange(min=500, max=5000)],default=2750)
     TE = DecimalRangeField(label='TE (ms)', validators= [DataRequired(), NumberRange(min=10, max=450)],default=235)
     FA = DecimalRangeField(label='FA (deg)', validators= [DataRequired(), NumberRange(min=0.0, max=360)],default=90)
     submit = SubmitField("Submit chosen parameters")
     submit_questions = SubmitField("Submit Answer")
-    P1_q = RadioField('question1', choices=['T1', 'T2', 'PD'], validators=[InputRequired()])
+    P1_q = RadioField('question1', choices=['T1w', 'T2w', 'PDw'], validators=[InputRequired()])
     P2_q = RadioField('question2', choices=['Contrast Decreases', 'Contrast Increases'], validators=[InputRequired()])
     P3_q = RadioField('question3', choices=['CSF', 'GM', 'WM'])
 # EXAMPLE

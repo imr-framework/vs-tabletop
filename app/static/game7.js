@@ -99,10 +99,10 @@ socket.on('renew stars',(msg)=>{
     num_empty = 5 - num_full - num_half;
 
 
-    let stars_html = `<span> ${num_stars} / 5 stars earned</span> `
-    stars_html += '<i class="bi bi-star-fill"></i> '.repeat(num_full)
-    stars_html += '<i class="bi bi-star-half"></i> '.repeat(num_half)
-    stars_html += '<i class="bi bi-star"></i> '.repeat(num_empty)
+    let stars_html = ""
+    stars_html += '<i class="bi bi-star-fill text-warning"></i> '.repeat(num_full)
+    stars_html += '<i class="bi bi-star-half text-warning"></i> '.repeat(num_half)
+    stars_html += '<i class="bi bi-star text-warning"></i> '.repeat(num_empty)
 
     $("#stars-display").html(stars_html);
 
@@ -264,6 +264,10 @@ $('#check-answer-2d').click(()=>{
     $('#final-task-of-4').prop('checked',answer===correct_ind_2d);
 })
 
+$('#final-task-of-4').prop('disabled',true);
+$('#final-task-of-5').prop('disabled',true);
+
+
 $('#check-answer-1d').click(()=>{
     let answer = -1;
     for (x=0;x<3;x++){
@@ -298,8 +302,13 @@ function update_progress_bar(step) {
 
 function go_to_next_tab(step){
     if (step<5){
+        // Activate tab
         $(`#task${step+1}-tab`).removeClass('disabled');
         $(`#task${step+1}-tab`).tab('show');
+
+        //TODO activate tab content too
+        $(`#step${step}`).removeClass('show active');
+        $(`#step${step+1}`).addClass('show active');
     }
     else{
         loop();

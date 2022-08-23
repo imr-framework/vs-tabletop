@@ -7,7 +7,7 @@ import plotly.graph_objects as go
 import utils
 import random
 from forms import Game5Form
-from info import GAMES_DICT, GAME5_INSTRUCTIONS, GAME5_M_INFO
+from info import GAMES_DICT, GAME5_INSTRUCTIONS, GAME5_M_INFO, GAME5_BACKGROUND
 from models import User, Calibration
 from __main__ import app, login_manager, db, socketio
 import plotly.express as px
@@ -53,7 +53,7 @@ def game5_view():
     return render_template('game5.html',template_title="Proton's got moves",template_intro_text="Can you follow on?",
                            template_game_form=game_form, graphJSON_spin=j1, graphJSON_signal=j2,
                            questions=questions,success_text=success_text,uses_images=uses_images_list,
-                           instructions=GAME5_INSTRUCTIONS, game_num=5)
+                           instructions=GAME5_INSTRUCTIONS, game_num=5, background=GAME5_BACKGROUND)
                             #TODO use function to store/generate tasks
 
 
@@ -159,6 +159,7 @@ def reset_everything():
                                    'M_target_on':False
                                  })
     reset_m()
+    socketio.emit('message',{'text':'The stage has been reset.','type':''})
 
     return
 

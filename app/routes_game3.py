@@ -8,7 +8,7 @@ from flask import flash, render_template, session, redirect, url_for
 from flask_login import login_required, login_user, logout_user
 import utils
 from forms import *
-from info import GAMES_DICT
+from info import GAMES_DICT, GAME3_BACKGROUND
 from models import User, Calibration
 from __main__ import app, login_manager, db, socketio
 from models import MultipleChoice
@@ -36,7 +36,7 @@ def game3():
     print(session['game3'])
     return render_template('game3.html', template_title="Brains, please!", template_intro_text="",
                            G3Form=form, graphJSON_img = j1, graphJSON_bar = j2, questions = questions,
-                           success_text=success_text, uses_images=uses_images, game_num=3)
+                           success_text=success_text, uses_images=uses_images, game_num=3,background=GAME3_BACKGROUND)
 
 @socketio.on('Update param for Game3')
 def update_parameter(info):
@@ -124,7 +124,7 @@ def update_task_progress():
     if session['game3']['current_task'] == 1:
         P1_q = session['game3']['P1_q']
         print(session['game3']['completed_task'])
-        if(P1_q == 'T1'):
+        if(P1_q == 'T1w'):
             session['game3']['completed_task'] = 1
             session['game3']['current_task'] = 2
             print(session['game3']['completed_task'])
@@ -154,7 +154,7 @@ def fetch_all_game3_questions():
 
     uses_images_list = []
     all_Qs = MultipleChoice.query.filter_by(game_number=3).all()
-    success_text = len(all_Qs) * ['Correct! Move on to the next question!']
+    success_text = len(all_Qs) * ['Correct! Move on to the next question.']
     for Q in all_Qs:
         qdata = Q.get_randomized_data()
         uses_images_list.append(Q.uses_images)

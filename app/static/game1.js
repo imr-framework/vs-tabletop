@@ -39,11 +39,13 @@ $('.answer-mc').on('click', (event)=>{
     if (choice == letters[parseInt($(`#mc-correct-choice-${q_ind}`).text())]){
         console.log("Answer is correct! ")
         // Make success text visible
+        $(`#mc-failure-text-${q_ind}`).addClass('d-none');
         $(`#mc-success-text-${q_ind}`).removeClass('d-none')
         socket.emit('game 1 question answered',{'ind': q_ind, 'correct': true});
     }
     else{
         console.log("Answer is wrong! ")
+        $(`#mc-failure-text-${q_ind}`).removeClass('d-none');
         $(`#mc-success-text-${q_ind}`).addClass('d-none')
         // Hide success text
         socket.emit('game 1 question answered',{'ind': q_ind, 'correct': false});
@@ -208,10 +210,10 @@ socket.on('renew stars',(msg)=>{
     num_empty = 5 - num_full - num_half;
 
 
-    let stars_html = `<span> ${num_stars} / 5 stars earned</span> `
-    stars_html += '<i class="bi bi-star-fill"></i> '.repeat(num_full)
-    stars_html += '<i class="bi bi-star-half"></i> '.repeat(num_half)
-    stars_html += '<i class="bi bi-star"></i> '.repeat(num_empty)
+    let stars_html = ''
+    stars_html += '<i class="bi bi-star-fill text-warning"></i> '.repeat(num_full)
+    stars_html += '<i class="bi bi-star-half text-warning"></i> '.repeat(num_half)
+    stars_html += '<i class="bi bi-star text-warning"></i> '.repeat(num_empty)
 
     $("#stars-display").html(stars_html);
 })

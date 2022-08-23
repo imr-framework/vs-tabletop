@@ -1,14 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
 <head>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
-
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=Neo, initial-scale=1.0">
     <title>Tabs</title>
-    <link href='style.css' rel='stylesheet'>
-
 </head>
 
 {% if session['game3']['completed_task'] == 3 %}
@@ -88,7 +84,7 @@
             <form action="/games/3" method="POST">
             <p class="tabs_text">
                 Answer the below question to test your knowledge and move on to the next task!
-                <br>Which scan highlights fat and proteins?
+                <br>Which scan makes CSF look dark?
                 <div class="card-body btn-group">
                 {% for subfield in G3Form.P1_q %}
                                 {% if subfield.id == "P1_q" %}
@@ -102,11 +98,12 @@
                                 {{ subfield.label(class="btn btn-outline-primary d-flex align-items-center justify-content-center") }}
 
                             {% endfor %}
-            </div>
+                </div>
                 <br>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </p>
             </form>
+
         </div>
         <div class="tabs__content {{ task2_status }}">
           <h2 class="tabs__title">Instructions</h2>
@@ -210,23 +207,23 @@
                                      <button type="button" class="btn btn-sm shadow-none"
                                              data-mdb-container="body"
                                              data-mdb-toggle="popover"
-                                             data-mdb-placement="left" title="What is T1"
-                                             data-mdb-content="longitudinal relaxation time tells us how long it takes for the z-component of the M vector to regrow from zero to about 63% of its maximum. Highlights fat and proteins">
+                                             data-mdb-placement="left" title="T1"
+                                             data-mdb-content="T1 tells us how long it takes for the z-component of the M vector to regrow from zero to about 63% of its maximum. Highlights fat and proteins">
                                             <i class="bi bi-question-circle-fill"></i></button>
                                     <b>T2</b>
                                      <button type="button" class="btn btn-sm shadow-none"
                                              data-mdb-container="body"
                                              data-mdb-toggle="popover"
-                                             data-mdb-placement="left" title="What is T2?"
-                                             data-mdb-content="transverse relaxation time tells us how long it takes for the xy-component of the M vector to decay from 100% to about 37%. Different tissues have different T2 values.">
+                                             data-mdb-placement="left" title="T2"
+                                             data-mdb-content="T2 tells us how long it takes for the xy-component of the M vector to decay from 100% to about 37%. Different tissues have different T2 values.">
                                             <i class="bi bi-question-circle-fill"></i></button>
                                      <b>or PD</b>
                                          <button type="button" class="btn btn-sm shadow-none"
                                              data-mdb-container="body"
                                              data-mdb-toggle="popover"
                                              data-mdb-placement="left"
-                                             title="What is PD?"
-                                             data-mdb-content="proton density tells us how many protons there are in a unit volume tissue. More signal is generated from tissues with higher PD.">
+                                             title="Proton density"
+                                             data-mdb-content="Proton density tells us how many protons there are in a unit volume tissue. More signal is generated from tissues with higher PD.">
                                             <i class="bi bi-question-circle-fill"></i></button>
                                      <b>weighted scan</b>
                                  </div>
@@ -235,9 +232,9 @@
                                  <div class="card-body btn-group">
                                      {% for subfield in G3Form.options %}
                                             {% if subfield.id == "options" %}
-                                                {{ subfield(class="btn-check ", autocomplete="off",checked=session['game3']['options']=='T1') }}
+                                                {{ subfield(class="btn-check", autocomplete="off",checked=session['game3']['options']=='T1') }}
                                             {% elif subfield.id == "options-1" %}
-                                                {{ subfield(class="btn-check ", autocomplete="off",checked=session['game3']['options']=='T2') }}
+                                                {{ subfield(class="btn-check", autocomplete="off",checked=session['game3']['options']=='T2') }}
                                             {% else %}
                                                 {{ subfield(class="btn-check ", autocomplete="off", checked=session['game3']['options']=='PD') }}
                                             {% endif %}
@@ -255,7 +252,7 @@
                                              <button type="button" class="btn btn-sm shadow-none"
                                                      data-mdb-container="body"
                                                      data-mdb-toggle="popover"
-                                                     data-mdb-placement="left" title="Repetition Time (TR)?"
+                                                     data-mdb-placement="left" title="Repetition Time (TR)"
                                                      data-mdb-content="TR is the time difference between one set of RF pulses and the next set,
                                                             which we use to repeatedly excite the protons. This ensures that the signal is consistent as we build
                                                             up an MR image.">
@@ -328,7 +325,7 @@
                          <button type="button" class="btn btn-sm shadow-none"
                                  data-mdb-container="body"
                                  data-mdb-toggle="popover"
-                                 data-mdb-placement="top" title="Cerebrospinal Fluid (CSF)?"
+                                 data-mdb-placement="top" title="Cerebrospinal Fluid (CSF)"
                                  data-mdb-content="CSF is the liquid content of brain ventricles. It flows in and around the brain to absorb impact from injuries to the skull and provide nutrients.">
                                 <i class="bi bi-question-circle-fill"></i></button>
 
@@ -375,7 +372,7 @@
                     <div class="card-body">
                         <div class="chart" id="chart-G3">
                         </div>
-                        {{G3Form.submit(class="btn btn-large btn-info")}}
+                        <button type="submit" class="btn btn-large btn-success">RUN</button>
                     </div>
                 </div>
 
@@ -383,24 +380,17 @@
                     <div class="card-header"><b>Questions</b></div>
                     <div class="card text-white bg-secondary" style="color: grey">
                         <div id="slide" class="carousel slide" data-bs-interval="false">
-                            <div class="carousel-indicators"><button type="button" data-bs-target="#slide" data-bs-slide-to="0" class="active"></button>
-                                <button type="button" data-bs-target="#slide" data-bs-slide-to="1"></button>
-                                <button type="button" data-bs-target="#slide" data-bs-slide-to="2"></button>
-                                <button type="button" data-bs-target="#slide" data-bs-slide-to="3"></button>
-                                <button type="button" data-bs-target="#slide" data-bs-slide-to="4"></button>
-                                <button type="button" data-bs-target="#slide" data-bs-slide-to="5"></button>
-                                <button type="button" data-bs-target="#slide" data-bs-slide-to="6"></button>
-                            </div>
                             <div class="carousel-inner">
                                 <form action="/games/3" method="POST">
                                 {% for ind in range(success_text | length) %}
                                     {% set letters = ['a','b','c','d'] %}
                                     {% set active_text = 'active' if ind==0 else '' %}
                                     <div class="carousel-item {{active_text}}">
-                                        <h2> Question {{ ind + 1 }}</h2>
+                                    <br>
+                                        <span> Q{{ ind + 1 }}:</span>
                                         {{ questions[ind]['text'] }}
                                         {% if (questions[ind]['main_image_path']) | length > 0 %}
-                                        <br><img src=".{{ questions[ind]['main_image_path']}}" style="height:100px; width:100px;">
+                                        <br><img src=".{{ questions[ind]['main_image_path']}}" alt="question image" style="height:100px; width:auto">
                                         {% endif %}
                                         {% for ind2 in range(questions[ind]['choices'] | length) %}
                                             {% if not uses_images[ind] %}
@@ -415,8 +405,11 @@
                                         <p class="d-none">Correct choice: <span id="mc-correct-choice-{{ind}}">{{ questions[ind]['correct']}}</span></p>
 
 
-                                        <br><div class="btn btn-large btn-primary answer-mc" id="answer-mc-{{ind}}">Submit</div>
-                                        <p id="mc-success-text-{{ind}}" class="d-none">{{ success_text[ind] }}</p>
+                                        <br>
+
+                                        <div class="btn btn-large btn-primary answer-mc" id="answer-mc-{{ind}}">Submit</div>
+                                        <p id="mc-success-text-{{ind}}" class="d-none" style="color:palegreen">{{ success_text[ind] }}</p>
+                                        <p id="mc-failure-text-{{ind}}" class="d-none" style="color:#ffb500">Wrong answer, try again!</p>
                                     </div>
 
                                 {% endfor %}
@@ -434,41 +427,6 @@
                 </form>
              </div>
                  </div>
-                <div class="row card">
-                    <div class="card header bg-light"><b>Star Count: 5 stars to <i>mastery!</i></b></div>
-                        <div class="card body">
-                               <p class="font-monospace" id="stars-display">
-                                   {% set num_stars = session['game3']['progress'].num_stars %}
-                                   {% set num_full = (num_stars | round(0,'floor') )| int %}
-                                   {% set num_half = ((2*(num_stars-num_full)) | round) | int %}
-                                   {% set num_empty = 5 - num_full - num_half %}
-                                   {% set star_array = [] %}
-                                    <span>{{ num_stars }}/5 stars earned</span>
-                                   {% for f in range(num_full) %}
-                                        {% set star_array = star_array.append(2) %}
-                                   {% endfor %}
-                                   {% for h in range(num_half) %}
-                                        {% set star_array = star_array.append(1) %}
-                                   {% endfor %}
-                                   {% for e in range(num_empty) %}
-                                       {% set star_array = star_array.append(0) %}
-                                    {% endfor %}
-
-                                   {% for star in star_array %}
-                                       {% if star == 2 %}
-                                            <i class="bi bi-star-fill"></i>
-                                       {% elif star == 1 %}
-                                           <i class="bi bi-star-half"></i>
-                                       {% else %}
-                                           <i class="bi bi-star"></i>
-                                       {% endif %}
-                                   {% endfor %}
-                                   {% if session['game3']['star_count'] == 5.0 %}
-                                    Continue to Game 3 to collect more stars!
-                                   {% endif %}
-                               </p>
-                        </div>
-                    </div>
 
 {% endblock %}
 

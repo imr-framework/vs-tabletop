@@ -40,6 +40,7 @@ def get_image(fov,n,n_zf,min_level,max_level):
 
     # Normalize before anything else
     # Normalize to between (0,1)
+    print(f'N={n}, min = {np.min(img)}, max = {np.max(img)}')
     img = (img - np.min(img)) / (np.max(img)-np.min(img))
 
 
@@ -60,6 +61,9 @@ def get_image(fov,n,n_zf,min_level,max_level):
         final_image = img
 
     # Zerofill in k-space when needed
+    # Preserve scale
+    img_min = np.min(final_image)
+    img_max = np.max(final_image)
     if n_zf is not None:
         if n_zf < n:
             raise ValueError("The zerofill target matrix size should be larger than the acq. matrix size.")
@@ -70,6 +74,11 @@ def get_image(fov,n,n_zf,min_level,max_level):
         ind2 = int(n_zf/2 + n/2)
         kspace_zf[ind1:ind2,ind1:ind2] = kspace
         final_image = np.absolute(np.fft.ifft2(np.fft.fftshift(kspace_zf)))
+
+    final_image = (final_image - np.min(final_image)) / (np.max(final_image)-np.min(final_image))
+    final_image = final_image * (img_max - img_min) + img_min
+
+
 
     # Windowing: Normalize levels between (min,max) to (0,1)
     if max_level <= min_level:

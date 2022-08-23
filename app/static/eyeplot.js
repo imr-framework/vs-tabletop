@@ -3,12 +3,23 @@ import Interactive from "https://vectorjs.org/interactive.js";
 
 
 
-const W = 400;
-const H = 400;
-const cc = [W/2, H/2];
-const R = H/3;
+
 // Construct an interactive within the HTML element with the id "my-interactive"
 let myInteractive = new Interactive("my-interactive");
+
+
+// Sizing
+let total_width = $('#my-interactive').parent().innerWidth();
+console.log('total_width');
+console.log(total_width);
+
+
+
+const W = total_width*0.75;
+const H = total_width*0.75;
+const cc = [W/2, H/2];
+const R = H/3;
+
 myInteractive.width = W;
 myInteractive.height = H;
 myInteractive.originX = 0;
@@ -53,7 +64,7 @@ let projLine = myInteractive.line(cc[0]/2,R/4,cc[0]/2,cc[1]-R/4);
 projLine.style.strokeWidth='2px';
 projLine.style.stroke='DodgerBlue';
 
-
+$('#circle-15').attr('r',50).attr('stroke','none').attr('fill','dodgerblue').attr('opacity','0.25');
 
 projLine.update = function () {
     this.x1 = control.x;
@@ -66,13 +77,13 @@ projLine.update();
 projLine.addDependency(control);
 
 // Display angle
-let thetaDisplay = myInteractive.text(50, 30, `θ = 90 degrees`);
-thetaDisplay.addDependency(control);
-thetaDisplay.update = function () {
-    thetaDisplay.contents = `θ = ${rad2Deg(getAngle()).toFixed(2)} degrees`;
-    // thetaDisplay.contents = `θ = ${getAngle().toFixed(2)} or ${(getAngle()/(2*Math.PI)).toFixed(2)}τ`;
-};
-thetaDisplay.update();
+// let thetaDisplay = myInteractive.text(50, 30, `θ = 90 degrees`);
+// thetaDisplay.addDependency(control);
+// thetaDisplay.update = function () {
+//     thetaDisplay.contents = `θ = ${rad2Deg(getAngle()).toFixed(2)} degrees`;
+//     // thetaDisplay.contents = `θ = ${getAngle().toFixed(2)} or ${(getAngle()/(2*Math.PI)).toFixed(2)}τ`;
+// };
+// thetaDisplay.update();
 
 
 const svgSize = 32;
@@ -125,6 +136,10 @@ $('#proj1d_angle_set').on('click',()=>{
 })
 
 
+$('#eye-control-handle').on('mouseup mouseleave',()=>{
+    // Change lines and 1D plot
+    socket.emit('Eye control changed')
+})
 
 
 

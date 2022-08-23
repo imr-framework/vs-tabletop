@@ -218,7 +218,14 @@ def generate_static_plot(mags, coil=None, tx=None, target=None):
         layout=go.Layout(
             paper_bgcolor='gainsboro',
             scene=dict(xaxis=axis_shared, yaxis=axis_shared, zaxis=axis_shared, aspectmode="cube"),
-            margin=dict(r=10, l=10, b=10, t=10),
+            margin=dict(
+                l=5,
+                r=5,
+                b=5,
+                t=5,
+                pad=0
+            ),
+
             uirevision=True)
     )
 

@@ -70,113 +70,98 @@
 
     <div class="row g-0 w-100 h-50">
         <div class="col-4 mh-100">
-            <div class="card h-100">
-                <form action="/games/7" method="POST">
-                    {{ G7Form.hidden_tag() }}
+            <div class="card">
                         <div class="card-header">Projection settings</div>
-                        <div class="card-body">
+                        <div class="card-body h-75">
                             <div class="row h-100">
-                            <div class="col-4">
-                                <!-- 3D model choice -->
-                            <div class="form-group">
-                            {{ G7Form.phantom_type_field.label(class="form-label")}}
-                                <div type="button" class="btn btn-sm shadow-none"
-                                     data-mdb-container="body"
-                                     data-mdb-toggle="popover"
-                                     data-mdb-placement="top"
-                                     title='3D model'
-                                     data-mdb-content="Select among a list of pre-made 3D models with cutouts that fills with water which generate signal.">
-                                    <i class="bi bi-question-circle-fill"></i>
-                                </div>
-                            {{ G7Form.phantom_type_field(class="form-control",id='model')}}
-                            </div>
-
-                            <!-- 2D projection axis -->
-                            <div class="form-group pt-3">
-                                <div class="col">
-
-                                    {{ G7Form.proj_2d_axis_field.label(class="form-label col") }}
-                                    <div type="button" class="btn btn-sm shadow-none"
-                                         data-mdb-container="body"
-                                         data-mdb-toggle="popover"
-                                         data-mdb-placement="top"
-                                         title='2D projection axis'
-                                         data-mdb-content="The axis along which the water-filled parts of the 3D volume is summed.">
-                                        <i class="bi bi-question-circle-fill"></i>
-                                    </div>
-                                 </div>
-
-
-                                <div class="row">
-                                {% for subfield in G7Form.proj_2d_axis_field %}
-                                    <div class="form-control col">
-                                        {{ subfield(id='proj2d_axis',class='form-check-input proj-2d-xyz') }}
-                                        {{ subfield.label(class='form-check-label') }}
-                                    </div>
-                                {% endfor %}
-                                </div>
-                            </div>
-
-                            <!-- 1D projection angle -->
-
-                                {{ G7Form.proj_1d_angle_field.label(class="form-label")}}
-                                    <div type="button" class="btn btn-sm shadow-none"
-                                         data-mdb-container="body"
-                                         data-mdb-toggle="popover"
-                                         data-mdb-placement="bottom"
-                                         title='1D projection angle'
-                                         data-mdb-content="The angle at which we pass parallel rays through an 2D image.
-                                                        The total image intensity along each ray is summed to form the projection
-                                                       on a line/surface at a right angle to the rays.">
-                                         <i class="bi bi-question-circle-fill"></i>
+                                <div class="col-5">
+                                <form action="/games/7" method="POST">
+                                    {{ G7Form.hidden_tag() }}
+                                    <!-- 3D model choice -->
+                                    <div class="row">
+                                        <div class="form-group">
+                                            <label for="model" class="form-label">Select model <span type="button" class="btn btn-sm shadow-none"
+                                                 data-mdb-container="body"
+                                                 data-mdb-toggle="popover"
+                                                 data-mdb-placement="top"
+                                                 title='3D model'
+                                                 data-mdb-content="Select among a list of pre-made 3D models with cutouts that fills with water which generate signal.">
+                                                <i class="bi bi-question-circle-fill"></i>
+                                            </span>
+                                            </label>
+                                        {{ G7Form.phantom_type_field(class="form-control",id='model')}}
+                                        </div>
                                     </div>
 
-                                <div class="form-group row">
-                                    <div class="col-8">
-                                {{ G7Form.proj_1d_angle_field(class='form-control',id='proj1d_angle',disabled=true)}}
+                                <!-- 2D projection axis -->
+                                    <div class="form-group">
+                                    <div class="col">
+
+                                        {{ G7Form.proj_2d_axis_field.label(class="form-label col") }}
+                                        <div type="button" class="btn btn-sm shadow-none"
+                                             data-mdb-container="body"
+                                             data-mdb-toggle="popover"
+                                             data-mdb-placement="top"
+                                             title='2D projection axis'
+                                             data-mdb-content="The axis along which the water-filled parts of the 3D volume is summed.">
+                                            <i class="bi bi-question-circle-fill"></i>
+                                        </div>
+                                     </div>
+
+
+                                    <div class="row">
+                                    {% for subfield in G7Form.proj_2d_axis_field %}
+                                        <div class="form-control col">
+                                            {{ subfield(id='proj2d_axis',class='form-check-input proj-2d-xyz') }}
+                                            {{ subfield.label(class='form-check-label') }}
+                                        </div>
+                                    {% endfor %}
                                     </div>
-                                    <div class="col-4">
-                                        deg.
+                                </div>
+                                <!-- 1D projection angle -->
+                                    {{ G7Form.proj_1d_angle_field.label(class="form-label")}}
+                                        <div type="button" class="btn btn-sm shadow-none"
+                                             data-mdb-container="body"
+                                             data-mdb-toggle="popover"
+                                             data-mdb-placement="bottom"
+                                             title='1D projection angle'
+                                             data-mdb-content="The angle at which we pass parallel rays through an 2D image.
+                                                            The total image intensity along each ray is summed to form the projection
+                                                           on a line/surface at a right angle to the rays.">
+                                             <i class="bi bi-question-circle-fill"></i>
+                                        </div>
+
+                                    <div class="form-group row">
+                                        <div class="col-8">
+                                    {{ G7Form.proj_1d_angle_field(class='form-control',id='proj1d_angle',disabled=true)}}
+                                        </div>
+                                        <div class="col-4">
+                                            deg.
+                                        </div>
                                     </div>
+
+                                    <div class="form-group pt-3">
+                                        <div class="btn btn-lg btn-info" id="lines-toggle">Show/hide lines</div>
                                 </div>
-
-                            <!-- Form submit button -->
-                                <div class="form-group pt-3">
-                                    <!-- {{ G7Form.submit_field(class='btn btn-lg btn-success')}} -->
-
-                                    <div class="btn btn-lg btn-info" id="lines-toggle">Show/hide lines</div>
-                                </div>
-
+                                </form>
 
                                 </div>
+                                <div class="col-7">
+                                    <div class="row">
+                                        <div id="my-interactive"></div>
+                                        <script type="module" src="../static/eyeplot.js"></script>
+                                    </div>
 
-                            <div class="col-8">
-
-                            <div class="row">
-                                <div id="my-interactive"></div>
-                                <script type="module" src="../static/eyeplot.js"></script>
-
+                                </div>
                             </div>
-
-                            </div>
-                            </div>
-
                         </div>
-                </form>
-
-                 </div>
+            </div>
         </div>
                 <!-- Task panel -->
         <div class="col-4 mh-100">
-            <div class="card h-100">
+            <div class="card">
                     <div class="card-header h3">
                         Tasks
-                     <div type="button" class="btn btn-sm" data-bs-toggle="popover" data-bs-placement="top"
-                                      title="How to play"
-                                data-bs-content='Check off all tasks of each Move and press Next to move on. Complete all steps and answer the Questions on the right to earn five stars!'>
-                                    <i class="bi bi-question-circle-fill"></i>
-                                </div>
-
                     </div>
                     <div class="card-body">
                     <div class="progress">
@@ -227,10 +212,10 @@
                                 {% for step, details in instructions['explorations'][loop.index0].items() %}
                                       <li class="accordion-item">
                                           <div class="accordion-header row d-flex justify-content-center" id="heading-{{ task_index }}-{{ loop.index }}">
-                                              <div class="col-1 d-flex align-items-center justify-content-center">
+                                              <div class="col-2 d-flex align-items-center justify-content-center">
                                               <input class="form-check-input task-{{ task_index }}-check" type="checkbox" value="" aria-label="">
                                               </div>
-                                            <div class="col-11">
+                                            <div class="col-10">
                                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ task_index }}-{{ loop.index }}" aria-expanded="false" aria-controls="collapse-{{ task_index }}-{{ loop.index }}">
                                                 <strong>{{ step }}</strong>
                                             </button>
@@ -247,11 +232,11 @@
                                     <li class="accordion-item text-info">
                                           <div class="accordion-header row d-flex justify-content-center" id="heading-final-{{ task_index }}">
 
-                                              <div class="col-1 d-flex align-items-center justify-content-center">
-                                                <input class="form-check-input task-{{ task_index }}-check" id="final-task-of-{{ task_index }}" type="checkbox" disabled>
+                                              <div class="col-2 d-flex align-items-center justify-content-center">
+                                                <input class="form-check-input task-{{ task_index }}-check" id="final-task-of-{{ task_index }}" type="checkbox">
                                               </div>
 
-                                            <div class="col-11">
+                                            <div class="col-10">
                                             <button class="accordion-button collapsed final-task-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-final-{{ task_index }}" aria-expanded="false" aria-controls="collapse-final-{{ loop.index }}">
                                                 <strong class="text-info">{{ task }}</strong>
                                             </button>
@@ -355,22 +340,23 @@
         <div class="col-4 mh-100">
           <!-- Questions panel -->
           <div class="card h-100">
-           <div class="card-header h3">Questions</div>
+          <div class="card-header h3">Questions</div>
 
-                    <div id="slide" class="carousel slide card-body h-100" data-bs-interval="false">
+          <div id="slide" class="carousel slide card-body h-75" data-bs-interval="false">
+                   <!--
                     <div class="carousel-indicators">
                         <button type="button" data-bs-target="#slide" data-bs-slide-to="0" class="active"></button>
                         {% for i in range(1, success_text | length) %}
                             <button type="button" data-bs-target="#slide" data-bs-slide-to="{{ i }}"></button>
                         {% endfor %}
                     </div>
+                    -->
 
-                <div class="carousel-inner">
+                <div class="carousel-inner h-100">
                     {% for ind in range(success_text | length) %}
                         {% set letters = ['a','b','c','d'] %}
                         {% set active_text = 'active' if ind==0 else '' %}
-                        <div class="carousel-item {{active_text}}">
-
+                        <div class="carousel-item {{active_text}} mh-100">
                             <div class="row d-flex justify-content-center align-items-baseline">
                                 <p class="h5">Q{{ ind + 1 }}:{{ questions[ind]['text']}}</p>
                             </div>
@@ -411,32 +397,6 @@
 
             </div>
 
-               <p class="font-monospace" id="stars-display">
-                       {% set num_stars = session['game7']['progress'].num_stars %}
-                       {% set num_full = (num_stars | round(0,'floor') )| int %}
-                       {% set num_half = ((2*(num_stars-num_full)) | round) | int %}
-                       {% set num_empty = 5 - num_full - num_half %}
-                       {% set star_array = [] %}
-                        <span>{{ num_stars }}/5 stars earned</span>
-                       {% for f in range(num_full) %}
-                            {% set star_array = star_array.append(2) %}
-                       {% endfor %}
-                       {% for h in range(num_half) %}
-                            {% set star_array = star_array.append(1) %}
-                       {% endfor %}
-                       {% for e in range(num_empty) %}
-                           {% set star_array = star_array.append(0) %}
-                        {% endfor %}
-                       {% for star in star_array %}
-                           {% if star == 2 %}
-                                <i class="bi bi-star-fill"></i>
-                           {% elif star == 1 %}
-                               <i class="bi bi-star-half"></i>
-                           {% else %}
-                               <i class="bi bi-star"></i>
-                           {% endif %}
-                       {% endfor %}
-                   </p>
 
 
 

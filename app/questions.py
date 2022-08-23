@@ -208,7 +208,7 @@ def initialize_game3_questions():
         id = 305,
         game_number=3,
         question_text="Using the table, predict which tissue type will be highlighted with a T1w MR contrast:",
-        main_image_path = "./static/img/tissue_table.png",
+        main_image_path = "./static/img/game3/tissue_table.png",
         choiceA = "Gray matter",
         choiceB = "White matter",
         choiceC = "",
