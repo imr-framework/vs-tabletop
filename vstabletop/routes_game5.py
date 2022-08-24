@@ -4,7 +4,7 @@ from flask import flash, render_template, session, redirect, url_for, request
 from flask_login import login_required, login_user, logout_user
 import plotly
 import plotly.graph_objects as go
-import utils
+import vstabletop.utils as utils
 import random
 from vstabletop.forms import Game5Form
 from info import GAMES_DICT, GAME5_INSTRUCTIONS, GAME5_M_INFO, GAME5_BACKGROUND
