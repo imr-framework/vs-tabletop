@@ -9,7 +9,7 @@ from vstabletop.forms import *
 from vstabletop.info import GAMES_DICT, GAME7_INSTRUCTIONS, GAME7_RANDOM_MODELS, GAME7_BACKGROUND
 
 # TODO
-from models import User, Calibration, MultipleChoice
+from vstabletop.models import User, Calibration, MultipleChoice
 from __main__ import app, login_manager, db, socketio
 import random
 

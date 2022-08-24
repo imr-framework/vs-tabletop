@@ -14,7 +14,7 @@ import plotly.express as px
 import pandas as pd
 import json
 import numpy as np
-from models import MultipleChoice
+from vstabletop.models import MultipleChoice
 from workers.game5_worker import simulate_RF_rotation, generate_static_plot,\
                                   animate_b0_turn_on, simulate_spin_precession,\
                                 generate_static_signals, generate_coil_signal

@@ -1,8 +1,8 @@
 # Generates multiple choice questions and stores them in database
 # Gehua Tong, July 2022
 
+from vstabletop.models import MultipleChoice
 from vstabletop.app import db
-from models import MultipleChoice
 import random
 
 
@@ -382,7 +382,7 @@ if __name__ == "__main__":
     #                     It gets regenerated when you call the function db.create_all().
 
     # Input questions into database
-    from models import initialize_users
+    from vstabletop.models import initialize_users
 
     mc_list = initialize_game1_questions()
     mc_list += initialize_game3_questions()

@@ -27,13 +27,15 @@ class User(UserMixin, db.Model):
         Return string representation for printing
 
     """
+    __table_args__ = {'extend_existing': True}
+
 
     # Basic fields
     id = db.Column(db.Integer,primary_key=True)
     username = db.Column(db.String(10),index=True,unique=True)
     password_hash = db.Column(db.String(128),index=False,unique=False)
     joined_at = db.Column(db.Date(),index=True,default=datetime.utcnow())
-    progresses = db.relationship('Progress',backref='user',lazy='dynamic')
+    #progresses = db.relationship('Progress',backref='user',lazy='dynamic')
 
     def set_password(self,password):
         self.password_hash = generate_password_hash(password)
@@ -45,6 +47,8 @@ class User(UserMixin, db.Model):
         return f'ID: {self.id}; user name: {self.username}; date registered: {self.joined_at}'
 
 class Calibration(db.Model):
+    __table_args__ = {'extend_existing': True}
+
     id = db.Column(db.Integer(),primary_key=True)
     f0 = db.Column(db.Float(6,False),index=True)
     shimx = db.Column(db.Float(6,False))
@@ -65,8 +69,10 @@ class Calibration(db.Model):
         return f'f0={self.f0/1e6} MHz, shim = ({self.shimx},{self.shimy},{self.shimz}), Tx amp = {self.tx_amp}, \
                stored at {self.stored_at}.'
 
-# TODO connect each user to 1 progress:?
 class Progress(db.Model):
+    __table_args__ = {'extend_existing': True}
+
+
     id = db.Column(db.Integer(),primary_key=True)
     game_number = db.Column(db.Integer(),index=True)
     num_questions = db.Column(db.Integer(),index=True)
@@ -74,7 +80,9 @@ class Progress(db.Model):
     num_stars = db.Column(db.Integer(),index=True)
     num_steps_complete = db.Column(db.Integer(),index=True)
     num_steps_total = db.Column(db.Integer(),index=True)
-    user_id = db.Column(db.Integer(),db.ForeignKey('user.id')) # Which user it belongs to
+    user_id = db.Column(db.Integer(),index=True)
+    #user_id = db.Column(db.Integer(),db.ForeignKey('user.id')) # Which user it belongs to
+
     date_achieved = db.Column(db.Date(),index=True,default=datetime.utcnow())
 
     def update_stars(self):
@@ -95,6 +103,9 @@ class Progress(db.Model):
 
 
 class MultipleChoice(db.Model):
+    __table_args__ = {'extend_existing': True}
+
+
     # Multiple choice question to store in database
     id = db.Column(db.Integer(),primary_key=True)
     game_number = db.Column(db.Integer(),index=True)# 1 - 8

@@ -11,7 +11,7 @@ from vstabletop.info import GAMES_DICT, GAME1_BACKGROUND
 from __main__ import app, login_manager, db, socketio
 
 # TODO
-from models import MultipleChoice
+from vstabletop.models import MultipleChoice
 
 questions = []
 

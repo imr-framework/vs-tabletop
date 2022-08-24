@@ -9,7 +9,7 @@ import vstabletop.utils as utils
 from vstabletop.forms import *
 from vstabletop.info import GAMES_DICT, GAMES_INFO
 # TODO
-from models import User, Calibration
+from vstabletop.models import User, Calibration
 from vstabletop.fake_data_generator import get_fake_calibration_plots, SignalPlotsThread, FlipAnglePlotThread, get_empty_calibration_plots
 from __main__ import app, login_manager, db, socketio
 
