@@ -1,16 +1,12 @@
-import threading
-
-from flask_wtf import form
-
 from workers.game3_worker import game3_worker
-import numpy as np
 from flask import flash, render_template, session, redirect, url_for
 from flask_login import login_required, login_user, logout_user
-import utils
-from forms import *
-from info import GAMES_DICT, GAME3_BACKGROUND
-from models import User, Calibration
+import vstabletop.utils as utils
+from vstabletop.forms import *
+from vstabletop.info import GAMES_DICT, GAME3_BACKGROUND
 from __main__ import app, login_manager, db, socketio
+
+# TODO
 from models import MultipleChoice
 
 

@@ -1,7 +1,7 @@
 # Generates multiple choice questions and stores them in database
 # Gehua Tong, July 2022
 
-from app import db
+from vstabletop.app import db
 from models import MultipleChoice
 import random
 

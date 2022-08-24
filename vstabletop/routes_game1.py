@@ -1,20 +1,20 @@
 import threading
 from workers.game1_worker import game1_worker
 import numpy as np
-from flask import flash, render_template, session, redirect, url_for
+from flask import flash, render_template, session, redirect, url_for, current_app
 from flask_login import login_required, login_user, logout_user
-import utils
-from forms import *
-from info import GAMES_DICT, GAME1_BACKGROUND
-from models import User, Calibration
+import vstabletop.utils as utils
+from vstabletop.forms import *
+from vstabletop.info import GAMES_DICT, GAME1_BACKGROUND
 
 
 from __main__ import app, login_manager, db, socketio
 
-
+# TODO
 from models import MultipleChoice
 
 questions = []
+
 
 @app.route('/games/1',methods=["GET","POST"])
 @login_required

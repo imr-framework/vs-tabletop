@@ -136,6 +136,6 @@ external/
 
 # Others
 .idea/
-app/flask_session/
+vstabletop/flask_session/
 .xml
 .iml

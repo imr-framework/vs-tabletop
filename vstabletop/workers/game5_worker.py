@@ -7,7 +7,7 @@ import plotly.express as px
 import json
 from pypulseq.make_block_pulse import make_block_pulse
 from scipy.spatial.transform import Rotation as R
-import utils
+import vstabletop.utils as utils
 GAMMA_BAR = 42.58e6
 
 # Game 5

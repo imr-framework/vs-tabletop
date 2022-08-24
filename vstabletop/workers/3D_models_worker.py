@@ -1,6 +1,6 @@
 # Module to deal with generating and converting 3D models for games 7 and 8
 # Gehua Tong, July 2022
-from game7_worker import convert_stl_to_voxels
+from vstabletop.workers.game7_worker import convert_stl_to_voxels
 import glob
 import numpy as np
 from os import path

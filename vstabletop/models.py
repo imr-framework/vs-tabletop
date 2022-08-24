@@ -3,7 +3,7 @@
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
-from app import db
+from vstabletop.app import db
 from datetime import datetime
 import numpy as np
 

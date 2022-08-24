@@ -12,19 +12,19 @@ app.config["TESTING"] = True
 app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
 
-#app.config.update(SESSION_COOKIE_SAMESITE="None", SESSION_COOKIE_SECURE=True)
+#vstabletop.config.update(SESSION_COOKIE_SAMESITE="None", SESSION_COOKIE_SECURE=True)
 
 
 
 # App - connect to other libraries to enable stuff
 # 1. Enable database through SQLAlchemy
 # Add database location
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'splite:///myDB.db'
+#vstabletop.config['SQLALCHEMY_DATABASE_URI'] = 'splite:///myDB.db'
 ### -> uses DATABASE_URL (connecting to PostgreSQL instead of SQLite IF POSSIBLE, for Heroku deployment)
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DATABASE_URL') or 'sqlite:///myDB.db'
 # Turn off notification at every change
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-# Create database and bind it to app
+# Create database and bind it to vstabletop
 db = SQLAlchemy(app)
 
 # 2. Enable Authentication through flask_login
@@ -41,8 +41,14 @@ def launch_virtualscanner():
     import routes_game1, routes_game3, routes_game5, routes_game7
     import routes_game2, routes_game4, routes_game6, routes_game8
 
-    #app.run()
+    #vstabletop.run()
     socketio.run(app,debug=True,host="0.0.0.0")
 
 if __name__ == '__main__':
+    import sys
+    import os
+    script_path = os.path.abspath(__file__)
+    SEARCH_PATH = script_path[:script_path.index('vstabletop')]
+    sys.path.insert(0,SEARCH_PATH)
+
     launch_virtualscanner()

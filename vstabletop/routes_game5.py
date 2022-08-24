@@ -6,7 +6,7 @@ import plotly
 import plotly.graph_objects as go
 import utils
 import random
-from forms import Game5Form
+from vstabletop.forms import Game5Form
 from info import GAMES_DICT, GAME5_INSTRUCTIONS, GAME5_M_INFO, GAME5_BACKGROUND
 from models import User, Calibration
 from __main__ import app, login_manager, db, socketio

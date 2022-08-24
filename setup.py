@@ -32,7 +32,7 @@ setuptools.setup(
     include_package_data = True,
     entry_points={
         'console_scripts':[
-            'vstabletop = app.app: launch_virtualscanner'
+            'vstabletop = vstabletop.app: launch_virtualscanner'
         ]
     }
 

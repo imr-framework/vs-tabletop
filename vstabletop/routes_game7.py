@@ -1,12 +1,14 @@
 import threading
-from workers.game7_worker import game7_prep3d_worker, game7_projection_worker, game7_empty_plots_worker, \
+from vstabletop.workers.game7_worker import game7_prep3d_worker, game7_projection_worker, game7_empty_plots_worker, \
     get_2D_proj_graph, get_1D_proj_graph, projections_to_images
 import numpy as np
 from flask import flash, render_template, session, redirect, url_for
 from flask_login import login_required, login_user, logout_user
-import utils
-from forms import *
-from info import GAMES_DICT, GAME7_INSTRUCTIONS, GAME7_RANDOM_MODELS, GAME7_BACKGROUND
+import vstabletop.utils as utils
+from vstabletop.forms import *
+from vstabletop.info import GAMES_DICT, GAME7_INSTRUCTIONS, GAME7_RANDOM_MODELS, GAME7_BACKGROUND
+
+# TODO
 from models import User, Calibration, MultipleChoice
 from __main__ import app, login_manager, db, socketio
 import random

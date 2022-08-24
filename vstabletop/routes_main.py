@@ -5,11 +5,12 @@ import numpy as np
 import threading
 from flask import flash, render_template, session, redirect, url_for, request
 from flask_login import login_required, login_user, logout_user
-import utils
-from forms import *
-from info import GAMES_DICT, GAMES_INFO
+import vstabletop.utils as utils
+from vstabletop.forms import *
+from vstabletop.info import GAMES_DICT, GAMES_INFO
+# TODO
 from models import User, Calibration
-from fake_data_generator import get_fake_calibration_plots, SignalPlotsThread, FlipAnglePlotThread, get_empty_calibration_plots
+from vstabletop.fake_data_generator import get_fake_calibration_plots, SignalPlotsThread, FlipAnglePlotThread, get_empty_calibration_plots
 from __main__ import app, login_manager, db, socketio
 
 
