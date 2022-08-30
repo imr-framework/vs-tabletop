@@ -4,11 +4,10 @@ import plotly
 import plotly.express as px
 from scipy.io import loadmat
 import json
+from vstabletop.paths import DATA_PATH
 
-#TODO fix brain upside donw thing
 
 def game3_worker(TR,TE,FA,empty=False):
-    # TODO enable empty JSON
     """Generate brainweb brain image using sequence parameters
 
     Parameters
@@ -127,7 +126,8 @@ def get_image_json(TR,TE,FA):
 
 
     # Load brainweb model
-    brainweb = loadmat('static/data/bw.mat')
+    brainweb = loadmat(DATA_PATH / 'bw.mat')
+
     type_slice = brainweb['typemap'][:,:,87]
     # Show image
     px.imshow(type_slice)
@@ -174,7 +174,7 @@ def get_bargraph_json(TR,TE,FA,tissue_names):
     full_names = ['Background','CSF','GM','WM','Fat',
                   'Muscle/skin', 'Skin', 'Skull', 'Glia','Connective Tissue']
 
-    brainweb = loadmat('static/data/bw.mat')
+    brainweb = loadmat(DATA_PATH / 'bw.mat')
     p = brainweb['params']
     names = [nl[0] for nl in brainweb['names'][0]]
     names_for_plot = [full_names[u] for u in [names.index(name) for name in tissue_names]]
@@ -198,9 +198,6 @@ def get_bargraph_json(TR,TE,FA,tissue_names):
 if __name__ == '__main__':
     # Example usage
     # j1, j2 are to be passed into render_template()
-
-
-
     j1, j2 = game3_worker(TR=0.5,TE=0.05,FA=90)
 
 

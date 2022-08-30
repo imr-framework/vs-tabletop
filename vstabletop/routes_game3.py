@@ -8,8 +8,6 @@ from __main__ import app, login_manager, db, socketio
 
 # TODO
 from vstabletop.models import MultipleChoice
-
-
 questions = []
 
 

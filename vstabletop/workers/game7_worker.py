@@ -13,6 +13,7 @@ from skimage.transform import radon
 from scipy.spatial.transform import Rotation as R
 import matplotlib.pyplot as plt
 import matplotlib as mpl
+from vstabletop.paths import DATA_PATH, IMG_PATH
 
 def game7_projection_worker(voxels, proj3d_axis, proj2d_angle, lines=False, lines_angle=90):
     """Generates 2D and 1D projections of the given raster representation of a 3D model
@@ -73,7 +74,8 @@ def game7_prep3d_worker(difficulty="all",name=None,lines=False,line_dir='z'):
 
     # Convert model name to path
     if name is not None:
-        model_info = f'./static/data/solids/{name}.stl'
+        model_info = DATA_PATH / 'solids' / f'{name}.stl'
+        #model_info = f'./static/data/solids/{name}.stl'
     else:
        model_info, name = get_random_model(difficulty="all")
 
@@ -81,7 +83,8 @@ def game7_prep3d_worker(difficulty="all",name=None,lines=False,line_dir='z'):
     print(f'Using model: {name}')
     graphJSON_3D = get_3d_model_plot(model_info,lines,line_dir)
     #voxels = convert_stls_to_voxels([model_info],resolution=100)
-    voxels = np.load(f'./static/data/solids/{name}.npy')
+    #voxels = np.load(f'./static/data/solids/{name}.npy')
+    voxels = np.load(DATA_PATH / 'solids' / f'{name}.npy')
     print(f'Loaded {name}.npy')
 
 
@@ -112,12 +115,14 @@ def get_random_model(difficulty="all"):
         raise NotImplementedError("Changes in difficulty are yet to be included!")
 
     # Get all stl paths in static/data/solids
-    all_stl_paths = glob.glob(f'./static/data/solids/*{level}.stl')
+    #all_stl_paths = glob.glob(f'./static/data/solids/*{level}.stl')
+    all_stl_paths = glob.glob(DATA_PATH / 'solids' / f'*{level}.stl')
     # Draw random integer
     index = np.random.randint(0,len(all_stl_paths))
     path = all_stl_paths[index]
 
-    name = path.removeprefix('./static/data/solids').removeprefix('/').removeprefix('\\').removesuffix('.stl')
+    #name = path.removeprefix('./static/data/solids').removeprefix('/').removeprefix('\\').removesuffix('.stl')
+    name = path.removeprefix(DATA_PATH / 'solids').removeprefix('/').removeprefix('\\').removesuffix('.stl').removeprefix('\"')
 
     return path, name
 
@@ -467,13 +472,16 @@ def cut_cylindrical_corners(voxels):
 
 def get_2D_proj_graph(name,dir):
     # Generate arrays for challenge answer options (2D)
-    voxels = np.load(f'./static/data/solids/{name}.npy')
+    #voxels = np.load(f'./static/data/solids/{name}.npy')
+    voxels = np.load(DATA_PATH / 'solids' / f'{name}.npy')
     proj2d = generate_projection_3d_2d(voxels,dir)
     return proj2d
 
 def get_1D_proj_graph(name,dir,angle):
     # Generate arrays for challenge answer options (1D)
-    voxels = np.load(f'./static/data/solids/{name}.npy')
+    #voxels = np.load(f'./static/data/solids/{name}.npy')
+    voxels = np.load(DATA_PATH / 'solids' / f'{name}.npy')
+
     proj2d = generate_projection_3d_2d(voxels,dir)
     proj1d = generate_projection_2d_1d(proj2d,angle)
     return proj1d
@@ -491,10 +499,12 @@ def projections_to_images(g_list_2d, g_list_1d):
         ax = plt.subplot(111)
         ax.plot(g_list_1d[q])
         ax.set_axis_off()
-        fig.savefig(f'./static/img/game7/im1d-{q}.jpg')
+        #fig.savefig(f'./static/img/game7/im1d-{q}.jpg')
+        fig.savefig(IMG_PATH / 'game7' / f'im1d-{q}.jpg')
 
         # 2D
-        plt.imsave(f'./static/img/game7/im2d-{q}.jpg', np.flipud(g_list_2d[q].T),cmap=mpl.cm.gray)
+        #plt.imsave(f'./static/img/game7/im2d-{q}.jpg', np.flipud(g_list_2d[q].T),cmap=mpl.cm.gray)
+        plt.imsave(IMG_PATH / 'game7' / f'im2d-{q}.jpg', np.flipud(g_list_2d[q].T),cmap=mpl.cm.gray)
 
 
 
@@ -505,7 +515,7 @@ if __name__ == "__main__":
     proj2d_angle = 90 # degrees
 
     L = False
-    # Replace name with any included in the /static/data/solids folde
+    # Replace name with any included in the /static/data/solids folder
     j1, voxels = game7_prep3d_worker(name='g7_set1_typeA',lines=L,line_dir='y')
     j2, j3 = game7_projection_worker(voxels, proj3d_axis, proj2d_angle,lines=L,lines_angle=45)
 

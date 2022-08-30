@@ -9,8 +9,6 @@ from vstabletop.info import GAMES_DICT, GAME1_BACKGROUND
 
 
 from __main__ import app, login_manager, db, socketio
-
-# TODO
 from vstabletop.models import MultipleChoice
 
 questions = []
@@ -19,19 +17,20 @@ questions = []
 @app.route('/games/1',methods=["GET","POST"])
 @login_required
 def game1():
+    """Game 1 view function
+
+    Returns
+    -------
+    str
+        HTML to display on game 1 path
+    """
     form=Game1Form()
-
     questions, success_text, uses_images = fetch_all_game1_questions()
-
-    print(questions)
-    print(success_text)
-    print(uses_images)
 
     j1 = game1_worker(session['game1']['FOV_scale'], session['game1']['Matrix_scale'], session['game1']['zero_fill'],
                       session['game1']['Min_scale'], session['game1']['Max_scale'])
 
     update_task_progress()
-
     if form.validate_on_submit():
         #TODO Update second Matrix scale with the zerofill field.
         print('validate')
@@ -46,15 +45,16 @@ def game1():
 
 @socketio.on('Update param for Game1')
 def update_parameter(info):
+    """Update session parameters in response to frontend message
+    """
+
     print(session)
     # Update corresponding entry in session
     print(info['id'], 'id', info['value'], 'value')
     if info['id'] in ['Matrix_scale', 'zero_fill']:
         info['value'] = int(info['value'])
-
     elif info['id'] in ['P1_q-0', 'P1_q', 'P1_q-1', 'P1_q-2', 'P1_q-3', 'P2_q', 'P2_q-0', 'P2_q-1', 'P2_q-2', 'a', 'b', 'c', 'd']:
         info['value'] = str(info['value'])
-
     elif info['id'] in ['FOV_scale', 'Voxel_scale']:
         info['value'] = float(info['value']) / 1000
     elif info['id'] in ['flexCheckChecked1', 'flexCheckChecked2', 'flexCheckChecked3', 'flexCheckChecked4']:
@@ -130,12 +130,10 @@ def update_parameter(info):
 
     socketio.emit('G1 take session data', {'data': session_game1})
 
-    #socketio.emit('G1 take session data', {'data': session['game1']})
 
-
-    
 
 def fetch_all_game1_questions():
+    questions = []
     uses_images_list = []
     success_text = 10*['Correct! Move on to the next question.']
     for id in range(101,111):
@@ -157,7 +155,6 @@ def fetch_all_game1_questions():
                           'correct': corr_array_new.index(True),
                           'main_image_path': Q.main_image_path})
 
-    # TODO Rishi replace success text as needed
     success_text[0] = "You got the first answer correct!"
     success_text[1] = "You got the second answer correct!"
 
