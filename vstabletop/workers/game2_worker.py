@@ -6,27 +6,32 @@ import json
 import plotly.graph_objects as go
 import plotly
 from phantominator import shepp_logan
-
+from PIL import ImageOps, Image
 
 def game2_worker_convert(input, scale, forward=True):
     # Perform forward or backward, 1D or 2D FT
     if forward:
         if len(input.shape) == 1: # 1D case
             output, outscale = forward_1d(input, scale)
+            outtype = 'spectrum'
         elif len(input.shape) == 2: # 2D case
             output, outscale = forward_2d(input, scale)
+            outtype = 'kspace'
+
         else:
             raise ValueError('The input dimension must be 1 or 2')
     else:
         if len(input.shape) == 1: # 1D case
             output, outscale = backward_1d(input, scale)
+            outtype = 'signal'
         elif len(input.shape) == 2: # 2D case
             output, outscale = backward_2d(input, scale)
+            outtype = 'image'
         else:
             raise ValueError('The input dimension must be 1 or 2')
 
     # Make figure
-    fig = make_graph(output,outscale)
+    fig = make_graph(output,outscale,outtype)
     #fig.show() # For debugging.
 
     # Return JSON formatted figure
@@ -38,11 +43,18 @@ def game2_worker_fetch(type='original',dim=1,name='flat',info={}):
     fig = go.Figure()
     if dim == 1:
         input, scale = get_1d_data(type,256,[-1,1],name)
+        if type == 'original':
+            fig = make_graph(input,scale,'signal')
+        else:
+            fig = make_graph(input,scale,'spectrum')
     elif dim == 2:
         input, scale = get_2d_data(type, [256,256],[-1,1,-1,1],name)
+        if type == 'original':
+            fig = make_graph(input,scale,'image')
+        else:
+            fig = make_graph(input,scale,'kspace')
 
 
-    fig = make_graph(input,scale)
     #fig.show()
 
     graphJSON_input = json.dumps(fig,cls=plotly.utils.PlotlyJSONEncoder)
@@ -50,7 +62,7 @@ def game2_worker_fetch(type='original',dim=1,name='flat',info={}):
     return graphJSON_input, input, scale
 
 
-def make_graph(data,scale):
+def make_graph(data,scale,type):
     # Detect data size
     # 1D case
     fig = go.Figure()
@@ -62,15 +74,20 @@ def make_graph(data,scale):
     # 2D case
     elif len(data.shape) == 2:
         print('Making 2D graph')
-        fig.add_trace(go.Heatmap(z=np.absolute(data),colorscale='gray',showscale=False))
+        if type == 'kspace':
+            data = np.log(np.absolute(data))
+            data[data==-np.Inf] = 0
+        else:
+            data = np.absolute(data)
+        fig.add_trace(go.Heatmap(z=data,colorscale='gray',showscale=False))
         fig.update_layout(yaxis=dict(scaleanchor='x'),
                           plot_bgcolor='rgba(0,0,0,0)',
                           margin=go.layout.Margin(l=0,r=0,b=0,t=0))
     return fig
 
 def make_empty_graphs():
-    fig1 = make_graph(np.zeros(256), scale=np.linspace(-1,1,256))
-    fig2 = make_graph(np.zeros((256,256)),scale=[np.linspace(-1,1,256),np.linspace(-1,1,256)])
+    fig1 = make_graph(np.zeros(256), scale=np.linspace(-1,1,256),type='signal')
+    fig2 = make_graph(np.zeros((256,256)),scale=[np.linspace(-1,1,256),np.linspace(-1,1,256)],type='spectrum')
 
     j1 = json.dumps(fig1,cls=plotly.utils.PlotlyJSONEncoder)
     j2 = json.dumps(fig2,cls=plotly.utils.PlotlyJSONEncoder)
@@ -171,7 +188,41 @@ def get_1d_data(type, N, range, name, info={}):
 
     return data1d, xmodel
 
+def convert_drawing(data_path):
+    try:
+        im = Image.open(data_path)
+    except:
+        print('Data path problems!')
+    data = np.array(ImageOps.grayscale(im))
+    return data
 
+def convert_2d_drawing(data_path,target='image'):
+    # Read PNG file and process
+    data = convert_drawing(data_path)
+    data = np.flipud(data)
+    # Create graph, update session, and send back to frontend
+    scale = [np.linspace(-1,1,400),np.linspace(-1,1,400)]
+    fig = make_graph(data,scale,target)
+    graphJSON = json.dumps(fig,cls=plotly.utils.PlotlyJSONEncoder)
+    return graphJSON, data, scale
+
+def convert_1d_drawing(data_path,target='signal'):
+    image = convert_drawing(data_path)
+    data = np.zeros(image.shape[1])
+    # Detect lowest non-white point of each column
+    for u in range(image.shape[1]): # For each column
+        # Find last row that has non-white point
+        col = image[:,u]
+        q = np.argwhere(col!=255)
+        if len(q) == 0:
+            data[u] = 0
+        else:
+            data[u]  = (400 - q[0])-200
+    scale = np.linspace(-1,1,400)
+
+    fig = make_graph(data,scale,target)
+    graphJSON = json.dumps(fig,cls=plotly.utils.PlotlyJSONEncoder)
+    return graphJSON, data, scale
 
 if __name__ == '__main__':
     j0 = game2_worker_fetch(dim=2, name='shepp-logan')

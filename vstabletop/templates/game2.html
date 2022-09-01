@@ -62,9 +62,9 @@
 </div>
 <div class="col-4">
     <div class="card h-100">
-        <div class="card-body">
+        <div class="card-body row">
             <!-- Tabs navs -->
-                <ul class="nav nav-tabs mb-3" id="ex1" role="tablist">
+                <ul class="nav nav-tabs mb-3 nav-justified" id="ex1" role="tablist">
                   <li class="nav-item" role="presentation">
                     <a
                       class="nav-link active"
@@ -105,19 +105,29 @@
                 <!-- Tabs navs -->
 
                 <!-- Tabs content -->
-                <div class="tab-content" id="ex1-content">
+                <div class="tab-content h-100" id="ex1-content">
                   <div
-                    class="tab-pane fade show active bg-success"
+                    class="tab-pane fade show active"
                     id="ex1-tabs-1"
                     role="tabpanel"
-                    aria-labelledby="ex1-tab-1"
-                  >
-                    (Drawing board)
+                    aria-labelledby="ex1-tab-1">
+                    <div class="d-flex justify-content-center">
+                        <div class="canvas-frame">
+                      <canvas id="drawing"></canvas>
+                        </div>
+                    </div>
+                      <label for="drawing-width">Line width:</label>
+                      <input type="range" value="30" min="0" max="150" id="drawing-width">
+
+                      <button class="btn btn-light" id="use-drawing-1d">Use (1D)</button>
+                      <button class="btn btn-light" id="use-drawing-2d">Use (2D)</button>
+                      <button class="btn btn-light" id="clear-drawing">Clear</button>
                   </div>
-                  <div class="tab-pane fade bg-warning" id="ex1-tabs-2" role="tabpanel" aria-labelledby="ex1-tab-2">
+
+                  <div class="tab-pane fade" id="ex1-tabs-2" role="tabpanel" aria-labelledby="ex1-tab-2">
                     (Slicer vector drawing)
                   </div>
-                  <div class="tab-pane fade bg-light" id="ex1-tabs-3" role="tabpanel" aria-labelledby="ex1-tab-3">
+                  <div class="tab-pane fade" id="ex1-tabs-3" role="tabpanel" aria-labelledby="ex1-tab-3">
                     (Upload options)
                   </div>
                 </div>
@@ -158,17 +168,18 @@
 {% endblock %}
 
 {% block additional_imports %}
+    <script src="../static/fabric.js"></script>
     <script src="../static/game2.js"></script>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script type="text/javascript">
-        const layout = {
-            autosize: true
-        };
         // Plotting with Plotly
         let graph_left = {{ graphJSON_left | safe }};
         let graph_right = {{ graphJSON_right | safe }}
-        Plotly.plot('chart-left',  graph_left, layout);
-        Plotly.plot('chart-right', graph_right, layout);
+        Plotly.plot('chart-left',  graph_left, {autosize: true});
+        Plotly.plot('chart-right', graph_right, {autosize: true});
     </script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="../static/styles/style_game2.css">
 
 {% endblock %}

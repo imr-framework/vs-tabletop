@@ -1,3 +1,5 @@
+const layout = {autosize: true};
+
 $('#link-to-game2').addClass('text-success');
 let socket = io();
 
@@ -56,4 +58,41 @@ $('#forward-transform').on('click',()=>{
 
 $('#backward-transform').on('click',()=>{
     socket.emit('Perform backward transform')
+})
+
+// Fabric canvas
+let canvas = new fabric.Canvas('drawing',{
+    isDrawingMode: true
+});
+canvas.setHeight(400);
+canvas.setWidth(400);
+canvas.setBackgroundColor('white');
+canvas.renderAll();
+
+$('#clear-drawing').on('click',()=>{
+    canvas.clear();
+    canvas.setBackgroundColor('white');
+    canvas.renderAll();
+})
+
+$('#drawing-width').on('change',()=> {
+    console.log('Width changed');
+    canvas.freeDrawingBrush.width = parseInt($('#drawing-width').val(), 10) || 1;
+    console.log(canvas.freeDrawingBrush.width);
+  });
+
+$('#use-drawing-2d').on('click',()=>{
+//     fabric.log('cropped png dataURL: ', canvas.toDataURL({
+//     format: 'png'
+// }));
+    let drawing2d = canvas.toDataURL({format: 'png'});
+    socket.emit('Send 2D drawing',{'url':drawing2d});
+})
+
+$('#use-drawing-1d').on('click',()=>{
+//     fabric.log('cropped png dataURL: ', canvas.toDataURL({
+//     format: 'png'
+// }));
+    let drawing1d = canvas.toDataURL({format: 'png'});
+    socket.emit('Send 1D drawing',{'url':drawing1d});
 })
