@@ -56,6 +56,31 @@ class Game1Form(FlaskForm):
     to_slider_value = DecimalRangeField(label='range', validators=[DataRequired(), NumberRange(min=0.0, max=100),],default=40)
     min_value = IntegerField(label='min', validators=[DataRequired(), NumberRange(min=0, max=100)],default=10)
     max_value = IntegerField(label='max', validators=[DataRequired(), NumberRange(min=0, max=100)],default=90)
+
+class Game2Form(FlaskForm):
+    image_name_field = SelectField('Select image type', choices=[
+        ('flat','Unity'), ('delta','Spike'), ('shepp-logan','Phantom')
+    ], default='flat')
+    kspace_name_field = SelectField('Select k-space type', choices=[
+        ('flat','Unity'), ('delta','Spike'), ('shepp-logan','Phantom')
+    ], default='delta')
+    signal_name_field = SelectField('Select signal type', choices=[
+        ('flat','Unity'), ('delta','Spike')
+    ],default='flat')
+    spectrum_name_field = SelectField('Select spectrum type', choices=[
+        ('flat','Unity'), ('delta','Spike')
+    ], default='delta')
+
+
+
+    dim_field = RadioField(label='Dimension',choices=['1D','2D'], validators=[DataRequired()],default='1D')
+    N1d_field = IntegerField()
+    N2d_x_field = IntegerField()
+    N2d_y_field = IntegerField()
+
+    submit_field = SubmitField(label='Run')
+
+
 class Game3Form(FlaskForm):
     options = RadioField('options', choices=['T1w', 'T2w', 'PDw'],validators=[],default='T1')
     TR = DecimalRangeField(label='TR (ms)', validators= [DataRequired(), NumberRange(min=500, max=5000)],default=2750)

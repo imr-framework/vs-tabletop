@@ -1,11 +1,174 @@
 {% extends "base.html" %}
 {% block content %}
+<!-- Row 1: displays -->
+<div class="row h-50">
+<div class="col-4">
+    <div class="card h-100">
+        <div class="card-header">
+            Original space
+        </div>
+        <div class="card-body">
+            <div class="chart h-100" id="chart-left"></div>
+        </div>
+    </div>
+</div>
+<div class="col-4">
+        <div class="row h-25 d-flex align-content-center" id="messages">
+            <i class="bi bi-megaphone text-info" id="megaphone"></i>
+        </div>
+        <div class="row h-50">
+            <button class="btn btn-success" id="forward-transform">Forward  >></button>
+            <button class="btn btn-success" id="backward-transform"><<  Backward</button>
+
+        </div>
 
 
+</div>
+
+<div class="col-4">
+   <div class="card h-100">
+        <div class="card-header">
+            Frequency space
+        </div>
+        <div class="card-body">
+            <div class="chart h-100" id="chart-right"></div>
+        </div>
+    </div></div>
+</div>
+<!-- Row 2: inputs-->
+<div class="row h-50">
+<div class="col-4">
+    <div class="card h-100">
+        <div class="card-header">Image/signal options</div>
+        <div class="card-body">
+            <form action="/games/2" method="POST">
+                <div class="form-group">
+            {{ template_game_form.signal_name_field.label(class="form-label") }}
+            {{ template_game_form.signal_name_field(class="form-control") }}
+                    </div>
+
+                <div class="btn btn-large btn-info" id="fetch-signal">Fetch</div>
+
+               <div class="form-group">
+            {{ template_game_form.image_name_field.label(class="form-label") }}
+            {{ template_game_form.image_name_field(class="form-control") }}
+                </div>
+
+                <div class="btn btn-large btn-info" id="fetch-image">Fetch</div>
+
+            </form>
+        </div>
+    </div>
+</div>
+<div class="col-4">
+    <div class="card h-100">
+        <div class="card-body">
+            <!-- Tabs navs -->
+                <ul class="nav nav-tabs mb-3" id="ex1" role="tablist">
+                  <li class="nav-item" role="presentation">
+                    <a
+                      class="nav-link active"
+                      id="ex1-tab-1"
+                      data-mdb-toggle="tab"
+                      href="#ex1-tabs-1"
+                      role="tab"
+                      aria-controls="ex1-tabs-1"
+                      aria-selected="true"
+                      >Draw</a
+                    >
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <a
+                      class="nav-link"
+                      id="ex1-tab-2"
+                      data-mdb-toggle="tab"
+                      href="#ex1-tabs-2"
+                      role="tab"
+                      aria-controls="ex1-tabs-2"
+                      aria-selected="false"
+                      >Slicer</a
+                    >
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <a
+                      class="nav-link"
+                      id="ex1-tab-3"
+                      data-mdb-toggle="tab"
+                      href="#ex1-tabs-3"
+                      role="tab"
+                      aria-controls="ex1-tabs-3"
+                      aria-selected="false"
+                      >Upload</a
+                    >
+                  </li>
+                </ul>
+                <!-- Tabs navs -->
+
+                <!-- Tabs content -->
+                <div class="tab-content" id="ex1-content">
+                  <div
+                    class="tab-pane fade show active bg-success"
+                    id="ex1-tabs-1"
+                    role="tabpanel"
+                    aria-labelledby="ex1-tab-1"
+                  >
+                    (Drawing board)
+                  </div>
+                  <div class="tab-pane fade bg-warning" id="ex1-tabs-2" role="tabpanel" aria-labelledby="ex1-tab-2">
+                    (Slicer vector drawing)
+                  </div>
+                  <div class="tab-pane fade bg-light" id="ex1-tabs-3" role="tabpanel" aria-labelledby="ex1-tab-3">
+                    (Upload options)
+                  </div>
+                </div>
+                <!-- Tabs content -->
+        </div>
+    </div>
+</div>
+
+<div class="col-4">
+    <div class="card h-100">
+        <div class="card-header">
+            <span>kspace/spectrum inputs</span>
+        </div>
+
+        <div class="card-body">
+            <form action="/games/2" method="POST">
+                <div class="form-group">
+            {{ template_game_form.spectrum_name_field.label(class="form-label") }}
+            {{ template_game_form.spectrum_name_field(class="form-control") }}
+                </div>
+             <div class="btn btn-large btn-info" id="fetch-spectrum">Fetch</div>
+
+                <div class="form-group">
+            {{ template_game_form.kspace_name_field.label(class="form-label") }}
+            {{ template_game_form.kspace_name_field(class="form-control") }}
+                    </div>
+                <div class="btn btn-large btn-info" id="fetch-kspace">Fetch</div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+</div>
 
 
 {% endblock %}
 
 {% block additional_imports %}
     <script src="../static/game2.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script type="text/javascript">
+        const layout = {
+            autosize: true
+        };
+        // Plotting with Plotly
+        let graph_left = {{ graphJSON_left | safe }};
+        let graph_right = {{ graphJSON_right | safe }}
+        Plotly.plot('chart-left',  graph_left, layout);
+        Plotly.plot('chart-right', graph_right, layout);
+    </script>
+
 {% endblock %}
