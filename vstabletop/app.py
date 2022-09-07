@@ -4,6 +4,7 @@ from flask_login import LoginManager, UserMixin, login_required, login_user, cur
 from os import environ # this line should go at the top of your file
 from flask_socketio import SocketIO, emit
 from flask_session import Session
+from paths import IMG_PATH
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "how-i-spin"
@@ -24,6 +25,11 @@ Session(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DATABASE_URL') or 'sqlite:///myDB.db'
 # Turn off notification at every change
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# Upload folder
+UPLOAD_FOLDER = IMG_PATH
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+app.config['UPLOAD_FOLDER_GAME2'] = UPLOAD_FOLDER / 'Game2'
+
 # Create database and bind it to vstabletop
 db = SQLAlchemy(app)
 
@@ -34,6 +40,8 @@ login_manager.init_app(app)
 
 # 3. Enable socketIO
 socketio = SocketIO(app, manage_session=False)
+
+
 
 
 def launch_virtualscanner():

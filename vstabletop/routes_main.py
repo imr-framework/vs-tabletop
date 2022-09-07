@@ -28,7 +28,8 @@ def initialize_parameters():
                         'Min_scale': 0.1, 'Max_scale': 0.9, 'P1_q': 'No', 'P2_q': 'No', 'P3_q': 'No',
                         'progress': utils.new_progress_of_game(1), 'mc_status_list': utils.num_questions_of_game(1)*[False],
                         'current_task': 1, 'completed_task': 0, 'star_count': 0, 'checked': 0}
-    session['game2'] = {'data_left': None, 'scale_left': None, 'data_right': None, 'scale_right': None,
+    session['game2'] = {'data_left': None, 'scale_left': None, 'data_right': None, 'scale_right': None, 'source': 'preset',
+                        'erase_mask': None,
                         'progress':utils.new_progress_of_game(2), 'task_completed': 0}
     session['game3'] = {'options': 'T1', 'TR': 500, 'TE': 10, 'FA':90, 'P1_q': 'No', 'P2_q': 'No', 'P3_q': 'No', 'progress': utils.new_progress_of_game(3),
                         'mc_status_list': utils.num_questions_of_game(1)*[False], 'current_task': 1, 'completed_task': 0, 'star_count': 0}

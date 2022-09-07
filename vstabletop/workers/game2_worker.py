@@ -7,6 +7,8 @@ import plotly.graph_objects as go
 import plotly
 from phantominator import shepp_logan
 from PIL import ImageOps, Image
+from vstabletop.paths import IMG_PATH
+import fnmatch
 
 def game2_worker_convert(input, scale, forward=True):
     # Perform forward or backward, 1D or 2D FT
@@ -79,10 +81,20 @@ def make_graph(data,scale,type):
             data[data==-np.Inf] = 0
         else:
             data = np.absolute(data)
+
+        # Normalization
+        data = 255 * ((data - np.min(data))/ (np.max(data)-np.min(data)))
+        print(f'Max of 2D data: {np.max(data)}')
+        print(f'Min of 2D data: {np.min(data)}')
+
         fig.add_trace(go.Heatmap(z=data,colorscale='gray',showscale=False))
         fig.update_layout(yaxis=dict(scaleanchor='x'),
                           plot_bgcolor='rgba(0,0,0,0)',
                           margin=go.layout.Margin(l=0,r=0,b=0,t=0))
+
+        fig.update_xaxes(showticklabels=False)
+        fig.update_yaxes(showticklabels=False)
+
     return fig
 
 def make_empty_graphs():
@@ -97,14 +109,17 @@ def make_empty_graphs():
 
 def forward_1d(signal, tmodel):
     """1D forward FFT"""
+    print('Forward 1d')
     N = len(signal)
-    spectrum = fft.fftshift(fft.fft(signal))
+    spectrum =fft.fftshift(fft.fft(signal))
     df = 1/(tmodel[-1] - tmodel[1])
     fmodel = df* (np.arange(-N/2, N/2) + 0.25*(1-(-1)**N))
     return spectrum, fmodel
 
 def backward_1d(spectrum, fmodel):
     """1D backward FFT"""
+    print('Backward 1d')
+
     N = len(spectrum)
     signal = (fft.ifft(fft.ifftshift(spectrum)))
     dt = 1/(fmodel[-1] - fmodel[1])
@@ -160,11 +175,15 @@ def get_2d_data(type, N,range,name,info={}):
         data2d[int(N[0]/2),int(N[1]/2)] = 1
     elif name == 'shepp-logan':
         img, _, _ = shepp_logan((N[0], N[1], 1), MR=True, zlims=(-.25, .25))
-        if type == 'original':
-            data2d = np.squeeze(img)
-        elif type == 'frequency':
-            data2d = fft.fftshift(fft.fft2(np.squeeze(img)))
-
+        data2d = np.squeeze(img)
+    elif name == 'cat':
+        data2d = read_image_grayscale(IMG_PATH / 'Game2' / 'beet_cat.png')
+    elif name == 'mri-x':
+        data2d = read_image_grayscale(IMG_PATH / 'Game2' / 'brain-x.png')
+    elif name == 'mri-y':
+        data2d = read_image_grayscale(IMG_PATH / 'Game2' / 'brain-y.png')
+    elif name == 'mri-z':
+        data2d = read_image_grayscale(IMG_PATH / 'Game2' / 'brain-z.png')
     elif name == 'deltas':
         for loc in info['delta_locs']:
             indx = int(np.round(N[0] * (loc[0] - range[0]) / (range[1] - range[0])))
@@ -188,18 +207,22 @@ def get_1d_data(type, N, range, name, info={}):
 
     return data1d, xmodel
 
-def convert_drawing(data_path):
+def read_image_grayscale(data_path, N=None):
     try:
         im = Image.open(data_path)
     except:
         print('Data path problems!')
+
+    if N is not None:
+        im = im.resize(N)
+
     data = np.array(ImageOps.grayscale(im))
+    data = np.flipud(data)
     return data
 
 def convert_2d_drawing(data_path,target='image'):
     # Read PNG file and process
-    data = convert_drawing(data_path)
-    data = np.flipud(data)
+    data = read_image_grayscale(data_path)
     # Create graph, update session, and send back to frontend
     scale = [np.linspace(-1,1,400),np.linspace(-1,1,400)]
     fig = make_graph(data,scale,target)
@@ -207,7 +230,7 @@ def convert_2d_drawing(data_path,target='image'):
     return graphJSON, data, scale
 
 def convert_1d_drawing(data_path,target='signal'):
-    image = convert_drawing(data_path)
+    image = read_image_grayscale(data_path)
     data = np.zeros(image.shape[1])
     # Detect lowest non-white point of each column
     for u in range(image.shape[1]): # For each column
@@ -223,6 +246,17 @@ def convert_1d_drawing(data_path,target='signal'):
     fig = make_graph(data,scale,target)
     graphJSON = json.dumps(fig,cls=plotly.utils.PlotlyJSONEncoder)
     return graphJSON, data, scale
+
+# TODO match size of erase mask and current k-space
+def retrieve_erase_mask(shape):
+    # Make a mask from the png file according to requested shape
+    erase_data = read_image_grayscale(IMG_PATH / 'Game2' / 'erase.png', shape)
+    erase_mask = (erase_data > 0)
+
+    return erase_mask
+
+
+
 
 if __name__ == '__main__':
     j0 = game2_worker_fetch(dim=2, name='shepp-logan')

@@ -1,5 +1,5 @@
 const layout = {autosize: true};
-
+let graphData;
 $('#link-to-game2').addClass('text-success');
 let socket = io();
 
@@ -61,6 +61,7 @@ $('#backward-transform').on('click',()=>{
 })
 
 // Fabric canvas
+// Canvas 1 : drawing
 let canvas = new fabric.Canvas('drawing',{
     isDrawingMode: true
 });
@@ -69,30 +70,93 @@ canvas.setWidth(400);
 canvas.setBackgroundColor('white');
 canvas.renderAll();
 
+
 $('#clear-drawing').on('click',()=>{
     canvas.clear();
     canvas.setBackgroundColor('white');
     canvas.renderAll();
 })
 
+$('#fill-drawing').on('click',()=>{
+    canvas.clear();
+    canvas.setBackgroundColor('black');
+    canvas.renderAll();
+})
+
 $('#drawing-width').on('change',()=> {
     console.log('Width changed');
     canvas.freeDrawingBrush.width = parseInt($('#drawing-width').val(), 10) || 1;
+    $('#drawing-width-info').text(parseInt($('#drawing-width').val(), 10) || 1);
     console.log(canvas.freeDrawingBrush.width);
   });
 
-$('#use-drawing-2d').on('click',()=>{
-//     fabric.log('cropped png dataURL: ', canvas.toDataURL({
-//     format: 'png'
-// }));
-    let drawing2d = canvas.toDataURL({format: 'png'});
-    socket.emit('Send 2D drawing',{'url':drawing2d});
+$('#drawing-graylevel').on('change',()=> {
+    console.log('Color changed');
+    let gl = (255/100)*(parseInt($('#drawing-graylevel').val(), 10) || 1);
+    canvas.freeDrawingBrush.color = `rgb(${gl},${gl},${gl})`;
+    $('#drawing-graylevel-info').text(parseInt($('#drawing-graylevel').val(), 10) || 1);
+  });
+
+
+$('#use-drawing').on('click',()=>{
+    let drawing = canvas.toDataURL({format:'png'});
+    socket.emit('Send drawing',{'url':drawing});
+
 })
 
-$('#use-drawing-1d').on('click',()=>{
-//     fabric.log('cropped png dataURL: ', canvas.toDataURL({
-//     format: 'png'
-// }));
-    let drawing1d = canvas.toDataURL({format: 'png'});
-    socket.emit('Send 1D drawing',{'url':drawing1d});
+// Canvas 2: erase
+
+let canvas2 = new fabric.Canvas('erase',{
+    isDrawingMode: true
+});
+canvas2.setHeight(400);
+canvas2.setWidth(400);
+canvas2.setBackgroundColor('lightgreen');
+canvas2.renderAll();
+
+canvas2.freeDrawingBrush.color = 'black';
+canvas2.freeDrawingBrush.width = 50;
+
+
+
+$('#erase-width').on('change',()=> {
+    canvas2.freeDrawingBrush.width = parseInt($('#erase-width').val(), 10) || 10;
+    $('#erase-width-info').text(parseInt($('#erase-width').val(), 10) || 10);
+  });
+
+$('#erase-reset').on('click',()=>{
+    canvas2.clear();
+    canvas2.setBackgroundColor('lightgreen');
+    canvas2.renderAll();
+    socket.emit('Reset erase');
 })
+
+$('#erase-apply').on('click',()=>{
+    let erase = canvas2.toDataURL({format:'png'});
+    socket.emit('Send erase',{'url': erase});
+})
+
+// Slicer communications
+import {getMaskValues} from "./slicer.js";
+
+function getUndersamplingInfo(){
+    // Retrieve undersampling factors
+    return {
+        'usf-x': $('#undersample_x_field').val(),
+        'usf-y': $('#undersample_y_field').val()
+    }
+}
+
+$('#use-slicer').on('click',()=>{
+    // Mask
+    let slicerInfo = Object.assign(getMaskValues(), getUndersamplingInfo())
+    console.log(slicerInfo);
+    socket.emit('Use slicer info', slicerInfo);
+})
+
+// Others
+$('.preset-input').on('change',()=>{
+    console.log('Preset input changed');
+    socket.emit('Go back to preset');
+})
+

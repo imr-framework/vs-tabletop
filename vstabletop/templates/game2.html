@@ -19,7 +19,25 @@
         <div class="row h-50">
             <button class="btn btn-success" id="forward-transform">Forward  >></button>
             <button class="btn btn-success" id="backward-transform"><<  Backward</button>
-
+        </div>
+        <!-- Current mode options -->
+        <div class="row h-25">
+            <div class="col-6">
+                <div class="row">
+                <button class="btn btn-light btn-lg btn-outline-primary shadow-none" id="fetch-image">Get image</button>
+                    </div>
+                <div class="row">
+                <button class="btn btn-light btn-lg btn-outline-primary shadow-none" id="fetch-signal">Get signal</button>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="row">
+                <button class="btn btn-light btn-lg btn-outline-primary shadow-none" id="fetch-kspace">Get kspace</button>
+                    </div>
+                <div class="row">
+                <button class="btn btn-light btn-lg btn-outline-primary shadow-none" id="fetch-spectrum">Get spectrum</button>
+                </div>
+            </div>
         </div>
 
 
@@ -39,31 +57,35 @@
 <div class="row h-50">
 <div class="col-4">
     <div class="card h-100">
-        <div class="card-header">Image/signal options</div>
+        <div class="card-header">Image/signal presets</div>
         <div class="card-body">
-            <form action="/games/2" method="POST">
-                <div class="form-group">
-            {{ template_game_form.signal_name_field.label(class="form-label") }}
-            {{ template_game_form.signal_name_field(class="form-control") }}
-                    </div>
-
-                <div class="btn btn-large btn-info" id="fetch-signal">Fetch</div>
 
                <div class="form-group">
             {{ template_game_form.image_name_field.label(class="form-label") }}
-            {{ template_game_form.image_name_field(class="form-control") }}
+            {{ template_game_form.image_name_field(class="form-control preset-input") }}
+                </div>
+                  <div class="form-group">
+            {{ template_game_form.image_rotation_field.label(class="form-label") }}
+            {{ template_game_form.image_rotation_field(class="form-range preset-input") }}
                 </div>
 
-                <div class="btn btn-large btn-info" id="fetch-image">Fetch</div>
+                <div class="form-group">
+            {{ template_game_form.signal_name_field.label(class="form-label") }}
+            {{ template_game_form.signal_name_field(class="form-control preset-input") }}
+                    </div>
 
-            </form>
+
+
+
         </div>
     </div>
 </div>
+
 <div class="col-4">
     <div class="card h-100">
-        <div class="card-body row">
+        <div class="card-body">
             <!-- Tabs navs -->
+            <div class="row">
                 <ul class="nav nav-tabs mb-3 nav-justified" id="ex1" role="tablist">
                   <li class="nav-item" role="presentation">
                     <a
@@ -86,7 +108,7 @@
                       role="tab"
                       aria-controls="ex1-tabs-2"
                       aria-selected="false"
-                      >Slicer</a
+                      >Erase</a
                     >
                   </li>
                   <li class="nav-item" role="presentation">
@@ -98,40 +120,126 @@
                       role="tab"
                       aria-controls="ex1-tabs-3"
                       aria-selected="false"
+                      >Sampling</a
+                    >
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <a
+                      class="nav-link"
+                      id="ex1-tab-4"
+                      data-mdb-toggle="tab"
+                      href="#ex1-tabs-4"
+                      role="tab"
+                      aria-controls="ex1-tabs-4"
+                      aria-selected="false"
                       >Upload</a
                     >
                   </li>
                 </ul>
                 <!-- Tabs navs -->
-
+            </div>
+            <div class="row">
                 <!-- Tabs content -->
-                <div class="tab-content h-100" id="ex1-content">
-                  <div
-                    class="tab-pane fade show active"
-                    id="ex1-tabs-1"
-                    role="tabpanel"
-                    aria-labelledby="ex1-tab-1">
+                <div class="tab-content" id="ex1-content">
+
+                  <div class="tab-pane fade show active" id="ex1-tabs-1" role="tabpanel" aria-labelledby="ex1-tab-1">
+                      <div class="row h-75">
                     <div class="d-flex justify-content-center">
-                        <div class="canvas-frame">
+                    <div class="canvas-frame">
                       <canvas id="drawing"></canvas>
                         </div>
                     </div>
-                      <label for="drawing-width">Line width:</label>
-                      <input type="range" value="30" min="0" max="150" id="drawing-width">
-
-                      <button class="btn btn-light" id="use-drawing-1d">Use (1D)</button>
-                      <button class="btn btn-light" id="use-drawing-2d">Use (2D)</button>
+                          </div>
+                      <div class="row h-25">
+                    <div class="col-8">
+                    <div class="row h-50">
+                        <div class="col-4">
+                      <label for="drawing-width" class="form-label">Width:</label>
+                      <span id="drawing-width-info">1</span>
+                        </div>
+                        <div class="col-8">
+                            <input type="range" value="1" min="1" max="100" id="drawing-width" class="form-range">
+                    </div>
+                    </div>
+                        <div class="row h-50">
+                            <div class="col-4">
+                          <label for="drawing-graylevel">Lightness:</label>
+                          <span id="drawing-graylevel-info">0</span>
+                            </div>
+                            <div class="col-8">
+                          <input type="range" value="0" min="0" max="100" class='form-range' id="drawing-graylevel">
+                                </div>
+                        </div>
+                        </div>
+                      <div class="col-4">
+                      <button class="btn btn-light" id="use-drawing">Use</button>
                       <button class="btn btn-light" id="clear-drawing">Clear</button>
-                  </div>
+                      <button class="btn btn-light" id="fill-drawing">Fill</button>
 
+                      </div>
+                      </div>
+                  </div>
                   <div class="tab-pane fade" id="ex1-tabs-2" role="tabpanel" aria-labelledby="ex1-tab-2">
-                    (Slicer vector drawing)
+                      <div class="row h-75">
+                          <div class="d-flex justify-content-center">
+                            <div class="canvas-frame">
+                              <canvas id="erase"></canvas>
+                            </div>
+                          </div>
+                      </div>
+                      <div class="row h-25 d-flex align-items-center">
+                          <div class="col-4">
+                      <label for="erase-width" class="form-label">Width:</label>
+                      <span id="erase-width-info">50</span>
+                        </div>
+                        <div class="col-4">
+                            <input type="range" value="50" min="10" max="100" id="erase-width" class="form-range">
+                    </div>
+                          <div class="col-4">
+                              <div class="row">
+                                  <button class="btn btn-light" id="erase-apply">Apply</button>
+                              </div>
+                                <div class="row">
+                                  <button class="btn btn-light" id="erase-reset">Reset</button>
+                              </div>
+                          </div>
+                      </div>
                   </div>
                   <div class="tab-pane fade" id="ex1-tabs-3" role="tabpanel" aria-labelledby="ex1-tab-3">
-                    (Upload options)
+                          <span>k-space restriction</span>
+                          <div id="my-interactive-game2"></div>
+                          <script type="module" src="../static/slicer.js"></script>
+                          <button class="btn btn-light" id="reset-slicer">Reset</button>
+                          <button class="btn btn-light" id="invert-slicer">Invert</button>
+                           <br>
+                              <div class="row d-flex justify-content-center">Undersampling factors</div>
+                              <div class="row">
+                                  <div class="col-3">
+                                    {{ template_game_form.undersample_x_field.label(class='form-label') }}
+                                  </div>
+                                  <div class="col-3">
+                                    {{ template_game_form.undersample_x_field(class='form-control') }}
+                                  </div>
+                                  <div class="col-3">
+                                    {{ template_game_form.undersample_y_field.label(class='form-label') }}
+                                  </div>
+                                  <div class="col-3">
+                                    {{ template_game_form.undersample_y_field(class='form-control') }}
+                                  </div>
+                              </div>
+                           <button class="btn btn-primary" id="use-slicer">Apply</button>
+
+                  </div>
+
+                  <div class="tab-pane fade" id="ex1-tabs-4" role="tabpanel" aria-labelledby="ex1-tab-4">
+                    <form method="POST" enctype="multipart/form-data" action="/games/2" >
+                        <input type="file" name="file">
+                        <button type="submit" value="Upload">Upload</button>
+                    </form>
                   </div>
                 </div>
                 <!-- Tabs content -->
+            </div>
         </div>
     </div>
 </div>
@@ -139,24 +247,27 @@
 <div class="col-4">
     <div class="card h-100">
         <div class="card-header">
-            <span>kspace/spectrum inputs</span>
+            <span>K-space/spectrum presets</span>
         </div>
 
         <div class="card-body">
-            <form action="/games/2" method="POST">
-                <div class="form-group">
-            {{ template_game_form.spectrum_name_field.label(class="form-label") }}
-            {{ template_game_form.spectrum_name_field(class="form-control") }}
-                </div>
-             <div class="btn btn-large btn-info" id="fetch-spectrum">Fetch</div>
+
 
                 <div class="form-group">
             {{ template_game_form.kspace_name_field.label(class="form-label") }}
-            {{ template_game_form.kspace_name_field(class="form-control") }}
+            {{ template_game_form.kspace_name_field(class="form-control preset-input") }}
                     </div>
-                <div class="btn btn-large btn-info" id="fetch-kspace">Fetch</div>
 
-            </form>
+                        <div class="form-group">
+            {{ template_game_form.kspace_rotation_field.label(class="form-label") }}
+            {{ template_game_form.kspace_rotation_field(class="form-range preset-input") }}
+                </div>
+
+                <div class="form-group">
+            {{ template_game_form.spectrum_name_field.label(class="form-label") }}
+            {{ template_game_form.spectrum_name_field(class="form-control preset-input") }}
+                </div>
+
 
         </div>
     </div>
@@ -169,7 +280,9 @@
 
 {% block additional_imports %}
     <script src="../static/fabric.js"></script>
-    <script src="../static/game2.js"></script>
+    <link rel="stylesheet" href="https://vectorjs.org/library.css">
+
+    <script type='module' src="../static/game2.js"></script>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script type="text/javascript">
         // Plotting with Plotly

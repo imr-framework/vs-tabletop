@@ -58,12 +58,22 @@ class Game1Form(FlaskForm):
     max_value = IntegerField(label='max', validators=[DataRequired(), NumberRange(min=0, max=100)],default=90)
 
 class Game2Form(FlaskForm):
+    # Image and options
     image_name_field = SelectField('Select image type', choices=[
-        ('flat','Unity'), ('delta','Spike'), ('shepp-logan','Phantom')
+        ('flat','Unity'), ('delta','Spike'), ('shepp-logan','Phantom'),
+        ('mri-x', 'MRI (sagittal)'), ('mri-y','MRI (coronal)'), ('mri-z','MRI (axial)'),
+        ('cat','Cat'), ('sin','Sine wave'), ('cos','Cosine wave'),('line','Line')
     ], default='flat')
+    image_rotation_field = DecimalRangeField(label='Rotation (deg)', validators=[NumberRange(0,360)],default=0)
+
+
     kspace_name_field = SelectField('Select k-space type', choices=[
-        ('flat','Unity'), ('delta','Spike'), ('shepp-logan','Phantom')
+        ('flat','Unity'), ('delta','Spike'),('delta2','Double spike')
     ], default='delta')
+    kspace_rotation_field = DecimalRangeField(label='Rotation (deg)', validators=[NumberRange(0,360)],default=0)
+
+
+
     signal_name_field = SelectField('Select signal type', choices=[
         ('flat','Unity'), ('delta','Spike')
     ],default='flat')
@@ -71,12 +81,9 @@ class Game2Form(FlaskForm):
         ('flat','Unity'), ('delta','Spike')
     ], default='delta')
 
+    undersample_x_field = IntegerField('Horizontal',validators=[NumberRange(1,32)],default=1)
+    undersample_y_field = IntegerField('Vertical',validators=[NumberRange(1,32)],default=1)
 
-
-    dim_field = RadioField(label='Dimension',choices=['1D','2D'], validators=[DataRequired()],default='1D')
-    N1d_field = IntegerField()
-    N2d_x_field = IntegerField()
-    N2d_y_field = IntegerField()
 
     submit_field = SubmitField(label='Run')
 
