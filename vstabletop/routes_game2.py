@@ -28,8 +28,6 @@ def game2():
     G2Form = Game2Form()
     j1, j2 = make_empty_graphs()
 
-    # Load the user-uploaded image by default, if applicable
-
     # User uploaded image!
     if request.method == 'POST':
         #uploaded = request.form.get('uploaded')
@@ -61,7 +59,7 @@ def game2():
 def generate_new_signal(payload):
     if session['game2']['source'] == 'preset':
         print(f"Signal [{payload['name']}] requested")
-        graphJSON, data, scale = game2_worker_fetch('original',1,name=payload['name'])
+        graphJSON, data, scale = game2_worker_fetch('original',1,name=payload['name'],info=payload)
         # Save state to session
     elif session['game2']['source'] == 'drawing':
         graphJSON, data, scale = convert_1d_drawing(IMG_PATH / 'Game2' / 'drawing.png', 'signal')
@@ -74,14 +72,9 @@ def generate_new_signal(payload):
 @socketio.on('Request image')
 def generate_new_image(payload):
     # Retrieve info
-    myinfo = {'image_angle': session['game2']['image_angle']}
-
     if session['game2']['source'] == 'preset':
         print(f"Image [{payload['name']}] requested")
-        if payload['name'] in ['sin','cos','circ']:
-            myinfo['wave_k'] = session['game2']['wave_k']
-            myinfo['wave_phase'] = session['game2']['wave_phase']
-        graphJSON, data, scale = game2_worker_fetch('original',2,name=payload['name'],info=myinfo)
+        graphJSON, data, scale = game2_worker_fetch('original',2,name=payload['name'],info=payload)
     elif session['game2']['source'] == 'drawing':
         graphJSON, data, scale = convert_2d_drawing(IMG_PATH / 'Game2' / 'drawing.png', 'image')
     elif session['game2']['source'] == 'upload' or payload=='upload':
@@ -102,7 +95,7 @@ def generate_new_image(payload):
 def generate_new_spectrum(payload):
     if session['game2']['source'] == 'preset':
         print(f"Spectrum [{payload['name']}] requested")
-        graphJSON, data, scale = game2_worker_fetch('frequency',1,name=payload['name'])
+        graphJSON, data, scale = game2_worker_fetch('frequency',1,name=payload['name'],info=payload)
     elif session['game2']['source'] == 'drawing':
         graphJSON, data, scale = convert_1d_drawing(IMG_PATH / 'Game2' / 'drawing.png', 'signal')
 
@@ -115,7 +108,8 @@ def generate_new_spectrum(payload):
 def generate_new_kspace(payload):
     if session['game2']['source'] == 'preset':
         print(f"Kspace [{payload['name']}] requested")
-        graphJSON, data, scale = game2_worker_fetch('frequency',2,name=payload['name'])
+
+        graphJSON, data, scale = game2_worker_fetch('frequency',2,name=payload['name'],info=payload)
     elif session['game2']['source'] == 'drawing':
         graphJSON, data, scale = convert_2d_drawing(IMG_PATH / 'Game2' / 'drawing.png', 'kspace')
 
@@ -172,6 +166,8 @@ def process_erasing_mask(payload):
     with open(IMG_PATH / 'Game2' / 'erase.png', 'wb') as f:
         f.write(data)
 
+    print('Session data right shape')
+    print(session['game2']['data_right'].shape)
     mask = retrieve_erase_mask(shape=session['game2']['data_right'].shape)
     utils.update_session_subdict(session,'game2',{'erase_mask': mask})
     update_chart_right()
@@ -224,7 +220,6 @@ def apply_slicer(payload):
     usfx = int(payload['usf-x'])
     usfy = int(payload['usf-y'])
     usmask = np.zeros((Nx, Ny))
-    print(usfx,usfy)
     usmask[0::usfx, 0::usfy] = 1
 
     # Combine the two effects
@@ -234,5 +229,7 @@ def apply_slicer(payload):
     update_chart_right()
 
 
-
-
+@socketio.on('Update parameter for Game 2')
+def update_parameters_game2(info):
+    if info['id'] not in ['image_name_field','signal_name_field','kspace_name_field','spectrum_name_field']:
+        utils.update_session_subdict(session,'game2',{info['id']:float(info['value'])})

@@ -4,24 +4,36 @@ $('#link-to-game2').addClass('text-success');
 let socket = io();
 
 
+// TODO add in instantaneous variables! Don't use session ones ...
 $('#fetch-signal').on('click',()=>{
     let name = $('#signal_name_field').val();
-    socket.emit('Request signal',{'name':name});
+    socket.emit('Request signal',{'name':name,
+                                  'signal_scale': parseFloat($('#signal_scale').val()),
+                                   'signal_shift': parseFloat($('#signal_shift').val()),
+                                   'signal_phase_mod': parseFloat($('#signal_phase_mod').val())});
 })
 
 $('#fetch-image').on('click',()=>{
     let name = $('#image_name_field').val();
-    socket.emit('Request image', {'name':name});
+    socket.emit('Request image', {'name':name,
+                                   'image_angle': parseFloat($('#image_angle').val()),
+                                   'image_wavelength': parseFloat($('#image_wavelength').val()),
+                                   'image_wave_phase': parseFloat($('#image_wave_phase').val())});
 })
 
 $('#fetch-kspace').on('click',()=>{
     let name = $('#kspace_name_field').val();
-    socket.emit('Request kspace', {'name':name});
+    socket.emit('Request kspace', {'name':name,
+                                   'kspace_angle': parseFloat($('#kspace_angle').val()),
+                                    'kspace_ds_separation': parseFloat($('#kspace_ds_separation').val())});
 })
 
 $('#fetch-spectrum').on('click',()=>{
     let name = $('#spectrum_name_field').val();
-    socket.emit('Request spectrum', {'name':name});
+    socket.emit('Request spectrum', {'name':name,
+                                     'spectrum_scale': parseFloat($('#spectrum_scale').val()),
+                                    'spectrum_shift': parseFloat($('#spectrum_shift').val()),
+                                    'spectrum_phase_mod': parseFloat($('#spectrum_phase_mod').val())});
 })
 
 
@@ -154,7 +166,6 @@ $('#use-slicer').on('click',()=>{
     socket.emit('Use slicer info', slicerInfo);
 })
 
-// TODO Image upload - prevents page from reloading
 $('#upload-button').on('click',()=>{
     let formData = new FormData($('#upload-form').get(0));
     $.ajax({
@@ -169,6 +180,9 @@ $('#upload-button').on('click',()=>{
     })
 })
 
+$('#recover-button').on('click',()=>{
+    socket.emit('Request image','upload');
+})
 
 // Others
 $('.preset-input').on('change',(event)=>{
