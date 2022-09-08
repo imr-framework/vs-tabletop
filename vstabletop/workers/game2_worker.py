@@ -9,6 +9,7 @@ from phantominator import shepp_logan
 from PIL import ImageOps, Image
 from vstabletop.paths import IMG_PATH
 import fnmatch
+from scipy import ndimage
 
 def game2_worker_convert(input, scale, forward=True):
     # Perform forward or backward, 1D or 2D FT
@@ -44,14 +45,15 @@ def game2_worker_fetch(type='original',dim=1,name='flat',info={}):
     # Generate a new 1D or 2D image/signal or kspace/spectrum based on user inputs
     fig = go.Figure()
     if dim == 1:
-        input, scale = get_1d_data(type,256,[-1,1],name)
+        input, scale = get_1d_data(type,256,[-1,1],name,info)
         if type == 'original':
             fig = make_graph(input,scale,'signal')
         else:
             fig = make_graph(input,scale,'spectrum')
     elif dim == 2:
-        input, scale = get_2d_data(type, [256,256],[-1,1,-1,1],name)
+        input, scale = get_2d_data(type, [256,256],[-1,1,-1,1],name,info)
         if type == 'original':
+
             fig = make_graph(input,scale,'image')
         else:
             fig = make_graph(input,scale,'kspace')
@@ -70,24 +72,34 @@ def make_graph(data,scale,type):
     fig = go.Figure()
     if len(data.shape) == 1:
         print('Making 1D graph')
-        fig.add_trace(go.Scatter(x=scale,y=np.real(data),mode='lines'))
-        fig.add_trace(go.Scatter(x=scale,y=np.imag(data),mode='lines'))
+        fig.add_trace(go.Scatter(x=scale,y=np.angle(data),mode='lines',name='Phase',line=dict(color='gray')))
+        fig.add_trace(go.Scatter(x=scale,y=np.absolute(data),mode='lines',name='Amplitude',line=dict(color='navy')))
 
     # 2D case
     elif len(data.shape) == 2:
         print('Making 2D graph')
-        if type == 'kspace':
-            data = np.log(np.absolute(data))
-            data[data==-np.Inf] = 0
+        data = np.absolute(data)
+
+
+        # Special - for unity, make sure it's 0.5
+        print(f'Min of data: {np.min(data)}')
+        print(f'Max of data: {np.max(data)}')
+
+        if np.min(data) == np.max(data):
+            print('unity!')
+            data = 0.5*np.ones(data.shape)
         else:
-            data = np.absolute(data)
+           # Normalization to between 0 and 1
+           data = ((data - np.min(data))/ (np.max(data)-np.min(data)))
 
-        # Normalization
-        data = 255 * ((data - np.min(data))/ (np.max(data)-np.min(data)))
-        print(f'Max of 2D data: {np.max(data)}')
-        print(f'Min of 2D data: {np.min(data)}')
+        # Special scaling to display k-space more clearly
+        if type == 'kspace':
+            epsilon = 1e-4
+            data = data*(1-epsilon) + epsilon # range becomes (epsilon, 1)
+            data = (np.log(data) - np.log(epsilon)) / np.absolute(np.log(epsilon))# range is back to (0,1)
 
-        fig.add_trace(go.Heatmap(z=data,colorscale='gray',showscale=False))
+
+        fig.add_trace(go.Heatmap(z=data,colorscale='gray',zmin=0.0, zmax=1.0, showscale=False))
         fig.update_layout(yaxis=dict(scaleanchor='x'),
                           plot_bgcolor='rgba(0,0,0,0)',
                           margin=go.layout.Margin(l=0,r=0,b=0,t=0))
@@ -184,11 +196,33 @@ def get_2d_data(type, N,range,name,info={}):
         data2d = read_image_grayscale(IMG_PATH / 'Game2' / 'brain-y.png')
     elif name == 'mri-z':
         data2d = read_image_grayscale(IMG_PATH / 'Game2' / 'brain-z.png')
+    elif name == 'cos':
+        k = info['wave_k']
+        phase = info['wave_phase']
+        data2d = generate_2D_wave(256, k, phase, 0)
+    elif name == 'sin':
+        k = info['wave_k']
+        phase = info['wave_phase']
+        data2d = generate_2D_wave(256, k, 0.5*np.pi + phase, 0)
+    elif name == 'circ':
+        k = info['wave_k']
+        phase = info['wave_phase']
+        data2d = generate_2D_wave(256,k,0.5*np.pi+phase, None)
+    elif name == 'line-x':
+        data2d = generate_2D_line(256,'x')
+    elif name == 'line-y':
+        data2d = generate_2D_line(256,'y')
+
     elif name == 'deltas':
         for loc in info['delta_locs']:
             indx = int(np.round(N[0] * (loc[0] - range[0]) / (range[1] - range[0])))
             indy = int(np.round(N[1] * (loc[1] - range[2]) / (range[3] - range[2])))
             data2d[indx,indy] = 1
+
+    # TODO Perform rotation for general images (nonanalytic)
+    if type == 'image':
+        if name not in ['sin','cos','flat']:
+            data2d = ndimage.rotate(data2d,info['image_angle'])
 
     return data2d, xmodel
 
@@ -215,6 +249,14 @@ def read_image_grayscale(data_path, N=None):
 
     if N is not None:
         im = im.resize(N)
+    else:
+        # Resize image to within 600 x 600 pixels
+        maxside = np.max([im.width,im.height])
+        if maxside > 600:
+            new_width = int(round((600/maxside)*im.width))
+            new_height = int(round((600/maxside)*im.height))
+
+            im = im.resize((new_width,new_height))
 
     data = np.array(ImageOps.grayscale(im))
     data = np.flipud(data)
@@ -223,8 +265,9 @@ def read_image_grayscale(data_path, N=None):
 def convert_2d_drawing(data_path,target='image'):
     # Read PNG file and process
     data = read_image_grayscale(data_path)
+
     # Create graph, update session, and send back to frontend
-    scale = [np.linspace(-1,1,400),np.linspace(-1,1,400)]
+    scale = [np.linspace(-1,1,data.shape[0]),np.linspace(-1,1,data.shape[1])]
     fig = make_graph(data,scale,target)
     graphJSON = json.dumps(fig,cls=plotly.utils.PlotlyJSONEncoder)
     return graphJSON, data, scale
@@ -255,8 +298,52 @@ def retrieve_erase_mask(shape):
 
     return erase_mask
 
+# Helper functions
+def generate_2D_wave(N,k,phase,theta):
+    """
+    Parameters
+    ----------
+    N : integer
+        Size of output image (N x N)
+    k : float
+        Spatial frequency
+        Range : 0.5 ~ 20 per FOV (corresponds to wavelength of 0.05 - 2 FOV)
+    phase : float
+        Phase of wave (helps generate sin / cos / anything in between)
+        Phase = 0 : cosine wave
+        Phase = 1/4 wavelength : sine wave
+    theta : float
+        Rotation angle
+        If theta = None, a radial wave is generated
+    """
+    if k < 0.5:
+        k = 0.5
+        print('Using k = 0.5')
+    elif k > 20:
+        k = 20
+        print('Using k = 20')
 
+    # Generate meshgrid
+    model = np.linspace(-0.5,0.5,N,endpoint=False)
+    X,Y = np.meshgrid(model,model)
+    if theta is not None:
+        R = X*np.cos(theta) + Y*np.sin(theta)
+    else:
+        R = np.sqrt(X**2 + Y**2)
 
+    data = np.cos(2*np.pi*k*R + phase)
+
+    return data
+
+def generate_2D_line(N,axis):
+    data = np.zeros((N,N))
+    if axis == 'x':
+        data[int(N/2),:] = 1
+    elif axis == 'y':
+        data[:,int(N/2)] = 1
+    else:
+        raise ValueError('Requested axis must be x or y ')
+    return data
 
 if __name__ == '__main__':
     j0 = game2_worker_fetch(dim=2, name='shepp-logan')

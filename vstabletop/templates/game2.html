@@ -14,7 +14,11 @@
 </div>
 <div class="col-4">
         <div class="row h-25 d-flex align-content-center" id="messages">
-            <i class="bi bi-megaphone text-info" id="megaphone"></i>
+            <div class="col-2">
+                <i class="bi bi-megaphone" id="megaphone"></i>
+            </div>
+            <div class="font-monospace col-10" id="message-region"></div>
+
         </div>
         <div class="row h-50">
             <button class="btn btn-success" id="forward-transform">Forward  >></button>
@@ -60,20 +64,118 @@
         <div class="card-header">Image/signal presets</div>
         <div class="card-body">
 
-               <div class="form-group">
-            {{ template_game_form.image_name_field.label(class="form-label") }}
-            {{ template_game_form.image_name_field(class="form-control preset-input") }}
-                </div>
-                  <div class="form-group">
-            {{ template_game_form.image_rotation_field.label(class="form-label") }}
-            {{ template_game_form.image_rotation_field(class="form-range preset-input") }}
+               <div class="form-group row">
+                   <div class="col-4">
+                        {{ template_game_form.image_name_field.label(class="form-label") }}
+                   </div>
+                   <div class="col-8">
+                       {{ template_game_form.image_name_field(class="form-control preset-input") }}
+                   </div>
                 </div>
 
-                <div class="form-group">
-            {{ template_game_form.signal_name_field.label(class="form-label") }}
-            {{ template_game_form.signal_name_field(class="form-control preset-input") }}
+            <!-- Rotation angle -->
+            <div class="form-group row">
+                <div class="col-4">{{ template_game_form.image_rotation_field.label(class="form-label") }}</div>
+                <div class="col-8">
+                <div class="row">
+                    {{ template_game_form.image_rotation_field(class="form-range preset-input") }}
+                  <div class="ticks text-primary">
+                        {% for angle in [0,45,90,135,180,225,270,315,360] %}
+                        <span class="tick">{{ angle }}</span>
+                        {% endfor %}
+                  </div>
+                </div>
+                </div>
+            </div>
+
+
+            <!-- Wavelength -->
+            <div class="form-group row">
+                <div class="col-4">{{ template_game_form.image_wavelength_field.label(class="form-label") }}</div>
+                <div class="col-8">
+                <div class="row">
+                {{ template_game_form.image_wavelength_field(class="form-range preset-input") }}
+                        <div class="ticks text-primary">
+                        {% for w in [0.05,1.025, 2] %}
+                        <span class="tick">{{ w }}</span>
+                        {% endfor %}
+                        </div>
+                </div>
+                </div>
+
+            </div>
+
+
+            <!-- Wave phase -->
+             <div class="form-group row">
+                 <div class="col-4">{{ template_game_form.image_phase_field.label(class="form-label") }}</div>
+                 <div class="col-8">
+                 <div class="row">
+                     {{ template_game_form.image_phase_field(class="form-range preset-input") }}
+                     <div class="ticks text-primary">
+                     {% for angle in [0,45,90,135,180,225,270,315,360] %}
+                        <span class="tick">{{ angle }}</span>
+                        {% endfor %}
+                     </div>
                     </div>
+                </div>
+             </div>
+            <hr>
 
+            <!-- Signal and options -->
+            <!-- Signal type -->
+            <div class="form-group row">
+                <div class="col-4">{{ template_game_form.signal_name_field.label(class="form-label") }}</div>
+                <div class="col-8">
+                        {{ template_game_form.signal_name_field(class="form-control preset-input") }}
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-4">
+                    {{ template_game_form.signal_scale_field.label(class="form-label") }}
+                </div>
+                <div class="col-8">
+                    <div class="row">
+                        {{ template_game_form.signal_scale_field(class="form-range preset-input") }}
+                        <div class="ticks text-primary">
+                            {% for scale in [-10,-8,-6,-4,-2,0,2,4,6,8,10] %}
+                            <span class="tick">{{ scale }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-4">
+                    {{ template_game_form.signal_shift_field.label(class="form-label") }}
+                </div>
+                <div class="col-8">
+                    <div class="row">
+                        {{ template_game_form.signal_shift_field(class="form-range preset-input") }}
+                        <div class="ticks text-primary">
+                            {% for shift in [0,20,40,60,80,100] %}
+                            <span class="tick">{{ shift }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-4">{{ template_game_form.signal_phase_mod_field.label(class="form-label") }}</div>
+                <div class="col-8">
+                    <div class="row">
+                        {{ template_game_form.signal_phase_mod_field(class="form-range preset-input") }}
+                        <div class="ticks text-primary">
+                            {% for phase in [0,45,90,135,180,225,270,315,360] %}
+                            <span class="tick">{{ phase }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 
 
@@ -232,9 +334,11 @@
                   </div>
 
                   <div class="tab-pane fade" id="ex1-tabs-4" role="tabpanel" aria-labelledby="ex1-tab-4">
-                    <form method="POST" enctype="multipart/form-data" action="/games/2" >
-                        <input type="file" name="file">
-                        <button type="submit" value="Upload">Upload</button>
+                    <form method="POST" enctype="multipart/form-data" id="upload-form">
+                        <input type="file" name="file" id="upload-input">
+                        <div class="btn btn-lg btn-primary" id="upload-button">Upload</div>
+                        <div class="btn btn-lg btn-light" id="recover-button">Recover</div>
+
                     </form>
                   </div>
                 </div>
@@ -252,21 +356,105 @@
 
         <div class="card-body">
 
+                <div class="form-group row">
+                <div class="col-4">{{ template_game_form.kspace_name_field.label(class="form-label") }}</div>
+                <div class="col-8">
+                    {{ template_game_form.kspace_name_field(class="form-control preset-input") }}
+                </div>
 
-                <div class="form-group">
-            {{ template_game_form.kspace_name_field.label(class="form-label") }}
-            {{ template_game_form.kspace_name_field(class="form-control preset-input") }}
+
+                </div>
+
+                <div class="form-group row">
+                <div class="col-4">{{ template_game_form.kspace_rotation_field.label(class="form-label") }}</div>
+                <div class="col-8">
+                    <div class="row">
+                        {{ template_game_form.kspace_rotation_field(class="form-range preset-input") }}
+                        <div class="ticks text-primary">
+                            {% for angle in [0,45,90,135,180,225,270,315,360] %}
+                            <span class="tick">{{ angle }}</span>
+                            {% endfor %}
+                        </div>
                     </div>
-
-                        <div class="form-group">
-            {{ template_game_form.kspace_rotation_field.label(class="form-label") }}
-            {{ template_game_form.kspace_rotation_field(class="form-range preset-input") }}
+                </div>
                 </div>
 
-                <div class="form-group">
-            {{ template_game_form.spectrum_name_field.label(class="form-label") }}
-            {{ template_game_form.spectrum_name_field(class="form-control preset-input") }}
+
+                <div class="form-group row">
+                    <div class="col-4">{{ template_game_form.kspace_ds_separation_field.label(class="form-label")}}</div>
+                    <div class="col-8">
+                        <div class="row">
+                            {{ template_game_form.kspace_ds_separation_field(class="form-range preset-input") }}
+                            <div class="ticks text-primary">
+                            {% for sep in [0,0.25,0.5,0.75,1] %}
+                            <span class="tick">{{ sep }}</span>
+                            {% endfor %}
+                        </div>
+                        </div>
+                    </div>
                 </div>
+
+
+
+                <hr>
+
+                <!-- Spectrum options -->
+                <div class="form-group row">
+                    <div class="col-4">{{ template_game_form.spectrum_name_field.label(class="form-label") }}</div>
+                    <div class="col-8">
+                        {{ template_game_form.spectrum_name_field(class="form-control preset-input") }}
+                    </div>
+                </div>
+
+
+
+                <div class="form-group row">
+                    <div class="col-4">
+                        {{ template_game_form.spectrum_scale_field.label(class="form-label") }}
+                    </div>
+                    <div class="col-8">
+                        <div class="row">
+                            {{ template_game_form.spectrum_scale_field(class="form-range preset-input") }}
+                            <div class="ticks text-primary">
+                                {% for scale in [-10,-8,-6,-4,-2,0,2,4,6,8,10] %}
+                                <span class="tick">{{ scale }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-4">
+                        {{ template_game_form.spectrum_shift_field.label(class="form-label") }}
+                    </div>
+                    <div class="col-8">
+                        <div class="row">
+                            {{ template_game_form.spectrum_shift_field(class="form-range preset-input") }}
+                            <div class="ticks text-primary">
+                                {% for shift in [0,20,40,60,80,100] %}
+                                <span class="tick">{{ shift }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-4">{{ template_game_form.spectrum_phase_mod_field.label(class="form-label") }}</div>
+                    <div class="col-8">
+                        <div class="row">
+                            {{ template_game_form.spectrum_phase_mod_field(class="form-range preset-input") }}
+                            <div class="ticks text-primary">
+                                {% for phase in [0,45,90,135,180,225,270,315,360] %}
+                                <span class="tick">{{ phase }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
 
 
         </div>

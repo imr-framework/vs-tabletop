@@ -29,11 +29,12 @@ def game2():
     j1, j2 = make_empty_graphs()
 
     # Load the user-uploaded image by default, if applicable
-    if session['game2']['source'] == 'upload':
-        generate_new_image('upload')
 
     # User uploaded image!
     if request.method == 'POST':
+        #uploaded = request.form.get('uploaded')
+        print('Uploaded data: ', request.files)
+
         if 'file' not in request.files:
             print('No file uploaded')
             file = ''
@@ -48,6 +49,8 @@ def game2():
             file.save(os.path.join(app.config['UPLOAD_FOLDER_GAME2'], f'user_uploaded.{ext}'))
             utils.update_session_subdict(session,'game2',{'source':'upload'})
 
+        if session['game2']['source'] == 'upload':
+            generate_new_image('upload')
 
     return render_template('game2.html',template_title="K-space magik",template_intro_text="Can you find your way?",
                            template_game_form=G2Form, graphJSON_left=j1, graphJSON_right=j2,
@@ -70,9 +73,15 @@ def generate_new_signal(payload):
 # Socket
 @socketio.on('Request image')
 def generate_new_image(payload):
+    # Retrieve info
+    myinfo = {'image_angle': session['game2']['image_angle']}
+
     if session['game2']['source'] == 'preset':
         print(f"Image [{payload['name']}] requested")
-        graphJSON, data, scale = game2_worker_fetch('original',2,name=payload['name'])
+        if payload['name'] in ['sin','cos','circ']:
+            myinfo['wave_k'] = session['game2']['wave_k']
+            myinfo['wave_phase'] = session['game2']['wave_phase']
+        graphJSON, data, scale = game2_worker_fetch('original',2,name=payload['name'],info=myinfo)
     elif session['game2']['source'] == 'drawing':
         graphJSON, data, scale = convert_2d_drawing(IMG_PATH / 'Game2' / 'drawing.png', 'image')
     elif session['game2']['source'] == 'upload' or payload=='upload':
@@ -152,6 +161,7 @@ def process_drawing(payload):
         f.write(data)
 
     utils.update_session_subdict(session,'game2',{'source': 'drawing'})
+    socketio.emit('message', {'text':'Drawing saved!','type':'success'})
 
 @socketio.on('Send erase')
 def process_erasing_mask(payload):

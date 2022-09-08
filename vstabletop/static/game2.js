@@ -154,9 +154,47 @@ $('#use-slicer').on('click',()=>{
     socket.emit('Use slicer info', slicerInfo);
 })
 
-// Others
-$('.preset-input').on('change',()=>{
-    console.log('Preset input changed');
-    socket.emit('Go back to preset');
+// TODO Image upload - prevents page from reloading
+$('#upload-button').on('click',()=>{
+    let formData = new FormData($('#upload-form').get(0));
+    $.ajax({
+        type: 'POST',
+        url : '/games/2',
+        data: formData,
+        success:function(data){
+        },
+        cache: false,
+        contentType: false,
+        processData: false
+    })
 })
 
+
+// Others
+$('.preset-input').on('change',(event)=>{
+    console.log('Preset input changed');
+
+    // Request session to go back to source=preset
+    socket.emit('Go back to preset');
+
+    // Update session parameter
+    socket.emit('Update parameter for Game 2', {'id': event.target.id, 'value': event.target.value});
+
+})
+
+// Messaging
+
+socket.on('message', (msg)=>{
+    let added_class;
+    if (msg['type']==='warning'){
+        added_class = 'text-danger';
+    }
+    else if (msg['type']==='success'){
+        added_class = 'text-success';
+    }
+    else{
+        added_class = 'text-primary';
+    }
+    $('#message-region').text(msg['text']).removeClass('text-success text-danger text-primary').addClass(added_class);
+    $('#megaphone').removeClass('text-success text-danger text-primary').addClass(added_class)
+})
