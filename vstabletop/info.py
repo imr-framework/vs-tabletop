@@ -225,6 +225,66 @@ GAME1_BACKGROUND = {
                                        It merely “smoothes out the pixels” but does not improve true resolution at all."
 }
 
+GAME2_BACKGROUND = {
+    "Basics":"An image can be seen in more than one way. Just like a piano sonata can be represented either \
+             as a WAV file (a time domain signal) or discrete notes on a sheet music, an image can be in the form \
+            for human eyes as a grayscale map or as its spatial frequency domain, or k-space. \
+            Any 2D image (MR image, photo, drawing) can be converted to a k-space, and any 1D signal can be converted \
+            to a spectrum. The conversion process is essentially the same. ",
+    "Signal":"A signal is a function representing some processes we are eager to investigate. \
+              It can be discrete or continuous, categorical or interval, and in 1D or 2D or 3D or more dimensions. \
+              Examples: ECGs, brain waves, average June temperature of the past 10 years in your city… \
+              In this game, 'signal' is used specifically for a 1-dimensional continuous wave/curve in time",
+    "Sampling":"This refers to the process of gathering data at selected locations in k-space or in time. \
+                In discrete sampling, we get an approximate idea of a continuous signal by looking at it \
+                at a limited number of times. We want to sample just enough to get a fair representation of our signal.",
+    "Spectrum":"This is a curve that shows you how much of each frequency is in a signal. \
+                Each pair of peaks on the spectrum corresponds to a sinusoidal wave on the signal. \
+                Higher peaks means the component has larger amplitude, and peaks closer to the center means \
+                the component has lower frequency.",
+    "Fourier Transform (FT)":"FT a mathematical operation that converts a signal to its spectrum. \
+                              This process is one-to-one: we can apply the inverse Fourier transform to \
+                            the spectrum and get back the same signal. The amount of information is preserved \
+                            before and after the transformation. Mathematically, the FT can be performed as \
+                            an integral in time or space with complex exponentials thrown in. ",
+    "Properties of FT": "\
+          <ol>\
+          <li>The FT of the sum of two (or more) signals is equal to the sum of the FTs of those two (or more) signals.</li> \
+          <li>The FT of the product of two signals is equal to their FTs convolved together, and vice versa. </li>\
+          <li>If you multiply a signal by a constant C, the FT of it is also multiplied by C.</li>\
+          <li>If a signal gets wider, its FT gets narrower, and vice versa. </li> \
+          <li>If you move the signal horizontally, its FT gets a linearly varying complex phase. If you move the FT, the signal gets the same. </li>\
+        </ol>",
+    "Image space": "Explored in Game 1, image spaces are grayscale maps stored as matrices. \
+                    Each entry of the matrix represents a point in space and its magnitude tells \
+                    you how bright the image is at that spot.",
+    "K-space":"What you get if you perform a Fourier transform on the image space. Because the image space is 2D, \
+             we have to integrate in two directions. Similar properties apply to the 2D FT and 1D FT.",
+    "Spatial frequency:": "If a sine wave is represented by a pair of peaks on the spectrum, what is represented by a \
+                           pair of peaks in k-space? This is where spatial frequency comes in. \
+                          If there were two peaks symmetric by the origin in k-space and the line connecting the peaks is horizontal,\
+                           there would be vertical stripes in image space. \
+                           The brightness is not either black or white, but varies along the same horizontal line in the form \
+                           of a sinusoidal function. Importantly, the points in k-space and image-space do NOT map one-to-one.\
+                          Changing one point in k-space will change ALL POINTS in the image space, and vice versa. \
+                          This is because each point in k-space corresponds to a spatial wave that occupies the entire image. \
+                          Because of this, many image artifacts in MR are not straightforward, but require some amount of \
+                          “k-space intuition” to understand. ",
+    "K-space and MRI acquisition": "While the camera and the human eye both speak the language of image space \
+                                   (as projected onto the image sensor in the camera and the retina in the human eye),\
+                                   MRI speaks in k-space - it is the natural place where we get our data. \
+                                   This is because of the following:  \
+         <ol> \
+          <li>The protons in hydrogen atoms are tiny magnets that, when placed in a magnetic field, rotates around that field\'s direction.</li> \
+          <li>The stronger this field is, the faster they rotate. </li>\
+          <li>The position of a rotating thing can be represented as a complex exponential whose argument changes with time. </li>\
+          <li>When we apply an imaging gradient field (one of the three key magnetic fields that the MRI scanner uses), the complex exponentials get their frequencies modulated in such a way that the signal is the Fourier transform of the image. The signal in general is a spatial integral of all the tiny rotating magnets, so this process physically performs a Fourier transform (with the protons themselves being the complex exponential terms)! </li> \
+          <li>If we apply the gradients correctly, each point in time gets mapped to a different point in k-space, and we know this mapping.</li> \
+          <li>By sampling the signal at different times, we can fill up k-space. </li> \
+          <li>Lastly, we perform an inverse 2D FT to convert the k-space back to the image. This step is called image reconstruction.</li>\
+        </ol>"
+}
+
 GAME3_BACKGROUND = {
     "Basics": "Like any other part of the body, the brain has many types of tissues with different physical properties. \
     When using the MR scanner, we often rely on them to tell apart brain regions and look for areas where these properties \

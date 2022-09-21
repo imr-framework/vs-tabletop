@@ -2,7 +2,7 @@ from vstabletop.workers.game2_worker import make_empty_graphs, game2_worker_fetc
                                             game2_worker_convert, make_graph,\
                                             convert_2d_drawing, convert_1d_drawing,\
                                             retrieve_erase_mask
-from info import GAME2_INSTRUCTIONS
+from info import GAME2_INSTRUCTIONS, GAME2_BACKGROUND
 from flask import flash, render_template, session, redirect, url_for, request
 from urllib.request import urlopen
 from werkzeug.utils import secure_filename
@@ -59,7 +59,7 @@ def game2_view():
     return render_template('game2.html',template_title="K-space magik",template_intro_text="Can you find your way?",
                            template_game_form=G2Form, graphJSON_left=j1, graphJSON_right=j2,
                            questions=questions,success_text=success_text,uses_images=uses_images_list,
-                           game_num=2, instructions=GAME2_INSTRUCTIONS)
+                           game_num=2, instructions=GAME2_INSTRUCTIONS,background=GAME2_BACKGROUND)
 
 # Socket
 @socketio.on('Request signal')
