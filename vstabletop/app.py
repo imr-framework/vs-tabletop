@@ -14,9 +14,6 @@ app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
 
 #vstabletop.config.update(SESSION_COOKIE_SAMESITE="None", SESSION_COOKIE_SECURE=True)
-
-
-
 # App - connect to other libraries to enable stuff
 # 1. Enable database through SQLAlchemy
 # Add database location

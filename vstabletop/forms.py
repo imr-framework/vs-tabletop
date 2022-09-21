@@ -59,7 +59,7 @@ class Game1Form(FlaskForm):
 
 class Game2Form(FlaskForm):
     # Image and options
-    image_name_field = SelectField('Select image type', choices=[
+    image_name_field = SelectField('Select image', choices=[
         ('flat','Unity'), ('delta','Spike'), ('shepp-logan','Phantom'),
         ('mri-x', 'MRI (sagittal)'), ('mri-y','MRI (coronal)'), ('mri-z','MRI (axial)'),
         ('cat','Cat'), ('sin','Sine wave'), ('cos','Cosine wave'), ('circ','Circular wave'),
@@ -69,25 +69,28 @@ class Game2Form(FlaskForm):
     image_phase_field = DecimalRangeField(label='Wave phase (deg)',validators=[NumberRange(0,360)],default=0)
     image_wavelength_field = DecimalRangeField(label='Wavelength',validators=[NumberRange(0.05,2)],default=1)
 
-    kspace_name_field = SelectField('Select k-space type', choices=[
+    kspace_name_field = SelectField('Select k-space', choices=[
         ('flat','Unity'), ('delta','Spike'),('delta2','Double spike')
     ], default='delta')
     kspace_rotation_field = DecimalRangeField(label='Rotation (deg)', validators=[NumberRange(0,360)],default=0)
     kspace_ds_separation_field = DecimalRangeField(label='Spike separation',validators=[NumberRange(0,1)],default=0.25)
 
 
-    signal_name_field = SelectField('Select signal type', choices=[
-        ('flat','Unity'), ('delta','Spike')
+    signal_name_field = SelectField('Select signal', choices=[
+        ('flat','Unity'), ('delta','Spike'), ('sin','Sine wave'),('cos','Cosine wave')
     ],default='flat')
-    signal_scale_field = DecimalRangeField('Scale',validators=[NumberRange(-10,10)],default=1)
+    signal_scale_field = DecimalRangeField('Vertical scale',validators=[NumberRange(-10,10)],default=1)
+    signal_stretch_field = DecimalRangeField('Horizontal scale',validators=[NumberRange(0,10)],default=1)
+
     signal_shift_field = DecimalRangeField('Shift (%)',validators=[NumberRange(0,100)],default=0)
     signal_phase_mod_field = DecimalRangeField('Phase modulation (per point)',validators=[NumberRange(0,360)],default=0)
 
 
-    spectrum_name_field = SelectField('Select spectrum type', choices=[
+    spectrum_name_field = SelectField('Select spectrum', choices=[
         ('flat','Unity'), ('delta','Spike')
     ], default='delta')
-    spectrum_scale_field = DecimalRangeField('Scale', validators=[NumberRange(-10, 10)], default=1)
+    spectrum_scale_field = DecimalRangeField('Vertical scale', validators=[NumberRange(-10, 10)], default=1)
+    spectrum_stretch_field = DecimalRangeField('Horizontal scale',validators=[NumberRange(0,10)],default=1)
     spectrum_shift_field = DecimalRangeField('Shift (%)', validators=[NumberRange(0, 100)], default=0)
     spectrum_phase_mod_field = DecimalRangeField('Phase modulation (per point)', validators=[NumberRange(0, 360)],
                                                default=0)

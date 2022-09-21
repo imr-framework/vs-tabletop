@@ -21,6 +21,74 @@ for u in range(len(GAMES)):
     GAMES_INFO[u] = INTRO[u]
 
 
+# Game 2 instructions
+GAME2_INSTRUCTIONS={
+    'tabs':['Step 1', 'Step 2', 'Step 3',' Step 4'],
+    'titles': ['Explore 1D transforms','Explore 2D transforms','Perform k-space magiK!','Free exploration'],
+    'explorations':[
+        {'Get your first signal': 'Select "sine wave" in signal type and press "get signal" to load it to the left display. \
+          Describe the signal in your words.',
+         'Perform 1D forward transform': 'Press "forward" to perform a Fourier transform of the signal. \
+                                          The right display now shows the sine wave"s spectrum. What do you see?',
+         'Explore parameters':'Try changing each of the parameters, generate the signal, and get its spectrum each time. \
+                                         Describe what each parameter does to the signal and to the spectrum (vertical scale, horizontal scale, shift, phase modulation).',
+         'Explore signals':'Experiment with the other options in "select signal".',
+         'Explore spectra':'Experiment with options in the "select spectrum" drop down on the right. \
+                                      Use the "backward" button to perform an inverse Fourier transform, \
+                                    which recovers the signal from its spectrum. What happens when you press Forward and then Backward or vice versa?',
+         'Draw your own signal':'In the middle, go to the "Draw" tab and draw any curve you like. \
+         Press "Use" and then "Get signal" or "Get spectrum" to load it onto the panel you want. '},
+
+        {'Perform the 2D transform on images': 'Now we can look at the 2D analog of the same process. \
+                                                Go to the "2D Image" tab and choose any image you like. Press "Get Image" \
+                                                and then "Forward" to look at the k-space. Repeat it for a few images. \
+                                                What do the k-spaces have in common?',
+         'Look into the 2D sine wave':'Get the image of a 2D sine wave and generate its k-space. What do you see? \
+                                       You might have to zoom in to see the details of this one. How does this compare to the 1D sine wave? ',
+         'Explore image parameters':'Try changing each of the parameters below, generate a new image, and get its k-space each time. \
+             Describe what each parameter does to the image and to the k-space (rotation, horizontal scale, shift, and phase modulation).',
+         'Explore k-space parameters': 'Perform the Backward transform on the "Double spike" 2D k-space preset (press "Get K-space" to generate the k-space first). \
+                                        Change the parameters and describe what they do (rotation, spike separation). ',
+         'Free time':'Explore other images and k-space options and perform multiple backward and forward transforms. ',
+         'Draw your own image': 'Go to the "Draw" tab to paint any image you like. Press "Use" and then "Get image" (or "Get k-space") to load it. \
+                                 Perform transformation of your signal and spectrum. \
+                                 Use the drawing board and the preset signals to explore at least one of Properties 1-5 of the Fourier transform \
+                                                  (see Definitions from the top game dropdown or the lab manual) in 2D.\
+                                Record your findings with sketches of the images and k-spaces for each experiment. '},
+        {'Select your target': 'Load one of the MRI images and generate its k-space',
+         'Perform Sampling Magik': 'Go to the "Sampling" tab in the middle. The square represents k-space and the four lines slice it up. \
+                                    The lighter part will be preserved and the darker part will be erased from our k-space. \
+                                    Press "APPLY" to see the slicer applied. The erased parts are set to zero and appear black.',
+         'Eliminate the peripheral': 'Move the four lines closer to the middle of k-space so only a small portion of light gray remains, \
+                                     and press apply. Transform the restricted k-space back to image space. How did the image change? Why? \
+                                     Can you relate this to the sine wave experiments above?',
+         'Eliminate the center': 'Re-load the image and generate a fresh, complete k-space; then, press "Invert" in the slicer and "Apply"\
+                                  to block out the center but preserve the periphery of k-space.  \
+                                  Transform backwards. What do you see now? Describe your findings.',
+         'Customize your magik': 'Explore the sampling tab to section out different parts of k-space and see its effects. \
+                                  Moreover, you can also use the "Erase" tab to block out more interesting shapes and see \
+                                  what it does to k-space! Describe your findings.'},
+
+        {'Magik of Image Summoning': 'On the "upload" panel, you can upload an image and generate its k-space. \
+                                      Use "Erase" or "Slicer" to apply different filter effects onto your image and then transform backwards. \
+                                      "Recover" reloads the complete image.',
+         'Magik of Line Skipping':'Explore the effects of under-sampling factors on the "sampling" panel.',
+         'Magik of Art Creation': 'Using the properties of k-space, plan out and create your own art by drawing an image, \
+                                   converting it to k-space, and manipulating it with "erase" and "sampling".  \
+                                   You may export the images using the camera icon on top of them.',
+         'Magik of Photo Styling': 'Using a photo you have taken and your knowledge about k-space, style the photo in three different ways by changing its kspace.',
+         'Magik of Poetic Understanding':'Compose a haiku or a short poem about k-space using what you learned today.'}
+    ],
+    'tasks':{'Task 1': 'Perform transformation of your signal and spectrum. Use the drawing board and the preset signals to explore at least one of \
+          Properties 1-5 of the Fourier transform. Record your findings with sketches of the signals and spectra you used.',
+             'Task 2': 'Use the sampling tab, section k-space in a way that preserves only horizontal edges on an image.',
+             'Task 3': 'With the eraser tool, design a k-space "filter" that styles in the image in a particular way. ',
+             'Task 4': 'Congratulations on becoming a k-space magician! Check off this task and go on.'}
+}
+
+
+
+
 # Game 5 instructions
 GAME5_INSTRUCTIONS={
     'tabs': ['Move 1','Move 2','Move 3','Move 4'],

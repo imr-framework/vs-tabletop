@@ -222,31 +222,47 @@ def get_2d_data(type, N,range,name,info={}):
     return data2d, xmodel
 
 def get_1d_data(type, N, range, name, info={}):
-    # TODO apply info
     print('Getting 1D data...')
-    xmodel = np.linspace(range[0],range[1],N, endpoint=False)
-    data1d = np.zeros(xmodel.shape)
-    if name == 'flat':
-        data1d = np.ones(xmodel.shape)
-    elif name == 'delta':
-        data1d[int(N/2)] = 1
 
-    scale, shift, phasemod = 0, 0, 0
+    scale, stretch, shift, phasemod = 0, 0, 0, 0
     if type == 'original':
         scale = info['signal_scale']
         shift = info['signal_shift']
+        stretch = info['signal_stretch']
         phasemod = info['signal_phase_mod']
     elif type == 'frequency':
         scale = info['spectrum_scale']
         shift = info['spectrum_shift']
+        stretch = info['spectrum_stretch']
         phasemod = info['spectrum_phase_mod']
 
-    # Scaling
+
+
+    xmodel = np.linspace(range[0],range[1],N, endpoint=False)
+    data1d = np.zeros(xmodel.shape)
+
+    if stretch == 0:
+        return data1d, xmodel
+
+    if name == 'flat':
+        data1d = np.ones(xmodel.shape)
+    elif name == 'delta':
+        data1d[int(N/2)] = 1
+    elif name == 'sin':
+        xmodel = xmodel + 1
+        print(f'stretch: {stretch}')
+        data1d = np.sin((10/stretch)*xmodel*np.pi)
+    elif name == 'cos':
+        xmodel = xmodel + 1
+        data1d = np.cos((10/stretch)*xmodel*np.pi)
+
+    # Vertical Scaling
     data1d *= scale
     # Shifting
-    data1d = np.roll(data1d, int(round(shift * N)))
+    data1d = np.roll(data1d, int(round((shift/100) * N)))
     # Phase modulation
     data1d = data1d*np.exp(1j*(phasemod*np.pi/180)*np.arange(0,N))
+
 
     return data1d, xmodel
 

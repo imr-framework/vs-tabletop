@@ -33,19 +33,21 @@ def initialize_parameters():
                         # Image parameters
                         'image_wavelength': 1, 'image_wave_phase': 0, 'image_angle': 0,
                         # Signal parameters
-                        'signal_scale': 1, 'signal_shift': 0, 'signal_phase_mod': 0,
+                        'signal_scale': 1, 'signal_stretch':1, 'signal_shift': 0, 'signal_phase_mod': 0,
                         # K-space parameters
                         'kspace_angle': 0, 'kspace_ds_separation': 0.25,
                         # Spectrum parameters
-                        'spectrum_scale':1, 'spectrum_shift':0, 'spectrum_phase_mod':0,
-
+                        'spectrum_scale':1, 'spectrum_stretch':1, 'spectrum_shift':0, 'spectrum_phase_mod':0,
                         # Task progress
-                        'progress':utils.new_progress_of_game(2), 'task_completed': 0
+                        'progress':utils.new_progress_of_game(2), 'task_completed': 0, 'mc_status_list': utils.num_questions_of_game(2)*[False]
                         }
 
     session['game3'] = {'options': 'T1', 'TR': 500, 'TE': 10, 'FA':90, 'P1_q': 'No', 'P2_q': 'No', 'P3_q': 'No', 'progress': utils.new_progress_of_game(3),
                         'mc_status_list': utils.num_questions_of_game(1)*[False], 'current_task': 1, 'completed_task': 0, 'star_count': 0}
-    session['game4'] = {'progress':utils.new_progress_of_game(4)}
+    session['game4'] = {
+
+                         'progress':utils.new_progress_of_game(4),'task_completed':0,
+                        }
     session['game5'] = {'b0_on': False, 'b0': 100.0,'coil_on': False, 'rot_frame_on': False, 'flip_angle': 90, 'rf_phase': 0.0,
                         'coil_dir': 'x', 'm_theta': 0.0, 'm_phi':0.0, 'm_size': 1, 'tx_on': False,
                         'M_init': np.array([[0],[0],[0]]), 'M_target': np.array(([0],[0],[0])),

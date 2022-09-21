@@ -218,7 +218,12 @@
                         </div>
                     </li>
 
-
+                    <li class="nav-item">
+                        <div class="btn btn-light" id="tasks-button"  data-mdb-toggle="modal" data-mdb-target="#quizCenter">
+                            <i class="fas fa-edit"></i>
+                            Quiz
+                        </div>
+                    </li>
 
                 </ul>
 
@@ -281,9 +286,21 @@
     <div class="modal top fade" id="tasksCenter" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">Tasks</div>
+                <div class="modal-header h3">Tasks</div>
                 <div class="modal-body">
                     {% block tasks %}
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <div class="modal top fade" id="quizCenter" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">Questions</div>
+                <div class="modal-body">
+                    {% block questions %}
                     {% endblock %}
                 </div>
             </div>
@@ -313,7 +330,6 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
 
-    <script src="../static/main.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js" integrity="sha512-aMGMvNYu8Ue4G+fHa359jcPb1u+ytAF+P2SCb+PxrjCdO3n3ZTxJ30zuH39rimUggmTwmh2u7wvQsDTHESnmfQ==" crossorigin="anonymous"></script>
     <!-- MDB -->
     <script
@@ -323,5 +339,7 @@
 
   {% block additional_imports %}
   {% endblock %}
+
+
   </body>
 </html>

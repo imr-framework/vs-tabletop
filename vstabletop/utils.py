@@ -57,8 +57,31 @@ def num_questions_of_game(num):
 def new_progress_of_game(num):
     # TODO connect to Instructions db table
 
-    num_steps_dict = {1:4, 2:1, 3:3, 4:1, 5:4, 6:1, 7:5, 8:1}
+    num_steps_dict = {1:4, 2:4, 3:3, 4:1, 5:4, 6:1, 7:5, 8:1}
     num_mc = num_questions_of_game(num)
     return Progress(game_number=num, num_stars=0,
                     num_questions=num_mc, num_correct=0,
                     num_steps_total=num_steps_dict[num],num_steps_complete=0) # No user id attached yet
+
+def fetch_all_game_questions(num):
+    all_Qs = MultipleChoice.query.filter_by(game_number=num).all()
+    questions = []
+    uses_images_list = []
+    success_text = len(all_Qs) * ['Correct! Move on to the next question.']
+    for Q in all_Qs:
+        qdata = Q.get_randomized_data()
+        uses_images_list.append(Q.uses_images)
+        corr_array = [l == qdata[2] for l in ['A', 'B', 'C', 'D']]
+        corr_array_new = []
+        qchoices = []
+        for ind in range(len(qdata[1])):
+            if len(qdata[1][ind]) != 0:
+                qchoices.append(qdata[1][ind])
+                corr_array_new.append(corr_array[ind])
+
+        questions.append({'text': qdata[0],
+                          'choices': qchoices,
+                          'correct': corr_array_new.index(True),
+                          'main_image_path': Q.main_image_path})
+
+    return questions, success_text, uses_images_list

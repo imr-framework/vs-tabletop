@@ -151,6 +151,77 @@ def initialize_game1_questions():
 
     return mcs
 
+
+# Todo input the Game 2 questions from the lab manual
+def initialize_game2_questions():
+    mcs = []
+    mcs.append(MultipleChoice(
+        id = 201,
+        game_number = 2,
+        uses_images=False,
+        question_text="Which statement below is incorrect about the Fourier Transform?",
+        choiceA="It is an irreversible process.",
+        choiceB="It can be performed as an integral over time or space.",
+        choiceC="The FT of the product of two signals is not necessarily the product of its FTs.",
+        choiceD="The output of the inverse Fourier transform can be entirely real.",
+        correct_choice="A",
+        difficulty="hard"
+    ))
+
+    mcs.append(MultipleChoice(
+        id = 202,
+        game_number = 2,
+        uses_images=False,
+        question_text="What does k stand for in the term “k-space”?",
+        choiceA="Key imaging variable",
+        choiceB="Kinetic energy conversion",
+        choiceC="Spatial frequency",
+        choiceD="Coordinates of reconstruction",
+        correct_choice="C",
+        difficulty="medium"
+    ))
+
+    mcs.append(MultipleChoice(
+        id = 203,
+        game_number = 2,
+        uses_images=False,
+        question_text="What statement about k-space is correct?",
+        choiceA="The middle of k-space represents the edge information and small details on the image",
+        choiceB="The periphery of k-space represents the overall signal level of the image",
+        choiceC="K-space is artificially created from the acquired image",
+        choiceD="K-space is directly sampled and the image is created afterwards with an extra step",
+        correct_choice="D",
+        difficulty="hard"
+    ))
+
+    mcs.append(MultipleChoice(
+        id = 204,
+        game_number = 2,
+        uses_images=False,
+        question_text="What happens if I slice the k-space in the following way?",
+        main_image_path="./static/img/Game2/slicer.png",
+        choiceA="Vertical edges will get blurry",
+        choiceB="Horizontal edges will get blurry",
+        choiceC="Only vertical edges will be visible",
+        choiceD="Only horizontal edges will be visible",
+        correct_choice="A",
+        difficulty="hard"
+    ))
+
+    mcs.append(MultipleChoice(
+        id=205,
+        game_number = 2,
+        uses_images=False,
+        question_text="What is incorrect about spatial frequency?",
+        choiceA="Low spatial frequencies corresponds to information in the center of image space",
+        choiceB="Each point in k-space tells you the amplitude of one spatial frequency",
+        choiceC="High spatial frequencies corresponds to thinner stripes",
+        choiceD="In 2D, spatial frequency has a direction along which the wave amplitude changes",
+        correct_choice="A",
+        difficulty="hard"
+    ))
+    return mcs
+
 def initialize_game3_questions():
     mcs = []
     mcs.append(MultipleChoice(
@@ -385,6 +456,7 @@ if __name__ == "__main__":
     from vstabletop.models import initialize_users
 
     mc_list = initialize_game1_questions()
+    mc_list += initialize_game2_questions()
     mc_list += initialize_game3_questions()
     mc_list += initialize_game5_questions()
     mc_list += initialize_game7_questions()

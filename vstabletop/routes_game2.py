@@ -2,7 +2,7 @@ from vstabletop.workers.game2_worker import make_empty_graphs, game2_worker_fetc
                                             game2_worker_convert, make_graph,\
                                             convert_2d_drawing, convert_1d_drawing,\
                                             retrieve_erase_mask
-
+from info import GAME2_INSTRUCTIONS
 from flask import flash, render_template, session, redirect, url_for, request
 from urllib.request import urlopen
 from werkzeug.utils import secure_filename
@@ -14,6 +14,8 @@ import json
 import plotly
 import os
 import fnmatch
+import vstabletop.utils
+from vstabletop.models import MultipleChoice
 
 from __main__ import app, login_manager, db, socketio, ALLOWED_EXTENSIONS
 
@@ -24,9 +26,13 @@ def allowed_file(filename):
 
 # Games
 @app.route('/games/2',methods=["GET","POST"])
-def game2():
+def game2_view():
     G2Form = Game2Form()
     j1, j2 = make_empty_graphs()
+
+    # Get MC
+    questions, success_text, uses_images_list = utils.fetch_all_game_questions(2)
+    print(questions)
 
     # User uploaded image!
     if request.method == 'POST':
@@ -52,7 +58,8 @@ def game2():
 
     return render_template('game2.html',template_title="K-space magik",template_intro_text="Can you find your way?",
                            template_game_form=G2Form, graphJSON_left=j1, graphJSON_right=j2,
-                           game_num=2)
+                           questions=questions,success_text=success_text,uses_images=uses_images_list,
+                           game_num=2, instructions=GAME2_INSTRUCTIONS)
 
 # Socket
 @socketio.on('Request signal')
@@ -127,6 +134,7 @@ def forward_transform():
         socketio.emit('Deliver kspace',{'graph': graphJSON})
     elif len(input.shape) == 1:
         socketio.emit('Deliver spectrum',{'graph':graphJSON})
+    socketio.emit('message', {'text':'Forward transformation done.','type':'success'})
 
 
 
@@ -144,6 +152,8 @@ def backward_transform():
         socketio.emit('Deliver image',{'graph': graphJSON})
     elif len(input.shape) == 1:
         socketio.emit('Deliver signal',{'graph':graphJSON})
+    socketio.emit('message', {'text':'Backward transformation done.','type':'success'})
+
 
 @socketio.on('Send drawing')
 def process_drawing(payload):
@@ -170,6 +180,8 @@ def process_erasing_mask(payload):
     print(session['game2']['data_right'].shape)
     mask = retrieve_erase_mask(shape=session['game2']['data_right'].shape)
     utils.update_session_subdict(session,'game2',{'erase_mask': mask})
+    socketio.emit('message', {'text':'Erasing applied!','type':'success'})
+
     update_chart_right()
 
 @socketio.on('Reset erase')
@@ -226,6 +238,8 @@ def apply_slicer(payload):
     mask *= usmask
 
     utils.update_session_subdict(session,'game2',{'erase_mask': mask})
+    socketio.emit('message', {'text':'Sampling applied!','type':'success'})
+
     update_chart_right()
 
 
@@ -233,3 +247,44 @@ def apply_slicer(payload):
 def update_parameters_game2(info):
     if info['id'] not in ['image_name_field','signal_name_field','kspace_name_field','spectrum_name_field']:
         utils.update_session_subdict(session,'game2',{info['id']:float(info['value'])})
+
+# Tasks
+@socketio.on('game2 update progress')
+def game2_update_progress(msg):
+    task = int(msg['task'])
+
+    # Only update if there is progress (no backtracking)
+    if task > session['game2']['task_completed']:
+        utils.update_session_subdict(session, 'game2', {'task_completed': task})
+        print('Task ', session['game2']['task_completed'],' completed for game 2')
+
+        # Update database object
+        session['game2']['progress'].num_steps_complete = task
+        session['game2']['progress'].update_stars()
+        print('Game 2 progress updated: ', session['game5']['progress'])
+        socketio.emit('renew stars',{'stars': session['game2']['progress'].num_stars})
+
+
+# Questions
+
+
+
+@socketio.on("game 2 question answered")
+def update_mc_progress(msg):
+    # Updates session multiple choice status & progress object
+    # Tells frontend to update # stars displayed.
+
+    status = session['game2']['mc_status_list']
+    status[int(msg['ind'])] = bool(msg['correct'])
+    # Update current list
+    utils.update_session_subdict(session,'game2',
+                                 {'mc_status_list': status})
+
+    # Update progress
+    session['game2']['progress'].num_correct = sum(status)
+    session['game2']['progress'].update_stars()
+
+    print('Game 2 progress updated: ', session['game2']['progress'])
+
+    # Change stars display
+    socketio.emit('renew stars',{'stars': session['game2']['progress'].num_stars})
