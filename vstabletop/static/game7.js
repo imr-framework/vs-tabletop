@@ -141,6 +141,7 @@ $(".task-next-button").click((event)=>{
 
 // Interactive task - generate random initial and target M's!
 $('.randomize').click((event)=>{
+    console.log('Loading Random model');
     // TODO get random 3D model.
     let t = '2D';
 

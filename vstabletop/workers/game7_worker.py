@@ -491,7 +491,6 @@ def projections_to_images(g_list_2d, g_list_1d):
     print('Received g_list_2d')
 
     for q in range(3):
-        print('The true view of the data ...')
         print(g_list_1d[q].shape)
 
         # 1D
