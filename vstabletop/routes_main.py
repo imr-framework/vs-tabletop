@@ -44,10 +44,13 @@ def initialize_parameters():
 
     session['game3'] = {'options': 'T1', 'TR': 500, 'TE': 10, 'FA':90, 'P1_q': 'No', 'P2_q': 'No', 'P3_q': 'No', 'progress': utils.new_progress_of_game(3),
                         'mc_status_list': utils.num_questions_of_game(1)*[False], 'current_task': 1, 'completed_task': 0, 'star_count': 0}
-    session['game4'] = {
 
-                         'progress':utils.new_progress_of_game(4),'task_completed':0,
-                        }
+    session['game4'] = { 'mode':'bright','flow_on': False, 'flow_speed': 50,
+                           'bright_thk': 5, 'bright_tr':20, 'bright_fa': 45,
+                           'dark_thk': 5, 'dark_te': 50,
+                           'thk':5,'fa':30,'tr':20,'te':20,
+                         'progress':utils.new_progress_of_game(4),'task_completed':0}
+
     session['game5'] = {'b0_on': False, 'b0': 100.0,'coil_on': False, 'rot_frame_on': False, 'flip_angle': 90, 'rf_phase': 0.0,
                         'coil_dir': 'x', 'm_theta': 0.0, 'm_phi':0.0, 'm_size': 1, 'tx_on': False,
                         'M_init': np.array([[0],[0],[0]]), 'M_target': np.array(([0],[0],[0])),

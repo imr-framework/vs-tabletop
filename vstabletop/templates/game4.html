@@ -4,96 +4,207 @@
 <div class="container-fluid vh-100">
 
 <div class="row h-100">
-    <div class="col-6 h-100">
-        <div class="card">
+    <div class="col-7 h-100">
+        <!-- Flow vector drawing and controls -->
+        <div class="row h-25 p-2 d-flex align-content-center">
+            <div class="col-3">
+                <div class="row">
+                   <span id="flow-info"> Flow speed: 1 mm / s </span>
+                </div>
+                <div class="row">
+                    {{ template_game_form.flow_speed_field.label(class="form-label") }}
+                    {{ template_game_form.flow_speed_field(class="form-control",id="flow_speed") }}
+                </div>
+                <div class="row">
+                    <button class="btn btn-info btn-lg" id="flow-manual-button">PUSH</button>
+                </div>
+            </div>
 
-                <div class="card-header">Parameters</div>
-                <div class="card-body">
-                    <div class="row">
-                        <ul class="nav nav-tabs nav-fill mb-3" id="original-space-tabs" role="tablist">
-                          <li class="nav-item" role="presentation">
-                            <a
-                              class="nav-link active"
-                              id="flow-tab-1"
-                              data-mdb-toggle="tab"
-                              href="#flow-tabs-1"
-                              role="tab"
-                              aria-controls="flow-tabs-1"
-                              aria-selected="true"
-                              >Bright blood</a
-                            >
-                          </li>
-                          <li class="nav-item" role="presentation">
-                            <a
-                              class="nav-link"
-                              id="flow-tab-2"
-                              data-mdb-toggle="tab"
-                              href="#flow-tabs-2"
-                              role="tab"
-                              aria-controls="flow-tabs-2"
-                              aria-selected="false"
-                              >Dark blood</a
-                            >
-                          </li>
-    </ul>
-                    </div>
-                    <div class="row">
-                        <div class="tab-content" id="flow-content">
-                            <div class="tab-pane fade show active" id="flow-tabs-1" role="tabpanel" aria-labelledby="flow-tab-1">
-                                <!-- Bright blood plots-->
+            <div class="col-9">
+                  <object id="syringe" style="height:90% ;width:90%;"
+                          data="../static/img/syringe.svg" type="image/svg+xml">
+                  </object>
+            </div>
 
-                                <div class="row h-25">
-                                    <div class="chart">CHART 2</div>
+        </div>
+        <div class="row h-75">
+            <div class="card h-100">
+                <div class="card-body h-100">
+                    <div class="col h-100">
+                        <div class="row">
+                            <ul class="nav nav-tabs nav-fill mb-3" id="bright-blood-tabs" role="tablist">
+                              <li class="nav-item" role="presentation">
+                                <a
+                                  class="nav-link active"
+                                  id="flow-tab-1"
+                                  data-mdb-toggle="tab"
+                                  href="#flow-tabs-1"
+                                  role="tab"
+                                  aria-controls="flow-tabs-1"
+                                  aria-selected="true"
+                                  >Bright blood</a
+                                >
+                              </li>
+                              <li class="nav-item" role="presentation">
+                                <a
+                                  class="nav-link"
+                                  id="flow-tab-2"
+                                  data-mdb-toggle="tab"
+                                  href="#flow-tabs-2"
+                                  role="tab"
+                                  aria-controls="flow-tabs-2"
+                                  aria-selected="false"
+                                  >Dark blood</a
+                                >
+                              </li>
+                            </ul>
+                        </div>
+                        <div class="row">
+                            <div class="tab-content" id="flow-content">
+                                <div class="tab-pane fade show active" id="flow-tabs-1" role="tabpanel" aria-labelledby="flow-tab-1">
+                                    <!-- Bright blood plots-->
+                                    <div class="row h-25">
+                                        <div class="chart" id="bright-chart-1"></div>
+                                    </div>
+                                    <div class="row h-25">
+                                        <div class="chart" id="bright-chart-2"> </div>
+                                    </div>
+                                    <div class="row h-50">
+                                        <div class="col form-group">
+                                            {{ template_game_form.bright_thk_field.label(class="form-label") }}
+                                            {{ template_game_form.bright_thk_field(class="form-control",id='bright_thk') }}
+                                        </div>
+                                        <div class="col form-group">
+                                            {{ template_game_form.bright_tr_field.label(class="form-label") }}
+                                            {{ template_game_form.bright_tr_field(class="form-control",id='bright_tr') }}
+                                        </div>
+
+                                            {{ template_game_form.bright_fa_field.label(class="form-label") }}
+                                            {{ template_game_form.bright_fa_field(class="form-range",id='bright_fa') }}
+                                        <div class="ticks text-primary">
+                                              {% for b in [0,15,30,45,60,75,90] %}
+                                               <span class="tick">{{ b }}</span>
+                                              {% endfor %}
+                                          </div>
+                                        </div>
                                 </div>
-                                <div class="row h-25">
+                                <div class="tab-pane fade" id="flow-tabs-2" role="tabpanel" aria-labelledby="flow-tab-2">
+                                    <!-- Dark blood plots-->
+                                    <div class="row h-25">
+                                        <div class="chart" id="dark-chart-1"></div>
+                                    </div>
+                                    <div class="row h-25">
+                                        <div class="chart" id="dark-chart-2"></div>
+                                    </div>
+                                    <div class="row h-50">
+                                        <div class="form-group col">
+                                            {{ template_game_form.dark_thk_field.label(class="form-label") }}
+                                            {{ template_game_form.dark_thk_field(class="form-control",id="dark_thk") }}
+                                        </div>
+                                        <div class="form-group col">
+                                            {{ template_game_form.dark_te_field.label(class="form-label") }}
+                                            {{ template_game_form.dark_te_field(class="form-control",id="dark_te") }}
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="form-group row">
-                                    <div class="chart">CHART 2</div>
+                                <div class="tab-pane fade" id="flow-tabs-2" role="tabpanel" aria-labelledby="flow-tab-2">
+                                    Where am I?
                                 </div>
-
-                            </div>
-
-
-                            <div class="tab-pane fade" id="flow-tabs-2" role="tabpanel" aria-labelledby="flow-tab-2">
-                                <!-- Dark blood plots-->
                             </div>
                         </div>
                     </div>
 
                 </div>
+            </div>
         </div>
     </div>
-    <div class="col-6 h-100">
+
+
+    <div class="col-5 h-100">
         <div class="row h-50">
             <div class="card">
                 <div class="card-header">
                     Image
                 </div>
                 <div class="card-body">
-                    <div class="chart" id="chart-game4-image"></div>
+                    <div class="chart" id="image-chart"></div>
                 </div>
             </div>
         </div>
         <div class="row h-50">
             <div class="card">
-                <div class="card-header"></div>
                 <div class="card-body">
+                <div class="row">
                     <button class="btn btn-lg btn-success">RUN!</button>
+                </div>
+                    <div class="form-group row">
+                        <div class="col-4">
+                            {{ template_game_form.sequence_type_field.label(class="form-label") }}
+                        </div>
+                        <div class="col-8">
+                            {{ template_game_form.sequence_type_field(class="form-control",id="contrast-type") }}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-4">{{ template_game_form.thk_field.label(class="form-label") }}</div>
+                        <div class="col-8">{{ template_game_form.thk_field(class="form-control",id="thk") }}</div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-4">{{ template_game_form.tr_field.label(class="form-label") }}</div>
+                        <div class="col-8">{{ template_game_form.tr_field(class="form-control",id="tr") }}</div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-4">{{ template_game_form.te_field.label(class="form-label") }}</div>
+                        <div class="col-8">{{ template_game_form.te_field(class="form-control",id="te") }}</div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-4">{{ template_game_form.fa_field.label(class="form-label") }}</div>
+                        <div class="col-8">
+                            {{ template_game_form.fa_field(class="form-range",id="fa") }}
+                            <div class="ticks text-primary">
+                              {% for b in [0,15,30,45,60,75,90] %}
+                               <span class="tick">{{ b }}</span>
+                              {% endfor %}
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
 
             </div>
         </div>
     </div>
-</div>
 
 
 </div>
 
-
+</div>
 {% endblock %}
 
 
 {% block additional_imports %}
     <script src="../static/game4.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script type="text/javascript">
+        // Plotting with Plotly
+        // Bright blood
+        let graph1 = {{ graphJSON_top_bright | safe }};
+        let graph2 = {{ graphJSON_bottom_bright | safe }}
+        // Get correct widths and heights
+        // replace the layout {autosize: true}
+        Plotly.plot('bright-chart-1',  graph1, {autosize:true});
+        Plotly.plot('bright-chart-2',  graph2, {autosize:true});
+
+        // Dark blood
+        let graph3 = {{ graphJSON_top_dark | safe }};
+        let graph4 = {{ graphJSON_bottom_dark | safe }};
+        Plotly.plot('dark-chart-1',graph3, {autosize:true});
+        Plotly.plot('dark-chart-2',graph4, {autosize:true});
+
+        // Image
+        let graph5 = {{ graphJSON_image | safe }};
+        Plotly.plot('image-chart',graph5,{autosize:true});
+
+    </script>
+
 {% endblock %}
