@@ -119,9 +119,13 @@ class Game4Form(FlaskForm):
     flow_onoff_field = BooleanField('Flow status',default=False)
     flow_speed_field = DecimalField('Flow speed %',validators=[NumberRange(min=0,max=100)], default=50)
 
+    # Liquid properties
+    t1_field = DecimalField('T1 (ms)', places=0, validators=[NumberRange(min=500,max=4000)],default=2000)
+    t2_field = DecimalField('T2 (ms)', places=1, validators=[NumberRange(min=5,max=200)],default=200)
+
     # Concept simulation fields - bright blood
     bright_thk_field = DecimalField('Slice thickness (mm)', places=1, validators=[NumberRange(min=0.0,max=10.0)],default=5)
-    bright_tr_field = DecimalField('Repetition Time (ms)', places=0, validators=[NumberRange(min=10,max=2000)],default=20)
+    bright_tr_field = DecimalField('Repetition Time (ms)', places=0, validators=[NumberRange(min=10,max=2000)],default=250)
     bright_fa_field = IntegerRangeField('Flip angle (deg)', validators=[NumberRange(min=0,max=90)],default=45)
 
     # Concept simulation fields - dark blood
@@ -134,7 +138,7 @@ class Game4Form(FlaskForm):
     sequence_type_field = SelectField('Contrast type',choices=[('dark','Dark blood'),('bright','Bright blood')],default='bright')
     thk_field = DecimalField('Slice thickness (mm)',validators=[DataRequired(),NumberRange(min=1.0,max=10.0)],default=5)
     fa_field = IntegerRangeField('Flip angle (degrees)',validators=[DataRequired(),NumberRange(min=0,max=90)],default=30)
-    tr_field = IntegerField('Repetition Time (ms)',validators=[DataRequired(),NumberRange(min=10,max=2000)],default=20)
+    tr_field = IntegerField('Repetition Time (ms)',validators=[DataRequired(),NumberRange(min=10,max=2000)],default=250)
     te_field = IntegerField('Echo Time (ms)',validators=[DataRequired(),NumberRange(min=5,max=100)],default=5)
 
     submit_field = SubmitField("Run")

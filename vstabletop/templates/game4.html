@@ -1,33 +1,74 @@
 {% extends "base.html" %}
 {% block content %}
 
+
+
 <div class="container-fluid vh-100">
 
 <div class="row h-100">
     <div class="col-7 h-100">
+
         <!-- Flow vector drawing and controls -->
-        <div class="row h-25 p-2 d-flex align-content-center">
-            <div class="col-3">
-                <div class="row">
-                   <span id="flow-info"> Flow speed: 1 mm / s </span>
-                </div>
-                <div class="row">
-                    {{ template_game_form.flow_speed_field.label(class="form-label") }}
-                    {{ template_game_form.flow_speed_field(class="form-control",id="flow_speed") }}
-                </div>
-                <div class="row">
-                    <button class="btn btn-info btn-lg" id="flow-manual-button">PUSH</button>
-                </div>
-            </div>
+        <div class="row p-2 d-flex align-content-center">
+                <div class="col-3">
+                    <div class="row">
+                       <span id="flow-info"> Flow speed: 10 mm / s </span>
+                    </div>
+                    <div class="row">
+                        {{ template_game_form.flow_speed_field.label(class="form-label") }}
+                        {{ template_game_form.flow_speed_field(class="form-control",id="flow_speed",value=session['game4']['flow_speed']) }}
+                    </div>
+                    <div class="row">
+                        <button class="btn btn-info btn-lg" id="flow-manual-button">PUSH</button>
+                    </div>
+                    <div class="row">
+                        <button class="btn btn-primary btn-lg" id="solution-param-button"
+                                data-mdb-toggle="modal" data-mdb-target="#solutionModal">Solution</button>
+                    </div>
+                    <div class="modal fade" id="solutionModal" tabindex="-1" aria-labelledby="solutionModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="solutionModalLabel">Solution parameters</h5>
+                                    <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Input fields -->
+                                    <div class="form-group">
+                                        {{ template_game_form.t1_field.label(class="form-label") }}
+                                        {{ template_game_form.t1_field(class="form-control",id="T1",value=session['game4']['T1']) }}
+                                    </div>
+                                    <div class="form-group">
+                                        {{ template_game_form.t2_field.label(class="form-label") }}
+                                        {{ template_game_form.t2_field(class="form-control",id="T2",value=session['game4']['T2']) }}
+                                    </div>
+                                </div>
+                                <div class="modal-footer d-flex justify-content-center">
+                                    <button type="button" class="btn btn-info" data-mdb-dismiss="modal">Save and close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-            <div class="col-9">
-                  <object id="syringe" style="height:90% ;width:90%;"
-                          data="../static/img/syringe.svg" type="image/svg+xml">
-                  </object>
-            </div>
+                    <div class="row">
+                        <div class="col-6 p-0">
+                            T1 = <span id="t1-display">{{ session['game4']['T1'] }}</span> ms
+                        </div>
+                        <div class="col-6 p-0">
+                            T2 = <span id="t2-display">{{ session['game4']['T2'] }}</span> ms
+                        </div>
+                    </div>
 
+                </div>
+                <div class="col-9">
+                      <object id="syringe" style="height:90% ;width:90%;"
+                              data="../static/img/syringe.svg" type="image/svg+xml">
+                      </object>
+                </div>
         </div>
-        <div class="row h-75">
+
+
+        <div class="row ">
             <div class="card h-100">
                 <div class="card-body h-100">
                     <div class="col h-100">
@@ -72,15 +113,15 @@
                                     <div class="row h-50">
                                         <div class="col form-group">
                                             {{ template_game_form.bright_thk_field.label(class="form-label") }}
-                                            {{ template_game_form.bright_thk_field(class="form-control",id='bright_thk') }}
+                                            {{ template_game_form.bright_thk_field(class="form-control",id='bright_thk',value=session['game4']['bright_thk']) }}
                                         </div>
                                         <div class="col form-group">
                                             {{ template_game_form.bright_tr_field.label(class="form-label") }}
-                                            {{ template_game_form.bright_tr_field(class="form-control",id='bright_tr') }}
+                                            {{ template_game_form.bright_tr_field(class="form-control",id='bright_tr',value=session['game4']['bright_tr']) }}
                                         </div>
 
                                             {{ template_game_form.bright_fa_field.label(class="form-label") }}
-                                            {{ template_game_form.bright_fa_field(class="form-range",id='bright_fa') }}
+                                            {{ template_game_form.bright_fa_field(class="form-range",id='bright_fa',value=session['game4']['bright_fa']) }}
                                         <div class="ticks text-primary">
                                               {% for b in [0,15,30,45,60,75,90] %}
                                                <span class="tick">{{ b }}</span>
@@ -96,14 +137,15 @@
                                     <div class="row h-25">
                                         <div class="chart" id="dark-chart-2"></div>
                                     </div>
+                                    <hr>
                                     <div class="row h-50">
                                         <div class="form-group col">
                                             {{ template_game_form.dark_thk_field.label(class="form-label") }}
-                                            {{ template_game_form.dark_thk_field(class="form-control",id="dark_thk") }}
+                                            {{ template_game_form.dark_thk_field(class="form-control",id="dark_thk",value=session['game4']['dark_thk']) }}
                                         </div>
                                         <div class="form-group col">
                                             {{ template_game_form.dark_te_field.label(class="form-label") }}
-                                            {{ template_game_form.dark_te_field(class="form-control",id="dark_te") }}
+                                            {{ template_game_form.dark_te_field(class="form-control",id="dark_te",value=session['game4']['dark_te']) }}
                                         </div>
                                     </div>
                                 </div>
@@ -121,6 +163,13 @@
 
 
     <div class="col-5 h-100">
+           <div class="row">
+            <div class="card">
+                <p>Messages</p>
+                <p id="message-region">Press "PUSH" after you change parameters to re-run the flow simulation!</p>
+
+            </div>
+        </div>
         <div class="row h-50">
             <div class="card">
                 <div class="card-header">
@@ -131,36 +180,38 @@
                 </div>
             </div>
         </div>
-        <div class="row h-50">
+        <div class="row h-25">
             <div class="card">
                 <div class="card-body">
                 <div class="row">
-                    <button class="btn btn-lg btn-success">RUN!</button>
+                    <button class="btn btn-lg btn-success" id="run-scan">RUN!</button>
                 </div>
                     <div class="form-group row">
                         <div class="col-4">
                             {{ template_game_form.sequence_type_field.label(class="form-label") }}
                         </div>
                         <div class="col-8">
-                            {{ template_game_form.sequence_type_field(class="form-control",id="contrast-type") }}
+                            {{ template_game_form.sequence_type_field(class="form-control",
+                                                                      id="contrast-type",
+                                                                      value=session['game4']['mode']) }}
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-4">{{ template_game_form.thk_field.label(class="form-label") }}</div>
-                        <div class="col-8">{{ template_game_form.thk_field(class="form-control",id="thk") }}</div>
+                        <div class="col-8">{{ template_game_form.thk_field(class="form-control",id="thk",value=session['game4']['thk']) }}</div>
                     </div>
                     <div class="form-group row">
                         <div class="col-4">{{ template_game_form.tr_field.label(class="form-label") }}</div>
-                        <div class="col-8">{{ template_game_form.tr_field(class="form-control",id="tr") }}</div>
+                        <div class="col-8">{{ template_game_form.tr_field(class="form-control",id="tr",value=session['game4']['tr']) }}</div>
                     </div>
                     <div class="form-group row">
                         <div class="col-4">{{ template_game_form.te_field.label(class="form-label") }}</div>
-                        <div class="col-8">{{ template_game_form.te_field(class="form-control",id="te") }}</div>
+                        <div class="col-8">{{ template_game_form.te_field(class="form-control",id="te",value=session['game4']['te']) }}</div>
                     </div>
                     <div class="form-group row">
                         <div class="col-4">{{ template_game_form.fa_field.label(class="form-label") }}</div>
                         <div class="col-8">
-                            {{ template_game_form.fa_field(class="form-range",id="fa") }}
+                            {{ template_game_form.fa_field(class="form-range",id="fa",value=session['game4']['fa']) }}
                             <div class="ticks text-primary">
                               {% for b in [0,15,30,45,60,75,90] %}
                                <span class="tick">{{ b }}</span>

@@ -87,6 +87,12 @@ GAME2_INSTRUCTIONS={
 }
 
 
+# Game 4 info
+GAME4_INFO = {
+    'T1_BLOOD': 2000e-3, # T1 = 2000 ms
+    'T2_BLOOD': 200e-3, # T2 = 200 ms
+    'T2s_BLOOD': 200e-3 / 6  # Roughly the same ratio as CSF in the Brainweb model
+}
 
 
 # Game 5 instructions
