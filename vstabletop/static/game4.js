@@ -17,7 +17,6 @@ $('#flow-manual-button').on("click",()=>{
         $('#flow-manual-button').text('STOP').removeClass('btn-info').addClass('btn-danger');
         socket.emit('Flow on',{'mode':mode});
         console.log('flow on');
-        console.log(mode);
     }
     else{
         $('#flow-manual-button').text('PUSH').removeClass('btn-danger').addClass('btn-info');
@@ -52,17 +51,36 @@ $('#run-scan').on('click',()=>{
 
 $('#flow-tab-1').on('click',()=>{
     socket.emit('Toggle mode',{'mode':'bright'})
-    // TODO change contrast type under image
     $('#contrast-type').val('bright');
+    socket.emit("Update parameter for Game 4", {'id': 'contrast-type', 'value': 'bright'});
 })
 
 $('#flow-tab-2').on('click',()=>{
     socket.emit('Toggle mode',{'mode':'dark'})
-    // TODO change contrast type under image
     $('#contrast-type').val('dark');
+    socket.emit("Update parameter for Game 4", {'id': 'contrast-type', 'value': 'dark'});
 
 })
 
+$('#contrast-type').on('input',(event)=>{
+    let mode = event.target.value;
+    if (mode === 'dark'){
+        $('#flow-tab-1').removeClass('active');
+        $('#flow-tab-2').addClass('active');
+        $('#flow-tabs-1').removeClass('show active');
+        $('#flow-tabs-2').addClass('show active')
+    }
+    else{
+        $('#flow-tab-2').removeClass('active');
+        $('#flow-tab-1').addClass('active');
+        $('#flow-tabs-2').removeClass('show active');
+        $('#flow-tabs-1').addClass('show active')
+    }
+})
+
+$('#run-scan').on('click',()=>{
+    socket.emit('Simulate flow image');
+})
 
 socket.on('Deliver bright plots', (payload)=>{
     Plotly.newPlot('bright-chart-1',JSON.parse(payload['graph1']),{autosize:true});
@@ -70,10 +88,12 @@ socket.on('Deliver bright plots', (payload)=>{
 
 })
 
-
-
 socket.on('Deliver dark plots', (payload)=>{
     Plotly.newPlot('dark-chart-1',JSON.parse(payload['graph3']),{autosize:true});
     Plotly.newPlot('dark-chart-2',JSON.parse(payload['graph4']),{autosize:true});
 
+})
+
+socket.on('Deliver flow image',(payload)=>{
+    Plotly.newPlot('image-chart',JSON.parse(payload['graph5']),{autosize:true});
 })

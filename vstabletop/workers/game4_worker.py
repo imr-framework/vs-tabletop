@@ -3,15 +3,16 @@ from plotly import graph_objects as go
 import plotly
 import plotly.express as px
 import json
-from virtualscanner.server.simulation.bloch.phantom import SpheresArrayPlanarPhantom
 from virtualscanner.server.simulation.bloch.spingroup_ps_t2star import SpinGroupT2star
-
+from vstabletop.workers.phantom_worker import load_game4_phantom
+from scipy.io import savemat
 # Constants (approximate 1.5T values ~ Spees et al., 2001, MRM)
 # T1_BLOOD = 2000e-3 # T1 = 2000 ms
 # T2_BLOOD = 200e-3 # T2 = 200 ms
 # T2s_BLOOD = T2_BLOOD / 6  # Roughly the same ratio as CSF in the Brainweb model
 M0 = 1
 T2S_RATIO =  1/10
+BRIGHT_TE = 5e-3
 
 def game4_worker_simulation(mode='bright',info={}):
     # Bright blood
@@ -25,8 +26,10 @@ def game4_worker_simulation(mode='bright',info={}):
     return j1, j2
 
 def game4_worker_image(mode='bright',info={}):
-    img = simulate_flow_image(mode,info)
-    fig = go.Figure(go.Heatmap(z=img, colorscale='gray', showscale=False))
+    image = simulate_flow_image(mode,info)
+    # Normalize?
+
+    fig = go.Figure(go.Heatmap(z=np.squeeze(image), colorscale='gray',zmin=np.min(image), zmax=np.max(image), showscale=True))
     fig.update_traces(showlegend=False)
     fig.update_layout(yaxis=dict(scaleanchor='x'),
                       plot_bgcolor='rgba(0,0,0,0)',
@@ -42,17 +45,6 @@ def game4_worker_image(mode='bright',info={}):
     # Make plots
     imgJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return imgJSON
-
-#TODO make phantom to be stored in session
-def game4_worker_phantom(info):
-    t1 = info['T1']*1e-3
-    t2 = info['T2']*1e-3
-    t2s = t2 * T2S_RATIO
-    pd = 1
-    #phantom = SpheresArrayPlanarPhantom()
-    phantom = 0
-    return phantom
-
 
 # Simulated / animted plots
 def simulate_bright_plots(info):
@@ -114,11 +106,50 @@ def simulate_dark_plots(info):
 def simulate_flow_image(mode,info):
     if mode == 'empty':
         return np.zeros((256,256))
+    else:
+        # Load & unit-convert parameters
+        flow_speed = (info['flow_speed'] / 100) * 20e-3
+        thk = info['thk'] * 1e-3
+        tr = info['tr'] * 1e-3
+        te = info['te'] * 1e-3
+        fa = info['fa']
+        theta = fa * np.pi / 180
+        t1 = info['T1'] * 1e-3
+        t2 = info['T2'] * 1e-3
+        t2s = t2 * T2S_RATIO
 
-    # Initialize phantom (0 - background, 1 - stationary, 2 - flow)
+        # Load phantom
+        phantom_dict = load_game4_phantom(T1=1000, T2=200, T2s=50, speed=3)
+
+        if mode == "bright":
+            print('simulating bright image')
+            signals, has_partial, ff, pf = signal_model_bright(flow_speed,thk,tr,fa,t1,t2s)
+            fraction_list = ff * np.ones(signals.shape)
+            if has_partial:
+                fraction_list[-1] = pf
+
+            flow_signal = sum(signals * fraction_list)
+            static_signal = signal_SS(t1,t2s,tr,te,theta)
+
+        elif mode == "dark":
+            print('simulating dark image')
+            d, fraction, alpha1, alpha2, beta = signal_model_dark(flow_speed,thk,te,t2,t2s)
+
+            flow_signal = beta * fraction + alpha2 * (1-fraction)
+            static_signal = beta
 
 
-    return None
+        else:
+            raise ValueError("Unsupported mode. Use one of {'empty','bright','dark'}")
+
+        print('signals...')
+        print('static:', static_signal)
+        print('flow:', flow_signal)
+        image = phantom_dict['static'] * static_signal + phantom_dict['flow'] * flow_signal
+
+    savemat('simulated_image_game4.mat',{'image':image})
+
+    return image
 
 def plot_bright_signals(info, signal_partitioned_list, signal_total_list, fraction_list, Mxy_list, Mz_list, t_list):
     fig1 = go.Figure()
@@ -234,6 +265,28 @@ def plot_dark_signals(info,d,fraction,alpha1,alpha2,beta, Mxy_list_both, Mxy_lis
     return darkJSON1, darkJSON2
 
 def signal_model_dark(v,thk,te,t2,t2s):
+    """
+    Parameters
+    ----------
+    v : float
+        Flow speed [m/s]
+    thk : float
+        Slice thickness in [m]
+    te : float
+        Echo time in [s]
+    t2 : float
+        T2 in [s]
+    t2s : float
+        T2* in [s]
+
+    Returns
+    -------
+    d : float
+        Distance travelled between 90 and 180 pulses
+    fraction : float
+        Fraction of slice experience both 90 and 180 pulses (0-1)
+
+    """
     # Calculate distance
     d = v * te/2
     if d < thk: # Incomplete outflow
@@ -410,10 +463,18 @@ def signal_model_bright(v,thk,tr,fa,t1,t2s):
 
 def signal_nonSS(Nrf,t1,t2s,tr,theta): # Fa in radians, theta in degrees
     E1 = np.exp(-tr/t1)
-    E2 = np.exp(-5e-3/t2s)
+    E2 = np.exp(-BRIGHT_TE/t2s)
     q = E1*np.cos(theta)
     Mze = M0*(1-E1)/(1-q)
     signal = (Mze + (q**(Nrf-1))*(M0-Mze))*np.sin(theta)*E2
+    return signal
+
+
+def signal_SS(t1,t2s,tr,te,theta):
+    E1 = np.exp(-tr/t1)
+    E2 = np.exp(-te/t2s)
+    q = E1*np.cos(theta)
+    signal = E2*np.sin(theta)*M0*(1-E1)/(1-q)
     return signal
 
 def signal_SE(t2,t2s,te):
