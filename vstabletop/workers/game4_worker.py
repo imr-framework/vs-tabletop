@@ -29,9 +29,31 @@ def game4_worker_image(mode='bright',info={}):
     image = simulate_flow_image(mode,info)
     # Normalize?
 
-    fig = go.Figure(go.Heatmap(z=np.squeeze(image), colorscale='gray',zmin=np.min(image), zmax=np.max(image), showscale=True))
+    #fig = go.Figure(go.Heatmap(z=np.squeeze(image), colorscale='gray',zmin=np.min(image), zmax=np.max(image), showscale=True))
+    fig = go.Figure(go.Heatmap(z=np.squeeze(image),colorscale='gray',zmin=0,zmax=1,showscale=True))
     fig.update_traces(showlegend=False)
-    fig.update_layout(yaxis=dict(scaleanchor='x'),
+    fig.update_layout(updatemenus=[dict(type="buttons",direction="down",
+                                         buttons=list([
+                                             dict(
+                                                 args=[{"zmin": 0, "zmax":1}],
+                                                 label="Full range",
+                                                 method="restyle"
+                                             ),
+                                             dict(
+                                                 args=[{"zmin":np.min(image),"zmax":np.max(image)}],
+                                                 label="Normalized",
+                                                 method="restyle"
+                                             )
+                                         ]),
+                                        pad={"r":0,"t":15},
+                                        showactive=True,
+                                        x=0.05,
+                                        xanchor="left",
+                                        y=1.1,
+                                        yanchor="top"
+
+                                        )],
+                      yaxis=dict(scaleanchor='x'),
                       plot_bgcolor='rgba(0,0,0,0)',
                       margin=go.layout.Margin(
                           l=5,
@@ -52,11 +74,12 @@ def simulate_bright_plots(info):
     flow_speed = (info['flow_speed']/100) * 20e-3
     thk = info['bright_thk']*1e-3
     tr = info['bright_tr']*1e-3
+    te = info['bright_te']*1e-3
     fa = info['bright_fa']
     t1 = info['T1']*1e-3
     t2s = info['T2']*1e-3* T2S_RATIO
 
-    signals, has_partial, ff, pf = signal_model_bright(flow_speed,thk,tr,fa,t1,t2s)
+    signals, has_partial, ff, pf = signal_model_bright(flow_speed,thk,tr,te,fa,t1,t2s)
 
     # Calculate data for each step
     Nss = len(signals)
@@ -123,7 +146,7 @@ def simulate_flow_image(mode,info):
 
         if mode == "bright":
             print('simulating bright image')
-            signals, has_partial, ff, pf = signal_model_bright(flow_speed,thk,tr,fa,t1,t2s)
+            signals, has_partial, ff, pf = signal_model_bright(flow_speed,thk,tr,te,fa,t1,t2s)
             fraction_list = ff * np.ones(signals.shape)
             if has_partial:
                 fraction_list[-1] = pf
@@ -152,31 +175,61 @@ def simulate_flow_image(mode,info):
     return image
 
 def plot_bright_signals(info, signal_partitioned_list, signal_total_list, fraction_list, Mxy_list, Mz_list, t_list):
+    te_ms = info['bright_te']
     fig1 = go.Figure()
-    for u in range(len(t_list)):
-        fig1.add_trace(go.Scatter(x=t_list[u], y=Mz_list[u], mode='lines',line=dict(width=3,color='navy')))
-        fig1.add_trace(go.Scatter(x=t_list[u], y=Mxy_list[u], mode='lines', line=dict(width=3,color='green')))
 
-    fig1.update_xaxes(range=[t_list[0][0],t_list[-1][-1]])
+    for u in range(len(t_list)):
+        times =  np.array(t_list[u])*1e3 # Convert to ms
+        te_ind = int(np.round(te_ms / (times[1]-times[0])))
+
+
+        if u == 0:
+            namez = "Mz"
+            namexy = "Mxy"
+            namerf = "Pulse"
+            namete = "Echo time"
+            namesignal = "Signal"
+        else:
+            namez=""
+            namexy=""
+            namerf = ""
+            namete = ""
+            namesignal = ""
+        # RF pulse
+        fig1.add_trace(go.Scatter(x=2*[times[0]],y=[0,3],mode="lines",line=dict(width=5,color="orange"),name=namerf))
+        fig1.add_trace(go.Scatter(x=times, y=Mz_list[u], mode='lines',line=dict(width=3,color='navy'),name=namez))
+        fig1.add_trace(go.Scatter(x=times, y=Mxy_list[u], mode='lines', line=dict(width=3,color='green'),name=namexy))
+        fig1.add_trace(go.Scatter(x=2*[times[0]+te_ms],y=[0,3],mode="lines",line=dict(width=1,color='gray'),name=namete))
+        fig1.add_trace(go.Scatter(x=[times[te_ind]],y=[Mxy_list[u][te_ind]],mode="markers",
+                                  marker=dict(size=[8],color="aquamarine",line_color="green"),name=namesignal))
+
+    labels_to_show_in_legend = ["Mz", "Mxy",'Pulse',"Echo time","Signal"]
+    for trace in fig1['data']:
+        if (not trace['name'] in labels_to_show_in_legend):
+            trace['showlegend'] = False
+
+    fig1.update_xaxes(range=[t_list[0][0]*1e3,t_list[-1][-1]*1e3],title="Time (ms)")
     fig1.update_yaxes(range=[0,1])
 
-    fig1.update_layout(margin=dict(l=25,r=25,b=0,t=0),height=150)
-    fig1.update_traces(showlegend=False)
+    fig1.update_layout(margin=dict(l=0,r=0,b=0,t=0),height=150)
+    #fig1.update_traces(showlegend=False)
 
     fig2 = go.Figure()
 
     # Generate the necessary rectangles
     thk = info['bright_thk']
-    y0, y1 = 1,2
+    y0, y1, yc = 1,2,1.5
     # Background rectangle
-    # Flow rectangle
-    fig2.add_shape(type='rect',x0=0,y0=y0,x1=20,y1=y1,line=dict(width=0),fillcolor="navy")
+
 
     # Partial rectangle
     # Slice rectangle
-    fig2.add_vline(x=10-thk/2,line_width=2.5,line_dash='dot',line_color="goldenrod")
     fig2.add_vline(x=10+thk/2,line_width=2.5,line_dash='dot',line_color="goldenrod")
+    fig2.add_trace(go.Scatter(x=2*[10-thk/2],y=[0,3],mode="lines",line=dict(width=2.5,dash='dot',color="goldenrod"),name="Slice"))
+
     fig2.add_vrect(x0=10-thk/2, x1=10+thk/2, fillcolor="goldenrod",opacity=0.5,layer="below",line_width=0)
+    # Flow rectangle
+    fig2.add_shape(type='rect',x0=0,y0=y0,x1=20,y1=y1,line=dict(width=0),fillcolor="black",layer="below")
 
     # Signal rectangles
     pos = 10 - thk / 2
@@ -184,15 +237,23 @@ def plot_bright_signals(info, signal_partitioned_list, signal_total_list, fracti
         signal = signal_partitioned_list[-1][ind]
         xleft = pos
         xright = pos + thk * fraction
-        fig2.add_shape(type='rect', x0=xleft, y0=y0, x1=xright, y1=y1, line=dict(width=0),
-                       fillcolor=f"rgb({int(179 * signal)},{int(236 * signal)},{int(255 * signal)})")
+        xcenter = 0.5*(xleft + xright)
+        fig2.add_trace(go.Scatter(x=[xleft,xright,xright,xleft],y=[y0,y0,y1,y1],
+                                  mode="lines",line=dict(width=0),fill="toself",
+                                  fillcolor=color_map(signal),showlegend=False))
+        if ind == 0:
+            showtext = True
+        else:
+            showtext = False
+        fig2.add_trace(go.Scatter(x=[xcenter],y=[yc],mode="text",name="# pulses",text=ind+1,textfont=dict(family='Arial Black',size=15,color="chocolate"),
+                                  textposition="middle center",showlegend=showtext))
         pos = xright
 
     # flow figure!
-    fig2.update_xaxes(range=[0,20])
-    fig2.update_yaxes(range=[0,3],visible=False)
+    fig2.update_xaxes(range=[0,20],title="Distance (mm)",showgrid=False)
+    fig2.update_yaxes(range=[0,3],visible=False,showgrid=False)
     fig2.update_layout(margin=dict(l=25,r=25,b=0,t=0),height=150)
-    fig2.update_traces(showlegend=False)
+    #fig2.update_traces(showlegend=False)
 
     brightJSON1 = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
     brightJSON2 = json.dumps(fig2, cls=plotly.utils.PlotlyJSONEncoder)
@@ -205,64 +266,179 @@ def plot_dark_signals(info,d,fraction,alpha1,alpha2,beta, Mxy_list_both, Mxy_lis
 
     # Top figure
     fig1 = go.Figure()
+    # Add in 90 and 180 vertical lines
+    fig1.add_trace(go.Scatter(visible=True,x=2*[0], y=[-0.1,1], mode='lines', line=dict(width=5, color='orange'),name="RF 90")) # 90
+    fig1.add_trace(go.Scatter(visible=True,x=2*[te/2], y=[0,1], mode='lines', line=dict(width=5, color='orange'),name="RF 180")) # 180
+    # Add TE line
+    fig1.add_trace(go.Scatter(visible=True,x=2*[te], y=[0,3], mode="lines", line=dict(width=3, color='gray'), name='Echo time'))
 
     # Add in signals
-    for u in range(len(t_list)):
-        fig1.add_trace(go.Scatter(x=1e3*t_list[u], y=np.absolute(Mxy_list_both[u]), mode='lines', line=dict(width=3, color='green')))
-        fig1.add_trace(go.Scatter(x=1e3*t_list[u], y=np.absolute(Mxy_list_90[u]), mode='lines', line=dict(width=3, color='darkcyan')))
-        fig1.add_trace(go.Scatter(x=1e3*t_list[u], y=np.absolute(Mxy_list_180[u]), mode='lines', line=dict(width=3, color='greenyellow')))
+    # for u in range(len(t_list)):
+    #     fig1.add_trace(go.Scatter(visible=False,x=1e3*t_list[u], y=np.absolute(Mxy_list_both[u]), mode='lines', line=dict(width=3, color='green'),name="Both"))
+    #     fig1.add_trace(go.Scatter(visible=False,x=1e3*t_list[u], y=np.absolute(Mxy_list_90[u]), mode='lines', line=dict(width=3, color='darkcyan'),name="90 only"))
+    #     fig1.add_trace(go.Scatter(visible=False,x=1e3*t_list[u], y=np.absolute(Mxy_list_180[u]), mode='lines', line=dict(width=3, color='greenyellow'),name="180 only"))
 
-    # Add in 90 and 180 vertical lines
-    fig1.add_trace(go.Scatter(x=[0,0], y=[-0.1,1], mode='lines', line=dict(width=5, color='orange'))) # 90
-    fig1.add_trace(go.Scatter(x=[te/2,te/2], y=[0,1], mode='lines', line=dict(width=5, color='orange'))) # 180
 
+    all_times = 1e3*np.array(t_list).flatten()
+
+    flatten_lambda = lambda lst: list(item for sublist in lst for item in sublist)
+
+    all_times = 1e3*np.array(flatten_lambda(t_list))
+    all_Mxy_both = np.absolute(np.array(flatten_lambda(Mxy_list_both)))
+    all_Mxy_90 = np.absolute(np.array(flatten_lambda(Mxy_list_90)))
+    all_Mxy_180 = np.absolute(np.array(flatten_lambda(Mxy_list_180)))
+
+
+    fig1.add_trace(go.Scatter(visible=True,x=all_times, y=all_Mxy_both, mode='lines', line=dict(width=3, color='green'),name="Both"))
+    fig1.add_trace(go.Scatter(visible=True,x=all_times, y=all_Mxy_90, mode='lines', line=dict(width=3, color='darkcyan'),name="90 only"))
+    fig1.add_trace(go.Scatter(visible=True,x=all_times, y=all_Mxy_180, mode='lines', line=dict(width=3, color='greenyellow'),name="180 only"))
+
+    # Styling
     fig1.update_xaxes(range=[-0.1*te, 1.5*te],title="Time (ms)")
     fig1.update_yaxes(range=[-0.1,1])
-    fig1.update_layout(margin=dict(l=25, r=25, b=0, t=0), height=150)
-    fig1.update_traces(showlegend=False)
+    fig1.update_layout(margin=dict(l=100, r=100, b=0, t=0),height=150)
 
+    # Dropdown button
+    fig1.update_layout(
+        updatemenus=[
+            dict(
+                buttons=list([
+                    dict(
+                        args=[{'visible': 6 * [True]}],
+                        label="all",
+                        method="update"
+                    ),
+                    dict(
+                        args=[{"visible": [True,True,True,True,False,False]}],
+                        label="90 + 180",
+                        method="update"
+                    ),
+                    dict(
+                        args=[{"visible": [True,False,True,False,True,False]}],
+                        label="90 only",
+                        method="update"
+                    ),
+                    dict(
+                        args=[{"visible": [False,True,True,False,False,True]}],
+                        label="180 only",
+                        method="update"
+                    )
+                ]),
+                direction="down",
+                pad={"r":15,"t":0},
+                showactive=True,
+                x=0,
+                xanchor="right",
+                y=0.8,
+                yanchor="top"
+            )
+        ]
+    )
+
+    # Sliders to change the extent of data displayed
 
     # Bottom figure
     fig2 = go.Figure()
     # Generate the necessary rectangles
     thk = info['dark_thk']
-    y0, y1 = 1, 2
+    y0, y1, yc = 1, 2, 1.5
 
     # Flow rectangle
-    fig2.add_shape(type='rect',x0=-1,y0=y0,x1=dist+1.5*thk,y1=y1,line=dict(width=0),fillcolor="navy")
+    #fig2.add_shape(type='rect',x0=-1,y0=y0,x1=dist+1.5*thk,y1=y1,line=dict(width=0),fillcolor="navy")
+    fig2.add_trace(go.Scatter(x=[-1,2*dist+1.5*thk,2*dist+1.5*thk,-1],y=[y0,y0,y1,y1],mode="lines",line=dict(width=0),fill="toself",fillcolor="black",showlegend=False))
 
     # Partial rectangle
     # Slice rectangle
-    fig2.add_vline(x=0,line_width=2.5,line_dash='dot',line_color="goldenrod")
-    fig2.add_vline(x=thk,line_width=2.5,line_dash='dot',line_color="goldenrod")
     fig2.add_vrect(x0=0, x1=thk, fillcolor="goldenrod",opacity=0.5,layer="below",line_width=0)
 
     # Flow rectangles
     # There are 5 timepoints
     # Use buttons to control
+    y_vec = [y0,y0,y1,y1]
 
-    # Time point 3 : s (TE/2)+
+    # Time point 3
     if dist < thk:
-        print(f'd: {dist}')
-        # 180 only
-        fig2.add_shape(type="rect",x0=0,y0=y0,x1=dist,y1=y1,line=dict(width=1),fillcolor="navy")
-        # 180 + 90
-        fig2.add_shape(type="rect",x0=dist,y0=y0,x1=thk,y1=y1,line=dict(width=1),fillcolor=f"rgb({int(179 * alpha1)},{int(236 * alpha1)},{int(255 * alpha1)})")
-        # 90 only
-        fig2.add_shape(type="rect",x0=thk,y0=y0,x1=dist+thk,y1=y1,line=dict(width=1),fillcolor=f"rgb({int(179 * alpha1)},{int(236 * alpha1)},{int(255 * alpha1)})")
+        seg_both = [dist, thk]
+        seg_90 = [thk, dist + thk]
+        seg_180 = [0, dist]
+        signal_both = alpha1
+        signal_90 = alpha1
+        signal_180 = 0
+
+        traces = get_dark_flow_plot_traces(seg_both, seg_90, seg_180, signal_both, signal_90, signal_180)
+        for trace in traces:
+            fig2.add_trace(trace)
+
     else:
-        fig2.add_shape(type="rect",x0=d,y0=y0,x1=d+thk,y1=y1,line=dict(width=0),fillcolor=f"rgb({int(179 * alpha1)},{int(236 * alpha1)},{int(255 * alpha1)})")
+        seg_both = [thk,thk]
+        seg_90 = [dist,dist+thk]
+        seg_180 = [0,thk]
+        signal_both = 0
+        signal_90 = alpha1
+        signal_180 = 0
 
-    fig2.update_xaxes(range=[-1,dist+1.5*thk],title="Distance (mm)")
-    fig2.update_yaxes(range=[0,3],visible=False)
+        traces = get_dark_flow_plot_traces(seg_both, seg_90, seg_180, signal_both, signal_90, signal_180)
+        for trace in traces:
+            fig2.add_trace(trace)
 
+        # 90 only
+        #fig2.add_trace(go.Scatter(x=[dist,dist+thk,dist+thk,dist],y=y_vec,mode="lines",line=dict(width=0),fill="toself",fillcolor=color_map(alpha1)))
+
+
+
+
+    # Slice boundaries
+    fig2.add_trace(go.Scatter(x=2*[0],y=[0,3],mode="lines",line=dict(width=2.5,dash='dot',color='goldenrod'),name='Slice',showlegend=False))
+    fig2.add_trace(go.Scatter(x=2*[thk],y=[0,3],mode="lines",line=dict(width=2.5,dash='dot',color='goldenrod'),name='Slice',showlegend=True))
+
+    # Figure styling
+    fig2.update_xaxes(range=[-1,2*dist+1.5*thk],title="Distance (mm)",showgrid=False)
+    fig2.update_yaxes(range=[0,3],visible=False,showgrid=False)
     fig2.update_layout(margin=dict(l=25, r=25, b=0, t=0),height=150)
-    fig2.update_traces(showlegend=False)
+    #fig2.update_traces(showlegend=False)
 
+    # Slider
     darkJSON1 = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
     darkJSON2 = json.dumps(fig2, cls=plotly.utils.PlotlyJSONEncoder)
 
     return darkJSON1, darkJSON2
+
+# TODO
+def get_dark_flow_plot_traces(seg_both,seg_90,seg_180,signal_both,signal_90,signal_180):
+    traces = []
+    traces.append(go.Scatter())
+    y_vec = [1,1,2,2]
+    yc = 1.5
+
+    text_both = "90+180" if seg_both[0] != seg_both[1] else ""
+    text_90 = "90 only" if seg_90[0] != seg_90[1] else ""
+    text_180 = "180 only" if seg_180[0] != seg_180[1] else ""
+
+
+    # 180 + 90
+    traces.append(go.Scatter(x=[seg_both[0], seg_both[1], seg_both[1], seg_both[0]], y=y_vec, mode="lines", line=dict(width=0),
+                              fill="toself", fillcolor=color_map(signal_both), showlegend=False))
+    traces.append(go.Scatter(x=[np.mean(seg_both)], y=[yc], mode="text", name="history", text=text_both,
+                              textfont=dict(family='Arial Black', size=15, color="green"),
+                              textposition="middle center", showlegend=False))
+
+    # 90 only
+    traces.append(go.Scatter(x=[seg_90[0], seg_90[1], seg_90[1], seg_90[0]], y=y_vec, mode="lines", line=dict(width=0),
+                              fill="toself", fillcolor=color_map(signal_90), showlegend=False))
+    traces.append(go.Scatter(x=[np.mean(seg_90)], y=[yc], mode="text", name="history", text=text_90,
+                              textfont=dict(family='Arial Black', size=15, color="darkcyan"),
+                              textposition="middle center", showlegend=False))
+
+    # 180 only
+    traces.append(go.Scatter(x=[seg_180[0],seg_180[1],seg_180[1],seg_180[0]], y=y_vec, mode="lines", line=dict(width=0), fill="toself",
+                              fillcolor=color_map(signal_180), showlegend=False))
+    traces.append(go.Scatter(x=[np.mean(seg_180)], y=[yc], mode="text", name="history", text=text_180,
+                              textfont=dict(family='Arial Black', size=15, color="greenyellow"),
+                              textposition="middle center", showlegend=False))
+
+
+    return traces
+
 
 def signal_model_dark(v,thk,te,t2,t2s):
     """
@@ -285,7 +461,6 @@ def signal_model_dark(v,thk,te,t2,t2s):
         Distance travelled between 90 and 180 pulses
     fraction : float
         Fraction of slice experience both 90 and 180 pulses (0-1)
-
     """
     # Calculate distance
     d = v * te/2
@@ -296,7 +471,6 @@ def signal_model_dark(v,thk,te,t2,t2s):
     alpha1, alpha2, beta = signal_SE(t2, t2s, te)
 
     return d, fraction, alpha1, alpha2, beta
-
 
 def generate_bright_signal_curves(n,tr,fa,t1,t2s):
     theta = fa * np.pi / 180
@@ -320,13 +494,10 @@ def generate_bright_signal_curves(n,tr,fa,t1,t2s):
 def generate_dark_signal_curves(te,t1,t2,t2s):
     # Time points simulated per TE
     ppte = 200
-
     Mxy_list_both = []
     Mxy_list_90 = []
     Mxy_list_180 = []
     t_list = []
-
-    #TODO also simulate 90 only and 180 only
 
     # Simulate
     # sg1 - both
@@ -421,7 +592,7 @@ def generate_dark_signal_curves(te,t1,t2,t2s):
 
     return Mxy_list_both, Mxy_list_90, Mxy_list_180, t_list
 
-def signal_model_bright(v,thk,tr,fa,t1,t2s):
+def signal_model_bright(v,thk,tr,te,fa,t1,t2s):
     # v [m/s]
     # thk [m]
     # tr [s]
@@ -444,16 +615,16 @@ def signal_model_bright(v,thk,tr,fa,t1,t2s):
         for n in range(num_full_slices):
             # Find the proportions and number of pulses applied to each
             # Apply signal equation to find total signal
-            signals[n] = signal_nonSS(n, t1, t2s, tr,theta)
+            signals[n] = signal_nonSS(n, t1, t2s, tr, te,theta)
 
         # Partial
         if num_pulse_to_ss > num_full_slices:
             has_partial = True
-            signals[num_pulse_to_ss - 1] = signal_nonSS(num_pulse_to_ss, t1, t2s, tr,theta)
+            signals[num_pulse_to_ss - 1] = signal_nonSS(num_pulse_to_ss, t1, t2s, tr, te, theta)
     else: # Case of zero flow - simulate 10 pulses
         full_frac = 1
         part_frac = 0
-        signals = [signal_nonSS(10,t1, t2s, tr, theta)]
+        signals = [signal_nonSS(10,t1, t2s, tr, te, theta)]
         has_partial = False
 
     print('signals: ',signals)
@@ -461,14 +632,13 @@ def signal_model_bright(v,thk,tr,fa,t1,t2s):
     signals = np.array(signals)
     return signals, has_partial, full_frac, part_frac
 
-def signal_nonSS(Nrf,t1,t2s,tr,theta): # Fa in radians, theta in degrees
+def signal_nonSS(Nrf,t1,t2s,tr,te,theta): # Fa in radians, theta in degrees
     E1 = np.exp(-tr/t1)
-    E2 = np.exp(-BRIGHT_TE/t2s)
+    E2 = np.exp(-te/t2s)
     q = E1*np.cos(theta)
     Mze = M0*(1-E1)/(1-q)
     signal = (Mze + (q**(Nrf-1))*(M0-Mze))*np.sin(theta)*E2
     return signal
-
 
 def signal_SS(t1,t2s,tr,te,theta):
     E1 = np.exp(-tr/t1)
@@ -483,6 +653,8 @@ def signal_SE(t2,t2s,te):
     signal_full_both = np.exp(-te/t2)
     return signal_half_90only, signal_full_90only, signal_full_both
 
+def color_map(intensity):
+    return f"rgb({int(179 * intensity)},{int(236 * intensity)},{int((255-139) * intensity)+139})"
 
 if __name__ == "__main__":
     # signals, has_partial,ff,pf = signal_model_bright(1.2e-3,10e-3,1,30)

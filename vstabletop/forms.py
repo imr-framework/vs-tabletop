@@ -17,7 +17,6 @@ class Login_Form(FlaskForm):
     password_field = PasswordField("Password",validators=[DataRequired()])
     submit_field = SubmitField("Log in")
 
-
 # Calibration
 class Display_Opts_Form(FlaskForm):
     autoscale_field = BooleanField("Autoscale", default=True)
@@ -102,7 +101,6 @@ class Game2Form(FlaskForm):
 
     submit_field = SubmitField(label='Run')
 
-
 class Game3Form(FlaskForm):
     options = RadioField('options', choices=['T1w', 'T2w', 'PDw'],validators=[],default='T1')
     TR = DecimalRangeField(label='TR (ms)', validators= [DataRequired(), NumberRange(min=500, max=5000)],default=2750)
@@ -125,8 +123,9 @@ class Game4Form(FlaskForm):
 
     # Concept simulation fields - bright blood
     bright_thk_field = DecimalField('Slice thickness (mm)', places=1, validators=[NumberRange(min=0.0,max=10.0)],default=5)
-    bright_tr_field = DecimalField('Repetition Time (ms)', places=0, validators=[NumberRange(min=10,max=2000)],default=250)
+    bright_tr_field = DecimalField('Repetition Time (ms)', places=0, validators=[NumberRange(min=20,max=2000)],default=250)
     bright_fa_field = IntegerRangeField('Flip angle (deg)', validators=[NumberRange(min=0,max=90)],default=45)
+    bright_te_field = DecimalField('Echo time (ms)',places=0,validators=[NumberRange(min=5,max=15)],default=5)
 
     # Concept simulation fields - dark blood
     dark_thk_field = DecimalField('Slice thickness (mm)', places=1, validators=[NumberRange(min=0.0,max=10.0)],default=5)
@@ -138,7 +137,7 @@ class Game4Form(FlaskForm):
     sequence_type_field = SelectField('Contrast type',choices=[('dark','Dark blood'),('bright','Bright blood')],default='bright')
     thk_field = DecimalField('Slice thickness (mm)',validators=[DataRequired(),NumberRange(min=1.0,max=10.0)],default=5)
     fa_field = IntegerRangeField('Flip angle (degrees)',validators=[DataRequired(),NumberRange(min=0,max=90)],default=30)
-    tr_field = IntegerField('Repetition Time (ms)',validators=[DataRequired(),NumberRange(min=10,max=2000)],default=250)
+    tr_field = IntegerField('Repetition Time (ms)',validators=[DataRequired(),NumberRange(min=20,max=2000)],default=250)
     te_field = IntegerField('Echo Time (ms)',validators=[DataRequired(),NumberRange(min=5,max=100)],default=5)
 
     submit_field = SubmitField("Run")
@@ -168,6 +167,11 @@ class Game5Form(FlaskForm):
     # No use for submit field
     submit_field = SubmitField("Tip!")
 
+class Game6Form(FlaskForm):
+    mapping_type_field = SelectField('Map type',choices=[('T1','T1'),('T2','T2')],default='T2')
+
+
+
 class Game7Form(FlaskForm):
     # For selectfields, choices are (value, label) pairs
     phantom_type_field = SelectField('Select model', choices=[
@@ -184,6 +188,13 @@ class Game7Form(FlaskForm):
     proj_1d_angle_field = DecimalField("1D proj. angle",validators=[NumberRange(min=0,max=360)],default=90)
 
     submit_field = SubmitField("Project all")
+
+class Game8Form(FlaskForm):
+    proj_2d_axis_field = RadioField("2D proj. axis", choices=['x','y','z'],default='z')
+    proj_1d_angle_field = DecimalField("1D proj. angle",validators=[NumberRange(min=0,max=360)],default=90)
+
+
+    submit_field = SubmitField("Check answer")
 
 
 # More user interaction through questions

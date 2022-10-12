@@ -58,3 +58,4 @@ def turn_off_flow():
 def update_flow_image():
     j5 = game4_worker_image(session['game4']['mode'],session['game4'])
     socketio.emit('Deliver flow image', {'graph5' : j5})
+

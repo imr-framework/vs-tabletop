@@ -46,9 +46,9 @@ def initialize_parameters():
                         'mc_status_list': utils.num_questions_of_game(1)*[False], 'current_task': 1, 'completed_task': 0, 'star_count': 0}
 
     session['game4'] = { 'mode':'bright','flow_on': False, 'flow_speed': 50,
-                           'bright_thk': 5, 'bright_tr':250, 'bright_fa': 45,
+                           'bright_thk': 5, 'bright_tr':250, 'bright_fa': 45, 'bright_te': 5,
                            'dark_thk': 5, 'dark_te': 50,
-                           'thk':5,'fa':30,'tr':20,'te':20,
+                           'thk':5,'fa':30,'tr':250,'te':5,
                            'T1': 2000, 'T2': 200, # T2s is always set to be the same proportion of T2
                          'progress':utils.new_progress_of_game(4),'task_completed':0}
 

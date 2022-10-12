@@ -44,14 +44,11 @@ $('#T2').on('change',()=>{
     $('#t2-display').text($('#T2').val())
 })
 
-$('#run-scan').on('click',()=>{
-    // Signal backend to simulate an image!
-
-})
-
 $('#flow-tab-1').on('click',()=>{
     socket.emit('Toggle mode',{'mode':'bright'})
     $('#contrast-type').val('bright');
+    $('#fa-row').show();
+    $('#tr-row').show();
     socket.emit("Update parameter for Game 4", {'id': 'contrast-type', 'value': 'bright'});
 })
 
@@ -59,7 +56,8 @@ $('#flow-tab-2').on('click',()=>{
     socket.emit('Toggle mode',{'mode':'dark'})
     $('#contrast-type').val('dark');
     socket.emit("Update parameter for Game 4", {'id': 'contrast-type', 'value': 'dark'});
-
+    $('#fa-row').hide();
+    $('#tr-row').hide();
 })
 
 $('#contrast-type').on('input',(event)=>{
@@ -69,12 +67,20 @@ $('#contrast-type').on('input',(event)=>{
         $('#flow-tab-2').addClass('active');
         $('#flow-tabs-1').removeClass('show active');
         $('#flow-tabs-2').addClass('show active')
+
+        // Toggle input displays
+        $('#fa-row').hide();
+        $('#tr-row').hide();
+
     }
     else{
         $('#flow-tab-2').removeClass('active');
         $('#flow-tab-1').addClass('active');
         $('#flow-tabs-2').removeClass('show active');
         $('#flow-tabs-1').addClass('show active')
+
+        $('#fa-row').show();
+        $('#tr-row').show();
     }
 })
 
@@ -97,3 +103,28 @@ socket.on('Deliver dark plots', (payload)=>{
 socket.on('Deliver flow image',(payload)=>{
     Plotly.newPlot('image-chart',JSON.parse(payload['graph5']),{autosize:true});
 })
+
+
+// Syringe animation
+let pushing = false;
+window.onload = function(){
+    let svgObj = document.getElementById('syringe');
+    let svgDoc = svgObj.contentDocument;
+
+    let svgItem = svgDoc.getElementById('animateSyringe');
+
+    $('#flow-manual-button').on('click',()=> {
+        if (!pushing) {
+            console.log('Start pushing the syringe!!!');
+            svgItem.beginElement();
+            pushing = true;
+        }
+        else{
+            console.log('Stop pushing the syringe.');
+            svgItem.endElement();
+            pushing = false;
+        }
+
+    })
+}
+

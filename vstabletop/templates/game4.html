@@ -44,7 +44,7 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer d-flex justify-content-center">
-                                    <button type="button" class="btn btn-info" data-mdb-dismiss="modal">Save and close</button>
+                                    <button type="button" class="btn btn-info" data-mdb-dismiss="modal">Save</button>
                                 </div>
                             </div>
                         </div>
@@ -63,7 +63,10 @@
                 <div class="col-9">
                       <object id="syringe" style="height:90% ;width:90%;"
                               data="../static/img/syringe.svg" type="image/svg+xml">
+
                       </object>
+
+
                 </div>
         </div>
 
@@ -118,10 +121,10 @@
                                 <div class="tab-pane fade {{ brightPaneStatus }}" id="flow-tabs-1" role="tabpanel" aria-labelledby="flow-tab-1">
                                     <!-- Bright blood plots-->
                                     <div class="row h-25">
-                                        <div class="chart" id="bright-chart-1"></div>
+                                        <div class="chart p-0" id="bright-chart-1"></div>
                                     </div>
                                     <div class="row h-25">
-                                        <div class="chart" id="bright-chart-2"> </div>
+                                        <div class="chart p-0" id="bright-chart-2"> </div>
                                     </div>
                                     <hr>
                                     <div class="row h-50">
@@ -133,7 +136,10 @@
                                             {{ template_game_form.bright_tr_field.label(class="form-label") }}
                                             {{ template_game_form.bright_tr_field(class="form-control",id='bright_tr',value=session['game4']['bright_tr']) }}
                                         </div>
-
+                                        <div class="col form-group">
+                                            {{ template_game_form.bright_te_field.label(class="form-label") }}
+                                            {{ template_game_form.bright_te_field(class="form-control",id="bright_te",value=session['game4']['bright_te']) }}
+                                        </div>
                                             {{ template_game_form.bright_fa_field.label(class="form-label") }}
                                             {{ template_game_form.bright_fa_field(class="form-range",id='bright_fa',value=session['game4']['bright_fa']) }}
                                         <div class="ticks text-primary">
@@ -146,10 +152,10 @@
                                 <div class="tab-pane fade {{ darkPaneStatus }}" id="flow-tabs-2" role="tabpanel" aria-labelledby="flow-tab-2">
                                     <!-- Dark blood plots-->
                                     <div class="row h-25">
-                                        <div class="chart" id="dark-chart-1"></div>
+                                        <div class="chart p-0" id="dark-chart-1"></div>
                                     </div>
                                     <div class="row h-25">
-                                        <div class="chart" id="dark-chart-2"></div>
+                                        <div class="chart p-0" id="dark-chart-2"></div>
                                     </div>
                                     <hr>
                                     <div class="row h-50">
@@ -163,16 +169,17 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="tab-pane fade" id="flow-tabs-2" role="tabpanel" aria-labelledby="flow-tab-2">
-                                    Where am I?
-                                </div>
                             </div>
                         </div>
+
                     </div>
 
                 </div>
             </div>
         </div>
+         <div class="row">
+                            <div class="btn btn-lg btn-info">Transfer parameters >> </div>
+         </div>
     </div>
 
 
@@ -200,29 +207,45 @@
                 <div class="row">
                     <button class="btn btn-lg btn-success" id="run-scan">RUN!</button>
                 </div>
-                    <div class="form-group row">
+
+                    <div class="form-group row" id="sequence-type-row">
                         <div class="col-4">
                             {{ template_game_form.sequence_type_field.label(class="form-label") }}
                         </div>
                         <div class="col-8">
-                            {{ template_game_form.sequence_type_field(class="form-control",
-                                                                      id="contrast-type",
-                                                                      value=session['game4']['mode']) }}
+                            <select class="form-control" id="contrast-type" name="sequence_type_field">
+                                {% if session['game4']['mode'] == "bright" %}
+                                    {% set brightsel = "selected" %}
+                                    {% set darksel = "" %}
+                                {% else %}
+                                    {% set darksel = "selected" %}
+                                    {% set brightsel = "" %}
+                                {% endif %}
+                                <option {{ brightsel }} value="bright">Bright blood</option>
+                                <option {{ darksel }} value="dark">Dark blood</option>
+
+                            </select>
+
                         </div>
                     </div>
-                    <div class="form-group row">
+
+                    <div class="form-group row" id="thk-row">
                         <div class="col-4">{{ template_game_form.thk_field.label(class="form-label") }}</div>
                         <div class="col-8">{{ template_game_form.thk_field(class="form-control",id="thk",value=session['game4']['thk']) }}</div>
                     </div>
-                    <div class="form-group row">
+
+                    <div class="form-group row" id="tr-row">
                         <div class="col-4">{{ template_game_form.tr_field.label(class="form-label") }}</div>
                         <div class="col-8">{{ template_game_form.tr_field(class="form-control",id="tr",value=session['game4']['tr']) }}</div>
                     </div>
-                    <div class="form-group row">
+
+                    <div class="form-group row" id="te-row">
                         <div class="col-4">{{ template_game_form.te_field.label(class="form-label") }}</div>
                         <div class="col-8">{{ template_game_form.te_field(class="form-control",id="te",value=session['game4']['te']) }}</div>
+
                     </div>
-                    <div class="form-group row">
+
+                    <div class="form-group row" id="fa-row">
                         <div class="col-4">{{ template_game_form.fa_field.label(class="form-label") }}</div>
                         <div class="col-8">
                             {{ template_game_form.fa_field(class="form-range",id="fa",value=session['game4']['fa']) }}
