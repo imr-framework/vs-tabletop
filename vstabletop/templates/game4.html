@@ -178,7 +178,7 @@
             </div>
         </div>
          <div class="row">
-                            <div class="btn btn-lg btn-info">Transfer parameters >> </div>
+                            <div class="btn btn-lg btn-info" id="transfer-params">Transfer parameters >> </div>
          </div>
     </div>
 
@@ -234,7 +234,13 @@
                         <div class="col-8">{{ template_game_form.thk_field(class="form-control",id="thk",value=session['game4']['thk']) }}</div>
                     </div>
 
-                    <div class="form-group row" id="tr-row">
+                    {% if session['game4']['mode']=='bright' %}
+                        {% set visibility = "" %}
+                    {% else %}
+                        {% set visibility = "d-none" %}
+                    {% endif %}
+
+                    <div class="form-group row {{ visibility }}" id="tr-row">
                         <div class="col-4">{{ template_game_form.tr_field.label(class="form-label") }}</div>
                         <div class="col-8">{{ template_game_form.tr_field(class="form-control",id="tr",value=session['game4']['tr']) }}</div>
                     </div>
@@ -245,7 +251,7 @@
 
                     </div>
 
-                    <div class="form-group row" id="fa-row">
+                    <div class="form-group row {{ visibility }}" id="fa-row">
                         <div class="col-4">{{ template_game_form.fa_field.label(class="form-label") }}</div>
                         <div class="col-8">
                             {{ template_game_form.fa_field(class="form-range",id="fa",value=session['game4']['fa']) }}

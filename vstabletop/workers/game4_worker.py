@@ -132,6 +132,11 @@ def simulate_flow_image(mode,info):
     else:
         # Load & unit-convert parameters
         flow_speed = (info['flow_speed'] / 100) * 20e-3
+
+        if not info['flow_on']:
+            flow_speed = 0
+            print('Flow is off!')
+
         thk = info['thk'] * 1e-3
         tr = info['tr'] * 1e-3
         te = info['te'] * 1e-3
@@ -153,6 +158,9 @@ def simulate_flow_image(mode,info):
 
             flow_signal = sum(signals * fraction_list)
             static_signal = signal_SS(t1,t2s,tr,te,theta)
+
+            if flow_speed == 0:
+                flow_signal = static_signal
 
         elif mode == "dark":
             print('simulating dark image')
@@ -214,45 +222,96 @@ def plot_bright_signals(info, signal_partitioned_list, signal_total_list, fracti
     fig1.update_layout(margin=dict(l=0,r=0,b=0,t=0),height=150)
     #fig1.update_traces(showlegend=False)
 
-    fig2 = go.Figure()
 
+    # Figure out: flow diagram
+    fig2 = go.Figure()
     # Generate the necessary rectangles
     thk = info['bright_thk']
     y0, y1, yc = 1,2,1.5
-    # Background rectangle
-
-
-    # Partial rectangle
     # Slice rectangle
     fig2.add_vline(x=10+thk/2,line_width=2.5,line_dash='dot',line_color="goldenrod")
     fig2.add_trace(go.Scatter(x=2*[10-thk/2],y=[0,3],mode="lines",line=dict(width=2.5,dash='dot',color="goldenrod"),name="Slice"))
-
     fig2.add_vrect(x0=10-thk/2, x1=10+thk/2, fillcolor="goldenrod",opacity=0.5,layer="below",line_width=0)
     # Flow rectangle
     fig2.add_shape(type='rect',x0=0,y0=y0,x1=20,y1=y1,line=dict(width=0),fillcolor="black",layer="below")
 
     # Signal rectangles
     pos = 10 - thk / 2
-    for ind, fraction in enumerate(fraction_list):
-        signal = signal_partitioned_list[-1][ind]
-        xleft = pos
-        xright = pos + thk * fraction
-        xcenter = 0.5*(xleft + xright)
-        fig2.add_trace(go.Scatter(x=[xleft,xright,xright,xleft],y=[y0,y0,y1,y1],
-                                  mode="lines",line=dict(width=0),fill="toself",
-                                  fillcolor=color_map(signal),showlegend=False))
-        if ind == 0:
-            showtext = True
-        else:
-            showtext = False
-        fig2.add_trace(go.Scatter(x=[xcenter],y=[yc],mode="text",name="# pulses",text=ind+1,textfont=dict(family='Arial Black',size=15,color="chocolate"),
-                                  textposition="middle center",showlegend=showtext))
-        pos = xright
+
+    if fraction_list[-1] != fraction_list[0]:
+        n_rect = len(fraction_list)
+    else:
+        n_rect = len(fraction_list) + 1
+
+    d = thk*fraction_list[0]
+
+    traces = get_bright_flow_plot_traces(n_rect,d,thk, signal_partitioned_list[-1])
+    traces[0].visible=True
+    traces[1].visible=True
+    [fig2.add_trace(trace) for trace in traces]
+    print(f'total number of rectangle traces: {len(traces)}')
+    print(f'total number of traces: {len(fig2.data)}')
+
+    # for ind, fraction in enumerate(fraction_list):
+    #     signal = signal_partitioned_list[-1][ind]
+    #     xleft = pos
+    #     xright = pos + thk * fraction
+    #     xcenter = 0.5*(xleft + xright)
+    #     fig2.add_trace(go.Scatter(x=[xleft,xright,xright,xleft],y=[y0,y0,y1,y1],
+    #                               mode="lines",line=dict(width=0),fill="toself",
+    #                               fillcolor=color_map(signal),showlegend=False))
+    #     if ind == 0:
+    #         showtext = True
+    #     else:
+    #         showtext = False
+    #     fig2.add_trace(go.Scatter(x=[xcenter],y=[yc],mode="text",name="# pulses",text=ind+1,textfont=dict(family='Arial Black',size=15,color="chocolate"),
+    #                               textposition="middle center",showlegend=showtext))
+    #     pos = xright
 
     # flow figure!
     fig2.update_xaxes(range=[0,20],title="Distance (mm)",showgrid=False)
     fig2.update_yaxes(range=[0,3],visible=False,showgrid=False)
-    fig2.update_layout(margin=dict(l=25,r=25,b=0,t=0),height=150)
+    fig2.update_layout(margin=dict(l=25,r=25,b=100,t=0),height=150)
+
+    print(signal_partitioned_list)
+
+
+
+    # Sliders
+    steps = []
+
+    #time_names = ["0-", "0+", "(TE/2)-", "(TE/2)+", "TE"]
+    #time_names = [f"{m}TR" for m in range(1,n_rect+1)]
+    time_names = [0]
+    for m in range(1,n_rect+1):
+        time_names += [f'RF{m}',f'TR{m}']
+    time_names.append(f'RF{n_rect+1}')
+
+    n_traces = n_rect + 1
+
+    for i in range(len(time_names)):
+        step = dict(
+            method="update",
+            args=[{"visible": [False] * len(fig2.data)}],
+            label=time_names[i]
+        )
+        step["args"][0]["visible"][0] = True
+        step["args"][0]["visible"][1+i*2*n_traces:1+(i+1)*2*n_traces] = 2*n_traces*[True]
+        # Turn on the 6 traces for the current time point
+        steps.append(step)
+
+    sliders = [dict(
+        active=0,
+        currentvalue={"visible": False},
+        pad={"t": 50},
+        steps=steps,
+        transition={"duration": 100, "easing": "cubic-in-out"}
+    )]
+
+    fig2.update_layout(sliders=sliders)
+
+
+
     #fig2.update_traces(showlegend=False)
 
     brightJSON1 = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
@@ -267,17 +326,10 @@ def plot_dark_signals(info,d,fraction,alpha1,alpha2,beta, Mxy_list_both, Mxy_lis
     # Top figure
     fig1 = go.Figure()
     # Add in 90 and 180 vertical lines
-    fig1.add_trace(go.Scatter(visible=True,x=2*[0], y=[-0.1,1], mode='lines', line=dict(width=5, color='orange'),name="RF 90")) # 90
+    fig1.add_trace(go.Scatter(visible=True,x=2*[0], y=[-0.1,1], mode='lines', line=dict(width=5, color='red'),name="RF 90")) # 90
     fig1.add_trace(go.Scatter(visible=True,x=2*[te/2], y=[0,1], mode='lines', line=dict(width=5, color='orange'),name="RF 180")) # 180
     # Add TE line
-    fig1.add_trace(go.Scatter(visible=True,x=2*[te], y=[0,3], mode="lines", line=dict(width=3, color='gray'), name='Echo time'))
-
-    # Add in signals
-    # for u in range(len(t_list)):
-    #     fig1.add_trace(go.Scatter(visible=False,x=1e3*t_list[u], y=np.absolute(Mxy_list_both[u]), mode='lines', line=dict(width=3, color='green'),name="Both"))
-    #     fig1.add_trace(go.Scatter(visible=False,x=1e3*t_list[u], y=np.absolute(Mxy_list_90[u]), mode='lines', line=dict(width=3, color='darkcyan'),name="90 only"))
-    #     fig1.add_trace(go.Scatter(visible=False,x=1e3*t_list[u], y=np.absolute(Mxy_list_180[u]), mode='lines', line=dict(width=3, color='greenyellow'),name="180 only"))
-
+    fig1.add_trace(go.Scatter(visible=True,x=2*[te], y=[0,3], mode="lines", line=dict(width=3, color='gray'), name='TE'))
 
     all_times = 1e3*np.array(t_list).flatten()
 
@@ -289,14 +341,28 @@ def plot_dark_signals(info,d,fraction,alpha1,alpha2,beta, Mxy_list_both, Mxy_lis
     all_Mxy_180 = np.absolute(np.array(flatten_lambda(Mxy_list_180)))
 
 
+    # TODO
     fig1.add_trace(go.Scatter(visible=True,x=all_times, y=all_Mxy_both, mode='lines', line=dict(width=3, color='green'),name="Both"))
     fig1.add_trace(go.Scatter(visible=True,x=all_times, y=all_Mxy_90, mode='lines', line=dict(width=3, color='darkcyan'),name="90 only"))
     fig1.add_trace(go.Scatter(visible=True,x=all_times, y=all_Mxy_180, mode='lines', line=dict(width=3, color='greenyellow'),name="180 only"))
 
+    te_ind = np.where(all_times==(np.sign(all_times-te)*np.min(np.absolute(all_times - te)) + te))[0][0]
+
+    # Add signal dots
+    fig1.add_trace(go.Scatter(visible=True,x=[all_times[te_ind]], y=[all_Mxy_both[te_ind]], mode="markers",
+                              marker=dict(size=[8], color="aquamarine", line_color="green"), name="Signal",showlegend=True))
+    # Add signal dots
+    fig1.add_trace(go.Scatter(visible=True,x=[all_times[te_ind]], y=[all_Mxy_90[te_ind]], mode="markers",
+                              marker=dict(size=[8], color="aquamarine", line_color="green"), name="",showlegend=False))
+    # Add signal dots
+    fig1.add_trace(go.Scatter(visible=True,x=[all_times[te_ind]], y=[all_Mxy_180[te_ind]], mode="markers",
+                             marker=dict(size=[8], color="aquamarine", line_color="green"), name="",showlegend=False))
+
     # Styling
     fig1.update_xaxes(range=[-0.1*te, 1.5*te],title="Time (ms)")
-    fig1.update_yaxes(range=[-0.1,1])
+    fig1.update_yaxes(range=[-0.1,1],title='Signal')
     fig1.update_layout(margin=dict(l=100, r=100, b=0, t=0),height=150)
+
 
     # Dropdown button
     fig1.update_layout(
@@ -304,22 +370,22 @@ def plot_dark_signals(info,d,fraction,alpha1,alpha2,beta, Mxy_list_both, Mxy_lis
             dict(
                 buttons=list([
                     dict(
-                        args=[{'visible': 6 * [True]}],
+                        args=[{'visible': 9 * [True],'showlegend':[True,True,True,True,True,True,True,False,False]}],
                         label="all",
                         method="update"
                     ),
                     dict(
-                        args=[{"visible": [True,True,True,True,False,False]}],
+                        args=[{"visible": [True,True,True,True,False,False,True,False,False],'showlegend':[True,True,True,True,False,False,True,False,False]}],
                         label="90 + 180",
                         method="update"
                     ),
                     dict(
-                        args=[{"visible": [True,False,True,False,True,False]}],
+                        args=[{"visible": [True,False,True,False,True,False,False,True,False],'showlegend':[True,True,True,False,True,False,False,True,False]}],
                         label="90 only",
                         method="update"
                     ),
                     dict(
-                        args=[{"visible": [False,True,True,False,False,True]}],
+                        args=[{"visible": [False,True,True,False,False,True,False,False,True],'showlegend':[True,True,True,False,False,True,False,False,True]}],
                         label="180 only",
                         method="update"
                     )
@@ -329,13 +395,52 @@ def plot_dark_signals(info,d,fraction,alpha1,alpha2,beta, Mxy_list_both, Mxy_lis
                 showactive=True,
                 x=0,
                 xanchor="right",
-                y=0.8,
-                yanchor="top"
+                y=1,
+                yanchor="bottom"
             )
+            # dict(
+            #     type="buttons",
+            #     direction="right",
+            #      pad={"l":5,"t":0,"b":2},
+            #     showactive=True,
+            #     x=0,
+            #     xanchor="left",
+            #     y=1,
+            #     yanchor="bottom",
+            #     buttons=[
+            #         {
+            #             "args":[None,{'frame':{"duration":10,"redraw":False},"fromcurrent":True,"transition":{"duration":5,"easing":"linear"}}],
+            #             "label": "Play",
+            #             "method": "animate"
+            #         },
+            #         {
+            #             "args":[[None],{"frame":{"duration":0,"redraw":False},
+            #                             "mode": "immediate",
+            #                             "transition": {"duration":0}}],
+            #             "label":"Pause",
+            #             "method":"animate"
+            #         }
+            #     ]
+            # )
         ]
     )
 
-    # Sliders to change the extent of data displayed
+    # Frames
+    # data_acc_all = []
+    # for ind, t in enumerate(all_times):
+    #     data_acc = []
+    #     data_acc.append(go.Scatter(x=all_times[:ind],y=all_Mxy_both[:ind],mode="lines", line=dict(width=3, color='green')))
+    #     data_acc.append(go.Scatter(x=all_times[:ind],y=all_Mxy_90[:ind],mode="lines", line=dict(width=3, color='darkcyan')))
+    #     data_acc.append(go.Scatter(x=all_times[:ind],y=all_Mxy_180[:ind],mode="lines", line=dict(width=3, color='greenyellow')))
+    #     if all_times[ind] >= 0:
+    #         data_acc.append(go.Scatter(visible=True,x=2*[0], y=[-0.1,1], mode='lines', line=dict(width=5, color='red')))
+    #     if all_times[ind] >= te/2:
+    #         data_acc.append(go.Scatter(visible=True, x=2 * [te / 2], y=[0, 1], mode='lines', line=dict(width=5, color='orange')))
+    #     if all_times[ind] >= te:
+    #         data_acc.append(go.Scatter(visible=True,x=2*[te], y=[0,3], mode="lines", line=dict(width=3, color='gray')))
+    #     data_acc_all.append(data_acc)
+    # fig1.frames = [go.Frame(data=data_acc) for data_acc in data_acc_all]
+
 
     # Bottom figure
     fig2 = go.Figure()
@@ -344,8 +449,8 @@ def plot_dark_signals(info,d,fraction,alpha1,alpha2,beta, Mxy_list_both, Mxy_lis
     y0, y1, yc = 1, 2, 1.5
 
     # Flow rectangle
-    #fig2.add_shape(type='rect',x0=-1,y0=y0,x1=dist+1.5*thk,y1=y1,line=dict(width=0),fillcolor="navy")
-    fig2.add_trace(go.Scatter(x=[-1,2*dist+1.5*thk,2*dist+1.5*thk,-1],y=[y0,y0,y1,y1],mode="lines",line=dict(width=0),fill="toself",fillcolor="black",showlegend=False))
+    fig2.add_trace(go.Scatter(x=[-1,2*dist+1.5*thk,2*dist+1.5*thk,-1],y=[y0,y0,y1,y1],mode="lines",
+                              line=dict(width=0),fill="toself",fillcolor="black",showlegend=False))
 
     # Partial rectangle
     # Slice rectangle
@@ -354,37 +459,87 @@ def plot_dark_signals(info,d,fraction,alpha1,alpha2,beta, Mxy_list_both, Mxy_lis
     # Flow rectangles
     # There are 5 timepoints
     # Use buttons to control
-    y_vec = [y0,y0,y1,y1]
-
+    traces = []
     # Time point 3
+
+    # Signals
+    signals=[[0,0,0],[0,1,0],[0,alpha1,0],[alpha1,alpha1,0],[beta,alpha2,0]]
+
     if dist < thk:
+        # Time point 1 (0-)
+        seg_both = [0,0]
+        seg_90 = [0,0]
+        seg_180 = [0,0]
+        signal_both, signal_90, signal_180 = tuple(signals[0])
+        [traces.append(trace) for trace in get_dark_flow_plot_traces(seg_both, seg_90, seg_180, signal_both, signal_90, signal_180)]
+
+        # Time point 2 (0+)
+        seg_both = [0,0]
+        seg_90 = [0,thk]
+        seg_180 = [0,0]
+        signal_both, signal_90, signal_180 = tuple(signals[1])
+        [traces.append(trace) for trace in get_dark_flow_plot_traces(seg_both, seg_90, seg_180, signal_both, signal_90, signal_180)]
+
+        # Time point 3 ((TE/2)-)
+        seg_both = [0,0]
+        seg_90 = [dist, thk+dist]
+        seg_180=[0,0]
+        signal_both, signal_90, signal_180 = tuple(signals[2])
+        [traces.append(trace) for trace in get_dark_flow_plot_traces(seg_both, seg_90, seg_180, signal_both, signal_90, signal_180)]
+
+        # Time point 4 ((TE/2)+)
         seg_both = [dist, thk]
         seg_90 = [thk, dist + thk]
         seg_180 = [0, dist]
-        signal_both = alpha1
-        signal_90 = alpha1
-        signal_180 = 0
+        signal_both, signal_90, signal_180 = tuple(signals[3])
+        [traces.append(trace) for trace in get_dark_flow_plot_traces(seg_both, seg_90, seg_180, signal_both, signal_90, signal_180)]
 
-        traces = get_dark_flow_plot_traces(seg_both, seg_90, seg_180, signal_both, signal_90, signal_180)
-        for trace in traces:
-            fig2.add_trace(trace)
+        # Time point 5 (TE)
+        seg_both = [2*dist,dist+thk]
+        seg_90 = [dist+thk,2*dist+thk]
+        seg_180 = [dist,2*dist]
+        signal_both, signal_90, signal_180 = tuple(signals[4])
+        [traces.append(trace) for trace in get_dark_flow_plot_traces(seg_both, seg_90, seg_180, signal_both, signal_90, signal_180)]
+
 
     else:
-        seg_both = [thk,thk]
+        # Time point 1 (0-)
+        seg_both = [0, 0]
+        seg_90 = [0, 0]
+        seg_180 = [0, 0]
+        signal_both, signal_90, signal_180 = tuple(signals[0])
+        [traces.append(trace) for trace in get_dark_flow_plot_traces(seg_both, seg_90, seg_180, signal_both, signal_90, signal_180)]
+
+        # Time point 2 (0+)
+        seg_both=[0,0]
+        seg_90 = [0,thk]
+        seg_180 = [0,0]
+        signal_both, signal_90, signal_180 = tuple(signals[1])
+        [traces.append(trace) for trace in get_dark_flow_plot_traces(seg_both, seg_90, seg_180, signal_both, signal_90, signal_180)]
+
+        # Time point 3 ((TE/2)-)
+        seg_both = [0, 0]
+        seg_90 = [dist, dist+thk]
+        seg_180 = [0, 0]
+        signal_both, signal_90, signal_180 = tuple(signals[2])
+        [traces.append(trace) for trace in get_dark_flow_plot_traces(seg_both, seg_90, seg_180, signal_both, signal_90, signal_180)]
+
+        # Time point 4 ((TE/2)+)
+        seg_both = [0,0]
         seg_90 = [dist,dist+thk]
         seg_180 = [0,thk]
-        signal_both = 0
-        signal_90 = alpha1
-        signal_180 = 0
+        signal_both, signal_90, signal_180 = tuple(signals[3])
+        [traces.append(trace) for trace in get_dark_flow_plot_traces(seg_both, seg_90, seg_180, signal_both, signal_90, signal_180)]
 
-        traces = get_dark_flow_plot_traces(seg_both, seg_90, seg_180, signal_both, signal_90, signal_180)
-        for trace in traces:
-            fig2.add_trace(trace)
+        # Time point 5 (TE)
+        seg_both = [0, 0]
+        seg_90 = [2*dist,2*dist+thk]
+        seg_180 = [dist,dist+thk]
+        signal_both, signal_90, signal_180 = tuple(signals[4])
+        [traces.append(trace) for trace in get_dark_flow_plot_traces(seg_both, seg_90, seg_180, signal_both, signal_90, signal_180)]
 
-        # 90 only
-        #fig2.add_trace(go.Scatter(x=[dist,dist+thk,dist+thk,dist],y=y_vec,mode="lines",line=dict(width=0),fill="toself",fillcolor=color_map(alpha1)))
-
-
+    for trace in traces:
+        fig2.add_trace(trace)
 
 
     # Slice boundaries
@@ -394,19 +549,107 @@ def plot_dark_signals(info,d,fraction,alpha1,alpha2,beta, Mxy_list_both, Mxy_lis
     # Figure styling
     fig2.update_xaxes(range=[-1,2*dist+1.5*thk],title="Distance (mm)",showgrid=False)
     fig2.update_yaxes(range=[0,3],visible=False,showgrid=False)
-    fig2.update_layout(margin=dict(l=25, r=25, b=0, t=0),height=150)
     #fig2.update_traces(showlegend=False)
 
     # Slider
+    steps = []
+
+    time_names = ["0-","0+","(TE/2)-","(TE/2)+","TE"]
+    for i in range(5):
+        step = dict(
+            method="update",
+            args=[{"visible": [False]*len(fig2.data)}],
+            label=time_names[i]
+        )
+        step["args"][0]["visible"][0] = True
+        step["args"][0]["visible"][-1:-3:-1] = [True,True]
+
+        step["args"][0]["visible"][6*i+1:6*i+7] = 6*[True]
+        # Turn on the 6 traces for the current time point
+        steps.append(step)
+
+
+    sliders = [dict(
+        active=0,
+        currentvalue={"visible": False},
+        pad={"t":50},
+        steps=steps,
+        transition={"duration":100,"easing":"cubic-in-out"}
+    )]
+    fig2.update_layout(sliders=sliders)
+    fig2.update_layout(margin=dict(l=25, r=25, b=100, t=0),height=200)
+
+
+
+
+    # Convert to JSON
     darkJSON1 = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
     darkJSON2 = json.dumps(fig2, cls=plotly.utils.PlotlyJSONEncoder)
 
     return darkJSON1, darkJSON2
 
-# TODO
+def get_bright_flow_plot_traces(n_rect,d,thk,signals):
+    # n_rect: total number of signal rectangles (the last one will be invisible if thk/d is an integer)
+    # signal values for 1, 2, 3, ... n_ss RF pulses
+    traces = []
+    # For each frame, we make n_rect + 1 rectangular traces and their associated text labels
+    # This makes (n_rect + 1)*2 - 1 labels (the zero / void doesn't have a label; any labels of void rectangles are made invisible)
+    n_frames = 2*(n_rect + 1)
+    #for fr in range(n_frames):
+
+    if len(signals) < n_rect:
+        signals = np.append(signals, 0)
+    signals = np.concatenate(([0], signals))
+
+    print(f'n_rect is {n_rect}')
+
+    for fr in range(n_frames):
+        if fr >= 2*n_rect:
+            fr = fr - 2
+        # Calculate divisions
+        divs = thk*np.ones(n_rect)
+        if (fr%2) == 0: # First set
+            print('even',fr)
+            divs[0:int(fr/2)] = d*np.arange(1,int(fr/2)+1)
+        else:
+            print('odd',fr)
+            divs[0:int((fr+1)/2)] = d*np.arange(0,int((fr+1)/2))
+        print(divs)
+
+        print("Final signals: ",signals )
+
+        # For each rectangle
+        left = 0
+        for u in range(n_rect+1):
+            xleft = left
+            if u < n_rect:
+                xright = divs[u]
+            else:
+                xright = thk
+            left = xright
+
+            print('xleft and xright before centering',xleft,xright)
+
+            xleft += 10 - thk / 2
+            xright += 10 - thk / 2
+            xcenter = 0.5*(xleft + xright)
+
+            traces.append(go.Scatter(visible=False,x=[xleft, xright, xright, xleft], y=[1, 1, 2, 2],
+                       mode="lines", line=dict(width=0), fill="toself",
+                       fillcolor=color_map(signals[u]), showlegend=False))
+
+            traces.append(go.Scatter(visible=False,x=[xcenter],y=[1.5],mode="text",name="# pulses",
+                                     text=(u if bool(xleft!=xright) else ""),textfont=dict(family='Arial Black',size=15,color="chocolate"),
+                                     textposition="middle center",showlegend=False))
+
+
+
+    return traces
+
+
+
 def get_dark_flow_plot_traces(seg_both,seg_90,seg_180,signal_both,signal_90,signal_180):
     traces = []
-    traces.append(go.Scatter())
     y_vec = [1,1,2,2]
     yc = 1.5
 
@@ -416,28 +659,29 @@ def get_dark_flow_plot_traces(seg_both,seg_90,seg_180,signal_both,signal_90,sign
 
 
     # 180 + 90
-    traces.append(go.Scatter(x=[seg_both[0], seg_both[1], seg_both[1], seg_both[0]], y=y_vec, mode="lines", line=dict(width=0),
+    traces.append(go.Scatter(visible=False,x=[seg_both[0], seg_both[1], seg_both[1], seg_both[0]], y=y_vec, mode="lines", line=dict(width=0),
                               fill="toself", fillcolor=color_map(signal_both), showlegend=False))
-    traces.append(go.Scatter(x=[np.mean(seg_both)], y=[yc], mode="text", name="history", text=text_both,
+    traces.append(go.Scatter(visible=False,x=[np.mean(seg_both)], y=[yc], mode="text", name="history", text=text_both,
                               textfont=dict(family='Arial Black', size=15, color="green"),
                               textposition="middle center", showlegend=False))
 
     # 90 only
-    traces.append(go.Scatter(x=[seg_90[0], seg_90[1], seg_90[1], seg_90[0]], y=y_vec, mode="lines", line=dict(width=0),
+    traces.append(go.Scatter(visible=False,x=[seg_90[0], seg_90[1], seg_90[1], seg_90[0]], y=y_vec, mode="lines", line=dict(width=0),
                               fill="toself", fillcolor=color_map(signal_90), showlegend=False))
-    traces.append(go.Scatter(x=[np.mean(seg_90)], y=[yc], mode="text", name="history", text=text_90,
+    traces.append(go.Scatter(visible=False,x=[np.mean(seg_90)], y=[yc], mode="text", name="history", text=text_90,
                               textfont=dict(family='Arial Black', size=15, color="darkcyan"),
                               textposition="middle center", showlegend=False))
 
     # 180 only
-    traces.append(go.Scatter(x=[seg_180[0],seg_180[1],seg_180[1],seg_180[0]], y=y_vec, mode="lines", line=dict(width=0), fill="toself",
+    traces.append(go.Scatter(visible=False,x=[seg_180[0],seg_180[1],seg_180[1],seg_180[0]], y=y_vec, mode="lines", line=dict(width=0), fill="toself",
                               fillcolor=color_map(signal_180), showlegend=False))
-    traces.append(go.Scatter(x=[np.mean(seg_180)], y=[yc], mode="text", name="history", text=text_180,
+    traces.append(go.Scatter(visible=False,x=[np.mean(seg_180)], y=[yc], mode="text", name="history", text=text_180,
                               textfont=dict(family='Arial Black', size=15, color="greenyellow"),
                               textposition="middle center", showlegend=False))
 
 
     return traces
+
 
 
 def signal_model_dark(v,thk,te,t2,t2s):
@@ -624,7 +868,7 @@ def signal_model_bright(v,thk,tr,te,fa,t1,t2s):
     else: # Case of zero flow - simulate 10 pulses
         full_frac = 1
         part_frac = 0
-        signals = [signal_nonSS(10,t1, t2s, tr, te, theta)]
+        signals = [signal_nonSS(10, t1, t2s, tr, te, theta)]
         has_partial = False
 
     print('signals: ',signals)

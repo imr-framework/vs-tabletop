@@ -123,13 +123,13 @@ class Game4Form(FlaskForm):
 
     # Concept simulation fields - bright blood
     bright_thk_field = DecimalField('Slice thickness (mm)', places=1, validators=[NumberRange(min=0.0,max=10.0)],default=5)
-    bright_tr_field = DecimalField('Repetition Time (ms)', places=0, validators=[NumberRange(min=20,max=2000)],default=250)
+    bright_tr_field = IntegerField('Repetition Time (ms)', validators=[NumberRange(min=20,max=2000)],default=250)
     bright_fa_field = IntegerRangeField('Flip angle (deg)', validators=[NumberRange(min=0,max=90)],default=45)
-    bright_te_field = DecimalField('Echo time (ms)',places=0,validators=[NumberRange(min=5,max=15)],default=5)
+    bright_te_field = IntegerField('Echo time (ms)',validators=[NumberRange(min=5,max=15)],default=5)
 
     # Concept simulation fields - dark blood
     dark_thk_field = DecimalField('Slice thickness (mm)', places=1, validators=[NumberRange(min=0.0,max=10.0)],default=5)
-    dark_te_field = DecimalField('Echo time (ms)', places=0, validators=[NumberRange(min=5,max=100)],default=50)
+    dark_te_field = IntegerField('Echo time (ms)', validators=[NumberRange(min=5,max=100)],default=50)
 
 
     # Image simulation fields

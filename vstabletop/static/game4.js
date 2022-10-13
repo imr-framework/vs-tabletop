@@ -47,8 +47,9 @@ $('#T2').on('change',()=>{
 $('#flow-tab-1').on('click',()=>{
     socket.emit('Toggle mode',{'mode':'bright'})
     $('#contrast-type').val('bright');
-    $('#fa-row').show();
-    $('#tr-row').show();
+    $('#fa-row').removeClass('d-none').show();
+    $('#tr-row').removeClass('d-none').show();
+
     socket.emit("Update parameter for Game 4", {'id': 'contrast-type', 'value': 'bright'});
 })
 
@@ -84,9 +85,26 @@ $('#contrast-type').on('input',(event)=>{
     }
 })
 
+$('#transfer-params').on('click',()=>{
+    // Transfer parameters from signal simulation (left) to image acquisition (right)
+    // Bright mode
+    if ($('#contrast-type').val() === 'bright') {
+        $('#thk').val($('#bright_thk').val());
+        $('#tr').val($('#bright_tr').val());
+        $('#fa').val($('#bright_fa').val());
+        $('#te').val($('#bright_te').val());
+    }
+    // Dark mode
+    else{
+        $('#thk').val($('#dark_thk').val());
+        $('#te').val($('#dark_te').val());
+    }
+})
+
 $('#run-scan').on('click',()=>{
     socket.emit('Simulate flow image');
 })
+
 
 socket.on('Deliver bright plots', (payload)=>{
     Plotly.newPlot('bright-chart-1',JSON.parse(payload['graph1']),{autosize:true});
