@@ -24,7 +24,7 @@ setuptools.setup(
         'Programming Language :: Python :: 3.9',
     ],
     url="https://github.com/imr-framework/vs-tabletop",
-    version="1.0.0b3", # Beta release
+    version="1.0.0b4", # Beta release
     packages = setuptools.find_packages(),
     install_requires = install_reqs,
     python_requires = '>=3',
