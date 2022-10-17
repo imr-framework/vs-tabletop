@@ -2,6 +2,132 @@
 {% block content %}
 
 
+<div class="container-fluid vh-100">
+    <!-- Displays -->
+    <div class="row h-50">
+        <div class="col-4 p-0">
+            <div class="card p-0 h-100">
+                <div class="chart-left h-100">
+                    Left pane. Sim - 3D spin animation; map - images
+                </div>
+            </div>
+        </div>
+        <div class="col-8 p-0">
+            <div class="card p-0 h-100">
+                <div class="chart-middle h-100">
+                    Middle pane. Sim - signal (occupies right panel's space too); map - signal in ROI / pixel
+                </div>
+            </div>
+        </div>
+        <div class="col-4 d-none p-0">
+            <div class="card p-0 h-100">
+                <div class="chart-right h-100">
+                    Right pane. Sim - invisible; map - T1 or T2 map
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inputs -->
+    <div class="row h-50">
+        <div class="card">
+            <!-- Tabs -->
+            <ul class="nav nav-tabs nav-fill mb-3" id="game6-tabs" role="tablist">
+                              <li class="nav-item" role="presentation">
+                                <a
+                                  class="nav-link active"
+                                  id="t1-sim-tab"
+                                  data-mdb-toggle="tab"
+                                  href="#t1-sim-tabs"
+                                  role="tab"
+                                  aria-controls="t1-sim-tabs"
+                                  aria-selected="true"
+                                  >T1 simulation</a
+                                >
+                              </li>
+                              <li class="nav-item" role="presentation">
+                                <a
+                                  class="nav-link"
+                                  id="t2-sim-tab"
+                                  data-mdb-toggle="tab"
+                                  href="#t2-sim-tabs"
+                                  role="tab"
+                                  aria-controls="t2-sim-tabs"
+                                  aria-selected="false"
+                                  >T2 simulation</a
+                                >
+                              </li>
+                              <li class="nav-item" role="presentation">
+                                <a
+                                  class="nav-link"
+                                  id="t1-map-tab"
+                                  data-mdb-toggle="tab"
+                                  href="#t1-map-tabs"
+                                  role="tab"
+                                  aria-controls="t1-map-tabs"
+                                  aria-selected="false"
+                                  >T1 mapping</a
+                                >
+                              </li>
+                              <li class="nav-item" role="presentation">
+                                <a
+                                  class="nav-link"
+                                  id="t2-map-tab"
+                                  data-mdb-toggle="tab"
+                                  href="#t2-map-tabs"
+                                  role="tab"
+                                  aria-controls="t2-map-tabs"
+                                  aria-selected="false"
+                                  >T2 mapping</a
+                                >
+                              </li>
+                            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content" id="flow-content">
+                <div class="tab-pane fade show active" id="t1-sim-tabs" role="tabpanel" aria-labelledby="t1-sim-tab">
+                    <!-- T1 simulation options-->
+                    <!-- Buttons -->
+                        <button class="btn btn-lg btn-success">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <button class="btn btn-lg btn-warning">
+                            <i class="fas fa-pause"></i>
+                        </button>
+                        <button class="btn btn-lg btn-danger">
+                            <i class="fas fa-stop"></i>
+                        </button>
+                </div>
+                <div class="tab-pane fade" id="t2-sim-tabs" role="tabpanel" aria-labelledby="t2-sim-tab">
+                        <button class="btn btn-lg btn-success">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <button class="btn btn-lg btn-warning">
+                            <i class="fas fa-pause"></i>
+                        </button>
+                        <button class="btn btn-lg btn-danger">
+                            <i class="fas fa-stop"></i>
+                        </button>
+
+                </div>
+                <div class="tab-pane fade" id="t1-map-tabs" role="tabpanel" aria-labelledby="t1-map-tab">
+                                    <!-- T1 simulation options-->
+
+                                </div>
+                <div class="tab-pane fade" id="t2-map-tabs" role="tabpanel" aria-labelledby="t2-map-tab">
+                                    <!-- T1 simulation options-->
+
+                                </div>
+
+
+            </div>
+
+
+        </div>
+    </div>
+
+
+</div>
 
 
 {% endblock %}
@@ -9,4 +135,19 @@
 
 {% block additional_imports %}
     <script src="../static/game6.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script type="text/javascript">
+        // Plotting with Plotly
+        // Image
+        let graph1 = {{ graphJSON_left | safe }};
+        Plotly.plot('chart-left',graph1,{autosize:true});
+        let graph2 = {{ graphJSON_middle | safe }};
+        Plotly.plot('chart-middle',graph2,{autosize:true});
+        let graph3 = {{ graphJSON_right | safe }};
+        Plotly.plot('chart-right',graph3,{autosize:true});
+
+
+
+    </script>
+
 {% endblock %}

@@ -58,7 +58,8 @@ def initialize_parameters():
                         'M_target_on': False,
                         'progress': utils.new_progress_of_game(5), 'mc_status_list': utils.num_questions_of_game(5)*[False],
                         'task_completed': 0}
-    session['game6'] = {'progress':utils.new_progress_of_game(6)}
+    session['game6'] = {'mode':'t1sim',
+                        'progress':utils.new_progress_of_game(6)}
     session['game7'] = {'model':'letterN', 'proj2d_axis': 'z', 'proj1d_angle': 90,
                         'plot3d_visible':False, 'plot2d_visible':False, 'plot1d_visible':False,
                         'lines_on': False,

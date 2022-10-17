@@ -170,6 +170,16 @@ class Game5Form(FlaskForm):
 class Game6Form(FlaskForm):
     mapping_type_field = SelectField('Map type',choices=[('T1','T1'),('T2','T2')],default='T2')
 
+    t1sim_T1_field = DecimalField('T1 (ms)')
+    t1sim_T2_field = DecimalField('T2 (ms)')
+
+
+    t2sim_T2_field = DecimalField('T2 (ms)')
+
+    t1map_minTI_field = DecimalField('TI low',validators=[NumberRange(min=5,max=20)],default=5)
+    t1map_maxTI_field = DecimalField('TI high',validators=[NumberRange(min=20,max=1000)],default=1000)
+    t1map_numTI_field = IntegerField('Number of TIs',default=6)
+
 
 
 class Game7Form(FlaskForm):
