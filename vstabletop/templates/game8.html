@@ -3,30 +3,168 @@
 <div class="container-fluid vh-100">
     <div class="row h-100">
         <div class="col-4">
-            <div class="h-100 m-5" style="background-color: palegreen">
-                <div class="row h-50" style="background-color: darkgray">
-                    <span class="text-light">Mystery 3D object</span>
-                </div>
+            <div class="h-100 m-5">
+
                 <div class="row h-50">
                     <div class="card">
+                        <div class="card-header">
+                            <span class="h3">Mode</span>
+                            <button class="btn btn-lg btn-light">3D</button>
+                            <button class="btn btn-lg btn-light">2D</button>
+                        </div>
+                        <div class="card-body"></div>
+                    </div>
+                </div>
+                <div class="row h-25">
+                    <div class="card">
                         <div class="card-header">Prescription</div>
-                        <div class="card-body">Form for projection selection</div>
+                        <div class="card-body">
+                            {{ template_game_form.proj_2d_axis_field.label(class="form-label") }}
+                           <div type="button" class="btn btn-sm shadow-none"
+                                 data-mdb-container="body"
+                                 data-mdb-toggle="popover"
+                                 data-mdb-placement="top"
+                                 title='2D projection axis'
+                                 data-mdb-content="The axis along which the water-filled parts of the 3D volume is summed.">
+                                <i class="bi bi-question-circle-fill"></i>
+                            </div>
+                        <div class="row">
+                            {% for subfield in template_game_form.proj_2d_axis_field %}
+                                <div class="form-control col">
+                                    {{ subfield(id='proj2d_axis',class='form-check-input proj-2d-xyz') }}
+                                    {{ subfield.label(class='form-check-label') }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="row">
+                            <button class="btn btn-primary">Image!</button>
+                        </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-4">
-           <div class="h-100 m-5" style="background-color: mediumaquamarine">
-                5 Cards / chances
+            <div class="h-100 m-5">
+               <!-- Tabs -->
+               <div class="row h-50">
+                    <div class="card">
+                        <ul class="nav nav-tabs nav-justified mb-3" id="ex1" role="tablist">
+                        {% for u in range(session['game8']['num_attempts']) %}
+                            {% if u == 0 %}
+                                {% set tab_status = "active" %}
+                                {% set aria_status = "true" %}
+                            {% else %}
+                                {% set tab_status = "" %}
+                                {% set aria_status = "false" %}
+                            {% endif %}
+                          <li class="nav-item" role="presentation">
+                            <a
+                              class="nav-link {{ tab_status }}"
+                              id="game8-tab-{{ u }}"
+                              data-mdb-toggle="tab"
+                              href="#game8-tabs-{{ u }}"
+                              role="tab"
+                              aria-controls="game8-tabs-{{ u }}"
+                              aria-selected={{ aria_status }}
+                              > Attempt #{{ u + 1 }}</a
+                            >
+                          </li>
+                        {% endfor %}
+
+                        </ul>
+                        <!-- Tabs navs -->
+
+                        <!-- Tabs content -->
+                        <div class="tab-content" id="game8-tabs-content">
+                            {% for u in range(session['game8']['num_attempts']) %}
+                                {% if u == 0 %}
+                                    {% set content_status = "show active" %}
+                                {% else %}
+                                    {% set content_status = "" %}
+                                {% endif %}
+                                <div
+                                    class="tab-pane fade {{ content_status }}"
+                                    id="game8-tabs-{{ u }}"
+                                    role="tabpanel"
+                                    aria-labelledby="game8-tab-{{ u }}"
+                                  >Tab {{ u + 1 }} content
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+               </div>
+               <div class="row h-25">
+                   <div class="card">
+                       <button class="btn btn-lg btn-info">Reset</button>
+                       <button class="btn btn-lg btn-success">New model</button>
+                   </div>
+               </div>
             </div>
+
         </div>
         <div class="col-4">
-           <div class="h-100 m-5" style="background-color: #baebe1">
+           <div class="h-100 m-5">
                 <div class="row h-50">
-                    Choices
+                    <div class="card">
+                        <div class="card-header">
+                            Choices
+                        </div>
+                        <div class="card-body">
+                            <div id="carouselExampleCrossfade" class="carousel slide carousel-fade" data-mdb-ride="carousel"
+                            data-mdb-interval="false">
+                              <div class="carousel-indicators">
+                                <button
+                                  type="button"
+                                  data-mdb-target="#carouselExampleCrossfade"
+                                  data-mdb-slide-to="0"
+                                  class="active"
+                                  aria-current="true"
+                                  aria-label="Slide 1"
+                                ></button>
+                                <button
+                                  type="button"
+                                  data-mdb-target="#carouselExampleCrossfade"
+                                  data-mdb-slide-to="1"
+                                  aria-label="Slide 2"
+                                ></button>
+                                <button
+                                  type="button"
+                                  data-mdb-target="#carouselExampleCrossfade"
+                                  data-mdb-slide-to="2"
+                                  aria-label="Slide 3"
+                                ></button>
+                              </div>
+                              <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <div class="chart">Chart 1 </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <div class="chart">Chart 2 </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <div class="chart">Chart 3 </div>
+                                </div>
+                              </div>
+                              <button class="carousel-control-prev" type="button" data-mdb-target="#carouselExampleCrossfade" data-mdb-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                              </button>
+                              <button class="carousel-control-next" type="button" data-mdb-target="#carouselExampleCrossfade" data-mdb-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                              </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="row h-50">
-                    Check answer
+                <div class="row h-25">
+                    <div class="card">
+                        <div class="card-body">
+                            <button class="btn btn-lg btn-primary">Check answer</button>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>

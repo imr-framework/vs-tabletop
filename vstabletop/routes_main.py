@@ -58,7 +58,9 @@ def initialize_parameters():
                         'M_target_on': False,
                         'progress': utils.new_progress_of_game(5), 'mc_status_list': utils.num_questions_of_game(5)*[False],
                         'task_completed': 0}
-    session['game6'] = {'mode':'t1sim',
+    session['game6'] = {'mode':'T1',
+                        't1_sim': 500, 't1_sim_dur': 1500,'t1_sim_mz0':0,'ti_sim':200,
+                        't2_sim': 50, 't2_sim_dur':150, 't2_sim_mx0':100,'te_sim': 25,
                         'progress':utils.new_progress_of_game(6)}
     session['game7'] = {'model':'letterN', 'proj2d_axis': 'z', 'proj1d_angle': 90,
                         'plot3d_visible':False, 'plot2d_visible':False, 'plot1d_visible':False,
@@ -66,7 +68,8 @@ def initialize_parameters():
                         'progress': utils.new_progress_of_game(7),'mc_status_list': utils.num_questions_of_game(7)*[False],
                         'task_completed': 0
                         }
-    session['game8'] = {'progress':utils.new_progress_of_game(8)}
+    session['game8'] = {'mode': '3D','num_attempts': 2,
+                        'progress':utils.new_progress_of_game(8)}
 
 # Login callback (required)
 @login_manager.user_loader

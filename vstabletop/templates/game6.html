@@ -7,22 +7,34 @@
     <div class="row h-50">
         <div class="col-4 p-0">
             <div class="card p-0 h-100">
-                <div class="chart-left h-100">
-                    Left pane. Sim - 3D spin animation; map - images
+                <div class="card-header">
+                    <span class="h3" id="left-chart-header">Spin Animation / Image</span>
                 </div>
+                <div class="card-body">
+                    <div class="chart h-100" id="chart-left">
+                    </div>
+                </div>
+
             </div>
         </div>
-        <div class="col-8 p-0">
+        <div class="col-4 p-0">
             <div class="card p-0 h-100">
-                <div class="chart-middle h-100">
-                    Middle pane. Sim - signal (occupies right panel's space too); map - signal in ROI / pixel
+                <div class="card-header">
+                    <span class="h3" id="right-chart-header">Spin Magnetization / ROI signal </span>
                 </div>
+                <div class="card-body">
+                    <div class="chart h-100" id="chart-middle">
+                    </div>
+                </div>
+
             </div>
         </div>
-        <div class="col-4 d-none p-0">
+        <div class="col-4 p-0">
             <div class="card p-0 h-100">
-                <div class="chart-right h-100">
-                    Right pane. Sim - invisible; map - T1 or T2 map
+                <div class="card-header">Pulse+magnetization / T1 or T2 map </div>
+                <div class="card-body">
+                    <div class="chart h-100" id="chart-right">
+                    </div>
                 </div>
             </div>
         </div>
@@ -30,99 +42,369 @@
 
     <!-- Inputs -->
     <div class="row h-50">
-        <div class="card">
-            <!-- Tabs -->
-            <ul class="nav nav-tabs nav-fill mb-3" id="game6-tabs" role="tablist">
-                              <li class="nav-item" role="presentation">
-                                <a
-                                  class="nav-link active"
-                                  id="t1-sim-tab"
-                                  data-mdb-toggle="tab"
-                                  href="#t1-sim-tabs"
-                                  role="tab"
-                                  aria-controls="t1-sim-tabs"
-                                  aria-selected="true"
-                                  >T1 simulation</a
-                                >
-                              </li>
-                              <li class="nav-item" role="presentation">
-                                <a
-                                  class="nav-link"
-                                  id="t2-sim-tab"
-                                  data-mdb-toggle="tab"
-                                  href="#t2-sim-tabs"
-                                  role="tab"
-                                  aria-controls="t2-sim-tabs"
-                                  aria-selected="false"
-                                  >T2 simulation</a
-                                >
-                              </li>
-                              <li class="nav-item" role="presentation">
-                                <a
-                                  class="nav-link"
-                                  id="t1-map-tab"
-                                  data-mdb-toggle="tab"
-                                  href="#t1-map-tabs"
-                                  role="tab"
-                                  aria-controls="t1-map-tabs"
-                                  aria-selected="false"
-                                  >T1 mapping</a
-                                >
-                              </li>
-                              <li class="nav-item" role="presentation">
-                                <a
-                                  class="nav-link"
-                                  id="t2-map-tab"
-                                  data-mdb-toggle="tab"
-                                  href="#t2-map-tabs"
-                                  role="tab"
-                                  aria-controls="t2-map-tabs"
-                                  aria-selected="false"
-                                  >T2 mapping</a
-                                >
-                              </li>
-                            </ul>
 
-            <!-- Tab panes -->
-            <div class="tab-content" id="flow-content">
-                <div class="tab-pane fade show active" id="t1-sim-tabs" role="tabpanel" aria-labelledby="t1-sim-tab">
-                    <!-- T1 simulation options-->
-                    <!-- Buttons -->
-                        <button class="btn btn-lg btn-success">
-                            <i class="fas fa-play"></i>
-                        </button>
-                        <button class="btn btn-lg btn-warning">
-                            <i class="fas fa-pause"></i>
-                        </button>
-                        <button class="btn btn-lg btn-danger">
-                            <i class="fas fa-stop"></i>
-                        </button>
-                </div>
-                <div class="tab-pane fade" id="t2-sim-tabs" role="tabpanel" aria-labelledby="t2-sim-tab">
-                        <button class="btn btn-lg btn-success">
-                            <i class="fas fa-play"></i>
-                        </button>
-                        <button class="btn btn-lg btn-warning">
-                            <i class="fas fa-pause"></i>
-                        </button>
-                        <button class="btn btn-lg btn-danger">
-                            <i class="fas fa-stop"></i>
-                        </button>
+        <div class="card h-100">
+            <!-- Vertical Tabs -->
+            <div class="row h-100">
+                  <div class="col-2 h-100">
+                      {% if session['game6']['mode'] == 'T1' %}
+                          {% set t1active = "active" %}
+                          {% set t1show = "show" %}
+                          {% set t2active = "" %}
+                          {% set t2show = "" %}
+                      {% else %}
+                          {% set t2active = "active" %}
+                          {% set t1active = "" %}
+                          {% set t2show = "show" %}
+                          {% set t1show = "" %}
+                      {% endif %}
+                    <!-- Tab navs -->
+                    <div
+                      class="nav d-flex align-items-stretch flex-column nav-tabs nav-fill text-center"
+                      id="v-tabs-tab"
+                      role="tablist"
+                      aria-orientation="vertical"
+                    >
+                      <a
+                        class="nav-link {{ t1active }}"
+                        id="tab-t1"
+                        data-mdb-toggle="tab"
+                        href="#v-tabs-t1"
+                        role="tab"
+                        aria-controls="v-tabs-t1"
+                        aria-selected="true"
+                        >T1</a
+                      >
+                      <a
+                        class="nav-link {{ t2active }}"
+                        id="tab-t2"
+                        data-mdb-toggle="tab"
+                        href="#v-tabs-t2"
+                        role="tab"
+                        aria-controls="v-tabs-t2"
+                        aria-selected="false"
+                        >T2</a
+                      >
+                    </div>
+                    <!-- Tab navs -->
+                  </div>
+                    <!-- Vertical Tab content -->
+                  <div class="col-10 h-100">
+                    <!-- Tab content -->
+                    <div class="tab-content h-100" id="v-tabs-tabContent">
+                      <div
+                        class="tab-pane h-100 fade {{ t1show }} {{ t1active }}"
+                        id="v-tabs-t1"
+                        role="tabpanel"
+                        aria-labelledby="v-tabs-t1-tab"
+                      >
+                          <div class="row h-100">
+                              <div class="col-4 p-0 h-100">
+                              <div class="card h-100">
+                              <div class="card-header">
+                                  <button class="btn btn-lg btn-outline-primary btn-light" id="t1-sim-button">Simulation</button>
+                              </div>
+                              <div class="card-body">
+                                  <div class="row">
+                                    <div class="col-4">
+                                        {{ template_game_form.t1sim_T1_field.label(class="form-label") }}
+                                    </div>
+                                    <div class="col-8">
+                                        {{ template_game_form.t1sim_T1_field(class="form-control") }}
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                      <div class="col-4">
+                                          {{ template_game_form.t1sim_duration_field.label(class="form-label") }}
+                                      </div>
+                                      <div class="col-8">
+                                          {{ template_game_form.t1sim_duration_field(class="form-control") }}
+                                      </div>
+                                  </div>
+                                  <div class="row">
+                                      <div class="col-4">
+                                          {{ template_game_form.t1sim_TI_field.label(class="form-label") }}
+                                      </div>
+                                      <div class="col-8">
+                                          {{ template_game_form.t1sim_TI_field(class="form-control") }}
+                                      </div>
+                                  </div>
+                                  <div class="row">
+                                  <div class="col-4">
+                                      {{ template_game_form.t1sim_MZ0_field.label(class="form-label") }}
+                                  </div>
+                                  <div class="col-8">
+                                          {{ template_game_form.t1sim_MZ0_field(class="form-range") }}
+                                        <div class="ticks text-primary">
+                                        {% for scale in [-1,-0.5,0,0.5,1] %}
+                                        <span class="tick">{{ scale }}</span>
+                                        {% endfor %}
+                                    </div>
+                                  </div>
 
-                </div>
-                <div class="tab-pane fade" id="t1-map-tabs" role="tabpanel" aria-labelledby="t1-map-tab">
-                                    <!-- T1 simulation options-->
+                                  </div>
 
+                              </div>
+
+                              </div>
+
+                              </div>
+                              <div class="col-8 p-0 h-100">
+                                  <div class="card h-100">
+                                      <div class="card-header">
+                                          <button class="btn btn-lg btn-outline-primary btn-light" id="t1-map-button">Mapping</button>
+                                      </div>
+                                      <div class="card-body">
+                                        <div class="row h-100">
+                                            <div class="col-4 border-end">
+                                                <div class="row h-50">
+                                                    <div class="col-9">
+                                                        <div class="row">
+                                                            <div class="col-6">
+                                                                {{ template_game_form.t1map_minTI_field.label(class="form-label") }}
+                                                            </div>
+                                                            <div class="col-6">
+                                                                {{ template_game_form.t1map_minTI_field(class="form-control") }}
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-6">
+                                                                {{ template_game_form.t1map_maxTI_field.label(class="form-label") }}
+                                                            </div>
+                                                            <div class="col-6">
+                                                                {{ template_game_form.t1map_maxTI_field(class="form-control") }}
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-6">
+                                                                {{ template_game_form.t1map_numTI_field.label(class="form-label") }}
+                                                            </div>
+                                                            <div class="col-6">
+                                                                {{ template_game_form.t1map_numTI_field(class="form-control") }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3 d-flex align-items-center">
+                                                        <div class="btn btn-light">
+                                                        Set
+                                                    </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row h-25">
+                                                    <div class="col-4">
+                                                        {{ template_game_form.t1map_allTI_field.label(class="form-label") }}
+                                                    </div>
+                                                    <div class="col-8">
+                                                        {{ template_game_form.t1map_allTI_field(class="form-control") }}
+                                                    </div>
+                                                </div>
+
+                                                <div class="row h-25">
+                                                    <button class="btn btn-lg btn-info">Scan</button>
+                                                </div>
+
+                                            </div>
+                                            <div class="col-4 border-end">
+                                                    <div class="row h-25">
+                                                        <div class="col-4 form-label">Sphere #</div>
+                                                            <div class="col-8 btn-group shadow-none">
+                                                                {% for u in range(4) %}
+                                                                    <input type="radio" class="btn-check" name="roi-options" id="sphere{{ u + 1 }}" autocomplete="off">
+                                                                    <label class="btn btn-outline-primary" for="sphere{{ u + 1 }}">{{ u + 1 }}</label>
+                                                                {% endfor %}
+                                                            </div>
+                                                    </div>
+                                                    <div class="row h-50">
+                                                        <div class="col-4 form-label">Equation</div>
+                                                        <div class="col-8"></div>
+                                                    </div>
+                                                    <div class="row h-25">
+                                                        <button class="btn btn-lg btn-primary">Fit</button>
+                                                    </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="row h-25 d-flex justify-items-center align-items-center">
+                                                    <div class="form-label">Display</div>
+                                                </div>
+                                                <div class="row h-50">
+                                                    <div class="col h-50">
+                                                        <div class="btn-group shadow-none">
+                                                          <input type="radio" name="t1map-disp-options" class="btn-check" id="t1-map-disp" autocomplete="off" checked>
+                                                          <label class="btn btn-outline-primary" for="t1-map-disp">T1 map</label>
+                                                          <input type="radio" name="t1map-disp-options" class="btn-check" id="t1-pht-disp" autocomplete="off">
+                                                          <label class="btn btn-outline-primary" for="t1-pht-disp">T1 phantom</label>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row h-25">
+                                                    <button class="btn btn-lg btn-success">Map</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+
+                      </div>
+                      <div
+                        class="tab-pane h-100 fade {{ t2show }} {{ t2active }}"
+                        id="v-tabs-t2"
+                        role="tabpanel"
+                        aria-labelledby="v-tabs-t2-tab"
+                      >
+                          <div class="row h-100">
+                              <div class="col-4 p-0 h-100">
+                                <div class="card h-100">
+                                    <div class="card-header">
+                                         <button class="btn btn-lg btn-outline-primary btn-light" id="t2-sim-button">Simulation</button>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-4">
+                                                {{ template_game_form.t2sim_T2_field.label(class="form-label") }}
+                                            </div>
+                                            <div class="col-8">
+                                                {{ template_game_form.t2sim_T2_field(class="form-control") }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-4">
+                                                {{ template_game_form.t2sim_duration_field.label(class="form-label") }}
+                                            </div>
+                                            <div class="col-8">
+                                                {{ template_game_form.t2sim_duration_field(class="form-control") }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-4">
+                                                {{ template_game_form.t2sim_TE_field.label(class="form-label") }}
+                                            </div>
+                                            <div class="col-8">
+                                                {{ template_game_form.t2sim_TE_field(class="form-control") }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-4">
+                                                {{ template_game_form.t2sim_MX0_field.label(class="form-label") }}
+                                            </div>
+                                            <div class="col-8">
+                                                {{ template_game_form.t2sim_MX0_field(class="form-range") }}
+                                                <div class="ticks text-primary">
+                                                    {% for scale in [0,0.25,0.5,0.75,1] %}
+                                                    <span class="tick">{{ scale }}</span>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
                                 </div>
-                <div class="tab-pane fade" id="t2-map-tabs" role="tabpanel" aria-labelledby="t2-map-tab">
-                                    <!-- T1 simulation options-->
+                              </div>
+                              <div class="col-8 p-0 h-100">
+                                <div class="card h-100">
+                                    <div class="card-header">
+                                        <button class="btn btn-lg btn-outline-primary btn-light" id="t2-map-button">Mapping</button>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row h-100">
+                                            <div class="col-4 border-end">
+                                                <div class="row h-50">
+                                                    <div class="col-9">
+                                                        <div class="row">
+                                                            <div class="col-6">
+                                                                {{ template_game_form.t2map_minTE_field.label(class="form-label") }}
+                                                            </div>
+                                                            <div class="col-6">
+                                                                {{ template_game_form.t2map_minTE_field(class="form-control") }}
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-6">
+                                                                {{ template_game_form.t2map_maxTE_field.label(class="form-label") }}
+                                                            </div>
+                                                            <div class="col-6">
+                                                                {{ template_game_form.t2map_maxTE_field(class="form-control") }}
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-6">
+                                                                {{ template_game_form.t2map_numTE_field.label(class="form-label") }}
+                                                            </div>
+                                                            <div class="col-6">
+                                                                {{ template_game_form.t2map_numTE_field(class="form-control") }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3 d-flex align-items-center">
+                                                        <div class="btn btn-light">
+                                                        Set
+                                                    </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row h-25">
+                                                    <div class="col-4">
+                                                        {{ template_game_form.t2map_allTE_field.label(class="form-label") }}
+                                                    </div>
+                                                    <div class="col-8">
+                                                        {{ template_game_form.t2map_allTE_field(class="form-control") }}
+                                                    </div>
+                                                </div>
 
+                                                <div class="row h-25">
+                                                    <button class="btn btn-lg btn-info">Scan</button>
+                                                </div>
+
+                                            </div>
+                                            <div class="col-4 border-end">
+                                                    <div class="row h-25">
+                                                        <div class="col-4 form-label">Sphere #</div>
+                                                            <div class="col-8 btn-group shadow-none">
+                                                                {% for u in range(4) %}
+                                                                    <input type="radio" class="btn-check" name="roi-options" id="sphere{{ u + 1 }}" autocomplete="off">
+                                                                    <label class="btn btn-outline-primary" for="sphere{{ u + 1 }}">{{ u + 1 }}</label>
+                                                                {% endfor %}
+                                                            </div>
+                                                    </div>
+                                                    <div class="row h-50">
+                                                        <div class="col-4 form-label">Equation</div>
+                                                        <div class="col-8"></div>
+                                                    </div>
+                                                    <div class="row h-25">
+                                                        <button class="btn btn-lg btn-primary">Fit</button>
+                                                    </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="row h-25 d-flex justify-items-center align-items-center">
+                                                    <div class="form-label">Display</div>
+                                                </div>
+                                                <div class="row h-50">
+                                                    <div class="col h-50">
+                                                        <div class="btn-group shadow-none">
+                                                          <input type="radio" name="t2map-disp-options" class="btn-check" id="t2-map-disp" autocomplete="off" checked>
+                                                          <label class="btn btn-outline-primary" for="t2-map-disp">T2 map</label>
+                                                          <input type="radio" name="t2map-disp-options" class="btn-check" id="t2-pht-disp" autocomplete="off">
+                                                          <label class="btn btn-outline-primary" for="t2-pht-disp">T2 phantom</label>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row h-25">
+                                                    <button class="btn btn-lg btn-success">Map</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
+                              </div>
+                          </div>
 
+                      </div>
 
+                    </div>
+                  </div>
             </div>
-
-
         </div>
     </div>
 

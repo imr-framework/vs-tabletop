@@ -170,15 +170,27 @@ class Game5Form(FlaskForm):
 class Game6Form(FlaskForm):
     mapping_type_field = SelectField('Map type',choices=[('T1','T1'),('T2','T2')],default='T2')
 
-    t1sim_T1_field = DecimalField('T1 (ms)')
-    t1sim_T2_field = DecimalField('T2 (ms)')
+    t1sim_T1_field = DecimalField('T1 (ms)',default=500)
+    t1sim_duration_field = DecimalField('Duration (ms)',default=1500)
+    t1sim_TI_field = DecimalField('TI (ms)', default=200)
+    t1sim_MZ0_field = DecimalRangeField('Init Mz (% M0)',validators=[NumberRange(min=-100,max=100)],default=0)
 
+    t2sim_T2_field = DecimalField('T2 (ms)',default=50)
+    t2sim_duration_field = DecimalField('Duration (ms)',default=150)
+    t2sim_TE_field = DecimalField('TE (ms)',default=25)
+    t2sim_MX0_field = DecimalRangeField('Init Mx (% M0)', validators=[NumberRange(min=0,max=100)],default=100)
 
-    t2sim_T2_field = DecimalField('T2 (ms)')
+    t1map_minTI_field = DecimalField('TI low (ms)',validators=[NumberRange(min=5,max=20)],default=5)
+    t1map_maxTI_field = DecimalField('TI high (ms)',validators=[NumberRange(min=20,max=1000)],default=1000)
+    t1map_numTI_field = IntegerField('Num. of TIs',default=6)
+    t1map_allTI_field = StringField('TI array (ms)',default="")
+    t1map_ROI_field = RadioField('Sphere #', choices=[(1,'1'),(2,'2'),(3,'3'),(4,'4')])
 
-    t1map_minTI_field = DecimalField('TI low',validators=[NumberRange(min=5,max=20)],default=5)
-    t1map_maxTI_field = DecimalField('TI high',validators=[NumberRange(min=20,max=1000)],default=1000)
-    t1map_numTI_field = IntegerField('Number of TIs',default=6)
+    t2map_minTE_field = DecimalField('TE low',validators=[NumberRange(min=1,max=100)],default=50)
+    t2map_maxTE_field = DecimalField('TE high',validators=[NumberRange(min=120,max=500)],default=250)
+    t2map_numTE_field = IntegerField('Num. of TEs',default=6)
+    t2map_allTE_field = StringField('TE array (ms)',default="")
+
 
 
 
@@ -200,6 +212,8 @@ class Game7Form(FlaskForm):
     submit_field = SubmitField("Project all")
 
 class Game8Form(FlaskForm):
+    dimension_field = SelectField("Dimension",choices=[('3d','3D to 2D'),('2d','2D to 1D')])
+
     proj_2d_axis_field = RadioField("2D proj. axis", choices=['x','y','z'],default='z')
     proj_1d_angle_field = DecimalField("1D proj. angle",validators=[NumberRange(min=0,max=360)],default=90)
 
