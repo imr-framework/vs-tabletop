@@ -6,7 +6,7 @@ from vstabletop.forms import Game6Form
 import vstabletop.utils as utils
 from vstabletop.info import GAME6_INFO
 
-DEFAULT_TIS = [5,10,20,50,80,100,150,250,500,1000] # Seconds
+DEFAULT_TIS = [5,10,20,50,100,500] # Seconds
 DEFAULT_TES = [8,16,24,32,64,128] # Seconds
 @app.route('/games/6',methods=["GET","POST"])
 def game6():
@@ -27,7 +27,7 @@ def change_to_T1(payload):
     if session['game6']['type'] == 'sim':
         j1,j2,j3 = game6_worker_sim(session['game6'])
     else:
-        j1,j2,j3 = game6_worker_map(session['game6'],update_list={'images':'blank','roi':'blank','map':'blank'},
+        j1,j2,j3 = game6_worker_map(session,update_list={'images':'blank','roi':'blank','map':'blank'},
                                                      display_list=[True,True,True])
 
     socketio.emit('Update plots',{'plots':{'left':j1, 'middle':j2, 'right':j3},'disp':{'left':True,'middle':True,'right':True}})
@@ -61,12 +61,33 @@ def change_to_mapping():
 
 @socketio.on("Scan T1")
 def scan_t1(payload):
+    ti_array_str = payload['ti_array_text'].split(',')
+    ti_array = [float(ti) for ti in ti_array_str]
+    utils.update_session_subdict(session,'game6',{'t1_map_TIs':ti_array})
+
     j1,j2,j3 = game6_worker_map(session,update_list={'images':'new','roi':None,'map':None},display_list=[True,False,False])
     socketio.emit('Update plots', {'plots':{'left': j1, 'middle': j2, 'right': j3}, 'disp':{'left':True,'middle':False,'right':False}})
+
+@socketio.on("Scan T2")
+def scan_t2(payload):
+    te_array_str = payload['te_array_text'].split(',')
+    te_array = [float(te) for te in te_array_str]
+    utils.update_session_subdict(session,'game6',{'t2_map_TEs': te_array})
+
+    j1,j2,j3 = game6_worker_map(session,update_list={'images':'new','roi':None,'map':None},display_list=[True,False,False])
+    socketio.emit('Update plots', {'plots':{'left': j1, 'middle': j2, 'right': j3}, 'disp':{'left':True,'middle':False,'right':False}})
+
 
 @socketio.on('Fit T1')
 def fit_t1(payload):
     print(f"T1 fit requested for sphere {payload['sphere']}")
+    j1,j2,j3 = game6_worker_map(session,update_list={'images': None, 'roi': 'fit', 'map':None},
+                                        display_list=[False,True,False])
+    socketio.emit('Update plots', {'plots':{'left': j1, 'middle': j2, 'right': j3}, 'disp':{'left':False,'middle':True,'right':False}})
+
+@socketio.on('Fit T2')
+def fit_t2(payload):
+    print(f"T2 fit requested for sphere {payload['sphere']}")
     j1,j2,j3 = game6_worker_map(session,update_list={'images': None, 'roi': 'fit', 'map':None},
                                         display_list=[False,True,False])
     socketio.emit('Update plots', {'plots':{'left': j1, 'middle': j2, 'right': j3}, 'disp':{'left':False,'middle':True,'right':False}})
@@ -79,9 +100,17 @@ def map_t1(payload):
     socketio.emit('Reset T1 map button')
     socketio.emit('Update plots', {'plots':{'left': j1, 'middle': j2, 'right': j3}, 'disp':{'left':False,'middle':False,'right':True}})
 
-# TODO expand with T2
-@socketio.on('Find ROI signal')
-def find_ROI_signal(payload):
+@socketio.on('Map T2')
+def map_t2(payload):
+    print(f'T2 map calculation requested!')
+    j1,j2,j3 = game6_worker_map(session,update_list={'images':None, 'roi': None, 'map': 'new'},
+                                        display_list=[False,False,True])
+    socketio.emit('Reset T2 map button')
+    socketio.emit('Update plots', {'plots':{'left': j1, 'middle': j2, 'right': j3}, 'disp':{'left':False,'middle':False,'right':True}})
+
+
+@socketio.on('Find T1 ROI signal')
+def find_T1_ROI_signal(payload):
     ind = int(payload['sphere'])
     # Update session and get the plots
     utils.update_session_subdict(session,'game6',{'current_sphere': ind })
@@ -91,7 +120,22 @@ def find_ROI_signal(payload):
     c, r = calculate_circle(type="T1",sphere=ind)
     socketio.emit('Add circle to image',{'center': c, 'radius': r})
 
+@socketio.on('Find T2 ROI signal')
+def find_T2_ROI_signal(payload):
+    ind = int(payload['sphere'])
+    utils.update_session_subdict(session, 'game6', {'current_sphere': ind})
+    j1, j2, j3 = game6_worker_map(session, update_list={'images': None, 'roi': 'new', 'map': None},
+                                  display_list=[False, True, False])
+    socketio.emit('Update plots', {'plots': {'left': j1, 'middle': j2, 'right': j3},
+                                   'disp': {'left': False, 'middle': True, 'right': False}})
+    # Send message to add corresponding circle to left plot
+    print(f'calculating circle #{ind}')
+    c, r = calculate_circle(type="T2", sphere=ind)
+    socketio.emit('Add circle to image', {'center': c, 'radius': r})
+
+
 @socketio.on('T1 switch to phantom')
+@socketio.on('T2 switch to phantom')
 def t1_switch_to_phantom():
     j1, j2, j3 = game6_worker_map(session, update_list={'images': None, 'roi': None, 'map': 'phantom'},
                                   display_list=[False, False, True])
@@ -99,6 +143,7 @@ def t1_switch_to_phantom():
                                    'disp': {'left': False, 'middle': False, 'right': True}})
 
 @socketio.on('T1 switch to map')
+@socketio.on('T2 switch to map')
 def t1_switch_to_map():
     j1, j2, j3 = game6_worker_map(session, update_list={'images': None, 'roi': None, 'map': 'mapped'},
                                   display_list=[False, False, True])

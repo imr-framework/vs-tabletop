@@ -32,7 +32,7 @@ GRID_COLOR = "white"
 COLOR_T1 = "navy"
 COLOR_T2 = "red"
 COLOR_T1_FIT = "deepskyblue"
-COLOR_TR_FIT = "indianred"
+COLOR_T2_FIT = "indianred"
 
 N = GAME6_INFO['phantom_n']
 FOV = GAME6_INFO['phantom_fov']
@@ -43,13 +43,13 @@ def game6_worker_sim(info):
     if info['mode'] == 'T1':
         T1 = info['t1_sim']*1e-3
         TI = info['t1_sim_ti']*1e-3
-        fig1 = make_t1_spin_plot(t1=T1)
+        fig1 = make_t1_spin_plot(t1=T1,mz0=info['t1_sim_mz0']/100)
         fig2 = make_t1_mag_plot(t1=T1,mz0=info['t1_sim_mz0']/100,duration=info['t1_sim_dur']*1e-3)
         fig3 = make_t1_sequence_plot(t1=T1,ti=TI)
     elif info['mode'] == 'T2':
         T2 = info['t2_sim']*1e-3
         TE = info['t2_sim_te']*1e-3
-        fig1 = make_t2_spin_plot(t2=T2)
+        fig1 = make_t2_spin_plot(t2=T2,mx0=info['t2_sim_mx0']/100)
         fig2 = make_t2_mag_plot(t2=T2,mx0=info['t2_sim_mx0']/100,duration=info['t2_sim_dur']*1e-3)
         fig3 = make_t2_sequence_plot(t2=T2, te=TE)
 
@@ -59,11 +59,10 @@ def game6_worker_sim(info):
 
     return graphJSON_left, graphJSON_middle, graphJSON_right
 
-# Sim mode
-def make_t1_spin_plot(t1):
+def make_t1_spin_plot(t1,mz0):
     # Simulate
     N_steps = 100
-    mags, __ = simulate_spin(m_first=[0,0,0], duration=3*t1, steps=N_steps, pdt1t2=(1,t1,0))
+    mags, __ = simulate_spin(m_first=[0,0,mz0], duration=3*t1, steps=N_steps, pdt1t2=(1,t1,0))
 
     # Make animated figure
     axis_shared = dict(
@@ -101,10 +100,10 @@ def make_t1_spin_plot(t1):
 
     return fig
 
-def make_t2_spin_plot(t2):
+def make_t2_spin_plot(t2,mx0):
     # Simulate
     N_steps = 100
-    mags, __ = simulate_spin(m_first=[1,0,0], duration=3*t2, steps=N_steps, pdt1t2=(1,0,t2))
+    mags, __ = simulate_spin(m_first=[mx0,0,0], duration=3*t2, steps=N_steps, pdt1t2=(1,0,t2))
 
     # Make animated figure
     axis_shared = dict(
@@ -204,9 +203,44 @@ def make_t1_sequence_plot(t1,ti):
     # RF
     fig.add_trace(go.Scatter(x=[0,0],y=[-1.5,1.5],mode="lines",line=dict(width=3,color="cyan"),name="RF 180"))
     fig.add_trace(go.Scatter(x=[ti,ti],y=[-1.5,1.5],mode="lines",line=dict(width=3,color="maroon"),name="RF 90"))
-
+    # Magnetization
     fig.add_trace(go.Scatter(x=times,y=mags[:,0],mode="lines",name="Mx",line=dict(width=2,color=SPIN_COLOR_XY)))
     fig.add_trace(go.Scatter(x=times,y=mags[:,2],mode="lines",name="Mz",line=dict(width=2,color=SPIN_COLOR_Z)))
+    # Text
+    fig.add_trace(go.Scatter(x=[ti/2],y=[-0.25],mode="text",text=['TI'],textfont=dict(color='gray',size=16),textposition="middle center"))
+
+    # Arrow 1
+    arrow1 = go.layout.Annotation(dict(
+        x=0,
+        y=-0.25,
+        xref="x", yref="y",
+        text="",
+        showarrow=True,
+        axref="x", ayref='y',
+        ax=ti/10,
+        ay=-0.25,
+        arrowhead=3,
+        arrowwidth=1.5,
+        arrowcolor='gray', )
+    )
+
+    # Arrow 2
+    arrow2 = go.layout.Annotation(dict(
+        x=ti,
+        y=-0.25,
+        xref="x", yref="y",
+        text="",
+        showarrow=True,
+        axref="x", ayref='y',
+        ax= ti - ti/10,
+        ay=-0.25,
+        arrowhead=3,
+        arrowwidth=1.5,
+        arrowcolor='gray', )
+    )
+
+    fig.update_layout(
+        annotations=[arrow1, arrow2])
     fig.update_xaxes(range=[times[0],times[-1]])
     fig.update_yaxes(range=[-1.2,1.2])
     fig.update_layout(margin=dict(l=5, r=5, b=5, t=5, pad=0))
@@ -233,9 +267,46 @@ def make_t2_sequence_plot(t2,te):
 
     # RF
     fig.add_trace(go.Scatter(x=[0, 0], y=[-1.5, 1.5], mode="lines", line=dict(width=3, color="maroon"),name="RF 90"))
-
+    # Magnetizations
     fig.add_trace(go.Scatter(x=times, y=mags[:, 0], mode="lines",line=dict(width=2,color=SPIN_COLOR_XY),name="Mxy"))
     fig.add_trace(go.Scatter(x=times, y=mags[:, 2], mode="lines",line=dict(width=2,color=SPIN_COLOR_Z),name="Mz"))
+    # Timing
+    fig.add_trace(go.Scatter(x=[te,te],y=[-1.5,1.5],mode="lines",line=dict(width=3,color="gray",dash='dash')))
+    fig.add_trace(go.Scatter(x=[te/2],y=[-0.25],mode="text",text=['TE'],textfont=dict(color='gray',size=16),textposition="middle center"))
+
+    # Arrow 1
+    arrow1 = go.layout.Annotation(dict(
+        x=0,
+        y=-0.25,
+        xref="x", yref="y",
+        text="",
+        showarrow=True,
+        axref="x", ayref='y',
+        ax=te/10,
+        ay=-0.25,
+        arrowhead=3,
+        arrowwidth=1.5,
+        arrowcolor='gray', )
+    )
+
+    # Arrow 2
+    arrow2 = go.layout.Annotation(dict(
+        x=te,
+        y=-0.25,
+        xref="x", yref="y",
+        text="",
+        showarrow=True,
+        axref="x", ayref='y',
+        ax=te - te/10,
+        ay=-0.25,
+        arrowhead=3,
+        arrowwidth=1.5,
+        arrowcolor='gray', )
+    )
+
+    fig.update_layout(
+        annotations=[arrow1, arrow2])
+
     fig.update_xaxes(range=[times[0], times[-1]])
     fig.update_yaxes(range=[-1.2, 1.2])
     fig.update_layout(margin=dict(l=5, r=5, b=5, t=5, pad=0))
@@ -256,13 +327,10 @@ def simulate_spin(m_first, duration, steps, pdt1t2):
         mags[q+1, :] = np.squeeze(spin.get_m())
     return mags, tmodel
 
-
-# TODO
 # Map mode
 def game6_worker_map(session,update_list,display_list):
     info = session['game6']
     if info['mode'] == 'T1':
-        print("Start mapping for T1")
         # Perform any updates
         # First
         if update_list['images']=='new':
@@ -307,11 +375,42 @@ def game6_worker_map(session,update_list,display_list):
         fig6 = display_t1_map(info, map, type=update_list['map']) if display_list[2] else None
 
     elif info ['mode'] == 'T2':
-        # TODO account for update_list (After T1 works!!!!!)
-        print("Start mapping for T2")
-        fig4 = display_t2_images()
-        fig5 = display_t2_ROI_signal()
-        fig6 = display_t2_map()
+        # First
+        if update_list['images']=='new':
+            t2_images = make_t2_images(info) # Session will get updated
+            info['t2_images'] = t2_images
+            utils.update_session_subdict(session,'game6',{'t2_images':t2_images})
+        elif update_list['images']=='blank':
+            info['t2_images'] = None
+            utils.update_session_subdict(session,'game6',{'t2_images':None})
+
+        # Second
+        if update_list['roi'] == 'new':
+            roi_signal = make_t2_ROI_signal(info)  # Session will get updated
+            info['t2_roi_signal'] = roi_signal
+            utils.update_session_subdict(session, 'game6', {'t2_roi_signal': roi_signal})
+
+        elif update_list['roi'] == 'fit':
+            roi_fit = make_t2_ROI_fit(info)  # Session will get updated
+            print('roi_fit', roi_fit)
+            info['t2_roi_fit'] = roi_fit
+            utils.update_session_subdict(session, 'game6', {'t2_roi_fit': roi_fit})
+
+        # Third
+        if update_list['map']=='new':
+            map = make_t2_map(info)
+            utils.update_session_subdict(session,'game6',{'t2_map': map}) # in ms
+        elif update_list['map']=='mapped':
+            map = info['t2_map']
+        elif update_list['map']=='phantom':
+            map = info['t2_phantom'].T2map*1e3
+        else:
+            map = np.zeros(np.shape(info['t2_phantom'].T2map))
+
+        fig4 = display_t2_images(info) if display_list[0] else None
+        fig5 = display_t2_ROI_signal(info,include_fit=(update_list['roi']=='fit')) if display_list[1] else None
+        fig6 = display_t2_map(info, map, type=update_list['map']) if display_list[2] else None
+
     else:
         raise ValueError('Mode can only be T1 or T2')
     # Make plots
@@ -321,20 +420,19 @@ def game6_worker_map(session,update_list,display_list):
 
     return graphJSON_left, graphJSON_middle, graphJSON_right
 
-# TODO get rid of
-def make_phantom(mode):
-    # Utilize Virtual Scanner's cylindrical phantom.
-    # T1 array
-    if mode == "T1":
-        myphantom = makeCylindricalPhantom(dim=2,n=32,dir='z',loc=0,fov=0.24,type_params=None)
-        return myphantom.T1map
-    # T2 array
-    elif mode == "T2":
-        myphantom = makeCylindricalPhantom(dim=2,n=32,dir='z',loc=-0.08,fov=0.24,type_params=None)
-        return myphantom.T2map
-    # T2 array
-    else:
-        raise ValueError('This mode is not supported. Use T1 or T2.')
+# def make_phantom(mode):
+#     # Utilize Virtual Scanner's cylindrical phantom.
+#     # T1 array
+#     if mode == "T1":
+#         myphantom = makeCylindricalPhantom(dim=2,n=32,dir='z',loc=0,fov=0.24,type_params=None)
+#         return myphantom.T1map
+#     # T2 array
+#     elif mode == "T2":
+#         myphantom = makeCylindricalPhantom(dim=2,n=32,dir='z',loc=-0.08,fov=0.24,type_params=None)
+#         return myphantom.T2map
+#     # T2 array
+#     else:
+#         raise ValueError('This mode is not supported. Use T1 or T2.')
 
 def initialize_phantom(session):
     if session['game6']['t1_phantom'] is None:
@@ -357,10 +455,8 @@ def initialize_phantom(session):
 def make_t1_images(info):
     # Simulate with signal equation
     def model(t1,pd,TI):
-        # T1 is an array
-        # TI is one number
-        return pd*(1-2*np.exp(-TI/t1)) + np.random.normal(0,0.05,size=(pd.shape))
-
+        # T1 is an array; TI is one number
+        return pd*(1-2*np.exp(-TI/t1)) + pd*np.random.normal(0,0.05,size=(pd.shape))
     t1 = info['t1_phantom'].T1map*1e3
     pd = info['t1_phantom'].PDmap
     TIs = info['t1_map_TIs']
@@ -368,32 +464,43 @@ def make_t1_images(info):
 
     return t1_images
 
-# TODO
-def make_t2_images(phantom,te_array):
-    fig = go.Figure()
-    def model(t1,ti):
-        return M0*(1-2*np.exp(-ti/t1))
+def make_t2_images(info):
+    def model(t2,pd,TE):
+        return pd*np.exp(-TE/t2) + pd*np.random.normal(0,0.05,size=(pd.shape))
+    t2 = info['t2_phantom'].T2map*1e3
+    pd = info['t2_phantom'].PDmap
+    TEs = info['t2_map_TEs']
+    t2_images = [model(t2,pd,TE) for TE in TEs]
 
-    fig.update_layout(margin=dict(l=5, r=5, b=5, t=5, pad=0))
+    return t2_images
 
-    return fig
-
-# TODO
 def make_t1_ROI_signal(info):
     n = info['current_sphere'] # 0(None),1,2,3,4
     if n == 0:
         signal = np.zeros(info['t1_map_TIs'].shape)
-        print('Non sphere selected')
+        print('No sphere selected')
     else:
         # Extract signal from ROI (average)
         signal = np.array([np.sum(info['t1_masks'][n-1]*t1_image)/np.sum(info['t1_masks'][n-1]) for t1_image in info['t1_images']])
+
+    return signal
+
+def make_t2_ROI_signal(info):
+    n = info['current_sphere'] # 0(None),1,2,3,4
+    if n == 0:
+        signal = np.zeros(info['t2_map_TEs'].shape)
+        print('No sphere selected')
+    else:
+        signal = np.array([np.sum(info['t2_masks'][n-1]*t2_image)/np.sum(info['t2_masks'][n-1]) for t2_image in info['t2_images']])
+
     return signal
 
 def make_t1_ROI_fit(info):
     popt = make_t1_fit(np.array(info['t1_map_TIs'])*1e-3, info['t1_roi_signal'])
-    # popt, pcov = curve_fit(T1_sig_eq_noTR, np.array(info['t1_map_TIs'])*1e-3, y_data,
-    #                        p0=(0.75, 1.5, 0), # scale, T1, offset
-    #                        bounds=([0.1, 0.1, -np.inf], [0.8, 1.5, np.inf]))
+    return popt
+
+def make_t2_ROI_fit(info):
+    popt = make_t2_fit(np.array(info['t2_map_TEs'])*1e-3, info['t2_roi_signal'])
     return popt
 
 def make_t1_fit(ti, signal):
@@ -402,7 +509,10 @@ def make_t1_fit(ti, signal):
     popt, __ = curve_fit(T1_sig_eq_noTR, ti, signal, p0=(0.75,1.5,0),bounds=([0,0,-np.inf],[1,5,np.inf]))
     return popt
 
-# TODO
+def make_t2_fit(te, signal):
+    popt, __ = curve_fit(T2_sig_eq_noTR, te, signal, p0=(0.75,0.05),bounds=([0,0],[1,4]))
+    return popt
+
 def make_t1_map(info):
     print("Start T1 mapping")
     # Perform mapping at every location
@@ -413,48 +523,27 @@ def make_t1_map(info):
             signal = [images[q][u,v][0] for q in range(len(images))]
             popt = make_t1_fit(np.array(info['t1_map_TIs']) * 1e-3, signal)
             map[u,v] = popt[1]*1e3 # Store in ms
-    print("End T1 mapping")
+    print("T1 mapping completed")
     return map
 
-
-# TODO
-def make_t2_ROI_signal():
-    fig = go.Figure()
-    fig.update_layout(margin=dict(l=5, r=5, b=5, t=5, pad=0))
-
-
-    return fig
-
-
-def make_t2_ROI_fit():
-    return
-# TODO
-def make_t2_map(display="phantom"):
-    # Display = "phantom" or "map"
-    fig = go.Figure()
-    if display == "phantom":
-        t2_phantom = make_phantom('T2')*1e3
-        fig.add_trace(
-            go.Heatmap(z=np.squeeze(t2_phantom), colorscale='viridis', showscale=True, colorbar={"title": "T2 (ms)"}))
-        fig.update_xaxes(range=[1, t2_phantom.shape[0]])
-        fig.update_yaxes(range=[1, t2_phantom.shape[1]])
-    elif display == "map":
-        # Load existing map from session (another button controls creation of map.)
-        fig.add_trace(go.Heatmap(z=np.zeros(32,32),colorscale='gray',showscale=False))
-    else:
-        fig.add_trace(go.Heatmap(z=np.zeros(32,32),colorscale='gray',showscale=False))
-
-    fig.update_layout(plot_bgcolor='rgba(0,0,0,0)', yaxis=dict(scaleanchor='x'), margin=dict(l=5, r=5, b=5, t=5, pad=0))
-    fig.update_xaxes(showticklabels=False)
-    fig.update_yaxes(showticklabels=False)
-    return fig
+def make_t2_map(info):
+    print("Start T2 mapping")
+    images = info['t2_images']
+    map = np.zeros(images[0].shape)
+    for u in range(images[0].shape[0]):
+        for v in range(images[0].shape[1]):
+            signal = [images[q][u,v][0] for q in range(len(images))]
+            popt = make_t2_fit(np.array(info['t2_map_TEs'])*1e-3, signal)
+            map[u,v] = popt[1]*1e3
+    print("T2 mapping completed")
+    return map
 
 def display_t1_images(info):
     t1_images = info['t1_images']
     if t1_images is not None:
         fig = go.Figure(
-            data=[go.Heatmap(z=np.squeeze(t1_images[0]),colorscale="gray",showscale=False)],
-            frames=[go.Frame(data=go.Heatmap(z=np.squeeze(t1_images[u]),
+            data=[go.Heatmap(z=np.absolute(np.squeeze(t1_images[0])),colorscale="gray",showscale=False)],
+            frames=[go.Frame(data=go.Heatmap(z=np.absolute(np.squeeze(t1_images[u])),
                                              colorscale="gray",
                                              showscale=False),name=f'frame{u}') for u in range(len(t1_images)) ])
 
@@ -520,6 +609,78 @@ def display_t1_images(info):
 
     return fig
 
+
+# TODO display image stored in session
+def display_t2_images(info):
+    t2_images = info['t2_images']
+    if t2_images is not None:
+        fig = go.Figure(
+            data=[go.Heatmap(z=np.absolute(np.squeeze(t2_images[0])), colorscale="gray", showscale=False)],
+            frames=[go.Frame(data=go.Heatmap(z=np.absolute(np.squeeze(t2_images[u])),
+                                             colorscale="gray",
+                                             showscale=False), name=f'frame{u}') for u in range(len(t2_images))])
+
+        fig.update_layout(plot_bgcolor='rgba(0,0,0,0)', yaxis=dict(scaleanchor='x'),
+                          margin=dict(l=5, r=5, b=5, t=5, pad=0))
+        fig.update_xaxes(showticklabels=False)
+        fig.update_yaxes(showticklabels=False)
+
+        # Add sliders
+        def frame_args(duration):
+            return {
+                "frame": {"duration": duration},
+                "mode": "immediate",
+                "fromcurrent": True,
+                "transition": {"duration": duration, "easing": "linear"},
+            }
+
+        sliders = [
+            {
+                "pad": {"b": 10, "t": 60},
+                "len": 0.9,
+                "x": 0.1,
+                "y": 0,
+                "steps": [
+                    {
+                        "args": [[f.name], frame_args(duration=500)],
+                        "label": f'{info["t2_map_TEs"][k]} ms',
+                        "method": "animate",
+                    }
+                    for k, f in enumerate(fig.frames)
+                ],
+            }
+        ]
+
+        # Layout
+        fig.update_layout(
+            updatemenus=[
+                {
+                    "buttons": [
+                        {
+                            "args": [None, frame_args(50)],
+                            "label": "&#9654;",  # play symbol
+                            "method": "animate",
+                        },
+                        {
+                            "args": [[None], frame_args(0)],
+                            "label": "&#9724;",  # pause symbol
+                            "method": "animate",
+                        },
+                    ],
+                    "direction": "left",
+                    "pad": {"r": 10, "t": 70},
+                    "type": "buttons",
+                    "x": 0.1,
+                    "y": 0,
+                }
+            ],
+            sliders=sliders
+        )
+
+    else:
+        fig = make_blank_plot('image')
+    return fig
+
 def display_t1_ROI_signal(info,include_fit):
     TIs = info['t1_map_TIs']
     signal = info['t1_roi_signal']
@@ -543,17 +704,60 @@ def display_t1_ROI_signal(info,include_fit):
 
         fig.add_trace(go.Scatter(x=timodel,y=T1_sig_eq_noTR(timodel_input,a,b,c),mode="lines",
                                  line=dict(width=2,color=COLOR_T1_FIT),name="Fit",showlegend=True))
+        # Add text of T1
+        fig.add_trace(go.Scatter(x=[timodel[0]],y=[1],mode="text",
+                                 text=[f'T1 = {int(np.round(b*1e3))} ms'],
+                                 textfont=dict(
+                                     color=COLOR_T1_FIT,
+                                     size=16),
+                                 textposition="bottom right",showlegend=False))
 
 
     fig.update_layout(margin=dict(l=5, r=5, b=5, t=5, pad=0))
     return fig
+
+
+# TODO
+def display_t2_ROI_signal(info,include_fit):
+    TEs = info['t2_map_TEs']
+    signal = info['t2_roi_signal']
+    if signal is None:
+        fig = make_blank_plot('signal')
+    else:
+        fig = go.Figure(go.Scatter(
+            x=TEs,
+            y=signal,
+            mode="markers",
+            marker=dict(color=COLOR_T2, size=10),
+            name="Signal",
+            showlegend=True
+        ))
+    # TODO
+    if include_fit:
+        # Plot the fit curve using the signal equation
+        temodel = np.linspace(0, TEs[-1], 100)
+        temodel_input = temodel * 1e-3
+        a, b = info['t2_roi_fit']
+
+        fig.add_trace(go.Scatter(x=temodel, y=T2_sig_eq_noTR(temodel_input, a, b), mode="lines",
+                                 line=dict(width=2, color=COLOR_T2_FIT), name="Fit", showlegend=True))
+        # Add text of T1
+        fig.add_trace(go.Scatter(x=[temodel[0]], y=[1], mode="text",
+                                 text=[f'T2 = {int(np.round(b * 1e3))} ms'],
+                                 textfont=dict(
+                                     color=COLOR_T2_FIT,
+                                     size=16),
+                                 textposition="bottom right", showlegend=False))
+
+    fig.update_layout(margin=dict(l=5, r=5, b=5, t=5, pad=0))
+    return fig
+
 
 def display_t1_map(info,map,type):
     # Display = "phantom" or "map"
     if type == "blank":
         return make_blank_plot('image')
     fig = go.Figure()
-    print('Map dimensions', map.shape)
     fig.add_trace(go.Heatmap(z=np.squeeze(map),colorscale='viridis', showscale=True,  colorbar={"title":"T1 (ms)"}))
     fig.update_layout(plot_bgcolor='rgba(0,0,0,0)',yaxis=dict(scaleanchor='x'),margin=dict(l=5, r=5, b=5, t=5, pad=0))
     fig.update_xaxes(showticklabels=False)
@@ -561,21 +765,16 @@ def display_t1_map(info,map,type):
 
     return fig
 
-
-
-# TODO display image stored in session
-def display_t2_images(info):
+def display_t2_map(info,map,type):
+    # Display = "phantom" or "map"
+    if type == "blank":
+        return make_blank_plot('image')
     fig = go.Figure()
-    return fig
+    fig.add_trace(go.Heatmap(z=np.squeeze(map),colorscale='viridis', showscale=True,  colorbar={"title":"T2 (ms)"}))
+    fig.update_layout(plot_bgcolor='rgba(0,0,0,0)',yaxis=dict(scaleanchor='x'),margin=dict(l=5, r=5, b=5, t=5, pad=0))
+    fig.update_xaxes(showticklabels=False)
+    fig.update_yaxes(showticklabels=False)
 
-# TODO
-def display_t2_ROI_signal(info):
-    fig = go.Figure()
-    return fig
-
-# TODO
-def display_t2_map(info):
-    fig = go.Figure()
     return fig
 
 def make_blank_plot(type="image"):
@@ -596,31 +795,19 @@ def calculate_circle(type,sphere):
     # Scaling : from [-FOV/2, FOV/2] to [0,N]
     N = GAME6_INFO['phantom_n']
     FOV = GAME6_INFO['phantom_fov']
-    c = (np.array(list(GAME6_INFO['t1_array_centers'][sphere-1])) + FOV/2) * ((N-1)/FOV)
     r = N/8
+    c = (np.array(list(GAME6_INFO[f'{type.lower()}_array_centers'][sphere-1])) + FOV/2) * ((N-1)/FOV)
+
     return list(c), r
 
+def T1_sig_eq_noTR(X,a,b,c):
+    # X : TI
+    # a : PD
+    # b : T1
+    # c (offset, not used)
+    return a * (1 - 2 * np.exp(- X / b)) # + c
 
-
-
-def T1_sig_eq_noTR(X, a, b, c):
-    """
-    Generate an exponential function for curve fitting.
-
-    Parameters
-    ----------
-    X : float
-        Independent variable
-    a : float
-        Curve fitting parameters
-    b : float
-        Curve fitting parameters
-    c : float
-        Curve fitting parameters
-
-    Returns
-    -------
-    float
-        Exponential function used for T1 curve fitting
-    """
-    return a * (1 - 2 * np.exp(- X / b))
+def T2_sig_eq_noTR(X,a,b):
+    # a : PD
+    # b : T2
+    return a * np.exp(-X/b)
