@@ -1,5 +1,5 @@
 # Names and global data
-
+import numpy as np
 # Game names
 GAMES = ['What is in an image?',
           'k-space magik', 'Brains, please!', 'Fresh Blood',
@@ -135,7 +135,14 @@ GAME5_M_INFO = [
     ([45,90],[1,0,0]),
 ]
 
-
+FOV = 0.24
+R = FOV/2
+s2 = np.sqrt(2)
+GAME6_INFO = {
+    'phantom_n': 32, 'phantom_fov': FOV,
+    't1_array_centers': [(R/(2*s2),R/(2*s2)),(-R/(2*s2),R/(2*s2)),(-R/(2*s2),-R/(2*s2)),(R/(2*s2),-R/(2*s2))],
+    't2_array_centers': [(0,R/2),(-R/2,0),(0,-R/2),(R/2,0)]
+}
 
 # Game 7 static text
 

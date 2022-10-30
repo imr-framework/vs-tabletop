@@ -48,7 +48,7 @@ def update_parameter(info):
     """Update session parameters in response to frontend message
     """
 
-    print(session)
+    #print(session)
     # Update corresponding entry in session
     print(info['id'], 'id', info['value'], 'value')
     if info['id'] in ['Matrix_scale', 'zero_fill']:
@@ -59,7 +59,7 @@ def update_parameter(info):
         info['value'] = float(info['value']) / 1000
     elif info['id'] in ['flexCheckChecked1', 'flexCheckChecked2', 'flexCheckChecked3', 'flexCheckChecked4']:
         info['value']
-    else:
+    elif info['value'] not in ['a','b','c','d']:
         info['value'] = float(info['value'])
 
     session['game1'][info['id']] = info['value']

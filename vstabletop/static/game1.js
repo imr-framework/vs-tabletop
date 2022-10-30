@@ -30,6 +30,9 @@ $('.answer-mc').on('click', (event)=>{
     submit_id = event.target.id;
     q_ind = submit_id[submit_id.length-1]
     console.log(submit_id);
+
+    console.log($('.q0-choice:checked'));
+
     choice = $(`.q${q_ind}-choice:checked`).attr("value");
 
     console.log(choice)

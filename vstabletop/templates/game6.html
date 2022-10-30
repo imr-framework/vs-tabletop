@@ -8,7 +8,7 @@
         <div class="col-4 p-0">
             <div class="card p-0 h-100">
                 <div class="card-header">
-                    <span class="h3" id="left-chart-header">Spin Animation / Image</span>
+                    <span class="h3" id="left-chart-header">Spin animation</span>
                 </div>
                 <div class="card-body">
                     <div class="chart h-100" id="chart-left">
@@ -20,7 +20,7 @@
         <div class="col-4 p-0">
             <div class="card p-0 h-100">
                 <div class="card-header">
-                    <span class="h3" id="right-chart-header">Spin Magnetization / ROI signal </span>
+                    <span class="h3" id="middle-chart-header">Magnetization</span>
                 </div>
                 <div class="card-body">
                     <div class="chart h-100" id="chart-middle">
@@ -31,7 +31,9 @@
         </div>
         <div class="col-4 p-0">
             <div class="card p-0 h-100">
-                <div class="card-header">Pulse+magnetization / T1 or T2 map </div>
+                <div class="card-header">
+                    <span class="h3" id="right-chart-header">Pulse sequence</span>
+                </div>
                 <div class="card-body">
                     <div class="chart h-100" id="chart-right">
                     </div>
@@ -102,7 +104,7 @@
                               <div class="col-4 p-0 h-100">
                               <div class="card h-100">
                               <div class="card-header">
-                                  <button class="btn btn-lg btn-outline-primary btn-light" id="t1-sim-button">Simulation</button>
+                                  <button class="btn btn-lg btn-outline-primary btn-light simulation-button" id="t1-sim-button">Simulation</button>
                               </div>
                               <div class="card-body">
                                   <div class="row">
@@ -110,7 +112,7 @@
                                         {{ template_game_form.t1sim_T1_field.label(class="form-label") }}
                                     </div>
                                     <div class="col-8">
-                                        {{ template_game_form.t1sim_T1_field(class="form-control") }}
+                                        {{ template_game_form.t1sim_T1_field(class="form-control session-input",id="t1_sim") }}
                                     </div>
                                   </div>
                                   <div class="row">
@@ -118,7 +120,7 @@
                                           {{ template_game_form.t1sim_duration_field.label(class="form-label") }}
                                       </div>
                                       <div class="col-8">
-                                          {{ template_game_form.t1sim_duration_field(class="form-control") }}
+                                          {{ template_game_form.t1sim_duration_field(class="form-control session-input",id="t1_sim_dur") }}
                                       </div>
                                   </div>
                                   <div class="row">
@@ -126,7 +128,7 @@
                                           {{ template_game_form.t1sim_TI_field.label(class="form-label") }}
                                       </div>
                                       <div class="col-8">
-                                          {{ template_game_form.t1sim_TI_field(class="form-control") }}
+                                          {{ template_game_form.t1sim_TI_field(class="form-control session-input",id="t1_sim_ti") }}
                                       </div>
                                   </div>
                                   <div class="row">
@@ -134,7 +136,7 @@
                                       {{ template_game_form.t1sim_MZ0_field.label(class="form-label") }}
                                   </div>
                                   <div class="col-8">
-                                          {{ template_game_form.t1sim_MZ0_field(class="form-range") }}
+                                          {{ template_game_form.t1sim_MZ0_field(class="form-range session-input",id="t1_sim_mz0") }}
                                         <div class="ticks text-primary">
                                         {% for scale in [-1,-0.5,0,0.5,1] %}
                                         <span class="tick">{{ scale }}</span>
@@ -152,7 +154,7 @@
                               <div class="col-8 p-0 h-100">
                                   <div class="card h-100">
                                       <div class="card-header">
-                                          <button class="btn btn-lg btn-outline-primary btn-light" id="t1-map-button">Mapping</button>
+                                          <button class="btn btn-lg btn-outline-primary btn-light mapping-button" id="t1-map-button">Mapping</button>
                                       </div>
                                       <div class="card-body">
                                         <div class="row h-100">
@@ -195,12 +197,12 @@
                                                         {{ template_game_form.t1map_allTI_field.label(class="form-label") }}
                                                     </div>
                                                     <div class="col-8">
-                                                        {{ template_game_form.t1map_allTI_field(class="form-control") }}
+                                                        {{ template_game_form.t1map_allTI_field(class="form-control",id="t1_map_TIs") }}
                                                     </div>
                                                 </div>
 
                                                 <div class="row h-25">
-                                                    <button class="btn btn-lg btn-info">Scan</button>
+                                                    <button class="btn btn-lg btn-info" id="t1-scan">Scan</button>
                                                 </div>
 
                                             </div>
@@ -209,8 +211,8 @@
                                                         <div class="col-4 form-label">Sphere #</div>
                                                             <div class="col-8 btn-group shadow-none">
                                                                 {% for u in range(4) %}
-                                                                    <input type="radio" class="btn-check" name="roi-options" id="sphere{{ u + 1 }}" autocomplete="off">
-                                                                    <label class="btn btn-outline-primary" for="sphere{{ u + 1 }}">{{ u + 1 }}</label>
+                                                                    <input type="radio" class="btn-check t1_sphere" name="roi-options" id="t1_sphere{{ u + 1 }}" autocomplete="off">
+                                                                    <label class="btn btn-outline-primary" for="t1_sphere{{ u + 1 }}">{{ u + 1 }}</label>
                                                                 {% endfor %}
                                                             </div>
                                                     </div>
@@ -219,7 +221,7 @@
                                                         <div class="col-8"></div>
                                                     </div>
                                                     <div class="row h-25">
-                                                        <button class="btn btn-lg btn-primary">Fit</button>
+                                                        <button class="btn btn-lg btn-primary" id="t1-fit">Fit</button>
                                                     </div>
                                             </div>
                                             <div class="col-4">
@@ -238,7 +240,10 @@
                                                     </div>
                                                 </div>
                                                 <div class="row h-25">
-                                                    <button class="btn btn-lg btn-success">Map</button>
+                                                    <button class="btn btn-lg btn-success" id="t1-map">
+                                                        <span class="spinner-border spinner-border-sm d-none" id="t1-map-spinner" role="status" aria-hidden="true"></span>
+                                                        <span id="t1-map-text">Map</span>
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
@@ -258,7 +263,7 @@
                               <div class="col-4 p-0 h-100">
                                 <div class="card h-100">
                                     <div class="card-header">
-                                         <button class="btn btn-lg btn-outline-primary btn-light" id="t2-sim-button">Simulation</button>
+                                         <button class="btn btn-lg btn-outline-primary btn-light simulation-button" id="t2-sim-button">Simulation</button>
                                     </div>
                                     <div class="card-body">
                                         <div class="row">
@@ -266,7 +271,7 @@
                                                 {{ template_game_form.t2sim_T2_field.label(class="form-label") }}
                                             </div>
                                             <div class="col-8">
-                                                {{ template_game_form.t2sim_T2_field(class="form-control") }}
+                                                {{ template_game_form.t2sim_T2_field(class="form-control session-input",id="t2_sim") }}
                                             </div>
                                         </div>
                                         <div class="row">
@@ -274,7 +279,7 @@
                                                 {{ template_game_form.t2sim_duration_field.label(class="form-label") }}
                                             </div>
                                             <div class="col-8">
-                                                {{ template_game_form.t2sim_duration_field(class="form-control") }}
+                                                {{ template_game_form.t2sim_duration_field(class="form-control session-input",id="t2_sim_dur") }}
                                             </div>
                                         </div>
                                         <div class="row">
@@ -282,7 +287,7 @@
                                                 {{ template_game_form.t2sim_TE_field.label(class="form-label") }}
                                             </div>
                                             <div class="col-8">
-                                                {{ template_game_form.t2sim_TE_field(class="form-control") }}
+                                                {{ template_game_form.t2sim_TE_field(class="form-control session-input",id="t2_sim_te") }}
                                             </div>
                                         </div>
                                         <div class="row">
@@ -290,7 +295,7 @@
                                                 {{ template_game_form.t2sim_MX0_field.label(class="form-label") }}
                                             </div>
                                             <div class="col-8">
-                                                {{ template_game_form.t2sim_MX0_field(class="form-range") }}
+                                                {{ template_game_form.t2sim_MX0_field(class="form-range session-input",id="t2_sim_mx0") }}
                                                 <div class="ticks text-primary">
                                                     {% for scale in [0,0.25,0.5,0.75,1] %}
                                                     <span class="tick">{{ scale }}</span>
@@ -305,7 +310,7 @@
                               <div class="col-8 p-0 h-100">
                                 <div class="card h-100">
                                     <div class="card-header">
-                                        <button class="btn btn-lg btn-outline-primary btn-light" id="t2-map-button">Mapping</button>
+                                        <button class="btn btn-lg btn-outline-primary btn-light mapping-button" id="t2-map-button">Mapping</button>
                                     </div>
                                     <div class="card-body">
                                         <div class="row h-100">
@@ -348,7 +353,7 @@
                                                         {{ template_game_form.t2map_allTE_field.label(class="form-label") }}
                                                     </div>
                                                     <div class="col-8">
-                                                        {{ template_game_form.t2map_allTE_field(class="form-control") }}
+                                                        {{ template_game_form.t2map_allTE_field(class="form-control",id="t2_map_TEs") }}
                                                     </div>
                                                 </div>
 
