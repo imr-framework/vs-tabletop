@@ -4,41 +4,74 @@
     <div class="row h-100">
         <div class="col-4">
             <div class="h-100 m-5">
-
                 <div class="row h-50">
                     <div class="card">
                         <div class="card-header">
-                            <span class="h3">Mode</span>
-                            <button class="btn btn-lg btn-light">3D</button>
-                            <button class="btn btn-lg btn-light">2D</button>
+                            <span class="h3">Mode </span>
+                            <input type="radio" class="btn-check" name="game8-mode" id="mode-2d" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="mode-2d">2D</label>
+                            <input type="radio" class="btn-check" name="game8-mode" id="mode-3d" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="mode-3d">3D</label>
                         </div>
-                        <div class="card-body"></div>
+                        <div class="card-body p-0">
+                            <div class="row h-100 d-flex align-items-center justify-content-center m-0 p-0">
+                                <div class="d-none p-0 m-0" id="mystery-image-2d">
+                                    <img src="../static/img/game8/mystery-2d.png" alt="2D mystery object"
+                                         style='max-height:100%; width:380px; object-position:top'/>
+                                </div>
+                                <div class="d-none p-0 m-0" id="mystery-image-3d">
+                                    <img src="../static/img/game8/mystery-3d.png" alt="2D mystery object"
+                                         style='max-height:100%; width:380px; object-position:top'/>
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="row h-25">
                     <div class="card">
                         <div class="card-header">Prescription</div>
                         <div class="card-body">
-                            {{ template_game_form.proj_2d_axis_field.label(class="form-label") }}
-                           <div type="button" class="btn btn-sm shadow-none"
-                                 data-mdb-container="body"
-                                 data-mdb-toggle="popover"
-                                 data-mdb-placement="top"
-                                 title='2D projection axis'
-                                 data-mdb-content="The axis along which the water-filled parts of the 3D volume is summed.">
-                                <i class="bi bi-question-circle-fill"></i>
-                            </div>
-                        <div class="row">
-                            {% for subfield in template_game_form.proj_2d_axis_field %}
-                                <div class="form-control col">
-                                    {{ subfield(id='proj2d_axis',class='form-check-input proj-2d-xyz') }}
-                                    {{ subfield.label(class='form-check-label') }}
+                            <div class="d-none" id="prescription-3d">
+                               {{ template_game_form.proj_2d_axis_field.label(class="form-label") }}
+                               <div type="button" class="btn btn-sm shadow-none"
+                                     data-mdb-container="body"
+                                     data-mdb-toggle="popover"
+                                     data-mdb-placement="top"
+                                     title='2D projection axis'
+                                     data-mdb-content="The axis along which the water-filled parts of the 3D volume is summed.">
+                                    <i class="bi bi-question-circle-fill"></i>
                                 </div>
-                            {% endfor %}
-                        </div>
-                        <div class="row">
-                            <button class="btn btn-primary">Image!</button>
-                        </div>
+                                <div class="row">
+                                    {% for subfield in template_game_form.proj_2d_axis_field %}
+                                        <div class="form-control col">
+                                            {{ subfield(id='proj2d_axis',class='form-check-input proj-2d-xyz') }}
+                                            {{ subfield.label(class='form-check-label') }}
+                                        </div>
+                                    {% endfor %}
+
+
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <button class="btn btn-primary" id="image-2d">Image 2D</button>
+                                </div>
+                            </div>
+                            <div id="prescription-2d">
+                                <div class="row">
+                                    <div class="col-4">
+                                        {{ template_game_form.proj_1d_angle_field.label(class="form-label") }}
+                                    </div>
+                                    <div class="col-8">
+                                        {{ template_game_form.proj_1d_angle_field(class="form-control", id='proj1d_angle') }}
+                                    </div>
+                                </div>
+                                <hr>
+
+                                <div class="row">
+                                    <button class="btn btn-primary" id="image-1d">Image 1D</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -48,9 +81,55 @@
             <div class="h-100 m-5">
                <!-- Tabs -->
                <div class="row h-50">
-                    <div class="card">
-                        <ul class="nav nav-tabs nav-justified mb-3" id="ex1" role="tablist">
-                        {% for u in range(session['game8']['num_attempts']) %}
+                    <div class="card h-100" id="2d-images-card">
+                        <div class="col h-100">
+                            <ul class="nav nav-tabs nav-justified mb-3" id="ex1" role="tablist">
+                            {% for u in range(session['game8']['num_attempts_2d']) %}
+                                {% if u == 0 %}
+                                    {% set tab_status = "active" %}
+                                    {% set aria_status = "true" %}
+                                {% else %}
+                                    {% set tab_status = "" %}
+                                    {% set aria_status = "false" %}
+                                {% endif %}
+                              <li class="nav-item" role="presentation">
+                                <a
+                                  class="nav-link {{ tab_status }}"
+                                  id="game8-2d-tab-{{ u }}"
+                                  data-mdb-toggle="tab"
+                                  href="#game8-2d-tabs-{{ u }}"
+                                  role="tab"
+                                  aria-controls="game8-2d-tabs-{{ u }}"
+                                  aria-selected={{ aria_status }}
+                                  > {{ u + 1 }}</a
+                                >
+                              </li>
+                            {% endfor %}
+                            </ul>
+                            <div class="tab-content h-100" id="game8-2d-tabs-content">
+                                {% for u in range(session['game8']['num_attempts_2d']) %}
+                                    {% if u == 0 %}
+                                        {% set content_status = "show active" %}
+                                    {% else %}
+                                        {% set content_status = "" %}
+                                    {% endif %}
+                                    <div
+                                        class="tab-pane fade {{ content_status }} h-100"
+                                        id="game8-2d-tabs-{{ u }}"
+                                        role="tabpanel"
+                                        aria-labelledby="game8-2d-tab-{{ u }}"
+                                      >
+                                      <div class="chart h-100 chart-attempt " id="chart-2d-attempt{{ u + 1 }}"></div>
+
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card d-none" id="3d-images-card">
+                        <ul class="nav nav-tabs nav-justified mb-3" id="ex2" role="tablist">
+                        {% for u in range(session['game8']['num_attempts_3d']) %}
                             {% if u == 0 %}
                                 {% set tab_status = "active" %}
                                 {% set aria_status = "true" %}
@@ -61,23 +140,21 @@
                           <li class="nav-item" role="presentation">
                             <a
                               class="nav-link {{ tab_status }}"
-                              id="game8-tab-{{ u }}"
+                              id="game8-3d-tab-{{ u }}"
                               data-mdb-toggle="tab"
-                              href="#game8-tabs-{{ u }}"
+                              href="#game8-3d-tabs-{{ u }}"
                               role="tab"
-                              aria-controls="game8-tabs-{{ u }}"
+                              aria-controls="game8-3d-tabs-{{ u }}"
                               aria-selected={{ aria_status }}
-                              > Attempt #{{ u + 1 }}</a
+                              > #{{ u + 1 }}</a
                             >
                           </li>
                         {% endfor %}
-
                         </ul>
                         <!-- Tabs navs -->
-
                         <!-- Tabs content -->
-                        <div class="tab-content" id="game8-tabs-content">
-                            {% for u in range(session['game8']['num_attempts']) %}
+                        <div class="tab-content" id="game8-3d-tabs-content">
+                            {% for u in range(session['game8']['num_attempts_3d']) %}
                                 {% if u == 0 %}
                                     {% set content_status = "show active" %}
                                 {% else %}
@@ -85,10 +162,15 @@
                                 {% endif %}
                                 <div
                                     class="tab-pane fade {{ content_status }}"
-                                    id="game8-tabs-{{ u }}"
+                                    id="game8-3d-tabs-{{ u }}"
                                     role="tabpanel"
-                                    aria-labelledby="game8-tab-{{ u }}"
-                                  >Tab {{ u + 1 }} content
+                                    aria-labelledby="game8-3d-tab-{{ u }}"
+                                  >
+                                <div class="col h-100">
+                                    <div class="row h-100">
+                                        <div class="chart h-100 chart-attempt" id="chart-3d-attempt{{ u + 1 }}"></div>
+                                    </div>
+                                </div>
                                 </div>
                             {% endfor %}
                         </div>
@@ -96,8 +178,21 @@
                </div>
                <div class="row h-25">
                    <div class="card">
-                       <button class="btn btn-lg btn-info">Reset</button>
-                       <button class="btn btn-lg btn-success">New model</button>
+                       <div class="card-header">Messages</div>
+                       <div class="card-body p-0">
+                           <div class="col p-0">
+                                {# Messages #}
+                               <div class="row h-50 d-flex justify-content-center m-3 text-info" id="message-region">
+                                    Messages
+                               </div>
+
+                               <div class="row h-50 m-0 p-0">
+                                   <button class="btn btn-lg btn-info" id="reset-button">Reset</button>
+                                   <button class="btn btn-lg btn-success" id="new-model-button">New model</button>
+                               </div>
+                           </div>
+
+                       </div>
                    </div>
                </div>
             </div>
@@ -106,62 +201,34 @@
         <div class="col-4">
            <div class="h-100 m-5">
                 <div class="row h-50">
-                    <div class="card">
-                        <div class="card-header">
-                            Choices
+                    <div class="card h-100">
+                        <div class="card-header h3">
+                            Options
                         </div>
-                        <div class="card-body">
-                            <div id="carouselExampleCrossfade" class="carousel slide carousel-fade" data-mdb-ride="carousel"
-                            data-mdb-interval="false">
-                              <div class="carousel-indicators">
-                                <button
-                                  type="button"
-                                  data-mdb-target="#carouselExampleCrossfade"
-                                  data-mdb-slide-to="0"
-                                  class="active"
-                                  aria-current="true"
-                                  aria-label="Slide 1"
-                                ></button>
-                                <button
-                                  type="button"
-                                  data-mdb-target="#carouselExampleCrossfade"
-                                  data-mdb-slide-to="1"
-                                  aria-label="Slide 2"
-                                ></button>
-                                <button
-                                  type="button"
-                                  data-mdb-target="#carouselExampleCrossfade"
-                                  data-mdb-slide-to="2"
-                                  aria-label="Slide 3"
-                                ></button>
-                              </div>
-                              <div class="carousel-inner">
-                                <div class="carousel-item active">
-                                    <div class="chart">Chart 1 </div>
-                                </div>
-                                <div class="carousel-item">
-                                    <div class="chart">Chart 2 </div>
-                                </div>
-                                <div class="carousel-item">
-                                    <div class="chart">Chart 3 </div>
-                                </div>
-                              </div>
-                              <button class="carousel-control-prev" type="button" data-mdb-target="#carouselExampleCrossfade" data-mdb-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Previous</span>
-                              </button>
-                              <button class="carousel-control-next" type="button" data-mdb-target="#carouselExampleCrossfade" data-mdb-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Next</span>
-                              </button>
-                            </div>
+                        <div class="card-body h-75">
+                            <div class="chart h-100" id="game8-choices-chart"></div>
                         </div>
                     </div>
                 </div>
                 <div class="row h-25">
                     <div class="card">
+                        <div class="card-header">Answer</div>
                         <div class="card-body">
-                            <button class="btn btn-lg btn-primary">Check answer</button>
+                        <div class="row">
+                              {% for subfield in template_game_form.answer_field %}
+                                    <div class="form-control col">
+                                        {{ subfield(id='game8_answer',class='form-check-input submit-option') }}
+                                        {{ subfield.label(class='form-check-label') }}
+                                    </div>
+                                {% endfor %}
+                        </div>
+                        <div class="row m-3 d-flex justify-items-center">
+                            <button class="btn btn-lg btn-primary" id="submit-button">Submit</button>
+                        </div>
+                        <div class="row m-3 d-flex justify-content-center">
+                            <span class="d-none text-success" id="feedback-correct">Correct!</span>
+                            <span class="d-none text-danger" id="feedback-wrong">Wrong choice. Try another one?</span>
+                        </div>
                         </div>
 
                     </div>
@@ -182,5 +249,24 @@
 
 
 {% block additional_imports %}
+
     <script src="../static/game8.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script type="text/javascript">
+        // Plotting with Plotly
+        // Image
+        // Plot the input image to ALL tabs (visible and invisible)
+{#        let graph1 = {{ graphJSON_image | safe }};#}
+{#           {% for u in range(session['game8']['num_attempts_2d']) %}#}
+{#                Plotly.plot('chart-2d-attempt{{ u + 1 }}',graph1, {autosize:true});#}
+{#           {% endfor %}#}
+{#           {% for u in range(session['game8']['num_attempts_3d']) %}#}
+{#                Plotly.plot('chart-3d-attempt{{ u + 1 }}',graph1, {autosize:true});#}
+{#           {% endfor %}#}
+{##}
+{#        // Plot the input options plot to the corresponding tab#}
+{#        let graph2 = {{ graphJSON_options | safe }};#}
+{#        Plotly.plot('game8-choices-chart',graph2,{autosize:true});#}
+    </script>
+
 {% endblock %}

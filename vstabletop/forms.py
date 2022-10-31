@@ -212,10 +212,14 @@ class Game7Form(FlaskForm):
     submit_field = SubmitField("Project all")
 
 class Game8Form(FlaskForm):
-    dimension_field = SelectField("Dimension",choices=[('3d','3D to 2D'),('2d','2D to 1D')])
+    # Mode
+    dimension_field = SelectField("Dimension",choices=[('2d','2D'),('1d','1D')])
+    answer_field = RadioField("Answer",choices=[(0,'A'),(1,'B'),(2,'C'),(3,'D')])
 
+    # Main inputs
     proj_2d_axis_field = RadioField("2D proj. axis", choices=['x','y','z'],default='z')
     proj_1d_angle_field = DecimalField("1D proj. angle",validators=[NumberRange(min=0,max=360)],default=90)
+
 
 
     submit_field = SubmitField("Check answer")

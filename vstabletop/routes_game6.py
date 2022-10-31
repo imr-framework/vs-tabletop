@@ -15,7 +15,6 @@ def game6():
     game6form = Game6Form()
     j1,j2,j3 = game6_worker_sim(session['game6'])
 
-
     return render_template('game6.html',template_title="Relaxation station",template_intro_text="Sit back and map",
                            template_game_form=game6form, game_num=6,
                            graphJSON_left=j1, graphJSON_middle=j2, graphJSON_right=j3)
@@ -35,7 +34,6 @@ def change_to_T1(payload):
 @socketio.on('Change to T2')
 def change_to_T2(payload):
     utils.update_session_subdict(session,'game6',{'mode':'T2'})
-
     if session['game6']['type'] == 'sim':
         j4,j5,j6 = game6_worker_sim(session['game6'])
     else:
@@ -151,7 +149,7 @@ def t1_switch_to_map():
                                    'disp': {'left': False, 'middle': False, 'right': True}})
 
 @socketio.on('Update parameter for Game 6')
-def update_parameters_game4(info):
+def update_parameters_game6(info):
     utils.update_session_subdict(session,'game6',{info['id']:float(info['value'])})
     print('g6 param updated!',session['game6'])
 

@@ -75,7 +75,12 @@ def initialize_parameters():
                         'progress': utils.new_progress_of_game(7),'mc_status_list': utils.num_questions_of_game(7)*[False],
                         'task_completed': 0
                         }
-    session['game8'] = {'mode': '3D','num_attempts': 2,
+    session['game8'] = { 'mode': '3D', 'ind_correct': None,
+                        'loaded_model': None, 'image': None,
+                        'loaded_3D': None, 'loaded_2D': None,
+                         'proj2d_axis': 'z', 'proj1d_angle': 90,
+                        'num_acquired_2d': 0, 'num_acquired_3d': 0,
+                        'num_attempts_2d': 5, 'num_attempts_3d': 2,
                         'progress':utils.new_progress_of_game(8)}
 
 # Login callback (required)

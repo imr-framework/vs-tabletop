@@ -184,6 +184,23 @@ GAME7_RANDOM_MODELS = [
 
 ]
 
+GAME8_RANDOM_MODELS = [
+    'g7_set1_typeA',
+    'g7_set1_typeB',
+    'g7_set1_typeC',
+    'g7_set2_u135_d1',
+    'g7_set2_u135_d2',
+    'g7_set2_u135_d3',
+    'center_ball',
+    'double_cone',
+    'double_cone_rev',
+    'letterC',
+    'letterN',
+    'letterY',
+    'simple_cube',
+    'two_holes'
+]
+
 
 # Verbose definitions for each game (in html)
 # Game 1
