@@ -6,33 +6,44 @@
             <div class="card">
                 <div class="card-header">Sequence</div>
                 <div class="card-body">
-                          <form method="POST" enctype="multipart/form-data" id="upload-form">
+                    <form method="POST" enctype="multipart/form-data" id="upload-form">
                         <input type="file" name="file" id="upload-input">
                         <div class="btn btn-lg btn-primary" id="upload-button">Upload</div>
-
+                        <div class="btn btn-lg btn-success d-none" id="display-seq">Plot</div>
                     </form>
                     <hr>
+                    <button class="btn btn-lg btn-light" id="compile-seq">Compile</button>
+                    <button class="btn btn-lg btn-primary" id="simulate-seq">Simulate</button>
                     <button class="btn btn-lg btn-info" id="run-scan">Run</button>
                 </div>
             </div>
-        </div>
-        <div class="col-4">
-            <div class="card">
+                      <div class="card">
                 <div class="card-header">Info</div>
                 <div class="card-body">
                     IP address
                     Red pitaya 122.88
                 </div>
             </div>
-        </div>
-        <div class="col-4">
-            <div class="card">
+        <div class="card">
                 <div class="card-header">Messages</div>
                 <div class="card-body">
                     <ul>
                         <li>Load and display pulseq sequence using MaRCoS</li>
                         <li>Run pulseq sequence on Red Pitaya</li>
                     </ul>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="col-8">
+            <div class="row h-100">
+                <div class="card">
+                    <div class="card-header">Sequence waveforms</div>
+                    <div class="card-body">
+                        <div class="chart h-100" id="psd-chart"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -46,5 +57,7 @@
 
 
 {% block additional_imports %}
-    <script src="../static/game8.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="../static/scan.js"></script>
+
 {% endblock %}

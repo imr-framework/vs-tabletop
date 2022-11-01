@@ -171,6 +171,7 @@ $('#use-slicer').on('click',()=>{
 
 $('#upload-button').on('click',()=>{
     let formData = new FormData($('#upload-form').get(0));
+
     $.ajax({
         type: 'POST',
         url : '/games/2',

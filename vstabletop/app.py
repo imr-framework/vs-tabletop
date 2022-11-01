@@ -4,7 +4,7 @@ from flask_login import LoginManager, UserMixin, login_required, login_user, cur
 from os import environ # this line should go at the top of your file
 from flask_socketio import SocketIO, emit
 from flask_session import Session
-from paths import IMG_PATH
+from paths import IMG_PATH, DATA_PATH
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "how-i-spin"
@@ -26,7 +26,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 UPLOAD_FOLDER = IMG_PATH
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['UPLOAD_FOLDER_GAME2'] = UPLOAD_FOLDER / 'Game2'
-
+app.config['UPLOAD_FOLDER_SCAN'] = DATA_PATH / 'scan'
 # Create database and bind it to vstabletop
 db = SQLAlchemy(app)
 
