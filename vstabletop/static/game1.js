@@ -33,7 +33,7 @@ $('.answer-mc').on('click', (event)=>{
 
     console.log($('.q0-choice:checked'));
 
-    choice = $(`.q${q_ind}-choice:checked`).attr("value");
+    choice = $(`.q${q_ind}-choice:checked`).last().attr("value");
 
     console.log(choice)
 
