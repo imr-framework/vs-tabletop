@@ -10,7 +10,7 @@ Virtual Scanner Tabletop is an extension to [Virtual Scanner](https://github.com
 ### Method 1: `pip install`
 1. On the command line, make a new virtual environment. 
 2. `pip install vs-tabletop`
-3. cd into the main folder called "vstabletop" and run `app.py`. Click into the link in the program output (examplee: http://127.0.0.1:5000/). Log in as admin using password `123456`. 
+3. cd into the main folder called "vstabletop" (`venv\Lib\site-packages\vstabletop`) and run `app.py`. Click into the link in the program output (examplee: http://127.0.0.1:5000/). Log in as admin using password `123456`. 
 
 ### Method 2: Cloning 
 1. Clone the repository.
