@@ -9,19 +9,50 @@
                     <form method="POST" enctype="multipart/form-data" id="upload-form">
                         <input type="file" name="file" id="upload-input">
                         <div class="btn btn-lg btn-primary" id="upload-button">Upload</div>
-                        <div class="btn btn-lg btn-success d-none" id="display-seq">Plot</div>
                     </form>
                     <hr>
-                    <button class="btn btn-lg btn-light" id="compile-seq">Compile</button>
-                    <button class="btn btn-lg btn-primary" id="simulate-seq">Simulate</button>
-                    <button class="btn btn-lg btn-info" id="run-scan">Run</button>
+                    <div class="row">
+                         <div class="col-5">
+                        {{ template_form.min_time_field.label(class="form-label") }}
+                        {{ template_form.min_time_field(class="form-control") }}
+                        </div>
+                        <div class="col-5">
+                            {{ template_form.max_time_field.label(class="form-label") }}
+                            {{ template_form.max_time_field(class="form-control") }}
+                        </div>
+                        <div class="col-2 d-flex align-items-bottom">
+                            <button class="btn btn-lg btn-success" id="display-seq" disabled>Plot</button>
+                        </div>
+                    </div>
+
+                    <hr>
+                    <button class="btn btn-lg btn-success" id="compile-seq">Compile and run</button>
+
                 </div>
             </div>
                       <div class="card">
-                <div class="card-header">Info</div>
+                <div class="card-header">Mode</div>
                 <div class="card-body">
-                    IP address
-                    Red pitaya 122.88
+                    <div class="row d-flex justify-content-center">
+                        <span>Red pitaya 122.88</span>
+                    </div>
+                    <div class="row d-flex justify-content-center">
+                        <span>Enter "localhost" for simulation and RP IP address for hardware mode</span>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col">
+                            <label class="form-label" for="ip-address">IP address:</label>
+                        </div>
+                        <div class="col">
+                            <input class="form-control" type="text" id="ip-address"/>
+                        </div>
+                        <div class="col">
+                            <button class="btn btn-info" id="update-ip">Update</button>
+                        </div>
+                    </div>
+
+
                 </div>
             </div>
         <div class="card">
@@ -30,6 +61,7 @@
                     <ul>
                         <li>Load and display pulseq sequence using MaRCoS</li>
                         <li>Run pulseq sequence on Red Pitaya</li>
+                        <li id="message-region"></li>
                     </ul>
                 </div>
             </div>

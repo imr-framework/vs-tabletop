@@ -224,6 +224,9 @@ class Game8Form(FlaskForm):
 
     submit_field = SubmitField("Check answer")
 
+class ScanForm(FlaskForm):
+    min_time_field = DecimalField('Start time (s)', default=0)
+    max_time_field = DecimalField('End time (s)', default=2)
 
 # More user interaction through questions
 #class MultipleChoiceForm(FlaskForm):

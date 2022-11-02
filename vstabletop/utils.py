@@ -32,6 +32,28 @@ def update_configuration(params,config_path):
         f.write(new_config)
         f.close()
 
+# TODO TODO TODO
+def update_local_configuration(ip,config_path):
+    # Only if file exists
+    with open(config_path, 'r+') as f:
+
+        # new_config = f"LARMOR_FREQ = {float(params['f0']) / 1e6} \n"
+        new_config = 'RF_MAX = 7661.29 \n'
+        new_config += "GX_MAX = 8.0e6 \n"  # System maximum X gradient strength, in Hz/m
+
+        new_config = 'import sys \n'
+        new_config += "sys.path.append('/marcos_pack/flocra_pulseq') \n"
+        new_config += "port = 11111 \n"
+        new_config += "fpga_clk_freq_MHz = 122.88 \n"
+
+        new_config += 'grad_board = "ocra1" \n'
+        new_config += "gpa_fhdo_current_per_volt = 2.5 \n"
+        new_config += f'ip_address = "{ip}" \n'
+        new_config += f'                \n'
+
+        f.write(new_config)
+        f.close()
+
 def update_session_subdict(sess,first_key, params):
     for second_key in params.keys():
         sess[first_key][second_key] = params[second_key]
