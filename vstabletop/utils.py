@@ -32,6 +32,8 @@ def update_configuration(params,config_path):
         f.write(new_config)
         f.close()
 
+<<<<<<< Updated upstream
+=======
 # TODO TODO TODO
 def update_local_configuration(ip,config_path):
     # Only if file exists
@@ -46,7 +48,8 @@ def update_local_configuration(ip,config_path):
         new_config += "port = 11111 \n"
         new_config += "fpga_clk_freq_MHz = 122.88 \n"
 
-        new_config += 'grad_board = "ocra1" \n'
+        #new_config += 'grad_board = "ocra1" \n'
+        new_config += 'grad_board = "gpa-fhdo" \n'
         new_config += "gpa_fhdo_current_per_volt = 2.5 \n"
         new_config += f'ip_address = "{ip}" \n'
         new_config += f'                \n'
@@ -54,6 +57,7 @@ def update_local_configuration(ip,config_path):
         f.write(new_config)
         f.close()
 
+>>>>>>> Stashed changes
 def update_session_subdict(sess,first_key, params):
     for second_key in params.keys():
         sess[first_key][second_key] = params[second_key]

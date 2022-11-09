@@ -10,11 +10,15 @@ from vstabletop.paths import DATA_PATH, LOCAL_CONFIG_PATH
 import plotly.graph_objects as go
 import plotly
 from plotly.subplots import make_subplots
+<<<<<<< Updated upstream
+=======
 from external.marcos_pack.flocra_pulseq.flocra_pulseq_interpreter import PSInterpreter
 import external.marcos_pack.marcos_client.experiment as ex
 import matplotlib.pyplot as plt
 from vstabletop.forms import ScanForm
 import vstabletop.utils as utils
+from scipy.io import savemat, loadmat
+>>>>>>> Stashed changes
 
 import numpy as np
 import math
@@ -211,6 +215,9 @@ def export_waveforms(seq, time_range=(0, np.inf)):
                      'adc': adc_signal_all, 'rf': rf_signal_all, 'rf_centers': rf_signal_centers,'gx':gx_all, 'gy':gy_all, 'gz':gz_all,
                      'grad_unit': '[kHz/m]', 'rf_unit': '[Hz]', 'time_unit':'[seconds]'}
 
+<<<<<<< Updated upstream
+    return all_waveforms
+=======
     return all_waveforms
 
 
@@ -221,8 +228,9 @@ def compile_seq():
     seq = Sequence()
     seq.read(DATA_PATH / "scan" / "user_uploaded.seq")
     print("Seq read")
-    exp = ex.Experiment(lo_freq=5, rx_t=3.125)
-    ps = PSInterpreter(grad_t=1)
+    #exp = ex.Experiment(lo_freq=5, rx_t=3.125)
+
+    ps = PSInterpreter()
     try:
         event_dict, params = ps.interpret(str(DATA_PATH / "scan" / "user_uploaded.seq"))
         print("Seq interpreted")
@@ -232,6 +240,14 @@ def compile_seq():
         print(f"Unexpected {err=}, {type(err)=}")
         socketio.emit("Message",{'type':'danger', 'text': "Interpreter error"})
         return
+
+    exp = ex.Experiment(lo_freq=5,
+                         rx_t=3.125,
+                         init_gpa=True,
+                         gpa_fhdo_offset_time=params['grad_t'] / 3,
+                         flush_old_rx=True,
+                         halt_and_reset=True,
+                         grad_max_update_rate=0.2)
 
     try:
         exp.add_flodict(event_dict)
@@ -247,7 +263,10 @@ def compile_seq():
     try: # Run experiment
         print("running experiment...")
         rxd, msgs = exp.run()
+        print(f'received signal: {rxd}')
+        savemat(f"{str(DATA_PATH)}/rx_data.mat",{'rxd': rxd, 'msgs': msgs})
         exp.close_server(only_if_sim=True)
+        #exp.close_server()
     except Exception as err:
         print(f"Unexpected {err=}, {type(err)=}")
         socketio.emit("Message", {'type': 'danger', 'text': 'Error compiling / running the experiment'})
@@ -260,3 +279,4 @@ def update_local_config(payload):
     print(f"Updating ip to {payload['ip-address']}")
     utils.update_local_configuration(payload['ip-address'], LOCAL_CONFIG_PATH)
 
+>>>>>>> Stashed changes
