@@ -104,7 +104,7 @@ GAME5_INSTRUCTIONS={
                    {'Turn the main field (B0) on and off. ': 'Press the green magnet button to turn on B0.',
                     'Experiment with different B0 values.': 'Press the button again to turn off B0. Then use the slider to change the strength of B0 and turn it on again. '},
                     # Move 2
-                    {'Set up environment for precession': 'First, turn off the rotating frame. Then, on the Set Initial Magnetization panel, input theta = 45, phi = 135, M/M0 = 1 and press SET. ',
+                    {'Set up environment for precession': 'First, turn off the rotating frame. Then, on the Set Initial Magnetization panel, input theta = 45 degrees, phi = 135 degrees, M/M0 = 1 and press SET. ',
                      'Let the magnetization precess':'Press "START". How would you describe this movement? ',
                      'Experiment with different B0 values': 'Change the main field values with the slider and press START again. How does the movement change with B0?',
                      'Experiment with different initial conditions': 'Set the initial magnetization to different thetas and phis, pressing SET and then START each time. How does the initial angle affect the trajectory of M?'},
