@@ -65,3 +65,5 @@ Screenshots are in-development previews of the games. They will be updated at th
 ### Module 4 (beginner): Puzzled by Projection I 
 ![game7](https://user-images.githubusercontent.com/31249056/186201082-00fc2dad-a9b1-4911-8862-99fbd73cccdc.png)
 
+# References
+Brain images from the Coursera Neurohacking in R (https://www.kaggle.com/datasets/ilknuricke/neurohackinginrimages) were used in Game 2.
