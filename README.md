@@ -12,7 +12,7 @@ Virtual Scanner Tabletop is an extension to [Virtual Scanner](https://github.com
 2. `pip install vs-tabletop`
 3. cd into the main folder called "vstabletop" (`venv\Lib\site-packages\vstabletop`) and run `app.py`. Click into the link in the program output (examplee: http://127.0.0.1:5000/). Log in as admin using password `123456`. 
 #### Troubleshooting 
-(version 1.0.0b4) - You might encounter problems with installing Kiwisolver which requires Visual C++. If you have trouble getting the Visual C++, you can ignore the kiwisolver and perform the following steps:
+(version 1.0.0b5) - You might encounter problems with installing Kiwisolver which requires Visual C++. If you have trouble getting the Visual C++, you can ignore the kiwisolver and perform the following steps:
 1. Install vs-tabletop without dependencies: `pip install vs-tabletop==1.0.0b4 --no-deps`
 2. After it's installed, find `requirements.txt` in the `vstabletop` folder and remove the `kiwisolver==1.0.1` line
 3. Install the rest of the requirements: `pip install -r requirements.txt`
@@ -65,3 +65,5 @@ Screenshots are in-development previews of the games. They will be updated at th
 ### Module 4 (beginner): Puzzled by Projection I 
 ![game7](https://user-images.githubusercontent.com/31249056/186201082-00fc2dad-a9b1-4911-8862-99fbd73cccdc.png)
 
+# References
+Brain images from the Coursera Neurohacking in R (https://www.kaggle.com/datasets/ilknuricke/neurohackinginrimages) were used in Game 2.
