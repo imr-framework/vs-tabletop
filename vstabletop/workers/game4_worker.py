@@ -71,7 +71,7 @@ def game4_worker_image(mode='bright',info={}):
 # Simulated / animted plots
 def simulate_bright_plots(info):
     # Get the raw values
-    flow_speed = (info['flow_speed']/100) * 20e-3
+    flow_speed = info['flow_speed']*1e-3
     thk = info['bright_thk']*1e-3
     tr = info['bright_tr']*1e-3
     te = info['bright_te']*1e-3
@@ -111,7 +111,7 @@ def simulate_dark_plots(info):
     # y-axis: signal strength - FID with T2* decay x 2 - [-1,1]
 
     te = info['dark_te']*1e-3
-    v = info['flow_speed']*1e-3
+    v = info['flow_speed']*1e-3  # convert mm/s to m/s
     thk = info['dark_thk']*1e-3
     t1 = info['T1']*1e-3
     t2 = info['T2']*1e-3
@@ -131,12 +131,13 @@ def simulate_flow_image(mode,info):
         return np.zeros((256,256))
     else:
         # Load & unit-convert parameters
-        flow_speed = (info['flow_speed'] / 100) * 20e-3
+        flow_speed = info['flow_speed']*1e-3
 
         if not info['flow_on']:
             flow_speed = 0
             print('Flow is off!')
-
+        else:
+            print('Flow is on!')
         thk = info['thk'] * 1e-3
         tr = info['tr'] * 1e-3
         te = info['te'] * 1e-3
@@ -165,7 +166,6 @@ def simulate_flow_image(mode,info):
         elif mode == "dark":
             print('simulating dark image')
             d, fraction, alpha1, alpha2, beta = signal_model_dark(flow_speed,thk,te,t2,t2s)
-
             flow_signal = beta * fraction + alpha2 * (1-fraction)
             static_signal = beta
 
@@ -176,6 +176,7 @@ def simulate_flow_image(mode,info):
         print('signals...')
         print('static:', static_signal)
         print('flow:', flow_signal)
+
         image = phantom_dict['static'] * static_signal + phantom_dict['flow'] * flow_signal
 
     savemat('simulated_image_game4.mat',{'image':image})
@@ -322,6 +323,7 @@ def plot_bright_signals(info, signal_partitioned_list, signal_total_list, fracti
 def plot_dark_signals(info,d,fraction,alpha1,alpha2,beta, Mxy_list_both, Mxy_list_90, Mxy_list_180, t_list):
     te = info['dark_te']
     dist = d*1e3
+
 
     # Top figure
     fig1 = go.Figure()
@@ -601,7 +603,7 @@ def get_bright_flow_plot_traces(n_rect,d,thk,signals):
         signals = np.append(signals, 0)
     signals = np.concatenate(([0], signals))
 
-    print(f'n_rect is {n_rect}')
+    #print(f'n_rect is {n_rect}')
 
     for fr in range(n_frames):
         if fr >= 2*n_rect:
@@ -609,14 +611,14 @@ def get_bright_flow_plot_traces(n_rect,d,thk,signals):
         # Calculate divisions
         divs = thk*np.ones(n_rect)
         if (fr%2) == 0: # First set
-            print('even',fr)
+            #print('even',fr)
             divs[0:int(fr/2)] = d*np.arange(1,int(fr/2)+1)
         else:
-            print('odd',fr)
+            #print('odd',fr)
             divs[0:int((fr+1)/2)] = d*np.arange(0,int((fr+1)/2))
-        print(divs)
+        #print(divs)
 
-        print("Final signals: ",signals )
+        #print("Final signals: ",signals )
 
         # For each rectangle
         left = 0
@@ -628,7 +630,7 @@ def get_bright_flow_plot_traces(n_rect,d,thk,signals):
                 xright = thk
             left = xright
 
-            print('xleft and xright before centering',xleft,xright)
+            #print('xleft and xright before centering',xleft,xright)
 
             xleft += 10 - thk / 2
             xright += 10 - thk / 2
@@ -871,7 +873,7 @@ def signal_model_bright(v,thk,tr,te,fa,t1,t2s):
         signals = [signal_nonSS(10, t1, t2s, tr, te, theta)]
         has_partial = False
 
-    print('signals: ',signals)
+    #print('signals: ',signals)
 
     signals = np.array(signals)
     return signals, has_partial, full_frac, part_frac
@@ -899,14 +901,3 @@ def signal_SE(t2,t2s,te):
 
 def color_map(intensity):
     return f"rgb({int(179 * intensity)},{int(236 * intensity)},{int((255-139) * intensity)+139})"
-
-if __name__ == "__main__":
-    # signals, has_partial,ff,pf = signal_model_bright(1.2e-3,10e-3,1,30)
-    # print(signals)
-    # print(has_partial)
-    # print(ff)
-    # print(pf)
-    #
-    info = {'flow_speed':5e-3, 'bright_thk':10e-3,'bright_tr':1,'bright_fa':30}
-    j1, j2 = game4_worker_simulation('bright',info)
-

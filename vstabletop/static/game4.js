@@ -27,10 +27,10 @@ $('#flow-manual-button').on("click",()=>{
 
 
 })
-
-$('#flow_speed').on('change',()=>{
-    $('#flow-info').text(`Flow speed: ${20*$('#flow_speed').val()/100} mm / s`);
-})
+//
+// $('#flow_speed').on('change',()=>{
+//     $('#flow-info').text(`Flow speed: ${20*$('#flow_speed').val()/100} mm / s`);
+// })
 
 $(':input').on('change', (event)=>{
     socket.emit("Update parameter for Game 4", {'id': event.target.id, 'value': event.target.value});
@@ -89,20 +89,24 @@ $('#transfer-params').on('click',()=>{
     // Transfer parameters from signal simulation (left) to image acquisition (right)
     // Bright mode
     if ($('#contrast-type').val() === 'bright') {
-        $('#thk').val($('#bright_thk').val());
-        $('#tr').val($('#bright_tr').val());
-        $('#fa').val($('#bright_fa').val());
-        $('#te').val($('#bright_te').val());
+        $('#thk').val($('#bright_thk').val()).change();
+        $('#tr').val($('#bright_tr').val()).change();
+        $('#fa').val($('#bright_fa').val()).change();
+        $('#te').val($('#bright_te').val()).change();
+
     }
     // Dark mode
     else{
-        $('#thk').val($('#dark_thk').val());
-        $('#te').val($('#dark_te').val());
+        $('#thk').val($('#dark_thk').val()).change();
+        $('#te').val($('#dark_te').val()).change();
     }
 })
 
 $('#run-scan').on('click',()=>{
-    socket.emit('Simulate flow image');
+    socket.emit('Simulate flow image',{'thk': $('#thk').val(),
+                                       'te': $('#te').val(),
+                                       'fa': $('#fa').val(),
+                                       'tr': $('#tr').val()});
 })
 
 
@@ -130,18 +134,33 @@ window.onload = function(){
     let svgDoc = svgObj.contentDocument;
 
     let svgItem = svgDoc.getElementById('animateSyringe');
+    let svgItem2 = svgDoc.getElementById('animateReservoir');
+
+    // Set animation speed based on current flow speed
 
     $('#flow-manual-button').on('click',()=> {
-        if (!pushing) {
-            console.log('Start pushing the syringe!!!');
-            svgItem.beginElement();
-            pushing = true;
-        }
-        else{
-            console.log('Stop pushing the syringe.');
-            svgItem.endElement();
-            pushing = false;
-        }
+            let speed = parseFloat($("#flow_speed").val());
+            if (speed > 0){
+                let animationDuration = 2 / (speed / 20);
+                svgItem.setAttribute('dur',`${animationDuration}s`)
+                svgItem2.setAttribute('dur',`${animationDuration}s`)
+
+                if (!pushing) {
+                    console.log('Start pushing the syringe!!!');
+                    svgItem.beginElement();
+                    svgItem2.beginElement();
+
+                    pushing = true;
+                }
+                else{
+                    console.log('Stop pushing the syringe.');
+                    svgItem.endElement();
+                    svgItem2.endElement();
+
+                    pushing = false;
+                }
+            }
+
 
     })
 }

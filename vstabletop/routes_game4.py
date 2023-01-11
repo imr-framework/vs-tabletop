@@ -55,7 +55,13 @@ def turn_off_flow():
     utils.update_session_subdict(session,'game4',{'flow_on':False})
 
 @socketio.on('Simulate flow image')
-def update_flow_image():
-    j5 = game4_worker_image(session['game4']['mode'],session['game4'])
+def update_flow_image(payload):
+    info = session['game4']
+    for id in ['te','tr','thk','fa']:
+        print(payload)
+        info[id] = float(payload[id])
+    utils.update_session_subdict(session,'game4',info)
+
+    j5 = game4_worker_image(session['game4']['mode'],info)
     socketio.emit('Deliver flow image', {'graph5' : j5})
 

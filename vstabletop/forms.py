@@ -115,7 +115,7 @@ class Game3Form(FlaskForm):
 class Game4Form(FlaskForm):
     # Flow
     flow_onoff_field = BooleanField('Flow status',default=False)
-    flow_speed_field = DecimalField('Flow speed %',validators=[NumberRange(min=0,max=100)], default=50)
+    flow_speed_field = DecimalField('Flow speed (mm/s)',validators=[NumberRange(min=0,max=100)], default=50)
 
     # Liquid properties
     t1_field = DecimalField('T1 (ms)', places=0, validators=[NumberRange(min=500,max=4000)],default=2000)

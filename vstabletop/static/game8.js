@@ -83,7 +83,8 @@ socket.on('Wipe all attempt plots',()=>{
     })
     $("#feedback-correct").addClass('d-none');
     $("#feedback-wrong").addClass('d-none');
-    $("#submit-button").attr('disabled',false);
+    //$("#submit-button").attr('disabled',false);
+    $('.submit-option').attr('disabled',false).prop('checked',false);
 })
 
 $("#new-model-button").on('click',()=>{
@@ -96,6 +97,10 @@ $("#new-model-button").on('click',()=>{
     }
 })
 
+$('.submit-option').on('click',()=>{
+    $('#submit-button').attr('disabled',false);
+})
+
 $('#submit-button').on('click',()=>{
     // Which answer was chosen?
     let choice;
@@ -104,10 +109,12 @@ $('#submit-button').on('click',()=>{
         if ($(this)[0].checked){
             choice = $(this).val();
         }
+        $(this).attr('disabled',true);
     })
     socket.emit("Answer submitted",{'choice':choice})
     // Disable submit button
     $('#submit-button').attr('disabled',true);
+
 })
 
 socket.on("Correct",()=>{

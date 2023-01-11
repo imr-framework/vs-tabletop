@@ -11,9 +11,9 @@
         <!-- Flow vector drawing and controls -->
         <div class="row p-2 d-flex align-content-center">
                 <div class="col-3">
-                    <div class="row">
-                       <span id="flow-info"> Flow speed: 10 mm / s </span>
-                    </div>
+{#                    <div class="row">#}
+{#                       <span id="flow-info"> Flow speed: 10 mm / s </span>#}
+{#                    </div>#}
                     <div class="row">
                         {{ template_game_form.flow_speed_field.label(class="form-label") }}
                         {{ template_game_form.flow_speed_field(class="form-control",id="flow_speed",value=session['game4']['flow_speed']) }}
@@ -23,7 +23,7 @@
                     </div>
                     <div class="row">
                         <button class="btn btn-primary btn-lg" id="solution-param-button"
-                                data-mdb-toggle="modal" data-mdb-target="#solutionModal">Solution</button>
+                                data-mdb-toggle="modal" data-mdb-target="#solutionModal">Tissue properties</button>
                     </div>
                     <div class="modal fade" id="solutionModal" tabindex="-1" aria-labelledby="solutionModalLabel" aria-hidden="true">
                         <div class="modal-dialog">

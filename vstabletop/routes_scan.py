@@ -55,7 +55,7 @@ def display_seq():
     seq = Sequence()
     seq.read(DATA_PATH / "scan" / "user_uploaded.seq")
     all_waveforms = export_waveforms(seq, time_range=time_range) #TODO parametrize
-
+    print("Waveforms exported")
     # Create plot
     fig = make_subplots(rows=6, cols=1,
                         subplot_titles=("RF magnitude", "Gx", "RF phase", "Gy", "ADC", "Gz"), shared_xaxes='all')
