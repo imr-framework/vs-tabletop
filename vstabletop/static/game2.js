@@ -314,3 +314,6 @@ socket.on('renew stars',(msg)=>{
     $("#stars-display").html(stars_html);
 
 })
+
+// Collapse all steps when tab is opened up
+$('.taskstep').removeClass('show');

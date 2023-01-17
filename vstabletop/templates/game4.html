@@ -275,7 +275,12 @@
 </div>
 {% endblock %}
 
-
+{% block tasks %}
+      <div class="test">
+        <input id="testinput" type="checkbox">
+        <label for="testinput">What?</label>
+    </div>
+{% endblock %}
 {% block additional_imports %}
     <script src="../static/game4.js"></script>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>

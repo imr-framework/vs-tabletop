@@ -1,3 +1,13 @@
+// New version: don't rely on forms
+
+$('#game1-run').on('click',()=>{
+    socket.emit('Acquire game 1 image',{'fov':parseFloat($('#FOV_scale').val()),
+                                        'n':parseInt($('#Matrix_scale').val()),
+                                        'zerofill': parseInt($('#zero_fill').val())});
+})
+
+
+
 $('#link-to-game1').addClass('text-success');
 
 let tabs = document.querySelectorAll('.tabs__toggle'),

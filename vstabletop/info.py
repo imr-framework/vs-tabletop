@@ -20,6 +20,26 @@ for u in range(len(GAMES)):
     GAMES_DICT[u] = GAMES[u]
     GAMES_INFO[u] = INTRO[u]
 
+# Game 1 instructions
+GAME1_INSTRUCTIONS={
+    'tabs': [f'Step {a+1}' for a in range(4)],
+    'titles': ['Explore field-of-view', 'Explore matrix size','Explore zero-filling','Explore windowing'],
+    'explorations':[{'Choose a field-of-view (FOV) and make an image': '',
+                     'Try a small FOV': '',
+                     'Try a big FOV': ''},
+                    {'Change the matrix size':'',
+                     'Try a small matrix size':'',
+                     'Try a big matrix size':'',
+                     'Find out what voxel size means':''},
+                    {'Change the zero-fill size':'',
+                     'Try the same zero-fill size as the matrix size':'',
+                     'Try a huge zero-fill size with a small matrix size':''},
+                    {'Adjust the image display with windowing':''}],
+    'tasks':{'Task 1: To see the whole picture': 'Adjust the FOV until you see the entire object.',
+             'Task 2: To see the details ': 'Adjust the matrix size until you can tell apart all the structures.',
+             'Task 3: Zero-fill is not magic!': 'Produce a low resolution image with a high matrix size',
+             'Task 4: To see the differences': 'Adjust the windowing until there is a very large contrast between the compartments.'}
+}
 
 # Game 2 instructions
 GAME2_INSTRUCTIONS={
@@ -86,6 +106,13 @@ GAME2_INSTRUCTIONS={
              'Task 4': 'Congratulations on becoming a k-space magician! Check off this task and go on.'}
 }
 
+GAME3_INSTRUCTIONS={
+    'tabs':[f'Step {a+1}' for a in range(3)],
+    'titles':['Explore MRI contrasts','Explore MRI parameters',''],
+    'explorations':[{},{}],
+    'tasks':{'Task 1':'',
+             'Task 2':''}
+}
 
 # Game 4 info
 GAME4_INFO = {
@@ -94,7 +121,13 @@ GAME4_INFO = {
     'T2s_BLOOD': 200e-3 / 6  # Roughly the same ratio as CSF in the Brainweb model
 }
 
-
+GAME4_INSTRUCTIONS={
+    'tabs':[f'Step {a+1}' for a in range(3)],
+    'titles':[],
+    'explorations':[{},{}],
+    'tasks':{'Task 1':'',
+             'Task 2':''}
+}
 # Game 5 instructions
 GAME5_INSTRUCTIONS={
     'tabs': ['Move 1','Move 2','Move 3','Move 4'],
@@ -142,6 +175,15 @@ GAME6_INFO = {
     'phantom_n': 32, 'phantom_fov': FOV,
     't1_array_centers': [(R/(2*s2),R/(2*s2)),(-R/(2*s2),R/(2*s2)),(-R/(2*s2),-R/(2*s2)),(R/(2*s2),-R/(2*s2))],
     't2_array_centers': [(0,R/2),(-R/2,0),(0,-R/2),(R/2,0)]
+}
+
+
+GAME6_INSTRUCTIONS={
+    'tabs':[f'Step {a+1}' for a in range(3)],
+    'titles':[],
+    'explorations':[{},{}],
+    'tasks':{'Task 1':'',
+             'Task 2':''}
 }
 
 # Game 7 static text
@@ -202,6 +244,13 @@ GAME8_RANDOM_MODELS = [
 ]
 
 
+GAME8_INSTRUCTIONS={
+    'tabs':[f'Step {a+1}' for a in range(3)],
+    'titles':[],
+    'explorations':[{},{}],
+    'tasks':{'Task 1':'',
+             'Task 2':''}
+}
 # Verbose definitions for each game (in html)
 # Game 1
 GAME1_BACKGROUND = {

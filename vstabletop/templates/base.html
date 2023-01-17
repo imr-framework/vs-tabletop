@@ -32,319 +32,327 @@
     <title>Virtual Scanner Tabletop</title>
   </head>
   <body>
+      <!-- How to play panel -->
+      <div class="modal fade" data-mdb-container="body" id="how-to-play-modal" tabindex="-1" role="dialog"
+                                                            aria-labelledby="how-to-play-label" aria-hidden="true">
+                                          <div class="modal-dialog">
+                                            <div class="modal-content">
+                                              <div class="modal-header">
+                                                <div class="modal-title font-weight-bold h5" id="how-to-play-label">
+                                                    <span>How to play</span>
+                                                </div>
+                                                <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+                                              </div>
+                                              <div class="modal-body">
+                                                         <ul class="list-group list-group-info list-group-small">
 
-  <!-- How to play panel -->
-  <div class="modal fade" data-mdb-container="body" id="how-to-play-modal" tabindex="-1" role="dialog"
-                                                        aria-labelledby="how-to-play-label" aria-hidden="true">
-                                      <div class="modal-dialog">
-                                        <div class="modal-content">
-                                          <div class="modal-header">
-                                            <div class="modal-title font-weight-bold h5" id="how-to-play-label">
-                                                <span>How to play</span>
+                             <li class="list-group-item">
+                               <i class="fas fa-mouse"></i>
+                                <span>Explore the game interface by trying different inputs! </span>
+                            </li>
+                            <li class="list-group-item">
+                                <i class="fas fa-clipboard-check  text-success"></i>
+                                <span>Follow the Instructions panel to complete Tasks to earn stars</span>
+                            </li>
+                            <li class="list-group-item">
+                                <i class="fas fa-question text-info"></i>
+                                <span>Answer the Questions to earn even more stars</span>
+                            </li>
+
+                            <li class="list-group-item">
+                            <i class="fas fa-star text-warning"></i>
+                                <span>Once you have 3 or more stars, you can move on to the next game!</span>
+                            </li>
+
+
+                        </ul>
+
+
+                                              </div>
+
                                             </div>
-                                            <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
                                           </div>
-                                          <div class="modal-body">
-                                                     <ul class="list-group list-group-info list-group-small">
+                                        </div>
+      <!-- Definitions panel -->
+      <div class="modal fade" data-mdb-container="body" id="definitions-modal" tabindex="-1" role="dialog"
+                                                            aria-labelledby="definitions-label" aria-hidden="true">
+                                          <div class="modal-dialog">
+                                            <div class="modal-content">
+                                              <div class="modal-header">
+                                                <div class="modal-title font-weight-bold h5" id="definitions-label">
+                                                    <span>Game {{ game_num }} Terms </span>
+                                                </div>
+                                                <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+                                              </div>
+                                              <div class="modal-body">
+                                              {% if background %}
+                                                             {% for term, definition in background.items() %}
+                                                                 <div class="h5">{{ term | safe }}</div><hr>
+                                                                 <p>
+                                                                    {{ definition | safe}}
+                                                                 </p>
+                                                             {% endfor %}
+                                              {% endif %}
+                                              </div>
 
-                         <li class="list-group-item">
-                           <i class="fas fa-mouse"></i>
-                            <span>Explore the game interface by trying different inputs! </span>
+                                            </div>
+                                          </div>
+                                        </div>
+      <!-- Main container -->
+      <div class="container-fluid vh-100 p-0">
+          <div class="row">
+             <!-- Navigation -->
+             <nav id="base-navbar" class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container-fluid">
+
+                <!-- icon -->
+                <!-- Sidebar toggler -->
+                <a id='sidebar-toggler' data-mdb-toggle="collapse" href="#" data-mdb-target=".collapsable-sidebar" role="button" class="px-2">
+                    <i class="fa fa-bars fa-lg text-light"></i>
+                </a>
+
+
+                <div class="collapse navbar-collapse" id="navbarColor01" data-toggle="buttons">
+                  <ul class="navbar-nav me-auto">
+
+                      <li class="nav-item">
+                        <a class="navbar-brand nav-link" href="/index">
+                            <img style="height:35px; width:auto" src="../static/img/vs-tabletop-icon.png" alt="vs tabletop icon">
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                      <a class="nav-link" href="/calibration">Calibration</a>
+                    </li>
+
+                    <li class="nav-item">
+                      <a class="nav-link" href="/scan">Scan</a>
+                    </li>
+
+
+                    <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" id="navbarDropdown" role="button"
+                         aria-haspopup="true" aria-expanded="false">Help</a>
+
+
+
+                       <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li>
+                                <button class="dropdown-item" type="button" data-mdb-toggle="modal" data-mdb-target="#how-to-play-modal">How to play</button>
+                            </li>
+                            <li>
+                                <button class="dropdown-item" type="button" data-mdb-toggle="modal" data-mdb-target="#definitions-modal">Definitions</button>
+                            </li>
+
+
+                        </ul>
+                    </li>
+
+                  </ul>
+
+
+                </div>
+
+
+
+                <div class="collapse navbar-collapse justify-content-center" id="navbarColor01" data-toggle="buttons">
+                {% if template_title %}
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle"
+                               href="#"
+                               id="gameDropdown"
+                               role="button"
+                               data-mdb-toggle="dropdown"
+                               aria-expanded="false"
+                               >
+                                Game {{ game_num }} : {{ template_title }}
+
+                            </a>
+
+                      <div class="dropdown-menu" aria-labelledby="gameDropdown">
+                        <a class="dropdown-item" href="/games/1" id="link-to-game1">Game 1: What's in an image?</a>
+                        <a class="dropdown-item" href="/games/2" id="link-to-game2">Game 2: K-space magik </a>
+                        <a class="dropdown-item" href="/games/3" id="link-to-game3">Game 3: Brains, please!</a>
+                        <a class="dropdown-item" href="/games/4" id="link-to-game4">Game 4: Fresh blood</a>
+                        <a class="dropdown-item" href="/games/5" id="link-to-game5">Game 5: Proton's got moves</a>
+                        <a class="dropdown-item" href="/games/6" id="link-to-game6">Game 6: Relaxation Station</a>
+                        <a class="dropdown-item" href="/games/7" id="link-to-game7">Game 7: Puzzled by Projection I</a>
+                        <a class="dropdown-item" href="/games/8" id="link-to-game8">Game 8: Puzzled by Projection II</a>
+                      </div>
                         </li>
-                        <li class="list-group-item">
-                            <i class="fas fa-clipboard-check  text-success"></i>
-                            <span>Follow the Instructions panel to complete Tasks to earn stars</span>
+                        <li class="nav-item">
+                            <a class="nav-link">
+                            <span class="font-monospace" id="stars-display">
+                                   {% set num_stars = session['game'+ (game_num | string)]['progress'].num_stars %}
+                                   {% set num_full = (num_stars | round(0,'floor') )| int %}
+                                   {% set num_half = ((2*(num_stars-num_full)) | round) | int %}
+                                   {% set num_empty = 5 - num_full - num_half %}
+                                   {% set star_array = [] %}
+                                   {% for f in range(num_full) %}
+                                        {% set star_array = star_array.append(2) %}
+                                   {% endfor %}
+                                   {% for h in range(num_half) %}
+                                        {% set star_array = star_array.append(1) %}
+                                   {% endfor %}
+                                   {% for e in range(num_empty) %}
+                                       {% set star_array = star_array.append(0) %}
+                                    {% endfor %}
+                                   {% for star in star_array %}
+                                       {% if star == 2 %}
+                                            <i class="bi bi-star-fill text-warning"></i>
+                                       {% elif star == 1 %}
+                                           <i class="bi bi-star-half text-warning"></i>
+                                       {% else %}
+                                           <i class="bi bi-star text-warning"></i>
+                                       {% endif %}
+                                   {% endfor %}
+                       </span>
+                            </a>
+
                         </li>
-                        <li class="list-group-item">
-                            <i class="fas fa-question text-info"></i>
-                            <span>Answer the Questions to earn even more stars</span>
+                        <li class="nav-item">
+                            <div class="btn btn-light" id="tasks-button"  data-mdb-toggle="modal" data-mdb-target="#tasksCenter">
+                                <i class="fas fa-tasks"></i>
+                                Instructions
+                            </div>
                         </li>
 
-                        <li class="list-group-item">
-                        <i class="fas fa-star text-warning"></i>
-                            <span>Once you have 3 or more stars, you can move on to the next game!</span>
+                        <li class="nav-item">
+                            <div class="btn btn-light" id="tasks-button"  data-mdb-toggle="modal" data-mdb-target="#quizCenter">
+                                <i class="fas fa-edit"></i>
+                                Quiz
+                            </div>
                         </li>
-
 
                     </ul>
 
 
-                                          </div>
 
-                                        </div>
-                                      </div>
-                                    </div>
-
-  <!-- Definitions panel -->
-  <div class="modal fade" data-mdb-container="body" id="definitions-modal" tabindex="-1" role="dialog"
-                                                        aria-labelledby="definitions-label" aria-hidden="true">
-                                      <div class="modal-dialog">
-                                        <div class="modal-content">
-                                          <div class="modal-header">
-                                            <div class="modal-title font-weight-bold h5" id="definitions-label">
-                                                <span>Game {{ game_num }} Terms </span>
-                                            </div>
-                                            <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
-                                          </div>
-                                          <div class="modal-body">
-                                          {% if background %}
-                                                         {% for term, definition in background.items() %}
-                                                             <div class="h5">{{ term | safe }}</div><hr>
-                                                             <p>
-                                                                {{ definition | safe}}
-                                                             </p>
-                                                         {% endfor %}
-                                          {% endif %}
-                                          </div>
-
-                                        </div>
-                                      </div>
-                                    </div>
-
-    <!-- Main container -->
-    <div class="container-fluid vh-100">
-
-    <!-- Navigation -->
-    <nav id="base-navbar" class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container-fluid">
-            <!-- icon -->
-            <a class="navbar-brand" href="/index">
-                <img style="height:35px; width:auto" src="../static/img/vs-tabletop-icon.png" alt="vs tabletop icon">
-            </a>
-
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarColor01" data-toggle="buttons">
-              <ul class="navbar-nav me-auto">
-
-                  <li class="nav-item">
-                  <a class="nav-link" href="/index">Home
-                    <span class="visually-hidden">(current)</span>
-                  </a>
-                </li>
-
-                <li class="nav-item">
-                  <a class="nav-link" href="/calibration">Calibration</a>
-                </li>
-
-                <li class="nav-item">
-                  <a class="nav-link" href="/scan">Scan</a>
-                </li>
+                {% endif %}
+                </div>
 
 
-                <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" id="navbarDropdown" role="button"
-                     aria-haspopup="true" aria-expanded="false">Games</a>
+                <div class="collapse navbar-collapse" id="navbarColor01" data-toggle="buttons">
+                {% if session['user']['username'] %}
 
-
-                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="/games/1" id="link-to-game1">Game 1: What's in an image?</a>
-                    <a class="dropdown-item" href="/games/2" id="link-to-game2">Game 2: K-space magik </a>
-                    <a class="dropdown-item" href="/games/3" id="link-to-game3">Game 3: Brains, please!</a>
-                    <a class="dropdown-item" href="/games/4" id="link-to-game4">Game 4: Fresh blood</a>
-                    <a class="dropdown-item" href="/games/5" id="link-to-game5">Game 5: Proton's got moves</a>
-                    <a class="dropdown-item" href="/games/6" id="link-to-game6">Game 6: Relaxation Station</a>
-                    <a class="dropdown-item" href="/games/7" id="link-to-game7">Game 7: Puzzled by Projection I</a>
-                    <a class="dropdown-item" href="/games/8" id="link-to-game8">Game 8: Puzzled by Projection II</a>
-                  </div>
-
-
-
-                </li>
-
-              </ul>
-
-
-            </div>
-
-
-
-            <div class="collapse navbar-collapse justify-content-center" id="navbarColor01" data-toggle="buttons">
-            {% if template_title %}
-                <ul class="navbar-nav">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle"
-                           href="#"
-                           id="gameDropdown"
-                           role="button"
-                           data-mdb-toggle="dropdown"
-                           aria-expanded="false"
-                           >
-                            Game {{ game_num }} : {{ template_title }}
-
-                        </a>
-                            <ul class="dropdown-menu" aria-labelledby="gameDropdown">
-                                <li>
-                                    <button class="dropdown-item" type="button" data-mdb-toggle="modal" data-mdb-target="#how-to-play-modal">How to play</button>
-                                </li>
-                                <li>
-                                    <button class="dropdown-item" type="button" data-mdb-toggle="modal" data-mdb-target="#definitions-modal">Definitions</button>
-                                </li>
-
-
-                            </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link">
-                        <span class="font-monospace" id="stars-display">
-                               {% set num_stars = session['game'+ (game_num | string)]['progress'].num_stars %}
-                               {% set num_full = (num_stars | round(0,'floor') )| int %}
-                               {% set num_half = ((2*(num_stars-num_full)) | round) | int %}
-                               {% set num_empty = 5 - num_full - num_half %}
-                               {% set star_array = [] %}
-                               {% for f in range(num_full) %}
-                                    {% set star_array = star_array.append(2) %}
-                               {% endfor %}
-                               {% for h in range(num_half) %}
-                                    {% set star_array = star_array.append(1) %}
-                               {% endfor %}
-                               {% for e in range(num_empty) %}
-                                   {% set star_array = star_array.append(0) %}
-                                {% endfor %}
-                               {% for star in star_array %}
-                                   {% if star == 2 %}
-                                        <i class="bi bi-star-fill text-warning"></i>
-                                   {% elif star == 1 %}
-                                       <i class="bi bi-star-half text-warning"></i>
-                                   {% else %}
-                                       <i class="bi bi-star text-warning"></i>
-                                   {% endif %}
-                               {% endfor %}
-                   </span>
-                        </a>
-
-                    </li>
-                    <li class="nav-item">
-                        <div class="btn btn-light" id="tasks-button"  data-mdb-toggle="modal" data-mdb-target="#tasksCenter">
-                            <i class="fas fa-tasks"></i>
-                            Instructions
+                <ul class="navbar-nav ms-auto">
+                      <li class="nav-item d-flex align-content-center">
+                         <div class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userInfoModalCenter">
+                           User: {{ session['user']['username'] }}
                         </div>
-                    </li>
-
+                      </li>
+                      <!-- Button trigger modal -->
                     <li class="nav-item">
-                        <div class="btn btn-light" id="tasks-button"  data-mdb-toggle="modal" data-mdb-target="#quizCenter">
-                            <i class="fas fa-edit"></i>
-                            Quiz
-                        </div>
-                    </li>
-
-                </ul>
-
-
-
-            {% endif %}
-            </div>
-
-
-            <div class="collapse navbar-collapse" id="navbarColor01" data-toggle="buttons">
-            {% if session['user']['username'] %}
-
-            <ul class="navbar-nav ms-auto">
-                  <li class="nav-item d-flex align-content-center">
-                     <div class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userInfoModalCenter">
-                       User: {{ session['user']['username'] }}
-                    </div>
+                      <a class="nav-link" href="/logout">Log out</a>
                   </li>
-                  <!-- Button trigger modal -->
-                <li class="nav-item">
-                  <a class="nav-link" href="/logout">Log out</a>
-              </li>
-            </ul>
-            {% endif %}
+                </ul>
+                {% endif %}
+                </div>
+
             </div>
+        </nav>
+          </div>
 
-        </div>
-    </nav>
+          <!-- Modal: user profile -->
+          <div class="modal fade" id="userInfoModalCenter" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">User Profile</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body col">
+                      <!--TODO Add in user icon -->
+                          <div class="row h-50">
+                         <svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" fill="dodgerblue" class="bi bi-file-earmark-person-fill" viewBox="0 0 16 16">
+                            <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zM11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0zm2 5.755V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-.245S4 12 8 12s5 1.755 5 1.755z"/>
+                         </svg>
+                          </div>
+                          <div class="row h-50 d-flex justify-content-center align-content-center">
+                          Username:  {{ session['user']['username']}} <br>
+                          Role: {{ session['user']['role']}} <br>
+                          Date joined: {{ session['user']['date_joined'] }}
 
-    <!-- Modal: user profile -->
-    <div class="modal fade" id="userInfoModalCenter" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog">
+                          </div>
+                      </div>
+                       <div class="modal-footer">
+                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                       </div>
+                    </div>
+                </div>
+                </div>
+          <!-- Modal: instructions -->
+          <div class="modal top fade" id="tasksCenter" tabindex="-1">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel">User Profile</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body col">
-                  <!--TODO Add in user icon -->
-                      <div class="row h-50">
-                     <svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" fill="dodgerblue" class="bi bi-file-earmark-person-fill" viewBox="0 0 16 16">
-                        <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zM11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0zm2 5.755V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-.245S4 12 8 12s5 1.755 5 1.755z"/>
-                     </svg>
-                      </div>
-                      <div class="row h-50 d-flex justify-content-center align-content-center">
-                      Username:  {{ session['user']['username']}} <br>
-                      Role: {{ session['user']['role']}} <br>
-                      Date joined: {{ session['user']['date_joined'] }}
+                    <div class="modal-header h3">Tasks</div>
+                    <div class="modal-body">
 
-                      </div>
-                  </div>
-                   <div class="modal-footer">
-                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                   </div>
-                </div>
-            </div>
-            </div>
-
-    <!-- Modal: instructions -->
-    <div class="modal top fade" id="tasksCenter" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header h3">Tasks</div>
-                <div class="modal-body">
-                    {% block tasks %}
-                    {% endblock %}
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-        <div class="modal top fade" id="quizCenter" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">Questions</div>
-                <div class="modal-body">
-                    {% block questions %}
-                    {% endblock %}
+          <!-- Modal: Questions panel -->
+          <div class="modal top fade" id="quizCenter" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">Questions</div>
+                    <div class="modal-body">
+                        {% block questions %}
+                        {% endblock %}
+                    </div>
                 </div>
             </div>
         </div>
+          <!-- Message board -->
+          <div class="row">
+              <div id="base-message-board" class="card bg-info">
+          </div>
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {%  for message in messages %}
+                        <p class="text-primary">{{ message }}</p>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+          <!-- Sidebar and main content -->
+           <div class="row h-100 collapse g-0 d-flex collapsable-sidebar">
+              <div class="col m-0 p-0 h-100 bg-light w-sidebar navbar-collapse collapse d-md-flex sidebar overflow-scroll collapsable-sidebar">
+                  <div class="card bg-light">
+
+                        {% block tasks %}
+                        {% endblock %}
+                    </div>
+              </div>
+
+           <div class="col p-0 h-100">
+              {% block content %}
+              {% endblock %}
+           </div>
     </div>
 
 
-    <!-- Message board -->
-    <div id="base-message-board" class="card bg-info">
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                {%  for message in messages %}
-                    <p class="text-primary">{{ message }}</p>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-    </div>
 
-    {% block content %}
-    {% endblock %}
-    </div>
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+      </div>
 
+      <!-- Imports -->
+      <!-- JavaScript -->
+      <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+      <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js" integrity="sha512-aMGMvNYu8Ue4G+fHa359jcPb1u+ytAF+P2SCb+PxrjCdO3n3ZTxJ30zuH39rimUggmTwmh2u7wvQsDTHESnmfQ==" crossorigin="anonymous"></script>
+      <!-- MDB -->
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.4.0/mdb.min.js"></script>
+      <!-- Custom -->
+      <link rel="stylesheet" href="../static/styles/style.css">
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js" integrity="sha512-aMGMvNYu8Ue4G+fHa359jcPb1u+ytAF+P2SCb+PxrjCdO3n3ZTxJ30zuH39rimUggmTwmh2u7wvQsDTHESnmfQ==" crossorigin="anonymous"></script>
-    <!-- MDB -->
-    <script
-      type="text/javascript"
-      src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.4.0/mdb.min.js"
-    ></script>
-
-  {% block additional_imports %}
-  {% endblock %}
-
+      <!-- Additional, page-specific imports -->
+      {% block additional_imports %}
+      {% endblock %}
 
   </body>
 </html>

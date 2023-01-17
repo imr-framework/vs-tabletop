@@ -263,14 +263,13 @@
             </div>
 
         <div class="col-6 h-100">
-            <form action="/games/1" method="POST">
             {{ G1Form.hidden_tag() }}
                 <div class="row card">
                     <div class="card-header"><b>Image</b></div>
                     <div class="card-body">
                         <div class="chart" id="chart-G1">
                         </div>
-                        <button type="submit" class="btn btn-lg btn-success">Run</button>
+                        <button id="game1-run" class="btn btn-lg btn-success">Run</button>
                     </div>
                 </div>
 
@@ -432,11 +431,6 @@
                     </div>
                 </div>
 
-
-
-</form>
-
-
             </div>
         </div>
 
@@ -496,6 +490,12 @@
 
 {% endblock %}
 
+{% block tasks %}
+    <div class="card-body">
+
+    </div>
+
+{% endblock %}
 {% block additional_imports %}
 
     <link rel="stylesheet" href="../static/styles/style_game1.css">

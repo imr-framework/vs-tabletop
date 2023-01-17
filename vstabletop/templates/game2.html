@@ -614,11 +614,17 @@
 {% endblock %}
 
 
+
+
 {% block tasks %}
 <div class="card-body">
+    <div class="test">
+        <input id="testinput" type="checkbox">
+        <label for="testinput">What?</label>
+    </div>
                     <div class="progress">
                         <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar"
-                             style="width: {{ session['game5']['task_completed']*25 }}%"
+                             style="width: {{ session['game2']['task_completed']*25 }}%"
                              aria-valuenow="0" aria-valuemin="{{ session['game2']['task_completed']*25 }}" aria-valuemax="100"></div>
                     </div>
                     <!-- Show tab for each lab procedure -->
@@ -634,7 +640,7 @@
                             {% set aria_disabled = (disabled == 'disabled') %}
 
                             <li class="nav-item" role="presentation">
-                                <button class="col nav-link {{ active }} {{ disabled }} text-info" id="task{{ loop.index }}-tab" data-bs-toggle="tab" data-bs-target="#step{{ loop.index }}"
+                                <button class="col nav-link {{ active }} {{ disabled }} text-info" id="task{{ loop.index }}-tab" data-mdb-toggle="tab" data-mdb-target="#step{{ loop.index }}"
                                         type="button" role="tab"  aria-controls="step{{ loop.index }}"
                                         aria-selected="{{ loop.index==1 }}" aria-disabled= "{{ aria_disabled }}">
                                     {{ tab }}
@@ -666,12 +672,12 @@
                                               <input class="form-check-input task-{{ task_index }}-check" type="checkbox" value="" aria-label="">
                                               </div>
                                             <div class="col-10">
-                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ loop.index }}" aria-expanded="false" aria-controls="collapse{{ loop.index }}">
+                                            <button class="accordion-button" type="button" data-mdb-toggle="collapse" data-mdb-target="#collapse{{ loop.index }}" aria-expanded="false" aria-controls="collapse{{ loop.index }}">
                                                 <strong>{{ step }}</strong>
                                             </button>
                                           </div>
                                           </div>
-                                          <div class="accordion-collapse collapse" id="collapse{{ loop.index }}" aria-labelledby="heading{{ loop.index }}" data-bs-parent="#instructions-accordion">
+                                          <div class="accordion-collapse collapse taskstep" id="collapse{{ loop.index }}" aria-labelledby="heading{{ loop.index }}" data-mdb-parent="#instructions-accordion">
                                               <div class="accordion-body">
                                                     <span>{{ details }}</span>
                                               </div>
@@ -688,12 +694,12 @@
                                               </div>
 
                                             <div class="col-10">
-                                            <button class="accordion-button collapsed final-task-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-final-{{ task_index }}" aria-expanded="false" aria-controls="collapse{{ loop.index }}">
+                                            <button class="accordion-button collapsed final-task-button" type="button" data-mdb-toggle="collapse" data-mdb-target="#collapse-final-{{ task_index }}" aria-expanded="false" aria-controls="collapse{{ loop.index }}">
                                                 <strong class="text-info">{{ task }}</strong>
                                             </button>
                                           </div>
                                           </div>
-                                          <div class="accordion-collapse collapse" id="collapse-final-{{ task_index }}" aria-labelledby="heading-final-{{ task_index }}" data-bs-parent="#instructions-accordion">
+                                          <div class="accordion-collapse collapse" id="collapse-final-{{ task_index }}" aria-labelledby="heading-final-{{ task_index }}" data-mdb-parent="#instructions-accordion">
                                               <div class="accordion-body">
                                                     <span>{{ task_details }}</span>
                                               </div>

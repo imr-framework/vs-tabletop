@@ -198,3 +198,62 @@ canvas {
   color: #ccc;
   text-align: center;
 }
+
+/* Sidebar */
+
+.w-sidebar {
+    width: 500px;
+    max-width: 500px;
+}
+
+.row.collapse {
+    margin-left: -500px;
+    left: 0;
+	transition: margin-left .15s linear;
+}
+
+.row.collapse.show {
+    margin-left: 0 !important;
+}
+
+.row.collapsing {
+    margin-left: -500px;
+    left: -0.05%;
+	transition: all .15s linear;
+}
+
+@media (max-width:500px) {
+    .row.collapse,
+    .row.collapsing {
+        margin-left: 0 !important;
+        left: 0 !important;
+        overflow: visible;
+    }
+
+    .row > .sidebar.collapse {
+        display: flex !important;
+        margin-left: -100% !important;
+        transition: all .25s linear;
+        position: fixed;
+        z-index: 1050;
+        max-width: 0;
+        min-width: 0;
+        flex-basis: auto;
+    }
+
+    .row > .sidebar.collapse.show {
+        margin-left: 0 !important;
+        width: 100%;
+        max-width: 100%;
+        min-width: initial;
+    }
+
+    .row > .sidebar.collapsing {
+        display: flex !important;
+        margin-left: -10% !important;
+        transition: all .2s linear !important;
+        position: fixed;
+        z-index: 1050;
+        min-width: initial;
+    }
+}

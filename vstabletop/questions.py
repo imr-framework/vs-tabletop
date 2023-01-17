@@ -151,8 +151,6 @@ def initialize_game1_questions():
 
     return mcs
 
-
-# Todo input the Game 2 questions from the lab manual
 def initialize_game2_questions():
     mcs = []
     mcs.append(MultipleChoice(
@@ -316,6 +314,94 @@ def initialize_game3_questions():
 
     return mcs
 
+def initialize_game4_questions():
+    """Defines a list of multiple choice questions
+
+    Returns
+    -------
+    mcs : list
+        List of MultipleChoice database models for game 4
+    """
+    mcs = [] # List of questions
+    mcs.append(MultipleChoice(
+        id=401,
+        game_number=4,
+        uses_images=False,
+        question_text="How can we visualize blood vessels with MRI?",
+        choiceA = "By eliminating signal from background tissues",
+        choiceB = "By eliminating signal from blood",
+        choiceC = "By eliminating signal from blood vessel walls",
+        choiceD = "By performing a maximum intensity projection on any MR image",
+        correct_choice = "B",
+        difficulty='medium'
+    ))
+
+    mcs.append(MultipleChoice(
+        id=402,
+        game_number=4,
+        uses_images=False,
+        question_text="Which of the following is false about steady state SPGR?",
+        choiceA="The steady state signal is lower than the initial signal",
+        choiceB="The fewer RF pulses protons experience, the higher signal they generate",
+        choiceC="The steady state signal is dependent on the flip angle",
+        choiceD="Fewer RF pulses are needed for moving protons to reach steady state than for stationary protons",
+        correct_choice = "D",
+        difficulty='hard'
+    ))
+
+    mcs.append(MultipleChoice(
+        id=403,
+        game_number=4,
+        uses_images=False,
+        question_text="How would you describe the RF pulse pattern in SPGR?",
+        choiceA="A train of equally spaced, alpha-degree (alpha < 90) pulses",
+        choiceB="A train of equally spaced 180-degree pulses",
+        choiceC="A 90-degree pulse followed by equally spaced 180-degree pulses",
+        choiceD="An alpha-degree (alpha < 90)  pulse followed by equally-spaced 90-degree pulses",
+        correct_choice = "A",
+        difficulty="medium"
+    ))
+
+    mcs.append(MultipleChoice(
+        id=404,
+        game_number=4,
+        uses_images=False,
+        question_text= "Which of the following is true about T2 and T2*?",
+        choiceA="Spin echoes generate T2* contrast",
+        choiceB="T2* is always longer than T2",
+        choiceC="T2 and T2* are the same for moving spins",
+        choiceD="T2*-weighted signal is lower than T2-weighted signal",
+        correct_choice="D",
+        difficulty="hard"
+    ))
+
+    mcs.append(MultipleChoice(
+        id=405,
+        game_number=4,
+        uses_images=False,
+        question_text="How do you describe the RF pulse pattern in SE?",
+        choiceA="90-deg pulse, Δt, 180-deg-pulse, Δt, get signal",
+        choiceB="180-deg pulse, Δt1, 90-deg pulse, Δt2, 180-deg pulse, Δt2, get signal",
+        choiceC="90-deg pulse,  2Δt, 180-deg pulse, get signal",
+        choiceD="90-deg pulse, Δt, 180-deg-pulse, 2Δt, get signal",
+        correct_choice="A",
+        difficulty="medium"
+    ))
+
+    mcs.append(MultipleChoice(
+        id=406,
+        game_number=4,
+        uses_images=False,
+        question_text="Which of the following is false about maximum intensity projection?",
+        choiceA="It generates a 2D image from a 3D volume",
+        choiceB="High signals are emphasized",
+        choiceC="You should use it for dark-blood MRA images",
+        choiceD="It helps radiologists visualize the shape of a vascular tree",
+        correct_choice="C",
+        difficulty="hard"
+    ))
+
+    return mcs
 
 def initialize_game5_questions():
     mcs = []
@@ -374,6 +460,103 @@ def initialize_game5_questions():
 
     return mcs
 
+def initialize_game6_questions():
+    mcs = []
+
+    mcs.append(MultipleChoice(
+        id=601,
+        game_number=6,
+        uses_images=False,
+        question_text="Which of the following is true about T1?",
+        choiceA="T1 refers to transverse relaxation",
+        choiceB="T1 relaxation causes Mz to approach zero",
+        choiceC="T1 relaxation causes Mz to approach its equilibrium value",
+        choiceD="T1 can be mapped by varying TEs",
+        correct_choice="C",
+        difficulty="medium"
+
+    ))
+
+    mcs.append(MultipleChoice(
+        id=602,
+        game_number=6,
+        uses_images=False,
+        question_text="Which of the following is false about T2?",
+        choiceA="T2 decay is caused by dephasing of spins",
+        choiceB="T2 decay happens in the x-y plane",
+        choiceC="T2 refers to the time taken to decrease Mxy by about 63%",
+        choiceD="T2 has units of [radians/Tesla]",
+        correct_choice="D",
+        difficulty="medium"
+    ))
+
+    mcs.append(MultipleChoice(
+        id=603,
+        game_number=6,
+        uses_images=False,
+        question_text="Which of the following describes an IRSE sequence?",
+        choiceA=" 90 RF, wait for T, 180 RF, wait for 2T, acquire",
+        choiceB="180 RF, wait for 5T, 90 RF, wait for T, acquire",
+        choiceC="90 RF, wait for T, 180 RF, wait for T, acquire, wait for T, 270 RF, wait for T, acquire",
+        choiceD="90 RF, wait for T, 90 RF, wait for T, acquire",
+        correct_choice="B",
+        difficulty="hard"
+    ))
+
+    mcs.append(MultipleChoice(
+        id=604,
+        game_number=6,
+        uses_images=False,
+        question_text="Which of the following describes a TSE sequence?",
+        choiceA="90 RF, wait for T, 180 RF, wait for T, acquire, wait for T, 180 RF, wait for T, acquire",
+        choiceB="180 RF, wait for T, 90 RF, wait for T, 180 RF, acquire",
+        choiceC="180 RF, wait for T, 90 RF, wait for T, acquire",
+        choiceD="90 RF, wait for 2T, acquire",
+        correct_choice="A",
+        difficulty="hard"
+    ))
+
+    mcs.append(MultipleChoice(
+        id=605,
+        game_number=6,
+        uses_images=False,
+        question_text="What does curve fitting accomplish?",
+        choiceA="It converts one image into a parameter (T1 or T2) map.",
+        choiceB="It fits the T1 or T2 signal model to the mapping data acquired at different timings.",
+        choiceC="It draws a straight line through T1 or T2 mapping data for each voxel.",
+        choiceD="It traces tissue boundaries to perform a segmentation based on T1 or T2 maps",
+        correct_choice="A",
+        difficulty="hard"
+    ))
+
+    mcs.append(MultipleChoice(
+        id=606,
+        game_number=6,
+        uses_images=False,
+        question_text="How can we get data to perform T2 mapping?",
+        choiceA="Apply an IRSE sequence with different TEs",
+        choiceB="Apply a TSE sequence with different TEs",
+        choiceC="Apply a TSE sequence with different TIs",
+        choiceD="Apply an IRSE sequence with different TRs",
+        correct_choice="B",
+        difficulty="medium"
+    ))
+
+    mcs.append(MultipleChoice(
+        id=607,
+        game_number=6,
+        uses_images=False,
+        question_text="What is Mz at t = 100 ms after a 180-degree pulse has been applied at t = 0 on a tissue type with T1 = 300 ms?",
+        choiceA="-43.3% M0",
+        choiceB="+27.4% M0",
+        choiceC="0",
+        choiceD="+91.0% M0",
+        correct_choice="A",
+        difficulty="hard"
+    ))
+
+
+    return mcs
 
 def initialize_game7_questions():
     mcs = []
@@ -420,6 +603,51 @@ def initialize_game7_questions():
 
     # Questions with images
 
+
+    return mcs
+
+def initialize_game8_questions():
+    mcs = []
+
+    # Questions without images (conceptual)
+    mcs.append(MultipleChoice(
+        id=801,
+        game_number=8,
+        uses_images=False,
+        question_text="Which of the following is a pair of forward and inverse processes?",
+        choiceA="Baking a cake and eating it",
+        choiceB="Growing a tree from a seed and harvesting a seed from that tree",
+        choiceC="Making a piece of art and selling it to buy more paint",
+        choiceD="Putting together a LEGO house and taking it apart",
+        correct_choice="D",
+        difficulty="easy"
+    ))
+
+    mcs.append(MultipleChoice(
+        id=802,
+        game_number=8,
+        uses_images=False,
+        question_text="Which of the following is not a way to sample k-space in a non-cartesian manner?",
+        choiceA="Sample points with the same spacing across x and across y",
+        choiceB="Sample points regularly along a line that crosses the center of k-space, rotate the line, and then sample it again",
+        choiceC="Sample points randomly so more points are sampled from the center of k-space",
+        choiceD="Sample points along a spiral",
+        correct_choice="A",
+        difficulty="medium"
+    ))
+
+    mcs.append(MultipleChoice(
+        id=803,
+        game_number=8,
+        uses_images=False,
+        question_text="Which of the following is not a way to process and reconstruct raw MRI data?",
+        choiceA="Performing an IFFT on it",
+        choiceB="Convert 1D radial data lines to the spatial domain and perform backprojection",
+        choiceC="Use gridding and then perform an IFFT",
+        choiceD="Bake it at 450F for 40 minutes",
+        correct_choice="D",
+        difficulty="easy"
+    ))
 
     return mcs
 
@@ -470,7 +698,7 @@ if __name__ == "__main__":
     #print(MultipleChoice.query.get(102).get_randomized_data())
 
 
-    print(MultipleChoice.query.filter_by(game_number=3).all())
+    #print(MultipleChoice.query.filter_by(game_number=3).all())
 
     # Example querying of database
     # All Game 1 questions
