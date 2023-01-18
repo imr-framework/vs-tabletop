@@ -23,22 +23,27 @@ for u in range(len(GAMES)):
 # Game 1 instructions
 GAME1_INSTRUCTIONS={
     'tabs': [f'Step {a+1}' for a in range(4)],
-    'titles': ['Explore field-of-view', 'Explore matrix size','Explore zero-filling','Explore windowing'],
-    'explorations':[{'Choose a field-of-view (FOV) and make an image': '',
-                     'Try a small FOV': '',
-                     'Try a big FOV': ''},
-                    {'Change the matrix size':'',
-                     'Try a small matrix size':'',
-                     'Try a big matrix size':'',
-                     'Find out what voxel size means':''},
-                    {'Change the zero-fill size':'',
-                     'Try the same zero-fill size as the matrix size':'',
-                     'Try a huge zero-fill size with a small matrix size':''},
-                    {'Adjust the image display with windowing':''}],
-    'tasks':{'Task 1: To see the whole picture': 'Adjust the FOV until you see the entire object.',
-             'Task 2: To see the details ': 'Adjust the matrix size until you can tell apart all the structures.',
-             'Task 3: Zero-fill is not magic!': 'Produce a low resolution image with a high matrix size',
-             'Task 4: To see the differences': 'Adjust the windowing until there is a very large contrast between the compartments.'}
+    'titles': ['Explore field-of-view', 'Explore matrix size','Explore zero-fill','Explore windowing'],
+    'explorations':[{'Make an image': 'Press RUN to make an image with the default settings. What do you see?',
+                     'Try a very big FOV': 'Set the FOV to 1000 mm and press RUN again. What do you see now?',
+                     'Try a very small FOV': 'Acquire an image with FOV=100 mm. What do you see more of and what is missing now?',
+                     'Experiment with FOV': 'Choose a few different FOVs and describe in your words what it means.'},
+                    {'Change the matrix size':'Look at the matrix size. You may change it to different numbers to make the image more or less pixellated.',
+                     'Try a small matrix size':'Put in a matrix size of 16 and press RUN. What happens?',
+                     'Try a big matrix size':'Now acquire an image with matrix size = 256. What is the difference?',
+                     'Experiment with matrix size': 'Try different matrix sizes and see how the image changes. How long does it take to get an image for smaller vs. larger matrix sizes? At which point is it not worth increasing it any more?',
+                     'Find out what voxel size means':'How does the voxel size change when you enter different matrix sizes? Can you write an equation that relates voxel size with FOV and matrix size?'},
+                    {'Change the zero-fill number':'The zero-fill is the displayed matrix size and should always be larger than the acquired matrix size. Try setting it to different numbers and acquire images.',
+                     'Try the same zero-fill number as the matrix size':'Set matrix size and zero-fill to be the same at 16, 32, and 64. How does the image change?',
+                     'Try a huge zero-fill number with a small matrix size':'Set matrix size to 16 and zero-fill to 64, 128, and 256. Does the zero-fill improve image resolution (that is, can you tell apart the structures better)? '},
+                    {'Adjust the image display with windowing':'The windowing sliders can be moved to change the range of values that is displayed from black to wihte.',
+                     'Change the minimum level':'Keeping the maximum level to the very right (100%), change the minimum level and re-run. How does the image change?',
+                     'Change the maximum level':'Keeping the minimum level to the very left (0%), change the maximum level and re-run. How does the image change now?',
+                     'Eliminate contrast':'Make minimum and maximum level the same and run at different values (for example, both at 0%, 50%,and 100%). Describe what exactly you see at a given level.'}],
+    'tasks':{'Task 1: To see the whole picture': 'Adjust the FOV until it is just right for viewing the object with all its structures.',
+             'Task 2: To see the details ': 'Adjust the matrix size until you can have a good idea of all the shapes.',
+             'Task 3: Zero-fill is not magic!': 'Produce a low resolution image with a big matrix size',
+             'Task 4: To see the differences': 'Adjust the windowing until there is a very large contrast between the structures.'}
 }
 
 # Game 2 instructions

@@ -424,7 +424,6 @@ $(".task-next-button").click((event)=>{
 
         }
         else{
-            //TODO step 3 additional logic
             socket.emit('game5 update progress',{'task': task_id});
             $(`#task-message-${task_id}`).addClass('d-none');
             $(`#task-success-${task_id}`).removeClass('d-none');

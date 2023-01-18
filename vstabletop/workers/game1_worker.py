@@ -34,6 +34,7 @@ def get_image(fov,n,n_zf,min_level,max_level):
 
     fov_orig = 0.25 # meters
     fov_portion = fov/fov_orig
+    print(f'fov_portion = {fov_portion}')
     n_first = int(np.ceil(0.5*(n / fov_portion)))*2
     img, _, _ = shepp_logan((n_first, n_first, 1), MR=True, zlims=(-.25, .25))
     img = np.squeeze(img)

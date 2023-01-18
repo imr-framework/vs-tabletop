@@ -3,11 +3,9 @@
 {#    <div class="seperate"><canvas id="canvas"></canvas></div>#}
 
     <form action="/games/5" method="POST">
-    <div class="row h-100">
+    <div class="row h-50" id="display-game5">
     <!-- Display panels on the left -->
-        <div class="col-3 h-100" id="display-game5">
-
-            <div class="row card bg-light">
+            <div class="col-6 card">
                 <div class="card-header">
                     <span>Magnetization</span>
                         <div type="button" class="btn btn-sm shadow-none"
@@ -26,7 +24,7 @@
                 </div>
             </div>
 
-            <div class="row card">
+            <div class="col-6 card">
                 <div class="card-header">
                     <span>Signal (emf)</span>
                         <div type="button" class="btn btn-sm shadow-none"
@@ -44,11 +42,10 @@
                   <div id='chart-signal' class='chart'></div>
                 </div>
             </div>
-        </div>
 
     <!-- Input fields -->
-        <div class="col col-9">
-            <div class="row h-50" id="fields-game5">
+    </div>
+    <div class="row h-50" id="fields-game5">
                     {{ template_game_form.hidden_tag() }}
                     <div class="col col-6 h-100">
                         <div class="row h-25">
@@ -235,7 +232,7 @@
                             </div>
                     </div>
                     <div class="col col-6">
-                            <div class="row h-50 card bg-light">
+                            <div class="row h-50 card">
                                 <h4 class="card-header">Set initial magnetization</h4>
                                 <div class="card-body">
                                     <!-- Add in options to set initial magnetization value. -->
@@ -310,73 +307,6 @@
 
 
                     </div>
-            </div>
-            <div class="row h-50">
-
-                    <!-- Questions panel -->
-                   <div class="col-6 card">
-                            <div class="card-header h3">Questions</div>
-                                <div id="slide" class="carousel slide card-body h-75" data-bs-interval="false">
-                            <div class="carousel-inner">
-                                {% for ind in range(success_text | length) %}
-                                    {% set letters = ['a','b','c','d'] %}
-                                    {% set active_text = 'active' if ind==0 else '' %}
-                                    <div class="carousel-item {{active_text}}">
-
-                                        <div class="row d-flex justify-content-center align-items-baseline">
-                                            <p class="h5">Q{{ ind + 1 }}:{{ questions[ind]['text']}}</p>
-                                        </div>
-
-                                        <div class="row d-flex justify-content-center">
-
-                                        <div class="form-check col-8">
-                                        {% for ind2 in range(questions[ind]['choices'] | length) %}
-                                            {% if not uses_images[ind] %}
-                                                <div class="form-group">
-                                            <input type="radio" class="q{{ind}}-choice form-check-input" id="q{{ind}}-{{letters[ind2]}}" name="mc-question" value="{{ letters[ind2] }}">
-                                            <label for="q{{ind}}-{{letters[ind2]}}" class="form-check-label">{{ questions[ind]['choices'][ind2] }}</label>
-                                                </div>
-                                            {% else %}
-                                            <div class="form-group">
-                                            <input type="radio"  class="q{{ind}}-choice form-check-input" id="q{{ind}}-{{letters[ind2] }}" name="mc-question" value="{{ letters[ind2] }}">
-                                            <label for="q{{ind}}-{{letters[ind2]}}" class="form-check-label"><img src=".{{ questions[ind]['choices'][ind2] }}" style="height: 150px; width:150px;"></label>
-                                            </div>
-                                            {% endif %}
-                                        {% endfor %}
-                                        </div>
-                                        </div>
-
-                                        <div class="row d-flex justify-content-center">
-                                            <div class="col-4">
-                                                <div class="btn btn-large btn-primary answer-mc" id="answer-mc-{{ind}}">Submit</div>
-                                            </div>
-                                            <div class="col-8">
-                                                <p id="mc-success-text-{{ ind }}" class="d-none" style="color:palegreen">{{ success_text[ind] }}</p>
-                                                <p id="mc-failure-text-{{ ind }}" class="d-none" style="color:#ffb500">Wrong answer. Try again!</p>
-                                            </div>
-
-                                        </div>
-
-                                        <p class="d-none">Correct choice: <span id="mc-correct-choice-{{ind}}">{{ questions[ind]['correct']}}</span></p>
-
-                                    </div>
-                                {% endfor %}
-                            </div>
-
-                            <button class="carousel-control-prev" type="button" data-bs-target="#slide" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon"></span>
-                            </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#slide" data-bs-slide="next">
-                                <span class="carousel-control-next-icon"></span>
-                            </button>
-
-                        </div>
-
-                </div>
-
-            </div>
-
-        </div>
     </div>
 
         </form>
@@ -394,7 +324,6 @@
 
 {% block tasks %}
     <div class="card-body">
-
                     <div class="progress">
                         <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar"
                              style="width: {{ session['game5']['task_completed']*25 }}%"
@@ -519,14 +448,69 @@
 
                       <div class="tab-pane fade" id="step2" role="tabpanel" aria-labelledby="profile-tab"></div>
                       <div class="tab-pane fade" id="step3" role="tabpanel" aria-labelledby="contact-tab"></div>
-
-
                     </div>
-
                     </div>
 {% endblock %}
 
+{% block questions %}
+          <div class="card bg-light">
+              <div id="slide" class="carousel slide card-body h-75" data-bs-interval="false">
+                            <div class="carousel-inner">
+                                {% for ind in range(success_text | length) %}
+                                    {% set letters = ['a','b','c','d'] %}
+                                    {% set active_text = 'active' if ind==0 else '' %}
+                                    <div class="carousel-item {{active_text}}">
 
+                                        <div class="row d-flex justify-content-center align-items-baseline">
+                                            <p class="h5">Q{{ ind + 1 }}:{{ questions[ind]['text']}}</p>
+                                        </div>
+
+                                        <div class="row d-flex justify-content-center">
+
+                                        <div class="form-check col-8">
+                                        {% for ind2 in range(questions[ind]['choices'] | length) %}
+                                            {% if not uses_images[ind] %}
+                                                <div class="form-group">
+                                            <input type="radio" class="q{{ind}}-choice form-check-input" id="q{{ind}}-{{letters[ind2]}}" name="mc-question" value="{{ letters[ind2] }}">
+                                            <label for="q{{ind}}-{{letters[ind2]}}" class="form-check-label">{{ questions[ind]['choices'][ind2] }}</label>
+                                                </div>
+                                            {% else %}
+                                            <div class="form-group">
+                                            <input type="radio"  class="q{{ind}}-choice form-check-input" id="q{{ind}}-{{letters[ind2] }}" name="mc-question" value="{{ letters[ind2] }}">
+                                            <label for="q{{ind}}-{{letters[ind2]}}" class="form-check-label"><img src=".{{ questions[ind]['choices'][ind2] }}" style="height: 150px; width:150px;"></label>
+                                            </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                        </div>
+                                        </div>
+
+                                        <div class="row d-flex justify-content-center">
+                                            <div class="col-4">
+                                                <div class="btn btn-large btn-primary answer-mc" id="answer-mc-{{ind}}">Submit</div>
+                                            </div>
+                                            <div class="col-8">
+                                                <p id="mc-success-text-{{ ind }}" class="d-none" style="color:palegreen">{{ success_text[ind] }}</p>
+                                                <p id="mc-failure-text-{{ ind }}" class="d-none" style="color:#ffb500">Wrong answer. Try again!</p>
+                                            </div>
+
+                                        </div>
+
+                                        <p class="d-none">Correct choice: <span id="mc-correct-choice-{{ind}}">{{ questions[ind]['correct']}}</span></p>
+
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            <button class="carousel-control-prev" type="button" data-bs-target="#slide" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon"></span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#slide" data-bs-slide="next">
+                                <span class="carousel-control-next-icon"></span>
+                            </button>
+
+                        </div>
+          </div>
+{% endblock %}
 
 
 {% block additional_imports %}

@@ -31,6 +31,8 @@
 
     <title>Virtual Scanner Tabletop</title>
   </head>
+
+
   <body>
       <!-- How to play panel -->
       <div class="modal fade" data-mdb-container="body" id="how-to-play-modal" tabindex="-1" role="dialog"
@@ -107,20 +109,24 @@
 
                 <!-- icon -->
                 <!-- Sidebar toggler -->
-                <a id='sidebar-toggler' data-mdb-toggle="collapse" href="#" data-mdb-target=".collapsable-sidebar" role="button" class="px-2">
-                    <i class="fa fa-bars fa-lg text-light"></i>
-                </a>
+                <button type="button" class="btn-lg btn-light px-2" id='sidebar-toggler' data-mdb-toggle="collapse" href="#" data-mdb-target=".collapsable-sidebar" role="button">
+                    <i class="fa fa-edit fa-lg text-primary"></i>
+                    Lab manual
+                </button>
 
 
                 <div class="collapse navbar-collapse" id="navbarColor01" data-toggle="buttons">
-                  <ul class="navbar-nav me-auto">
+                  <ul class="navbar-nav me-auto m-2">
+{#                      <li class="nav-item">#}
+{#                        <a class="navbar-brand nav-link" href="/index">#}
+{#                            Home#}
+{#                            <img style="height:35px; width:auto" src="../static/img/vs-tabletop-icon.png" alt="vs tabletop icon">#}
+{#                        </a>#}
+{#                    </li>#}
 
-                      <li class="nav-item">
-                        <a class="navbar-brand nav-link" href="/index">
-                            <img style="height:35px; width:auto" src="../static/img/vs-tabletop-icon.png" alt="vs tabletop icon">
-                        </a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/index">Home</a>
                     </li>
-
                     <li class="nav-item">
                       <a class="nav-link" href="/calibration">Calibration</a>
                     </li>
@@ -130,30 +136,11 @@
                     </li>
 
 
-                    <li class="nav-item dropdown">
-                      <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" id="navbarDropdown" role="button"
-                         aria-haspopup="true" aria-expanded="false">Help</a>
-
-
-
-                       <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li>
-                                <button class="dropdown-item" type="button" data-mdb-toggle="modal" data-mdb-target="#how-to-play-modal">How to play</button>
-                            </li>
-                            <li>
-                                <button class="dropdown-item" type="button" data-mdb-toggle="modal" data-mdb-target="#definitions-modal">Definitions</button>
-                            </li>
-
-
-                        </ul>
+                    <li class="nav-item ">
+                      <a class="nav-link" data-mdb-toggle="modal" data-mdb-target="#how-to-play-modal" href="#" id="navbarDropdown" role="button">How to play</a>
                     </li>
-
                   </ul>
-
-
                 </div>
-
-
 
                 <div class="collapse navbar-collapse justify-content-center" id="navbarColor01" data-toggle="buttons">
                 {% if template_title %}
@@ -163,23 +150,24 @@
                                href="#"
                                id="gameDropdown"
                                role="button"
-                               data-mdb-toggle="dropdown"
+                               data-bs-toggle="dropdown"
+                               aria-haspopup="true"
                                aria-expanded="false"
                                >
                                 Game {{ game_num }} : {{ template_title }}
 
                             </a>
 
-                      <div class="dropdown-menu" aria-labelledby="gameDropdown">
-                        <a class="dropdown-item" href="/games/1" id="link-to-game1">Game 1: What's in an image?</a>
-                        <a class="dropdown-item" href="/games/2" id="link-to-game2">Game 2: K-space magik </a>
-                        <a class="dropdown-item" href="/games/3" id="link-to-game3">Game 3: Brains, please!</a>
-                        <a class="dropdown-item" href="/games/4" id="link-to-game4">Game 4: Fresh blood</a>
-                        <a class="dropdown-item" href="/games/5" id="link-to-game5">Game 5: Proton's got moves</a>
-                        <a class="dropdown-item" href="/games/6" id="link-to-game6">Game 6: Relaxation Station</a>
-                        <a class="dropdown-item" href="/games/7" id="link-to-game7">Game 7: Puzzled by Projection I</a>
-                        <a class="dropdown-item" href="/games/8" id="link-to-game8">Game 8: Puzzled by Projection II</a>
-                      </div>
+                              <div class="dropdown-menu" aria-labelledby="gameDropdown">
+                                <a class="dropdown-item" href="/games/1" id="link-to-game1">Game 1: What's in an image?</a>
+                                <a class="dropdown-item" href="/games/2" id="link-to-game2">Game 2: K-space magik </a>
+                                <a class="dropdown-item" href="/games/3" id="link-to-game3">Game 3: Brains, please!</a>
+                                <a class="dropdown-item" href="/games/4" id="link-to-game4">Game 4: Fresh blood</a>
+                                <a class="dropdown-item" href="/games/5" id="link-to-game5">Game 5: Proton's got moves</a>
+                                <a class="dropdown-item" href="/games/6" id="link-to-game6">Game 6: Relaxation Station</a>
+                                <a class="dropdown-item" href="/games/7" id="link-to-game7">Game 7: Puzzled by Projection I</a>
+                                <a class="dropdown-item" href="/games/8" id="link-to-game8">Game 8: Puzzled by Projection II</a>
+                              </div>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link">
@@ -211,19 +199,9 @@
                             </a>
 
                         </li>
-                        <li class="nav-item">
-                            <div class="btn btn-light" id="tasks-button"  data-mdb-toggle="modal" data-mdb-target="#tasksCenter">
-                                <i class="fas fa-tasks"></i>
-                                Instructions
-                            </div>
-                        </li>
 
-                        <li class="nav-item">
-                            <div class="btn btn-light" id="tasks-button"  data-mdb-toggle="modal" data-mdb-target="#quizCenter">
-                                <i class="fas fa-edit"></i>
-                                Quiz
-                            </div>
-                        </li>
+
+
 
                     </ul>
 
@@ -282,23 +260,12 @@
                     </div>
                 </div>
                 </div>
-          <!-- Modal: instructions -->
-          <div class="modal top fade" id="tasksCenter" tabindex="-1">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header h3">Tasks</div>
-                    <div class="modal-body">
-
-                    </div>
-                </div>
-            </div>
-        </div>
 
           <!-- Modal: Questions panel -->
           <div class="modal top fade" id="quizCenter" tabindex="-1">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
-                    <div class="modal-header">Questions</div>
+                    <div class="modal-header h5">Questions</div>
                     <div class="modal-body">
                         {% block questions %}
                         {% endblock %}
@@ -306,6 +273,7 @@
                 </div>
             </div>
         </div>
+
           <!-- Message board -->
           <div class="row">
               <div id="base-message-board" class="card bg-info">
@@ -321,12 +289,30 @@
 
           <!-- Sidebar and main content -->
            <div class="row h-100 collapse g-0 d-flex collapsable-sidebar">
-              <div class="col m-0 p-0 h-100 bg-light w-sidebar navbar-collapse collapse d-md-flex sidebar overflow-scroll collapsable-sidebar">
-                  <div class="card bg-light">
+              <div class="col m-0 p-0 h-100 w-sidebar navbar-collapse collapse d-md-flex sidebar collapsable-sidebar">
+              <div class="row w-100 m-0">
 
+                   <!-- Collapsible tasks -->
+                    <button class="btn btn-light" id="tasks-button" data-mdb-toggle="collapse" data-mdb-target="#collapsible-tasks">
+                                <i class="fas fa-tasks"></i>
+                                Instructions
+                    </button>
+                  <div class="card bg-light collapse" id="collapsible-tasks">
+                    <!-- Collapsible tasks -->
                         {% block tasks %}
                         {% endblock %}
                     </div>
+                    <button class="btn btn-light" id="definitions-button" data-mdb-toggle="modal" data-mdb-target="#definitions-modal">
+                                <i class="fas fa-book"></i>Definitions
+                            </button>
+                    <button class="btn btn-light" id="tasks-button"  data-mdb-toggle="modal" data-mdb-target="#quizCenter">
+                        <i class="fas fa-edit"></i>
+                        Quiz
+                    </button>
+
+
+              </div>
+
               </div>
 
            <div class="col p-0 h-100">

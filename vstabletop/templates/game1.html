@@ -1,213 +1,386 @@
 {% extends "base.html" %}
 {% block content %}
-<head>
- <meta name="viewport"
-          content="width=device-width, initial-scale=1">
+        <div class="row d-flex justify-content-center">
+{#            <div class="col-6 h-50">#}
+{#                <form action="/games/1" method="POST">#}
+{#                    <div class="progress">#}
+{#                        {% set perc = 25*session['game1']['completed_task'] %}#}
+{#                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" style="width: {{ perc }}%"></div>#}
+{#                        {% if session['game1']['completed_task'] == 4 %}#}
+{#                          <div class="seperate"><canvas id="canvas"></canvas></div>#}
+{#                        {% endif %}#}
+{#                    </div>#}
+{#                    <!-- Tasks panel -->#}
+{#                    <div class="tabs">#}
+{##}
+{#                     {% if session['game1']['current_task'] == 1 %}#}
+{#                          {% set task1_status = 'is-active' %}#}
+{#                     {% elif session['game1']['current_task'] == 2 %}#}
+{#                          {% set task2_status = 'is-active' %}#}
+{#                     {% elif session['game1']['current_task'] == 3 %}#}
+{#                          {% set task3_status = 'is-active' %}#}
+{#                     {% elif session['game1']['current_task'] == 4 %}#}
+{#                          {% set task4_status = 'is-active' %}#}
+{#                    {% endif %}#}
+{##}
+{#                    <div class="row tabs__head" style="">#}
+{##}
+{#                                {% if session['game1']['current_task'] >= 1 %}#}
+{#                          <div class="col-3 tabs__toggle {{ task1_status }}">#}
+{#                          <span class="tabs__name"><b>Task 1: FOV</b></span>#}
+{#                        </div>#}
+{#                        {% endif %}#}
+{##}
+{#                        {% if session['game1']['current_task'] >=2 %}#}
+{#                        <div class="col-3 tabs__toggle {{ task2_status }}">#}
+{#                          <span class="tabs__name"><b>Task 2: Matrix Size</b></span>#}
+{#                        </div>#}
+{#                        {% endif %}#}
+{##}
+{#                        {% if session['game1']['current_task'] >=3 %}#}
+{#                        <div class="col-3 tabs__toggle {{ task3_status }}">#}
+{#                          <span class="tabs__name"><b>Task 3: Zero-Fill</b></span>#}
+{#                        </div>#}
+{#                        {% endif %}#}
+{##}
+{#                        {% if session['game1']['current_task'] == 4 %}#}
+{#                          <div class="col-3 tabs__toggle {{ task4_status }}">#}
+{#                              <span class="tabs__name"><b>Task 4: Windowing</b></span>#}
+{#                          </div>#}
+{#                        {% endif %}#}
+{#                    </div>#}
+{##}
+{#                      <div class="tabs__body" style="">#}
+{#                        <div class="tabs__content {{ task1_status }}" style="font-family: Georgia, serif">#}
+{#                          <h2 class="tabs__title">Instructions</h2>#}
+{#                          <p class="tabs__text" style="font-family: Georgia, serif">#}
+{#                              We will be imaging an elliptic object in this experiment.#}
+{#                              Input the below values into the FOV field and press "Run" on the right.#}
+{#                              Observe how the image changes with increasing and decreasing values.#}
+{#                              <ul style="font-family: Georgia, serif">#}
+{#                                <li>1. FOV: 105mm</li>#}
+{#                                <li>2. FOV: 150mm</li>#}
+{#                                <li>3. FOV: 315mm</li>#}
+{#                                <li>4. FOV: 400mm</li>#}
+{#                            </ul>#}
+{#                                After you are done, answer Question 1 and continue to the Task.#}
+{#                            <h2 class="tabs__title">Task: Finding the perfect FOV size</h2>#}
+{#                            <p class="tabs__text">#}
+{#                                <i>Change the FOV sizes to find the perfect FOV that allows the entire object to be seen in the scan area.</i>#}
+{##}
+{#                                {% if session['game1']['FOV_scale'] < 0.2 %}#}
+{#                                    <div class="row" style="color:red">#}
+{#                                    <br><b><i>Increase the FOV to zoom out!</i></b>#}
+{#                                    </div>#}
+{#                                {% elif session['game1']['FOV_scale'] > 0.3 %}#}
+{#                                    <div class="row" style="color:red">#}
+{#                                    <br><i>Decrease the FOV to zoom in!</i>#}
+{#                                        </div>#}
+{#                                {% else %}#}
+{#                                    <div class="success" style="color: green">#}
+{#                                    <br><i class="bi bi-clipboard-check-fill"></i>#}
+{#                                    <i><b>Perfect FOV achieved!</b></i>#}
+{#                                    <i class="bi bi-clipboard-check-fill"></i>#}
+{#                                    <br><i class="bi bi-unlock"></i>#}
+{#                                    <i><b>Task 2 Unlocked!</b></i>#}
+{#                                    <i class="bi bi-unlock"></i>#}
+{#                                    </div>#}
+{#                                {% endif %}#}
+{#                        </div>#}
+{#                        <div class="tabs__content {{  task2_status }}">#}
+{#                          <h2 class="tabs__title">Instructions</h2>#}
+{#                          <p class="tabs__text">1. Experiment with multiple Matrix sizes and observe how the image changes with increasing and decreasing values.#}
+{#                                            <br>2. After you are done, answer Question 2 and continue to the task!#}
+{#                          </p>#}
+{#                            <h2 class="tabs__title">Task: Finding the perfect Matrix Size</h2>#}
+{#                                <p class="tabs__text">#}
+{#                                    <i>Find a large enough matrix size so that when you can't see individual pixels.</i>#}
+{#                                {% if session['game1']['Matrix_scale'] < 300  %}#}
+{#                                    <div class="row" style="color:red">#}
+{#                                    <br><b><i>Continue to increase the Matrix Size. You are close.</i></b>#}
+{#                                    </div>#}
+{#                                    {% else %}#}
+{#                                        <div class="success" style="color: green">#}
+{#                                        <i class="bi bi-clipboard-check-fill"></i>#}
+{#                                        <b><i>Perfect Matrix Size Achieved!</i></b>#}
+{#                                        <i class="bi bi-clipboard-check-fill"></i>#}
+{#                                        <br><i class="bi bi-unlock"></i>#}
+{#                                        <i><b>Task 3 Unlocked!</b></i>#}
+{#                                        <i class="bi bi-unlock"></i>#}
+{#                                            </div>#}
+{#                                {% endif %}#}
+{#                            </p>#}
+{#                        </div>#}
+{#                        <div class="tabs__content {{  task3_status }}">#}
+{#                          <h2 class="tabs__title">Instructions</h2>#}
+{#                          <p class="tabs__text">1. Set Matrix Size = 32. Experiment with different Zero-Fill values and observe how the image changes.#}
+{#                                            <br>2. After you are done, answer Question 3 and continue to the task!#}
+{#                          </p>#}
+{#                            <h2 class="tabs__title">Task: What does the zero-fill do? </h2>#}
+{#                            <p class="tabs__text">#}
+{#                                <i>Set the matrix size to 32 and the zero-fill to 400 and observe how the image changes.</i>#}
+{#                                {% if session['game1']['completed_task'] == 3 %}#}
+{#                                    <div class="success" style="color:green">#}
+{#                                    <br><i class="bi bi-clipboard-check-fill"></i>#}
+{#                                        <b><i>Task 3 Completed</i></b>#}
+{#                                        <i class="bi bi-clipboard-check-fill"></i>#}
+{#                                        <br><i class="bi bi-unlock"></i>#}
+{#                                        <i><b>Task 4 Unlocked!</b></i>#}
+{#                                        <i class="bi bi-unlock"></i>#}
+{#                        </div>#}
+{#                                {% endif %}#}
+{#                        </div>#}
+{#                          <div class="tabs__content {{  task4_status }}">#}
+{#                              <h2 class="tabs__title">Instructions</h2>#}
+{#                              <p class="tabs__text">Input the following values into the Windowing Slider and observe contrast changes in the image:#}
+{#                                    <div class="form-check" style="font-size: .8em">#}
+{#                                      <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">#}
+{#                                      <label class="form-check-label" for="flexCheckDefault">#}
+{#                                        A high minimum (31 - 50) with low maximum (51 - 80)#}
+{#                                      </label>#}
+{#                                    </div>#}
+{#                                    <div class="form-check" style="font-size: .8em">#}
+{#                                      <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">#}
+{#                                      <label class="form-check-label" for="flexCheckChecked">#}
+{#                                        A low minimum (10 - 30) with a low maximum (51 - 80)#}
+{#                                      </label>#}
+{#                                    </div>#}
+{#                                    <div class="form-check" style="font-size: .8em">#}
+{#                                      <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">#}
+{#                                      <label class="form-check-label" for="flexCheckChecked">#}
+{#                                        A high minimum (31 - 50) with a high maximum (81 - 100)#}
+{#                                      </label>#}
+{#                                    </div>#}
+{##}
+{#                              <h2 class="tabs__title">Task: Manipulating Intensity Values</h2>#}
+{#                              <p class="tabs__text">#}
+{#                                  <i>Select intensity values to produce the most contrast!</i>#}
+{#                                    {% if session['game1']['Min_scale'] > 0.02 %}#}
+{#                                    <div class="row" style="color: red">#}
+{#                                    <br><b><i>Decrease Minimum value</i></b>#}
+{#                                    </div>#}
+{#                                    {% elif session['game1']['Max_scale'] < 0.98 %}#}
+{#                                    <div class="row" style="color:red">#}
+{#                                    <br><b><i>Increase Maximum value</i></b>#}
+{#                                        </div>#}
+{#                                    {% else %}#}
+{#                                <div class="success" style="color:green">#}
+{#                                    <br><i class="bi bi-clipboard-check-fill"></i>#}
+{#                                        <b><i>Perfect Windowing Achieved!</i></b>#}
+{#                                        <i class="bi bi-clipboard-check-fill"></i>#}
+{#                                        <br><i class="bi bi-unlock"></i>#}
+{#                                        <i><b>Game 3 Unlocked</b></i>#}
+{#                                        <i class="bi bi-unlock"></i>#}
+{##}
+{##}
+{#                                    <br><a href="/games/3" class="btn btn-success btn-large">Continue to Game 3!</a>#}
+{##}
+{#                                    </div>#}
+{#                                  {% endif %}#}
+{#                          </div>#}
+{#                      </div>#}
+{#                    </div>#}
+{#                    <div class="row-card bg-info">#}
+{#                        <div class="card-header"><b>Messages</b></div>#}
+{#                        <div class="card-body">#}
+{#                            {% if session['game1']['current_task'] == 1 %}#}
+{#                                Change the "FOV" value and click "RUN" to acquire a new image and observe changes.#}
+{#                            {% elif session['game1']['current_task'] == 2 %}#}
+{#                                Change the "Matrix Size" value and click "RUN" to acquire a new image and observe changes!#}
+{#                            {% elif session['game1']['current_task'] == 3 %}#}
+{#                                Change the "Zero-fill matrix size" value and click "RUN" to acquire a new image and observe changes!#}
+{#                            {% elif session['game1']['current_task'] == 4 %}#}
+{#                                Change the min and max values in the Windowing panel and "RUN" to observe how contrast changes!#}
+{#                                {% if session['game1']['completed_task'] == 4 %}#}
+{#                                        Complete the remaining multiple-choice questions to earn up to five stars!#}
+{#                                {% endif %}#}
+{#                            {% endif %}#}
+{#                        </div>#}
+{##}
+{#                    </div>#}
+{##}
+{##}
+{##}
+{##}
+{##}
+{##}
+{#                </form>#}
+{#            </div>#}
 
-</head>
-
-        <div class="row h-100">
-            <div class="col-6 h-50">
-                <form action="/games/1" method="POST">
-                    <div class="progress">
-                        {% set perc = 25*session['game1']['completed_task'] %}
-                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" style="width: {{ perc }}%"></div>
-                        {% if session['game1']['completed_task'] == 4 %}
-                          <div class="seperate"><canvas id="canvas"></canvas></div>
-                        {% endif %}
-                    </div>
-      <!-- Tasks panel -->
-        <div class="tabs">
-
-     {% if session['game1']['current_task'] == 1 %}
-          {% set task1_status = 'is-active' %}
-     {% elif session['game1']['current_task'] == 2 %}
-          {% set task2_status = 'is-active' %}
-     {% elif session['game1']['current_task'] == 3 %}
-          {% set task3_status = 'is-active' %}
-     {% elif session['game1']['current_task'] == 4 %}
-          {% set task4_status = 'is-active' %}
-    {% endif %}
-
-    <div class="row tabs__head" style="">
-
-                {% if session['game1']['current_task'] >= 1 %}
-          <div class="col-3 tabs__toggle {{ task1_status }}">
-          <span class="tabs__name"><b>Task 1: FOV</b></span>
-        </div>
-        {% endif %}
-
-        {% if session['game1']['current_task'] >=2 %}
-        <div class="col-3 tabs__toggle {{ task2_status }}">
-          <span class="tabs__name"><b>Task 2: Matrix Size</b></span>
-        </div>
-        {% endif %}
-
-        {% if session['game1']['current_task'] >=3 %}
-        <div class="col-3 tabs__toggle {{ task3_status }}">
-          <span class="tabs__name"><b>Task 3: Zero-Fill</b></span>
-        </div>
-        {% endif %}
-
-        {% if session['game1']['current_task'] == 4 %}
-          <div class="col-3 tabs__toggle {{ task4_status }}">
-              <span class="tabs__name"><b>Task 4: Windowing</b></span>
-          </div>
-        {% endif %}
-    </div>
-
-      <div class="tabs__body" style="">
-        <div class="tabs__content {{ task1_status }}" style="font-family: Georgia, serif">
-          <h2 class="tabs__title">Instructions</h2>
-          <p class="tabs__text" style="font-family: Georgia, serif">
-              We will be imaging an elliptic object in this experiment.
-              Input the below values into the FOV field and press "Run" on the right.
-              Observe how the image changes with increasing and decreasing values.
-              <ul style="font-family: Georgia, serif">
-                <li>1. FOV: 105mm</li>
-                <li>2. FOV: 150mm</li>
-                <li>3. FOV: 315mm</li>
-                <li>4. FOV: 400mm</li>
-            </ul>
-                After you are done, answer Question 1 and continue to the Task.
-            <h2 class="tabs__title">Task: Finding the perfect FOV size</h2>
-            <p class="tabs__text">
-                <i>Change the FOV sizes to find the perfect FOV that allows the entire object to be seen in the scan area.</i>
-
-                {% if session['game1']['FOV_scale'] < 0.2 %}
-                    <div class="row" style="color:red">
-                    <br><b><i>Increase the FOV to zoom out!</i></b>
-                    </div>
-                {% elif session['game1']['FOV_scale'] > 0.3 %}
-                    <div class="row" style="color:red">
-                    <br><i>Decrease the FOV to zoom in!</i>
+        <div class="col-8">
+            {{ G1Form.hidden_tag() }}
+                <div class="row card">
+                    <div class="card-header"><b>Image</b></div>
+                    <div class="card-body">
+                        <div class="chart" id="chart-G1">
                         </div>
-                {% else %}
-                    <div class="success" style="color: green">
-                    <br><i class="bi bi-clipboard-check-fill"></i>
-                    <i><b>Perfect FOV achieved!</b></i>
-                    <i class="bi bi-clipboard-check-fill"></i>
-                    <br><i class="bi bi-unlock"></i>
-                    <i><b>Task 2 Unlocked!</b></i>
-                    <i class="bi bi-unlock"></i>
+                        <button id="game1-run" class="btn btn-lg btn-success">
+                        <span class="spinner-border spinner-border-sm d-none" id="game1-spinner" role="status" aria-hidden="true"></span>
+                            <span>Run</span>
+                        </button>
                     </div>
-                {% endif %}
-        </div>
-        <div class="tabs__content {{  task2_status }}">
-          <h2 class="tabs__title">Instructions</h2>
-          <p class="tabs__text">1. Experiment with multiple Matrix sizes and observe how the image changes with increasing and decreasing values.
-                            <br>2. After you are done, answer Question 2 and continue to the task!
-          </p>
-            <h2 class="tabs__title">Task: Finding the perfect Matrix Size</h2>
-                <p class="tabs__text">
-                    <i>Find a large enough matrix size so that when you can't see individual pixels.</i>
-                {% if session['game1']['Matrix_scale'] < 300  %}
-                    <div class="row" style="color:red">
-                    <br><b><i>Continue to increase the Matrix Size. You are close.</i></b>
-                    </div>
-                    {% else %}
-                        <div class="success" style="color: green">
-                        <i class="bi bi-clipboard-check-fill"></i>
-                        <b><i>Perfect Matrix Size Achieved!</i></b>
-                        <i class="bi bi-clipboard-check-fill"></i>
-                        <br><i class="bi bi-unlock"></i>
-                        <i><b>Task 3 Unlocked!</b></i>
-                        <i class="bi bi-unlock"></i>
+                </div>
+                <div class="row">
+                     <div class="col-6 card" id="parameters-panel">
+                    <div class="card-header"><b>Image settings</b></div>
+                    <div class="card-body row">  <!--style="align: justified"-->
+                        <div class="col-3 form-group">
+
+
+                        <b>FOV</b>
+                            <button type="button" class="btn btn-sm shadow-none"
+                                    data-mdb-container="body"
+                                    data-mdb-toggle="popover"
+                                    data-mdb-placement="left"
+                                    title="Field-of-View (FOV)"
+                                    data-mdb-content="The real-world size of your image in units of distance (meters, millimeters, etc..">
+                                <i class="bi bi-question-circle-fill"></i>
+                            </button>
+                        <div class="d-flex justify-content-center">
+                        <input class="form-control" type="DecimalField" value="{{ session['game1']['FOV_scale']*1000}} " id="FOV_scale" style="">
+                        </div>
+                        {{G1Form.FOV_scale.label(class="form-label")}}
+                        </div>
+                        <div class="col-3 form-group">
+
+                        <b>Matrix Size</b>
+                             <button type="button" class="btn btn-sm shadow-none"
+                                data-mdb-container="body"
+                                data-mdb-toggle="popover"
+                                data-mdb-placement="left"
+                                title="Matrix Size (original)"
+                                data-mdb-content="The number of rows and columns of your originally acquired image matrix.">
+                                <i class="bi bi-question-circle-fill"></i></button>
+
+                            <div class="d-flex justify-content-center">
+                        <input class="form-control" type="DecimalField" value="{{ session['game1']['Matrix_scale']}} " id="Matrix_scale" style="">
                             </div>
-                {% endif %}
-            </p>
-        </div>
-        <div class="tabs__content {{  task3_status }}">
-          <h2 class="tabs__title">Instructions</h2>
-          <p class="tabs__text">1. Set Matrix Size = 32. Experiment with different Zero-Fill values and observe how the image changes.
-                            <br>2. After you are done, answer Question 3 and continue to the task!
-          </p>
-            <h2 class="tabs__title">Task: What does the zero-fill do? </h2>
-            <p class="tabs__text">
-                <i>Set the matrix size to 32 and the zero-fill to 400 and observe how the image changes.</i>
-                {% if session['game1']['completed_task'] == 3 %}
-                    <div class="success" style="color:green">
-                    <br><i class="bi bi-clipboard-check-fill"></i>
-                        <b><i>Task 3 Completed</i></b>
-                        <i class="bi bi-clipboard-check-fill"></i>
-                        <br><i class="bi bi-unlock"></i>
-                        <i><b>Task 4 Unlocked!</b></i>
-                        <i class="bi bi-unlock"></i>
-        </div>
-                {% endif %}
-        </div>
-          <div class="tabs__content {{  task4_status }}">
-              <h2 class="tabs__title">Instructions</h2>
-              <p class="tabs__text">Input the following values into the Windowing Slider and observe contrast changes in the image:
-                    <div class="form-check" style="font-size: .8em">
-                      <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                      <label class="form-check-label" for="flexCheckDefault">
-                        A high minimum (31 - 50) with low maximum (51 - 80)
-                      </label>
-                    </div>
-                    <div class="form-check" style="font-size: .8em">
-                      <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
-                      <label class="form-check-label" for="flexCheckChecked">
-                        A low minimum (10 - 30) with a low maximum (51 - 80)
-                      </label>
-                    </div>
-                    <div class="form-check" style="font-size: .8em">
-                      <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
-                      <label class="form-check-label" for="flexCheckChecked">
-                        A high minimum (31 - 50) with a high maximum (81 - 100)
-                      </label>
-                    </div>
-
-              <h2 class="tabs__title">Task: Manipulating Intensity Values</h2>
-              <p class="tabs__text">
-                  <i>Select intensity values to produce the most contrast!</i>
-                    {% if session['game1']['Min_scale'] > 0.02 %}
-                    <div class="row" style="color: red">
-                    <br><b><i>Decrease Minimum value</i></b>
-                    </div>
-                    {% elif session['game1']['Max_scale'] < 0.98 %}
-                    <div class="row" style="color:red">
-                    <br><b><i>Increase Maximum value</i></b>
+                        {{ G1Form.Matrix_scale.label(class="form-label") }}
                         </div>
-                    {% else %}
-                <div class="success" style="color:green">
-                    <br><i class="bi bi-clipboard-check-fill"></i>
-                        <b><i>Perfect Windowing Achieved!</i></b>
-                        <i class="bi bi-clipboard-check-fill"></i>
-                        <br><i class="bi bi-unlock"></i>
-                        <i><b>Game 3 Unlocked</b></i>
-                        <i class="bi bi-unlock"></i>
+                        <div class="col-3 form-group">
 
+                        <b>Voxel Size</b>
+                            <button type="button" class="btn btn-sm shadow-none"
+                                data-mdb-container="body"
+                                data-mdb-toggle="popover"
+                                data-mdb-placement="left"
+                                title="Voxel Size"
+                                data-mdb-content="A voxel is a cuboid and the smallest element that makes up an image. The voxel size is the length of each side of the cuboid.
+                                 Voxel size = (FOV) / (matrix size)">
+                                <i class="bi bi-question-circle-fill"></i>
+                            </button>
 
-                    <br><a href="/games/3" class="btn btn-success btn-large">Continue to Game 3!</a>
+                            <div class="d-flex justify-content-center">
+                        <input class="form-control" type="DecimalField" value="{{ session['game1']['Voxel_scale']*1000}} " id="Voxel_scale" style="">
+                            </div>
+                            {{ G1Form.Voxel_scale.label(class="form-label",for="Voxel_scale") }}
+                        </div>
+                        <div class="col-3 form-group">
 
-                    </div>
-                  {% endif %}
-          </div>
-      </div>
-    </div>
-                    <div class="row-card bg-info">
-                        <div class="card-header"><b>Messages</b></div>
-                        <div class="card-body">
-                            {% if session['game1']['current_task'] == 1 %}
-                                Change the "FOV" value and click "RUN" to acquire a new image and observe changes.
-                            {% elif session['game1']['current_task'] == 2 %}
-                                Change the "Matrix Size" value and click "RUN" to acquire a new image and observe changes!
-                            {% elif session['game1']['current_task'] == 3 %}
-                                Change the "Zero-fill matrix size" value and click "RUN" to acquire a new image and observe changes!
-                            {% elif session['game1']['current_task'] == 4 %}
-                                Change the min and max values in the Windowing panel and "RUN" to observe how contrast changes!
-                                {% if session['game1']['completed_task'] == 4 %}
-                                        Complete the remaining multiple-choice questions to earn up to five stars!
-                                {% endif %}
-                            {% endif %}
+                        <b>Zero-fill matrix size</b>
+                            <button type="button" class="btn btn-sm shadow-none"
+                                    data-mdb-container="body"
+                                    data-mdb-toggle="popover"
+                                    data-mdb-placement="top"
+                                    title="Zero-Fill"
+                                    data-mdb-content="An equal or higher matrix size than the original image’s. Any image can be zero-filled to have more voxels
+                                within the same FOV, but this operation does not add more information to the image.">
+                                <i class="bi bi-question-circle-fill"></i>
+                            </button>
+
+                        <div class="d-flex justify-content-center">
+                        <input class="form-control" type="IntegerField" value="128" id="zero_fill" style="">
+                        </div>
+                            {{ G1Form.zero_fill.label(for="zero_fill") }}
+{#                        {{ G1Form.zero_fill.value }}#}
                         </div>
 
+                        <script>
+                            var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+                            var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+                              return new bootstrap.Popover(popoverTriggerEl)
+                            })
+                    </script>
+                    <script>
+                    var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+                    var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+                      return new bootstrap.Popover(popoverTriggerEl)
+                    })
+                    </script>
                     </div>
+                    </div>
+                    <div class="col-6 card" id="windowing-panel">
+                    <div class="card-header"><b>Windowing</b>
 
-                    <div class="row-card" id="questions-panel">
-                        <div class="card-header"><b>Questions</b></div>
-                    <div class="card text-white bg-secondary mb-3" style="color: grey">
+                       </div>
+                    <div class="card-body">
+                        <div class="range_container col">
+                            <div class="form_control">
+                                <!-- Min part -->
+
+
+                                 <div class="row sliders_control d-flex justify-content-left">
+                                {{ G1Form.from_slider_value(id="fromSlider", class="", min="0", max="100", value=(session['game1']['Min_scale'])*100) }}
+                                {{ G1Form.to_slider_value(id="toSlider", class="",min="0", max="100", value=(session['game1']['Max_scale'])*100) }}
+                                     </div>
+
+
+                                <div class="row d-flex">
+                                <div class="col form_control_container" style="text-align: center">
+                                    <div class="form_control_container__time">Min </div>
+                                    <button type="button" class="btn btn-sm shadow-none"
+                                data-mdb-container="body"
+                                data-mdb-toggle="popover"
+                                data-mdb-placement="left"
+                                title="Min Level"
+                                data-mdb-content="The low cutoff point. All grayscale values below it will be seen as black">
+                                <i class="bi bi-question-circle-fill"></i></button>
+
+                                    {{ G1Form.min_value(class="form-control container__time__input", id="fromInput", min="0", max="100", value=(session['game1']['Min_scale'] * 100),disabled=True) }}
+
+                                    </div>
+
+                                <!-- Max part -->
+                                <div class="col form_control_container">  <!--style="position:relative; left:370px; top:2px"-->
+                                    <div class="form_control_container">
+                                    <div class="form_control_container__time d-flex justify-content-right">
+                                        Max
+
+                                        <button type="button" class="btn btn-sm shadow-none"
+                                                data-mdb-container="body"
+                                                data-mdb-toggle="popover"
+                                                data-mdb-placement="left"
+                                                title="Max Level?"
+                                                data-mdb-content="The high cutoff point. All grayscale values above it will be seen as white">
+                                                <i class="bi bi-question-circle-fill"></i>
+                                        </button>
+
+                                        {{ G1Form.max_value(class="form-control container__time__input", id="toInput", min="0", max="100", value=(session['game1']['Max_scale'] * 100), disabled=True) }}
+
+                                    </div>
+                                    </div>
+
+                                </div>
+                                </div>
+                            </div>
+
+
+                            <script>
+                            var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+                            var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+                              return new bootstrap.Popover(popoverTriggerEl)
+                            })
+                            </script>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+{% endblock %}
+
+{% block questions %}
+    <div class="card text-white bg-secondary mb-3 text-center" style="color: grey">
                         <div id="slide" class="carousel slide" data-bs-interval="false">
                             <div class="carousel-inner">
                                 <form action="/games/1" method="POST">
@@ -253,247 +426,130 @@
                             </button>
                         </div>
                     </div>
-                </div>
-
-
-
-
-
-                </form>
-            </div>
-
-        <div class="col-6 h-100">
-            {{ G1Form.hidden_tag() }}
-                <div class="row card">
-                    <div class="card-header"><b>Image</b></div>
-                    <div class="card-body">
-                        <div class="chart" id="chart-G1">
-                        </div>
-                        <button id="game1-run" class="btn btn-lg btn-success">Run</button>
-                    </div>
-                </div>
-
-                <div class="row card" id="parameters-panel">
-                    <div class="card-header"><b>Image settings</b></div>
-                    <div class="card-body row">  <!--style="align: justified"-->
-
-                        <div class="col-3 form-group">
-
-
-                        <b>FOV</b>
-                            <button type="button" class="btn btn-sm shadow-none"
-                                    data-mdb-container="body"
-                                    data-mdb-toggle="popover"
-                                    data-mdb-placement="left"
-                                    title="Field-of-View (FOV)"
-                                    data-mdb-content="The real-world size of your image in units of distance (meters, millimeters, etc..">
-                                <i class="bi bi-question-circle-fill"></i>
-                            </button>
-                        <div class="d-flex justify-content-center">
-                        <input class="form-control" type="DecimalField" value="{{ session['game1']['FOV_scale']*1000}} " id="FOV_scale" style="">
-                        </div>
-                        {{G1Form.FOV_scale.label(class="form-label")}}
-                        </div>
-                        <div class="col-3 form-group">
-
-                        <b>Matrix Size</b>
-                             <button type="button" class="btn btn-sm shadow-none"
-                                data-mdb-container="body"
-                                data-mdb-toggle="popover"
-                                data-mdb-placement="left"
-                                title="Matrix Size (original)"
-                                data-mdb-content="The number of rows and columns of your originally acquired image matrix.">
-                                <i class="bi bi-question-circle-fill"></i></button>
-
-                            <div class="d-flex justify-content-center">
-                        <input class="form-control" type="DecimalField" value="{{ session['game1']['Matrix_scale']}} " id="Matrix_scale" style="">
-                            </div>
-                        {{ G1Form.Matrix_scale.label(class="form-label") }}
-                        </div>
-
-                        <div class="col-3 form-group">
-
-                        <b>Voxel Size</b>
-                            <button type="button" class="btn btn-sm shadow-none"
-                                data-mdb-container="body"
-                                data-mdb-toggle="popover"
-                                data-mdb-placement="left"
-                                title="Voxel Size"
-                                data-mdb-content="A voxel is a cuboid and the smallest element that makes up an image. The voxel size is the length of each side of the cuboid.
-                                 Voxel size = (FOV) / (matrix size)">
-                                <i class="bi bi-question-circle-fill"></i>
-                            </button>
-
-                            <div class="d-flex justify-content-center">
-                        <input class="form-control" type="DecimalField" value="{{ session['game1']['Voxel_scale']*1000}} " id="Voxel_scale" style="">
-                            </div>
-                            {{ G1Form.Voxel_scale.label(class="form-label") }}
-                        </div>
-
-                        <div class="col-3 form-group">
-
-
-                        <b>Zero-fill matrix size</b>
-                            <button type="button" class="btn btn-sm shadow-none"
-                                    data-mdb-container="body"
-                                    data-mdb-toggle="popover"
-                                    data-mdb-placement="top"
-                                    title="Zero-Fill"
-                                    data-mdb-content="An equal or higher matrix size than the original image’s. Any image can be zero-filled to have more voxels
-                                within the same FOV, but this operation does not add more information to the image.">
-                                <i class="bi bi-question-circle-fill"></i>
-                            </button>
-
-                        <div class="d-flex justify-content-center">
-                        <input class="form-control" type="DecimalField" value="128" id="zero_fill" style="">
-                        </div>
-                            {{ G1Form.zero_fill.label }}
-                        {{ G1Form.zero_fill.value }}
-                        </div>
-
-                        <script>
-                            var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
-                            var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
-                              return new bootstrap.Popover(popoverTriggerEl)
-                            })
-                    </script>
-                    <script>
-                    var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
-                    var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
-                      return new bootstrap.Popover(popoverTriggerEl)
-                    })
-                    </script>
-                    </div>
-                    </div>
-                                <div class="row card">
-                    <div class="card-header"><b>Windowing</b>
-
-                       </div>
-                    <div class="card-body">
-                        <div class="range_container col">
-                            <div class="form_control">
-                                <!-- Min part -->
-
-
-                                 <div class="row sliders_control d-flex justify-content-left">
-                                {{ G1Form.from_slider_value(id="fromSlider", class="", min="0", max="100", value=(session['game1']['Min_scale'])*100) }}
-                                {{ G1Form.to_slider_value(id="toSlider", class="",min="0", max="100", value=(session['game1']['Max_scale'])*100) }}
-                                     </div>
-
-
-                                <div class="row d-flex">
-                                <div class="col form_control_container" style="text-align: center">
-                                    <div class="form_control_container__time">Min </div>
-                                    <button type="button" class="btn btn-sm shadow-none"
-                                data-mdb-container="body"
-                                data-mdb-toggle="popover"
-                                data-mdb-placement="left"
-                                title="Min Level"
-                                data-mdb-content="The low cutoff point. All grayscale values below it will be seen as black">
-                                <i class="bi bi-question-circle-fill"></i></button>
-
-                                    {{ G1Form.min_value(class="form-control container__time__input", id="fromInput", min="0", max="100", value=(session['game1']['Min_scale'] * 100)) }}
-
-                                    </div>
-
-                                <!-- Max part -->
-                                <div class="col form_control_container">  <!--style="position:relative; left:370px; top:2px"-->
-                                    <div class="form_control_container">
-                                    <div class="form_control_container__time d-flex justify-content-right">
-                                        Max
-
-                                        <button type="button" class="btn btn-sm shadow-none"
-                                                data-mdb-container="body"
-                                                data-mdb-toggle="popover"
-                                                data-mdb-placement="left"
-                                                title="Max Level?"
-                                                data-mdb-content="The high cutoff point. All grayscale values above it will be seen as white">
-                                                <i class="bi bi-question-circle-fill"></i>
-                                        </button>
-
-                                        {{ G1Form.max_value(class="form-control container__time__input", id="toInput", min="0", max="100", value=(session['game1']['Max_scale'] * 100)) }}
-
-                                    </div>
-                                    </div>
-
-                                </div>
-                                </div>
-                            </div>
-
-
-                            <script>
-                            var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
-                            var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
-                              return new bootstrap.Popover(popoverTriggerEl)
-                            })
-                            </script>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-
-{% endblock %}
-
-{% block questions %}
-
-{#            <div id="slide" class="carousel slide" data-bs-interval="false">#}
-{#            <div class="col">#}
-{#                <div class="carousel-inner">#}
-{#                    <form action="/games/1" method="POST">#}
-{#                    {% for ind in range(success_text | length) %}#}
-{#                        {% set letters = ['a','b','c','d'] %}#}
-{#                        {% set active_text = 'active' if ind==0 else '' %}#}
-{#                            <div class="carousel-item {{active_text}}">#}
-{#                            <br>#}
-{#                        <div class="row d-flex justify-content-center align-items-baseline">#}
-{#                            <p class="h5">Q{{ ind + 1 }}:{{ questions[ind]['text']}}</p>#}
-{#                        </div>#}
-{#                            {% if (questions[ind]['main_image_path']) | length > 0 %}#}
-{#                            <img src=".{{ questions[ind]['main_image_path']}}" style="max-height:120px; width:auto ">#}
-{#                            {% endif %}#}
-{#                            {% for ind2 in range(questions[ind]['choices'] | length) %}#}
-{#                                {% if not uses_images[ind] %}#}
-{#                                <br><input type="radio" class="q{{ind}}-choice" id="q{{ind}}-{{letters[ind2]}}" name="mc-question" value="{{ letters[ind2] }}">#}
-{#                                <label for="q{{ind}}-{{letters[ind2]}}">{{ questions[ind]['choices'][ind2] }}</label>#}
-{#                                {% else %}#}
-{#                                <input type="radio"  class="q{{ind}}-choice" id="q{{ind}}-{{letters[ind2] }}" name="mc-question" value="{{ letters[ind2] }}">#}
-{#                                <label for="q{{ind}}-{{letters[ind2]}}"><img src=".{{ questions[ind]['choices'][ind2] }}" style="height: 150px; width:150px;"></label>#}
-{#                                {% endif %}#}
-{#                            {% endfor %}#}
-{##}
-{#                            <p class="d-none">Correct choice: <span id="mc-correct-choice-{{ind}}">{{ questions[ind]['correct']}}</span></p>#}
-{##}
-{#                                <br><div class="btn btn-large btn-primary answer-mc" id="answer-mc-{{ind}}">Submit</div>#}
-{#                            <br>#}
-{#                            <p id="mc-success-text-{{ind}}" class="d-none" style="color:palegreen">{{ success_text[ind] }}</p>#}
-{#                            <p id="mc-failure-text-{{ind}}" class="d-none" style="color:#ffb500">Wrong answer, try again!</p>#}
-{##}
-{#                        </div>#}
-{##}
-{#                    {% endfor %}#}
-{#                    </form>#}
-{#                </div>#}
-{##}
-{#                <button class="carousel-control-prev" type="button" data-bs-target="#slide" data-bs-slide="prev">#}
-{#                    <span class="carousel-control-prev-icon"></span>#}
-{#                </button>#}
-{#                <button class="carousel-control-next" type="button" data-bs-target="#slide" data-bs-slide="next">#}
-{#                    <span class="carousel-control-next-icon"></span>#}
-{#                </button>#}
-{#            </div>#}
-{##}
-{#            </div>#}
-
 
 {% endblock %}
 
 {% block tasks %}
-    <div class="card-body">
+       <div class="card-body">
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar"
+                             style="width: {{ session['game1']['task_completed']*25 }}%"
+                             aria-valuenow="0" aria-valuemin="{{ session['game1']['task_completed']*25 }}" aria-valuemax="100"></div>
+                    </div>
+                    <!-- Show tab for each lab procedure -->
+                    <ul class="nav nav-tabs nav-justified" id="game1-tab" role="tablist">
+                        {% for tab in instructions['tabs'] %}
+                            {% if loop.index == ([session['game1']['task_completed'] + 1,4] | min) %}
+                                {% set active = 'active' %}
+                            {% else %}
+                                {% set active = '' %}
+                            {% endif %}
 
-    </div>
+                            {% set disabled = 'disabled' if loop.index > 1 + session['game1']['task_completed'] else '' %}
+                            {% set aria_disabled = (disabled == 'disabled') %}
+
+                            <li class="nav-item" role="presentation">
+                                <button class="col nav-link {{ active }} {{ disabled }} text-info" id="task{{ loop.index }}-tab" data-bs-toggle="tab" data-bs-target="#step{{ loop.index }}"
+                                        type="button" role="tab"  aria-controls="step{{ loop.index }}"
+                                        aria-selected="{{ loop.index==1 }}" aria-disabled= "{{ aria_disabled }}">
+                                    {{ tab }}
+                                </button>
+                            </li>
+                        {% endfor %}
+                    </ul>
+
+                    <!-- Instructions -->
+                    <!-- Show content for each lab procedure -->
+                    <div class="tab-content" id="game1-tab-content">
+                        {% for task, task_details in instructions['tasks'].items() %}
+                            {% if loop.index == ([session['game1']['task_completed'] + 1 , 4] | min) %}
+                                {% set show_text = 'show' %}
+                                {% set active_text = 'active' %}
+                            {% else %}
+                                {% set show_text = '' %}
+                                {% set active_text = '' %}
+                            {% endif %}
+                            <div class="tab-pane fade {{ show_text }} {{ active_text }}" id="step{{ loop.index }}" role="tabpanel" aria-labelledby="step{{ loop.index }}-tab">
+                                <div class="h4 text-info">{{ instructions['titles'][loop.index0] }}</div>
+
+                                <ul class="accordion" id="instructions-accordion">
+                                {% set task_index = loop.index %}
+                                {% for step, details in instructions['explorations'][loop.index0].items() %}
+                                      <li class="accordion-item">
+                                          <div class="accordion-header row d-flex justify-content-center" id="heading{{ loop.index }}">
+                                              <div class="col-2 d-flex align-items-center justify-content-center">
+                                              <input class="form-check-input task-{{ task_index }}-check" type="checkbox" value="" aria-label="">
+                                              </div>
+                                            <div class="col-10">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ loop.index }}" aria-expanded="false" aria-controls="collapse{{ loop.index }}">
+                                                <strong>{{ step }}</strong>
+                                            </button>
+                                          </div>
+                                          </div>
+                                          <div class="accordion-collapse collapse" id="collapse{{ loop.index }}" aria-labelledby="heading{{ loop.index }}" data-bs-parent="#instructions-accordion">
+                                              <div class="accordion-body">
+                                                    <span>{{ details }}</span>
+                                              </div>
+                                          </div>
+                                      </li>
+                                {% endfor %}
+
+                                <!-- Special item -->
+                                    <li class="accordion-item text-info">
+                                          <div class="accordion-header row d-flex justify-content-center" id="heading-final-{{ task_index }}">
+
+                                              <div class="col-2 d-flex align-items-center justify-content-center">
+                                                <input class="form-check-input task-{{ task_index }}-check" id="final-task-of-{{ task_index }}" type="checkbox">
+                                              </div>
+
+                                            <div class="col-10">
+                                            <button class="accordion-button collapsed final-task-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-final-{{ task_index }}" aria-expanded="false" aria-controls="collapse{{ loop.index }}">
+                                                <strong class="text-info">{{ task }}</strong>
+                                            </button>
+                                          </div>
+                                          </div>
+                                          <div class="accordion-collapse collapse" id="collapse-final-{{ task_index }}" aria-labelledby="heading-final-{{ task_index }}" data-bs-parent="#instructions-accordion">
+                                              <div class="accordion-body">
+                                                    <span>{{ task_details }}</span>
+                                              </div>
+                                          </div>
+                                      </li>
+                                </li>
+                                </ul>
+
+
+
+                                <div class="btn btn-info task-next-button" id="task{{ loop.index }}-next">Next</div>
+
+                                <p class="d-none text-danger" id="task-message-{{ task_index }}">
+                                    Complete and check all steps to move on.
+                                </p>
+                                {% set dnone = '' if session['game1']['task_completed'] >= task_index else 'd-none' %}
+
+                                {% set success_message = 'This step has been completed' if task_index < 4 else
+                                        'All steps complete. Congratulations! To earn the remaining stars, answer the questions to the right.' %}
+
+                                <p class="{{ dnone }} text-success" id="task-success-{{ task_index }}">
+                                    {{ success_message }}
+                                    {% if task_index == 4 %}
+                                        <a class="btn btn-large btn-success" href="/games/2"> Next game! </a>
+                                    {% endif %}
+                                </p>
+
+
+                            </div>
+
+
+
+                        {% endfor %}
+
+
+
+                      <div class="tab-pane fade" id="step2" role="tabpanel" aria-labelledby="profile-tab"></div>
+                      <div class="tab-pane fade" id="step3" role="tabpanel" aria-labelledby="contact-tab"></div>
+                    </div>
+                    </div>
+
 
 {% endblock %}
 {% block additional_imports %}

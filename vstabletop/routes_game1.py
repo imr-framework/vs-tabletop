@@ -6,6 +6,7 @@ from flask_login import login_required, login_user, logout_user
 import vstabletop.utils as utils
 from vstabletop.forms import *
 from vstabletop.info import GAMES_DICT, GAME1_BACKGROUND
+from vstabletop.info import GAME1_INSTRUCTIONS
 
 
 from __main__ import app, login_manager, db, socketio
@@ -40,7 +41,15 @@ def game1():
     return render_template('game1.html',template_title="What is in an image?",
                            template_intro_text="Voxels, field-of-views, and resolution ", G1Form = form,
                            graphJSON_img = j1, questions=questions, success_text=success_text, uses_images=uses_images,
-                           game_num = 1, background=GAME1_BACKGROUND)
+                           game_num = 1, background=GAME1_BACKGROUND,instructions=GAME1_INSTRUCTIONS)
+
+
+# TODO make sure format sent is correct
+@socketio.on('Acquire game 1 image')
+def update_image(info):
+    print(info)
+    j1 = game1_worker(float(info['fov'])*1e-3, info['n'], info['zerofill'], float(info['window_min'])*0.01, float(info['window_max'])*0.01)
+    socketio.emit('Deliver image',{'graphData': j1})
 
 
 @socketio.on('Update param for Game1')

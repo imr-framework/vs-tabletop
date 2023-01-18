@@ -1,11 +1,26 @@
 // New version: don't rely on forms
+let socket = io();
 
 $('#game1-run').on('click',()=>{
+    // Disable button
+    $('#game1-run').attr('disabled',true);
+    $('#game1-spinner').removeClass('d-none');
     socket.emit('Acquire game 1 image',{'fov':parseFloat($('#FOV_scale').val()),
                                         'n':parseInt($('#Matrix_scale').val()),
-                                        'zerofill': parseInt($('#zero_fill').val())});
+                                        'zerofill': parseInt($('#zero_fill').val()),
+                                        'window_min': parseFloat($('#fromSlider').val()),
+                                        'window_max': parseFloat($('#toSlider').val())});
+
 })
 
+socket.on('Deliver image',(payload)=>{
+    console.log("Image delivered")
+    graphData = JSON.parse(payload['graphData']);
+    Plotly.newPlot('chart-G1',graphData, {});
+
+    $('#game1-run').attr('disabled',false);
+    $('#game1-spinner').addClass('d-none');
+})
 
 
 $('#link-to-game1').addClass('text-success');
@@ -29,12 +44,65 @@ $(document).ready(function(){
   $('[data-bs-toggle="popover"]').popover();
 });
 
-let socket = io();
 
 $(':input').on('change', (event)=>{
     console.log('Updating')
     socket.emit("Update param for Game1", {'id': event.target.id, 'value': event.target.value});
 })
+
+
+// Tasks / progress
+
+$(".task-next-button").click((event)=>{
+    let task_id = event.target.id.replace('task','').replace('-next','');
+    // Check if all checkboxes of task are selected
+    if ($(`input.task-${task_id}-check`).not(':checked').length === 0){
+        console.log('All boxes are checked! Moving on.')
+        // Update session progress
+            socket.emit('game1 update progress',{'task': task_id});
+            $(`#task-message-${task_id}`).addClass('d-none');
+            $(`#task-success-${task_id}`).removeClass('d-none');
+            update_progress_bar(task_id);
+            go_to_next_tab(parseInt(task_id));
+
+    }
+    else{
+        // If this task hasn't been completed, print hint
+        // Use tab active status to judge
+        if (parseInt(task_id) === 4 || $(`#task${parseInt(task_id)+1}-tab`).hasClass('disabled')){
+            console.log('showing hint message')
+            console.log(`#task-message-${task_id}`);
+            $(`#task-message-${task_id}`).removeClass('d-none');
+
+        }
+        else{ // If step is already completed, just go to the next tab.
+            go_to_next_tab(parseInt(task_id));
+            // For the last step, display final success image
+        }
+    }
+})
+
+function update_progress_bar(step) {
+    // Update progress bar only if new value is larger than existing value.
+    let current = parseInt($('.progress-bar').attr('style').replace('width: ', '').replace('%', ''));
+    if (step * 25 > current) {
+        $('.progress-bar').prop('style', `width: ${step * 25}%`).prop('aria-valuenow', `${step * 25}`);
+    }
+}
+
+function go_to_next_tab(step){
+    if (step<4){
+        $(`#task${step+1}-tab`).removeClass('disabled');
+        $(`#task${step+1}-tab`).tab('show');
+        $(`#step${step}`).removeClass('show active');
+        $(`#step${step+1}`).addClass('show active');
+    }
+    else{
+        // Play confetti
+        loop();
+    }
+}
+
 
 $('.answer-mc').on('click', (event)=>{
     submit_id = event.target.id;
@@ -236,10 +304,10 @@ socket.on("Reset Matrix Scale", (msg)=>{
     $('#zero_fill').val(128);
     socket.emit("Done Resetting Matrix Scale")
 })
-const canvasEl = document.querySelector('#canvas');
-
-const w = canvasEl.width = window.innerWidth;
-const h = canvasEl.height = window.innerHeight * 2;
+// const canvasEl = document.querySelector('#canvas');
+//
+// const w = canvasEl.width = window.innerWidth;
+// const h = canvasEl.height = window.innerHeight * 2;
 
 function loop() {
   requestAnimationFrame(loop);
@@ -297,10 +365,10 @@ Confetti.prototype.draw = function() {
   ctx.fillStyle = this.color;
   ctx.fill();
 };
-
-const ctx = canvasEl.getContext('2d');
-const confNum = Math.floor(w / 4);
-const confs = new Array(confNum).fill().map(_ => new Confetti());
-
-loop();
+//
+// const ctx = canvasEl.getContext('2d');
+// const confNum = Math.floor(w / 4);
+// const confs = new Array(confNum).fill().map(_ => new Confetti());
+//
+// loop();
 
