@@ -618,11 +618,8 @@
 
 {% block tasks %}
 <div class="card-body">
-    <div class="test">
-        <input id="testinput" type="checkbox">
-        <label for="testinput">What?</label>
-    </div>
-                    <div class="progress">
+
+    <div class="progress">
                         <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar"
                              style="width: {{ session['game2']['task_completed']*25 }}%"
                              aria-valuenow="0" aria-valuemin="{{ session['game2']['task_completed']*25 }}" aria-valuemax="100"></div>

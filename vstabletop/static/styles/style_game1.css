@@ -158,12 +158,12 @@ ul {
   display: block;
 }
 
-canvas {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-}
+/*canvas {*/
+/*  position: absolute;*/
+/*  bottom: 0;*/
+/*  left: 0;*/
+/*  width: 100%;*/
+/*} */
 
 .title {
   position: absolute;

@@ -3,7 +3,7 @@ from flask import flash, render_template, session, redirect, url_for
 from flask_login import login_required, login_user, logout_user
 import vstabletop.utils as utils
 from vstabletop.forms import *
-from vstabletop.info import GAMES_DICT, GAME3_BACKGROUND
+from vstabletop.info import GAMES_DICT, GAME3_BACKGROUND, GAME3_INSTRUCTIONS
 from __main__ import app, login_manager, db, socketio
 
 # TODO
@@ -30,7 +30,8 @@ def game3():
     print(session['game3'])
     return render_template('game3.html', template_title="Brains, please!", template_intro_text="",
                            G3Form=form, graphJSON_img = j1, graphJSON_bar = j2, questions = questions,
-                           success_text=success_text, uses_images=uses_images, game_num=3,background=GAME3_BACKGROUND)
+                           success_text=success_text, uses_images=uses_images, game_num=3,background=GAME3_BACKGROUND,
+                           instructions=GAME3_INSTRUCTIONS)
 
 @socketio.on('Update param for Game3')
 def update_parameter(info):

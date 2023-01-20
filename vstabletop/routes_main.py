@@ -45,7 +45,8 @@ def initialize_parameters():
                         }
 
     session['game3'] = {'options': 'T1', 'TR': 500, 'TE': 10, 'FA':90, 'P1_q': 'No', 'P2_q': 'No', 'P3_q': 'No', 'progress': utils.new_progress_of_game(3),
-                        'mc_status_list': utils.num_questions_of_game(1)*[False], 'current_task': 1, 'completed_task': 0, 'star_count': 0}
+                        'mc_status_list': utils.num_questions_of_game(1)*[False], 'current_task': 1, 'completed_task': 0, 'star_count': 0,
+                        'task_completed':0}
 
     session['game4'] = { 'mode':'bright','flow_on': False, 'flow_speed': 50,
                            'bright_thk': 5, 'bright_tr':250, 'bright_fa': 45, 'bright_te': 5,

@@ -202,12 +202,12 @@ canvas {
 /* Sidebar */
 
 .w-sidebar {
-    width: 500px;
-    max-width: 500px;
+    width: 600px;
+    max-width: 600px;
 }
 
 .row.collapse {
-    margin-left: -500px;
+    margin-left: -600px;
     left: 0;
 	transition: margin-left .15s linear;
 }
@@ -217,12 +217,12 @@ canvas {
 }
 
 .row.collapsing {
-    margin-left: -500px;
+    margin-left: -600px;
     left: -0.05%;
 	transition: all .15s linear;
 }
 
-@media (max-width:500px) {
+@media (max-width:600px) {
     .row.collapse,
     .row.collapsing {
         margin-left: 0 !important;

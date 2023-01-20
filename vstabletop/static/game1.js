@@ -2,21 +2,110 @@
 let socket = io();
 
 $('#game1-run').on('click',()=>{
-    // Disable button
-    $('#game1-run').attr('disabled',true);
-    $('#game1-spinner').removeClass('d-none');
-    socket.emit('Acquire game 1 image',{'fov':parseFloat($('#FOV_scale').val()),
-                                        'n':parseInt($('#Matrix_scale').val()),
-                                        'zerofill': parseInt($('#zero_fill').val()),
-                                        'window_min': parseFloat($('#fromSlider').val()),
-                                        'window_max': parseFloat($('#toSlider').val())});
+    // Check validity of inputs
+    // FOV
 
+    fov = parseFloat($('#FOV_scale').val());
+    n = parseInt($('#Matrix_scale').val());
+    zf = parseInt($('#zero_fill').val());
+
+
+    console.log(n);
+    console.log(zf);
+
+    let all_valid = true;
+    if (fov > 2500 || fov < 50){
+        all_valid = false;
+        // Display warning
+        $('#FOV_scale').addClass('is-invalid');
+        $('#fovhelp').removeClass('d-none');
+
+    }
+    else{
+        $('#FOV_scale').removeClass('is-invalid');
+        $('#fovhelp').addClass('d-none');
+
+    }
+
+    if (n>1000 || n<8){
+        all_valid = false;
+        // Display warning
+        $('#Matrix_scale').addClass('is-invalid');
+        $('#matrixsizehelp').removeClass('d-none');
+    }
+    else{
+        $('#Matrix_scale').removeClass('is-invalid');
+        $('#matrixsizehelp').addClass('d-none');
+
+    }
+    if (zf>1200 || zf<8){
+        all_valid = false;
+        // Display warning
+        $('#zero_fill').addClass('is-invalid');
+        $('#zerofillhelp').removeClass('d-none');
+    }
+    else{
+        $('#zero_fill').removeClass('is-invalid');
+        $('#zerofillhelp').addClass('d-none');
+
+    }
+
+    if (all_valid){
+
+        // Disable button
+        $('#game1-run').attr('disabled',true);
+        $('#game1-spinner').removeClass('d-none');
+        socket.emit('Acquire game 1 image',{'fov': fov,
+                                            'n':n,
+                                            'zerofill': zf,
+                                            'window_min': parseFloat($('#fromSlider').val()),
+                                            'window_max': parseFloat($('#toSlider').val())});
+        // Check off the task if conditions are satisfied (base on which latest step we are on)
+        // Find current step
+        let current_step = 4;
+        for (let step = 2; step <=4 ; step++) {
+            if ($(`#task${step}-tab`).hasClass('disabled')){
+                current_step = step - 1;
+                break;
+            }
+        }
+        console.log(`Current step: ${current_step}`);
+
+        if (current_step === 1){
+            let fov = parseFloat($('#FOV_scale').val());
+            if (fov >= 230 && fov <= 300){
+                // Check off Task 1
+                $('#final-task-of-1').prop('checked',true);
+            }
+        }
+        else if (current_step === 2){
+            let n = parseInt($('#Matrix_scale').val());
+            if (n>=256){
+                $('#final-task-of-2').prop('checked',true);
+            }
+        }
+        else if (current_step === 3){
+            let n = parseInt($('#Matrix_scale').val());
+            let zf = parseInt($('#zero_fill').val());
+            if (n <= 32 && zf >= 256){
+                $('#final-task-of-3').prop('checked',true);
+            }
+        }
+        else if (current_step === 4){
+            let window_min = parseFloat($('#fromSlider').val());
+            let window_max = parseFloat($('#toSlider').val());
+            if (window_min >= 60 && window_max > 60){
+                $('#final-task-of-4').prop('checked',true);
+            }
+        }
+
+    }
 })
 
 socket.on('Deliver image',(payload)=>{
     console.log("Image delivered")
     graphData = JSON.parse(payload['graphData']);
-    Plotly.newPlot('chart-G1',graphData, {});
+    Plotly.newPlot('chart-G1',graphData);
 
     $('#game1-run').attr('disabled',false);
     $('#game1-spinner').addClass('d-none');
@@ -96,12 +185,56 @@ function go_to_next_tab(step){
         $(`#task${step+1}-tab`).tab('show');
         $(`#step${step}`).removeClass('show active');
         $(`#step${step+1}`).addClass('show active');
+        // Change to default parameters for that task
+        change_to_default_params(step+1);
     }
     else{
         // Play confetti
         loop();
     }
 }
+
+function change_to_default_params(step){
+    if (step === 1){
+            $('#Matrix_scale').val(128);
+            $('#Voxel_scale').val(1);
+            $('#FOV_scale').val(128);
+            $('#zero_fill').val(128);
+            $('#Min_scale').val(10);
+            $('#Max_scale').val(90);
+    }
+    else if (step === 2){
+            $('#Matrix_scale').val(128);
+            $('#Voxel_scale').val(250/128);
+            $('#FOV_scale').val(250);
+            $('#zero_fill').val(128);
+            $('#Min_scale').val(10);
+            $('#Max_scale').val(90);
+    }
+    else if (step === 3){
+            $('#Matrix_scale').val(128);
+            $('#Voxel_scale').val(1);
+            $('#FOV_scale').val(128);
+            $('#zero_fill').val(128);
+            $('#Min_scale').val(0);
+            $('#Max_scale').val(100);
+    }
+    else if (step === 4){
+            $('#Matrix_scale').val(256);
+            $('#Voxel_scale').val(1);
+            $('#FOV_scale').val(256);
+            $('#zero_fill').val(256);
+            $('#Min_scale').val(0);
+            $('#Max_scale').val(100);
+    }
+}
+
+$('.task_tab').on('click',(event)=>{
+    // Find which task it is
+    step = event.target.id[4];
+    // Update parameters
+    change_to_default_params(parseInt(step));
+})
 
 
 $('.answer-mc').on('click', (event)=>{

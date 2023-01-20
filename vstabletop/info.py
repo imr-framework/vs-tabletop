@@ -43,7 +43,7 @@ GAME1_INSTRUCTIONS={
     'tasks':{'Task 1: To see the whole picture': 'Adjust the FOV until it is just right for viewing the object with all its structures.',
              'Task 2: To see the details ': 'Adjust the matrix size until you can have a good idea of all the shapes.',
              'Task 3: Zero-fill is not magic!': 'Produce a low resolution image with a big matrix size',
-             'Task 4: To see the differences': 'Adjust the windowing until there is a very large contrast between the structures.'}
+             'Task 4: To leave out of the picture': 'Adjust windowing levels until you cannot see the darker sphere at the center-top.'}
 }
 
 # Game 2 instructions
@@ -113,10 +113,14 @@ GAME2_INSTRUCTIONS={
 
 GAME3_INSTRUCTIONS={
     'tabs':[f'Step {a+1}' for a in range(3)],
-    'titles':['Explore MRI contrasts','Explore MRI parameters',''],
-    'explorations':[{},{}],
+    'titles':['Explore MRI contrasts','Explore MRI parameters','Explore signal levels'],
+    'explorations':[{'Acquire an image':'',
+                     'Acquire different weightings':'',},
+                    {},
+                    {}],
     'tasks':{'Task 1':'',
-             'Task 2':''}
+             'Task 2':'',
+             'Task 3':''}
 }
 
 # Game 4 info

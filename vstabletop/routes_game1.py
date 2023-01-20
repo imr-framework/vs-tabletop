@@ -69,7 +69,10 @@ def update_parameter(info):
     elif info['id'] in ['flexCheckChecked1', 'flexCheckChecked2', 'flexCheckChecked3', 'flexCheckChecked4']:
         info['value']
     elif info['value'] not in ['a','b','c','d']:
-        info['value'] = float(info['value'])
+        try:
+            info['value'] = float(info['value'])
+        except:
+            print('Value cannot be converted to float')
 
     session['game1'][info['id']] = info['value']
     session.modified = True
@@ -107,10 +110,7 @@ def update_parameter(info):
     elif info['id'] == 'Matrix_scale':
         print('printing MS')
         session['game1']['Voxel_scale'] = float(session['game1']['FOV_scale'])/(float(session['game1']['Matrix_scale']))
-
-        if session['game1']['Matrix_scale'] > session['game1']['zero_fill']:
-            print("changing")
-            session['game1']['zero_fill'] = session['game1']['Matrix_scale']
+        session['game1']['zero_fill'] = session['game1']['Matrix_scale']
 
 
     elif info['id'] == 'zero_fill':
@@ -257,3 +257,16 @@ def update_task_progress():
     session['game1']['progress'].update_stars()
     socketio.emit('renew stars', {'stars': session['game1']['progress'].num_stars})
 
+@socketio.on('game1 update progress')
+def game1_update_progress(msg):
+    task = int(msg['task'])
+    # Only update if there is progress (no backtracking)
+    if task > session['game1']['task_completed']:
+        utils.update_session_subdict(session, 'game1', {'task_completed': task})
+        print('Task ', session['game1']['task_completed'],' completed for game 1')
+
+        # Update database object
+        session['game1']['progress'].num_steps_complete = task
+        session['game1']['progress'].update_stars()
+        print('Game 1 progress updated: ', session['game1']['progress'])
+        socketio.emit('renew stars',{'stars': session['game1']['progress'].num_stars})

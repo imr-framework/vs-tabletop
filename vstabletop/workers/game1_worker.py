@@ -4,6 +4,7 @@ import plotly
 import plotly.express as px
 import numpy as np
 import json
+import plotly.graph_objects as go
 
 # TODO add function for a choice of different medical modalities
 
@@ -83,11 +84,11 @@ def get_image(fov,n,n_zf,min_level,max_level):
 
     # Windowing: Normalize levels between (min,max) to (0,1)
     if max_level <= min_level:
-        max_level = 1
-        min_level = 0
-    final_image = (final_image - min_level) / (max_level - min_level)
-    final_image[final_image<=0] = 0
-    final_image[final_image>=1] = 1
+        final_image = final_image - final_image
+    else:
+        final_image = (final_image - min_level) / (max_level - min_level)
+        final_image[final_image<=0] = 0
+        final_image[final_image>=1] = 1
 
     final_image = np.flipud(final_image)
 
@@ -109,6 +110,7 @@ def generate_plot(img):
 
     fig = px.imshow(img,zmin=0.0, zmax=1.0,binary_string=True)
     fig.update(layout_coloraxis_showscale=False)
+    fig.update_layout(dict(autosize=False,width=500, height=500, margin=dict(l=1,r=1,b=1,t=1,pad=0)))
     fig.update_xaxes(showticklabels=False)
     fig.update_yaxes(showticklabels=False)
 
@@ -137,7 +139,22 @@ def game1_worker(fov,n,n_zf,min_level,max_level):
     j1 : str
         JSON string for Plotly.js to display
     """
-    img = get_image(fov,n,n_zf, min_level, max_level)
+    # Check parameters and return black image if parameters are out of bounds
+    parameters_valid = True
+    if (fov > 2.5 or fov < 0.05):
+        print('FOV is out of bounds')
+        parameters_valid = False
+    if (n < 8 or n > 1000):
+        print('Matrix size is out of bounds')
+        parameters_valid = False
+    if (n_zf < 8 or n_zf > 1200):
+        print('Zero fill is out of bounds')
+        parameters_valid = False
+
+    if parameters_valid:
+        img = get_image(fov,n,n_zf, min_level, max_level)
+    else:
+        img = np.zeros((128,128))
     fig = generate_plot(img)
     j1 = json.dumps(fig,cls=plotly.utils.PlotlyJSONEncoder)
 
