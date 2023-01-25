@@ -83,6 +83,8 @@ def simulate_bright_plots(info):
 
     # Calculate data for each step
     Nss = len(signals)
+
+
     fraction_list = ff*np.ones(signals.shape)
     if has_partial:
         fraction_list[-1] = pf
@@ -93,6 +95,8 @@ def simulate_bright_plots(info):
         mask = (np.arange(Nss) < u+1)
         signal_total_list.append(np.sum(signals*mask*fraction_list))
         signal_partitioned_list.append(signals*mask)
+
+
 
     # Generate Mxy and Mz curves
     if flow_speed > 0:

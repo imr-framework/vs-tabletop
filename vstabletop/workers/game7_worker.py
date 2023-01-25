@@ -162,9 +162,13 @@ def get_3d_model_plot(model_info,lines=False,line_dir='z'):
                        title_x=0.5,
                        font_color='black',
                        scene_camera=dict(eye=dict(x=1.25, y=-1.25, z=1)),
-                       scene_xaxis_visible=False,
-                       scene_yaxis_visible=False,
-                       scene_zaxis_visible=False)
+                       scene_xaxis_visible=True,
+                       scene_xaxis_showticklabels=False,
+                       scene_yaxis_visible=True,
+                       scene_yaxis_showticklabels=False,
+                       scene_zaxis_visible=True,
+                       scene_zaxis_showticklabels=False
+                       )
 
     fig = go.Figure(data=[mesh3D], layout=layout)
     fig.data[0].update(lighting=dict(ambient=0.15,

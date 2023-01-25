@@ -97,7 +97,7 @@
         </div>
         <div class="row">
             <div class="tab-content" id="ex0-content">
-                <div class="tab-pane fade show active" id="ex0-tabs-1" role="tabpanel" aria-labelledby="ex0-tab-1">
+                <div class="tab-pane fade show active p-4" id="ex0-tabs-1" role="tabpanel" aria-labelledby="ex0-tab-1">
          <!-- Signal options -->
                     <!-- Signal type -->
                     <div class="form-group row">
@@ -107,7 +107,7 @@
                         </div>
                     </div>
                     <!-- Signal vertical scale -->
-                    <div class="form-group row">
+                    <div class="form-group row mb-3 mr-3">
                         <div class="col-4">
                             {{ template_game_form.signal_scale_field.label(class="form-label") }}
                         </div>
@@ -124,7 +124,7 @@
                     </div>
                     <!-- Signal horizontal scale -->
 
-                    <div class="form-group row">
+                    <div class="form-group row mb-3">
                         <div class="col-4">
                             {{ template_game_form.signal_stretch_field.label(class="form-label") }}
                         </div>
@@ -142,7 +142,7 @@
                     </div>
 
                     <!-- Signal shift -->
-                    <div class="form-group row">
+                    <div class="form-group row mb-3">
                         <div class="col-4">
                             {{ template_game_form.signal_shift_field.label(class="form-label") }}
                         </div>
@@ -175,7 +175,7 @@
                 </div>
 
 
-                <div class="tab-pane fade" id="ex0-tabs-2" role="tabpanel" aria-labelledby="ex0-tab-2">
+                <div class="tab-pane fade p-4" id="ex0-tabs-2" role="tabpanel" aria-labelledby="ex0-tab-2">
 
                     <!-- Image options -->
                     <!-- Image name -->
@@ -188,7 +188,7 @@
                            </div>
                         </div>
                     <!-- Rotation angle -->
-                    <div class="form-group row">
+                    <div class="form-group row mb-3">
                         <div class="col-4">{{ template_game_form.image_rotation_field.label(class="form-label") }}</div>
                         <div class="col-8">
                         <div class="row">
@@ -202,7 +202,7 @@
                         </div>
                     </div>
                     <!-- Wavelength -->
-                    <div class="form-group row">
+                    <div class="form-group row mb-3">
                         <div class="col-4">{{ template_game_form.image_wavelength_field.label(class="form-label") }}</div>
                         <div class="col-8">
                         <div class="row">
@@ -217,7 +217,7 @@
 
                     </div>
                     <!-- Wave phase -->
-                     <div class="form-group row">
+                     <div class="form-group row mb-3">
                          <div class="col-4">{{ template_game_form.image_phase_field.label(class="form-label") }}</div>
                          <div class="col-8">
                          <div class="row">
@@ -300,7 +300,6 @@
             <div class="row">
                 <!-- Tabs content -->
                 <div class="tab-content" id="ex1-content">
-
                   <div class="tab-pane fade show active" id="ex1-tabs-1" role="tabpanel" aria-labelledby="ex1-tab-1">
                       <div class="row h-75">
                     <div class="d-flex justify-content-center">
@@ -443,7 +442,7 @@
             </div>
             <div class="row">
                 <div class="tab-content" id="ex2-content">
-                    <div class="tab-pane fade show active" id="ex2-tabs-1" role="tabpanel" aria-labelledby="ex2-tab-1">
+                    <div class="tab-pane fade show active p-4" id="ex2-tabs-1" role="tabpanel" aria-labelledby="ex2-tab-1">
                         <!-- Spectrum options -->
                         <div class="form-group row">
                             <div class="col-4">{{ template_game_form.spectrum_name_field.label(class="form-label") }}</div>
@@ -451,7 +450,7 @@
                                 {{ template_game_form.spectrum_name_field(class="form-control preset-input") }}
                             </div>
                         </div>
-                        <div class="form-group row">
+                        <div class="form-group row mb-3">
                             <div class="col-4">
                                 {{ template_game_form.spectrum_scale_field.label(class="form-label") }}
                             </div>
@@ -467,7 +466,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group row">
+                        <div class="form-group row mb-3">
                             <div class="col-4">
                                 {{ template_game_form.spectrum_stretch_field.label(class="form-label") }}
                             </div>
@@ -483,7 +482,7 @@
 
                             </div>
                         </div>
-                        <div class="form-group row">
+                        <div class="form-group row mb-3">
                             <div class="col-4">
                                 {{ template_game_form.spectrum_shift_field.label(class="form-label") }}
                             </div>
@@ -512,7 +511,7 @@
                             </div>
                         </div>
                     </div>
-                     <div class="tab-pane fade" id="ex2-tabs-2" role="tabpanel" aria-labelledby="ex2-tab-2">
+                     <div class="tab-pane fade p-4" id="ex2-tabs-2" role="tabpanel" aria-labelledby="ex2-tab-2">
                         <!-- K-space options -->
                         <div class="form-group row">
                         <div class="col-4">{{ template_game_form.kspace_name_field.label(class="form-label") }}</div>
@@ -522,7 +521,7 @@
 
 
                         </div>
-                        <div class="form-group row">
+                        <div class="form-group row mb-3">
                         <div class="col-4">{{ template_game_form.kspace_rotation_field.label(class="form-label") }}</div>
                         <div class="col-8">
                             <div class="row">
@@ -535,7 +534,7 @@
                             </div>
                         </div>
                         </div>
-                        <div class="form-group row">
+                        <div class="form-group row mb-3">
                             <div class="col-4">{{ template_game_form.kspace_ds_separation_field.label(class="form-label")}}</div>
                             <div class="col-8">
                                 <div class="row">

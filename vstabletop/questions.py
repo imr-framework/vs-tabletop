@@ -139,7 +139,7 @@ def initialize_game1_questions():
         id=110,
         game_number=1,
         uses_images=False,
-        question_text="What does zero-filling this reduced matrix size image of a pineapple do?",
+        question_text="What happens when you zero-fill this reduced matrix size image of a pineapple?",
         main_image_path="./static/img/game1/pineapples.png",
         choiceA="It makes each pixel represent a smaller section of space.",
         choiceB="It makes the fruit more delicious.",
@@ -686,8 +686,12 @@ if __name__ == "__main__":
     mc_list = initialize_game1_questions()
     mc_list += initialize_game2_questions()
     mc_list += initialize_game3_questions()
+    mc_list += initialize_game4_questions()
     mc_list += initialize_game5_questions()
+    mc_list += initialize_game6_questions()
     mc_list += initialize_game7_questions()
+    mc_list += initialize_game8_questions()
+
     refresh_database_and_add_questions(mc_list)
     initialize_users() # adds admin back into database
 

@@ -29,11 +29,11 @@ def game3_worker(TR,TE,FA,empty=False):
     """
 
     graphJSON_image = get_image_json(TR,TE,FA)
-    graphJSON_bar = get_bargraph_json(TR,TE,FA, ['csf','wm','gm'])# Shows three tissue types
+    graphJSON_bar, signals = get_bargraph_json(TR,TE,FA, ['csf','wm','gm'])# Shows three tissue types
     # All possible tissue types:
     # ['bkg','csf','gm','wm','fat','muscle/skin','skin','skull','glial','connective']
 
-    return graphJSON_image, graphJSON_bar
+    return graphJSON_image, graphJSON_bar, signals
 
 def weighing_options(option):
     """Generate sequence parameters for different qualitative scans
@@ -143,6 +143,8 @@ def get_image_json(TR,TE,FA):
     fig = px.imshow(mr_image, zmin=0.0, zmax=1.0, binary_string=True)
     fig.update_xaxes(showticklabels=False)
     fig.update_yaxes(showticklabels=False)
+    fig.update_layout(dict(autosize=False,width=500, height=500, margin=dict(l=1,r=1,b=1,t=1,pad=0)))
+
 
     #fig.show()
 
@@ -190,10 +192,11 @@ def get_bargraph_json(TR,TE,FA,tissue_names):
     fig.update_yaxes(title='Relative signal',titlefont=dict(size=36))
     fig.update_xaxes(title='Tissue type',titlefont=dict(size=36))
     #fig.show()
+    fig.update_layout(dict(autosize=False,width=800, height=500, margin=dict(l=1,r=1,b=1,t=1,pad=0)))
 
     graphJSON = json.dumps(fig,cls=plotly.utils.PlotlyJSONEncoder)
 
-    return graphJSON
+    return graphJSON, signals
 
 if __name__ == '__main__':
     # Example usage

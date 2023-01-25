@@ -12,6 +12,7 @@ from vstabletop.info import GAMES_DICT, GAMES_INFO
 from vstabletop.models import User, Calibration
 from vstabletop.fake_data_generator import get_fake_calibration_plots, SignalPlotsThread, FlipAnglePlotThread, get_empty_calibration_plots
 from __main__ import app, login_manager, db, socketio
+from vstabletop.models import MultipleChoice
 
 
 def initialize_parameters():
@@ -53,13 +54,15 @@ def initialize_parameters():
                            'dark_thk': 5, 'dark_te': 50,
                            'thk':5,'fa':30,'tr':250,'te':5,
                            'T1': 2000, 'T2': 200, # T2s is always set to be the same proportion of T2
-                         'progress':utils.new_progress_of_game(4),'task_completed':0}
+                         'progress':utils.new_progress_of_game(4),'task_completed':0,
+                         'mc_status_list': utils.num_questions_of_game(4)*[False],'star_count':0}
 
     session['game5'] = {'b0_on': False, 'b0': 100.0,'coil_on': False, 'rot_frame_on': False, 'flip_angle': 90, 'rf_phase': 0.0,
                         'coil_dir': 'x', 'm_theta': 0.0, 'm_phi':0.0, 'm_size': 1, 'tx_on': False,
                         'M_init': np.array([[0],[0],[0]]), 'M_target': np.array(([0],[0],[0])),
                         'M_target_on': False,
-                        'progress': utils.new_progress_of_game(5), 'mc_status_list': utils.num_questions_of_game(5)*[False],
+                        'progress': utils.new_progress_of_game(5),
+                        'mc_status_list': utils.num_questions_of_game(5)*[False],
                         'task_completed': 0}
     session['game6'] = {'mode':'T1', 'task':'sim',
                         't1_phantom':None, 't2_phantom':None, 't1_masks':None, 't2_masks': None,
@@ -69,9 +72,11 @@ def initialize_parameters():
                         't1_map_TIs': [], 't2_map_TEs': [],
                         't1_images':None, 't2_images': None,
                         't1_roi_signal': None, 't2_roi_signal': None,
-                        't1_roi_fit': None, 't2_roi_fit': None,
+                        't1w_roi_fit': None, 't2_roi_fit': None,
                         't1_map':None,'t2_map':None,
-                        'progress':utils.new_progress_of_game(6)}
+                        'progress':utils.new_progress_of_game(6),
+                        'mc_status_list':utils.num_questions_of_game(6)*[False],
+                        'task_completed': 0}
     session['game7'] = {'model':'letterN', 'proj2d_axis': 'z', 'proj1d_angle': 90,
                         'plot3d_visible':False, 'plot2d_visible':False, 'plot1d_visible':False,
                         'lines_on': False,
@@ -84,7 +89,9 @@ def initialize_parameters():
                          'proj2d_axis': 'z', 'proj1d_angle': 90,
                         'num_acquired_2d': 0, 'num_acquired_3d': 0,
                         'num_attempts_2d': 5, 'num_attempts_3d': 2,
-                        'progress':utils.new_progress_of_game(8)}
+                        'progress':utils.new_progress_of_game(8),
+                         'mc_status_list':utils.num_questions_of_game(8)*[False],
+                         'task_completed':0}
 
 # Login callback (required)
 @login_manager.user_loader
@@ -337,3 +344,4 @@ def update_parameter(info):
 def example_elements():
     return render_template('examples.html',template_title="UI Element Examples",
                            template_intro_text="For developer use")
+

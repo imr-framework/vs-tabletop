@@ -336,7 +336,7 @@
                                 {% set dnone = '' if session['game1']['task_completed'] >= task_index else 'd-none' %}
 
                                 {% set success_message = 'This step has been completed' if task_index < 4 else
-                                        'All steps complete. Congratulations! To earn the remaining stars, answer the questions to the right.' %}
+                                        'All steps complete. Congratulations! To earn the remaining stars, do the quiz.' %}
 
                                 <p class="{{ dnone }} text-success" id="task-success-{{ task_index }}">
                                     {{ success_message }}

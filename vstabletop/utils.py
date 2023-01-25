@@ -57,11 +57,12 @@ def num_questions_of_game(num):
 def new_progress_of_game(num):
     # TODO connect to Instructions db table
 
-    num_steps_dict = {1:4, 2:4, 3:3, 4:1, 5:4, 6:1, 7:5, 8:1}
+    num_steps_dict = {1:4, 2:4, 3:3, 4:4, 5:4, 6:4, 7:5, 8:3}
     num_mc = num_questions_of_game(num)
     return Progress(game_number=num, num_stars=0,
                     num_questions=num_mc, num_correct=0,
                     num_steps_total=num_steps_dict[num],num_steps_complete=0) # No user id attached yet
+
 
 def fetch_all_game_questions(num):
     all_Qs = MultipleChoice.query.filter_by(game_number=num).all()

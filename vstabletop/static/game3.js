@@ -1,3 +1,5 @@
+let socket = io();
+
 $('#link-to-game3').addClass('text-success');
 
 
@@ -21,7 +23,6 @@ $(document).ready(function(){
   $('[data-bs-toggle="popover"]').popover();
 })
 
-let socket = io();
 
 $(':input').on('change', (event)=>{
     socket.emit("Update param for Game3", {'id': event.target.id, 'value': event.target.value});
@@ -73,11 +74,11 @@ socket.on('renew stars', (msg)=>{
 
     $("#stars-display").html(stars_html);
 })
-
-const canvasEl = document.querySelector('#canvas');
-
-const w = canvasEl.width = window.innerWidth;
-const h = canvasEl.height = window.innerHeight * 2;
+//
+// const canvasEl = document.querySelector('#canvas');
+//
+// const w = canvasEl.width = window.innerWidth;
+// const h = canvasEl.height = window.innerHeight * 2;
 
 function loop() {
   requestAnimationFrame(loop);
@@ -135,12 +136,12 @@ Confetti.prototype.draw = function() {
   ctx.fillStyle = this.color;
   ctx.fill();
 };
-
-const ctx = canvasEl.getContext('2d');
-const confNum = Math.floor(w / 4);
-const confs = new Array(confNum).fill().map(_ => new Confetti());
-
-loop();
+//
+// const ctx = canvasEl.getContext('2d');
+// const confNum = Math.floor(w / 4);
+// const confs = new Array(confNum).fill().map(_ => new Confetti());
+//
+// loop();
 
 
 socket.on('G3 take session data', (msg)=>{
@@ -150,10 +151,112 @@ socket.on('G3 take session data', (msg)=>{
     $('#TE').val(msg['data']['TE']);
     $('#FA').val(msg['data']['FA']);
     console.log(msg['data'])
+ })
+//
+// $('.carousel').carousel({
+//   interval: false,
+// });
+
+
+$('#game3-run').on('click',()=>{
+    // Get settings
+    console.log('Requesting image');
+    socket.emit('Game 3 acquire image',{'TR': parseFloat($('#TR').val()),
+                                        'TE': parseFloat($('#TE').val()),
+                                        'FA': parseFloat($('#FA').val())});
+
+
 })
 
-$('.carousel').carousel({
-  interval: false,
-});
+
+socket.on('Deliver image',(payload)=>{
+    console.log("Image delivered")
+    graphData1 = JSON.parse(payload['graphData1']);
+    graphData2 = JSON.parse(payload['graphData2']);
+
+    Plotly.newPlot('chart-G3',graphData1);
+    Plotly.newPlot('chart-G3-bar',graphData2)
+    $('#game3-run').attr('disabled',false);
+    $('#game3-spinner').addClass('d-none');
+
+     let current_step = 3;
+     for (let step = 2; step <=3 ; step++) {
+         if ($(`#task${step}-tab`).hasClass('disabled')){
+             current_step = step - 1;
+             break;
+         }
+     }
+    console.log(`Current step: ${current_step}`);
+    if (payload[`task${current_step}_pass`]===1){
+        $(`#final-task-of-${current_step}`).prop('checked',true);
+    }
+
+})
+
+// Instant value display
+$("#TR").on('change',()=>{
+    $('#TR-val').text($('#TR').val());
+})
+
+$("#TE").on('change',()=>{
+    $('#TE-val').text($('#TE').val());
+})
+
+$("#FA").on('change',()=>{
+    $('#FA-val').text($('#FA').val());
+})
 
 
+
+
+// Progress tracking
+$(".task-next-button").click((event)=>{
+    let task_id = event.target.id.replace('task','').replace('-next','');
+    // Check if all checkboxes of task are selected
+    if ($(`input.task-${task_id}-check`).not(':checked').length === 0){
+        console.log('All boxes are checked! Moving on.')
+        // Update session progress
+            socket.emit('game3 update progress',{'task': task_id});
+            $(`#task-message-${task_id}`).addClass('d-none');
+            $(`#task-success-${task_id}`).removeClass('d-none');
+            update_progress_bar(task_id);
+            go_to_next_tab(parseInt(task_id));
+
+    }
+    else{
+        // If this task hasn't been completed, print hint
+        // Use tab active status to judge
+        if (parseInt(task_id) === 3 || $(`#task${parseInt(task_id)+1}-tab`).hasClass('disabled')){
+            console.log('showing hint message')
+            console.log(`#task-message-${task_id}`);
+            $(`#task-message-${task_id}`).removeClass('d-none');
+
+        }
+        else{ // If step is already completed, just go to the next tab.
+            go_to_next_tab(parseInt(task_id));
+            // For the last step, display final success image
+        }
+    }
+})
+
+function update_progress_bar(step) {
+    // Update progress bar only if new value is larger than existing value.
+    let current = parseInt($('.progress-bar').attr('style').replace('width: ', '').replace('%', ''));
+    if (step * (100/3) > current) {
+        $('.progress-bar').prop('style', `width: ${step * 100/3}%`).prop('aria-valuenow', `${step * 100/3}`);
+    }
+}
+
+function go_to_next_tab(step){
+    if (step<3){
+        $(`#task${step+1}-tab`).removeClass('disabled');
+        $(`#task${step+1}-tab`).tab('show');
+        $(`#step${step}`).removeClass('show active');
+        $(`#step${step+1}`).addClass('show active');
+        // Change to default parameters for that task
+    }
+
+
+
+
+}

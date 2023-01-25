@@ -15,6 +15,7 @@ $('#flow-manual-button').on("click",()=>{
     // Change status
     if ($('#flow-manual-button').text() === 'PUSH'){
         $('#flow-manual-button').text('STOP').removeClass('btn-info').addClass('btn-danger');
+
         socket.emit('Flow on',{'mode':mode});
         console.log('flow on');
     }
@@ -163,5 +164,101 @@ window.onload = function(){
 
 
     })
+}
+
+// Multiple choice
+$('.answer-mc').on('click', (event)=>{
+    submit_id = event.target.id;
+    q_ind = submit_id[submit_id.length-1]
+    console.log(submit_id);
+    choice = $(`.q${q_ind}-choice:checked`).attr("value");
+
+    console.log(choice)
+
+    let letters = ['a','b','c','d'];
+
+    if (choice == letters[parseInt($(`#mc-correct-choice-${q_ind}`).text())]){
+        console.log("Answer is correct! ")
+        // Make success text visible
+        $(`#mc-failure-text-${q_ind}`).addClass('d-none');
+        $(`#mc-success-text-${q_ind}`).removeClass('d-none')
+        socket.emit('game 4 question answered',{'ind': q_ind, 'correct': true});
+    }
+    else{
+        console.log("Answer is wrong! ")
+        $(`#mc-failure-text-${q_ind}`).removeClass('d-none');
+        $(`#mc-success-text-${q_ind}`).addClass('d-none');
+        // Hide success text
+        socket.emit('game 4 question answered',{'ind': q_ind, 'correct': false});
+    }
+
+
+    //choice="some choice"
+    console.log('Updating choice')
+})
+
+
+socket.on('renew stars', (msg)=>{
+    console.log('Stars should be updated now...')
+    num_stars = msg['stars'];
+    num_full = parseInt(Math.floor(num_stars));
+    num_half = parseInt(Math.round((num_stars-num_full)*2));
+    num_empty = 5 - num_full - num_half;
+
+    let stars_html = '';
+    stars_html += '<i class="bi bi-star-fill text-warning"></i> '.repeat(num_full);
+    stars_html += '<i class="bi bi-star-half text-warning"></i> '.repeat(num_half);
+    stars_html += '<i class="bi bi-star text-warning"></i> '.repeat(num_empty);
+
+    $("#stars-display").html(stars_html);
+})
+
+
+// Progress tracking
+$(".task-next-button").click((event)=>{
+    let task_id = event.target.id.replace('task','').replace('-next','');
+    // Check if all checkboxes of task are selected
+    if ($(`input.task-${task_id}-check`).not(':checked').length === 0){
+        console.log('All boxes are checked! Moving on.')
+        // Update session progress
+            socket.emit('game4 update progress',{'task': task_id});
+            $(`#task-message-${task_id}`).addClass('d-none');
+            $(`#task-success-${task_id}`).removeClass('d-none');
+            update_progress_bar(task_id);
+            go_to_next_tab(parseInt(task_id));
+
+    }
+    else{
+        // If this task hasn't been completed, print hint
+        // Use tab active status to judge
+        if (parseInt(task_id) === 4 || $(`#task${parseInt(task_id)+1}-tab`).hasClass('disabled')){
+            console.log('showing hint message')
+            console.log(`#task-message-${task_id}`);
+            $(`#task-message-${task_id}`).removeClass('d-none');
+
+        }
+        else{ // If step is already completed, just go to the next tab.
+            go_to_next_tab(parseInt(task_id));
+            // For the last step, display final success image
+        }
+    }
+})
+
+function update_progress_bar(step) {
+    // Update progress bar only if new value is larger than existing value.
+    let current = parseInt($('.progress-bar').attr('style').replace('width: ', '').replace('%', ''));
+    if (step * 25 > current) {
+        $('.progress-bar').prop('style', `width: ${step * 25}%`).prop('aria-valuenow', `${step * 25}`);
+    }
+}
+
+function go_to_next_tab(step) {
+    if (step < 4) {
+        $(`#task${step + 1}-tab`).removeClass('disabled');
+        $(`#task${step + 1}-tab`).tab('show');
+        $(`#step${step}`).removeClass('show active');
+        $(`#step${step + 1}`).addClass('show active');
+        // Change to default parameters for that task
+    }
 }
 

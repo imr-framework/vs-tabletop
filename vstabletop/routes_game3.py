@@ -19,7 +19,7 @@ def game3():
     questions, success_text, uses_images = fetch_all_game3_questions()
     print(questions)
 
-    j1, j2 = game3_worker(session['game3']['TR'] / 1000, session['game3']['TE'] / 1000, session['game3']['FA'])
+    j1, j2, _ = game3_worker(session['game3']['TR'] / 1000, session['game3']['TE'] / 1000, session['game3']['FA'])
 
     update_task_progress()
 
@@ -32,6 +32,21 @@ def game3():
                            G3Form=form, graphJSON_img = j1, graphJSON_bar = j2, questions = questions,
                            success_text=success_text, uses_images=uses_images, game_num=3,background=GAME3_BACKGROUND,
                            instructions=GAME3_INSTRUCTIONS)
+@socketio.on('Game 3 acquire image')
+def update_image(info):
+    # Worker
+    j1, j2, signals = game3_worker(info['TR']/1000, info['TE']/1000, info['FA'])
+
+    # Check status for each of three tasks
+    task1_pass = int(signals[0]<0.5*signals[1])
+    task2_pass = int(abs(info['TR']-500)<5 and abs(info['TE']-25)<2 and abs(signals[1]-signals[2])<0.05)
+    task3_pass = int(signals[2] > signals[1] and signals[1] > signals[0])
+
+    socketio.emit('Deliver image',{'graphData1':j1, 'graphData2': j2, 'task1_pass': task1_pass,
+                                                                      'task2_pass': task2_pass,
+                                                                      'task3_pass': task3_pass})
+
+
 
 @socketio.on('Update param for Game3')
 def update_parameter(info):
@@ -205,3 +220,16 @@ def update_choice(info):
     else:
         print("No")
 
+@socketio.on('game3 update progress')
+def game3_update_progress(msg):
+    task = int(msg['task'])
+    # Only update if there is progress (no backtracking)
+    if task > session['game3']['task_completed']:
+        utils.update_session_subdict(session, 'game3', {'task_completed': task})
+        print('Task ', session['game3']['task_completed'],' completed for game 3')
+
+        # Update database object
+        session['game3']['progress'].num_steps_complete = task
+        session['game3']['progress'].update_stars()
+        print('Game 3 progress updated: ', session['game3']['progress'])
+        socketio.emit('renew stars',{'stars': session['game3']['progress'].num_stars})

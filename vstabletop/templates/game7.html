@@ -323,10 +323,14 @@
                                 {% set dnone = '' if session['game7']['task_completed'] >= task_index else 'd-none' %}
 
                                 {% set success_message = 'This step has been completed' if task_index < 4 else
-                                        'All steps complete. Congratulations! Now, you can answer the multiple choice questions to earn more stars.' %}
+                                        'All steps complete. Congratulations! Now, you can answer the multiple choice questions to earn more stars.'
+                                        %}
 
                                 <p class="{{ dnone }} text-success" id="task-success-{{ task_index }}">
                                     {{ success_message }}
+                                    {% if task_index == 5 %}
+                                        <a class="btn btn-large btn-success" href="/games/8"> Next game! </a>
+                                    {% endif %}
                                 </p>
 
                             </div>
@@ -339,69 +343,54 @@
 
                     </div>
 {% endblock %}
+
 {% block questions %}
-              <div class="card">
-          <div class="card-header h3">Questions</div>
-
-          <div id="slide" class="carousel slide card-body h-75" data-bs-interval="false">
-                <div class="carousel-inner">
-                    {% for ind in range(success_text | length) %}
-                        {% set letters = ['a','b','c','d'] %}
-                        {% set active_text = 'active' if ind==0 else '' %}
-                        <div class="carousel-item {{active_text}}">
-                            <div class="row d-flex justify-content-center align-items-baseline">
-                                <p class="h5">Q{{ ind + 1 }}:{{ questions[ind]['text']}}</p>
-                            </div>
-
-                            <div class="row d-flex justify-content-center">
-
-                            <div class="form-check col-8">
-                            {% for ind2 in range(questions[ind]['choices'] | length) %}
-                                {% if not uses_images[ind] %}
-                                <div class="form-group">
-                                <input type="radio" class="q{{ind}}-choice form-check-input" id="q{{ind}}-{{letters[ind2]}}" name="mc-question" value="{{ letters[ind2] }}">
-                                <label for="q{{ind}}-{{letters[ind2]}}" class="form-check-label">{{ questions[ind]['choices'][ind2] }}</label>
+    <div class="card text-white bg-secondary mb-3 text-center" style="color: grey">
+                        <div id="slide" class="carousel slide" data-bs-interval="false">
+                            <div class="carousel-inner">
+                                <form action="/games/7" method="POST">
+                                {% for ind in range(success_text | length) %}
+                                    {% set letters = ['a','b','c','d'] %}
+                                    {% set active_text = 'active' if ind==0 else '' %}
+                                        <div class="carousel-item {{active_text}}">
+                                        <br>
+                                    <div class="row d-flex justify-content-center align-items-baseline">
+                                        <p class="h5">Q{{ ind + 1 }}:{{ questions[ind]['text']}}</p>
                                     </div>
-                                {% else %}
-                                <div class="form-group">
-                                <input type="radio"  class="q{{ind}}-choice form-check-input" id="q{{ind}}-{{letters[ind2] }}" name="mc-question" value="{{ letters[ind2] }}">
-                                <label for="q{{ind}}-{{letters[ind2]}}" class="form-check-label"><img src=".{{ questions[ind]['choices'][ind2] }}" style="height: 150px; width:150px;"></label>
-                                </div>
-                                {% endif %}
-                            {% endfor %}
+                                        {% if (questions[ind]['main_image_path']) | length > 0 %}
+                                        <img src=".{{ questions[ind]['main_image_path']}}" style="max-height:120px; width:auto ">
+                                        {% endif %}
+                                        {% for ind2 in range(questions[ind]['choices'] | length) %}
+                                            {% if not uses_images[ind] %}
+                                            <br><input type="radio" class="q{{ind}}-choice" id="q{{ind}}-{{letters[ind2]}}" name="mc-question" value="{{ letters[ind2] }}">
+                                            <label for="q{{ind}}-{{letters[ind2]}}">{{ questions[ind]['choices'][ind2] }}</label>
+                                            {% else %}
+                                            <input type="radio"  class="q{{ind}}-choice" id="q{{ind}}-{{letters[ind2] }}" name="mc-question" value="{{ letters[ind2] }}">
+                                            <label for="q{{ind}}-{{letters[ind2]}}"><img src=".{{ questions[ind]['choices'][ind2] }}" style="height: 150px; width:150px;"></label>
+                                            {% endif %}
+                                        {% endfor %}
+
+                                        <p class="d-none">Correct choice: <span id="mc-correct-choice-{{ind}}">{{ questions[ind]['correct']}}</span></p>
+
+                                            <br><div class="btn btn-large btn-primary answer-mc" id="answer-mc-{{ind}}">Submit</div>
+                                        <br>
+                                        <p id="mc-success-text-{{ind}}" class="d-none" style="color:palegreen">{{ success_text[ind] }}</p>
+                                        <p id="mc-failure-text-{{ind}}" class="d-none" style="color:#ffb500">Wrong answer, try again!</p>
+
+                                    </div>
+
+                                {% endfor %}
+                                </form>
                             </div>
 
-                            </div>
-                            <div class="row d-flex justify-content-center">
-                                <div class="col-4">
-                                    <div class="btn btn-large btn-primary answer-mc" id="answer-mc-{{ind}}">Submit</div>
-                                </div>
-                                <div class="col-8">
-                                <p id="mc-success-text-{{ ind }}" class="d-none" style="color:palegreen">{{ success_text[ind] }}</p>
-                                <p id="mc-failure-text-{{ ind }}" class="d-none" style="color:#ffb500">Wrong answer. Try again!</p>
-                                </div>
-                            </div>
-
-                            <p class="d-none">Correct choice: <span id="mc-correct-choice-{{ind}}">{{ questions[ind]['correct']}}</span></p>
-
+                            <button class="carousel-control-prev" type="button" data-bs-target="#slide" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon"></span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#slide" data-bs-slide="next">
+                                <span class="carousel-control-next-icon"></span>
+                            </button>
                         </div>
-                    {% endfor %}
-                </div>
-
-                <button class="carousel-control-prev" type="button" data-bs-target="#slide" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon"></span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#slide" data-bs-slide="next">
-                    <span class="carousel-control-next-icon"></span>
-                </button>
-
-            </div>
-
-
-
-
-
-    </div>
+                    </div>
 
 {% endblock %}
 

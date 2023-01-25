@@ -36,6 +36,7 @@ window.onload = function(){
             highlight = 'bg-warning';
         }
         let svgItem = svgDoc.getElementById(`circ-num-${u}`);
+        let myCirc = svgDoc.getElementById(`circ${u}`);
         $(svgItem).on('mouseover',()=>{
             console.log('in');
             $(`#game-card-${u}`).removeClass("bg-secondary").addClass(highlight);
@@ -44,7 +45,14 @@ window.onload = function(){
             $(`#game-card-${u}`).removeClass(highlight).addClass('bg-secondary');
     
         })
-            
+
+        $(`#game-card-${u}`).on('mouseover',()=>{
+            svgItem.setAttribute('transform-origin',`${myCirc.getAttribute('cx')} ${myCirc.getAttribute('cy')}`);
+            svgItem.setAttribute('transform','scale(1.2)');
+        }).on('mouseout',()=>{
+            svgItem.setAttribute('transform','');
+        })
+
         }
     
 
@@ -71,4 +79,6 @@ for (let num=1;num<=8;num++) {
             $(`#game-card-${num}`).removeClass(highlight).addClass('bg-secondary');
         }
     )
+
+
 }

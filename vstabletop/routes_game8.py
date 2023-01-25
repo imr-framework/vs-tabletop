@@ -4,19 +4,23 @@ from __main__ import app, login_manager, db, socketio
 from vstabletop.forms import Game8Form
 from vstabletop.workers.game8_worker import game8_worker_project, game8_worker_load
 import vstabletop.utils as utils
+from vstabletop.info import GAME8_INSTRUCTIONS, GAME8_BACKGROUND
+from vstabletop.utils import fetch_all_game_questions
 
 @app.route('/games/8',methods=["GET","POST"])
 def game8():
     info = session['game8']
     j1 = game8_worker_project(info, default=True)
     j2, __, __ = game8_worker_load(info,default=True)
-
     game8form = Game8Form()
+    questions, success_text, uses_images = fetch_all_game_questions(8)
 
 
     return render_template('game8.html',template_title="Puzzled by Projection II",template_intro_text="Backward puzzle",
                            template_game_form=game8form,game_num=8,
-                           graphJSON_image=j1, graphJSON_options=j2)
+                           graphJSON_image=j1, graphJSON_options=j2,
+                            questions=questions, success_text=success_text, uses_images=uses_images,
+                           instructions=GAME8_INSTRUCTIONS, background=GAME8_BACKGROUND)
 
 
 @socketio.on("Draw new 3D model")
@@ -121,3 +125,34 @@ def check_answer(answer):
         socketio.emit("Correct")
     else:
         socketio.emit("Wrong")
+
+
+@socketio.on("game 8 question answered")
+def update_mc_progress(msg):
+    status = session['game8']['mc_status_list']
+    status[int(msg['ind'])] = bool(msg['correct'])
+
+    utils.update_session_subdict(session, 'game8', {'mc_status_list': status})
+
+    session['game8']['progress'].num_correct = sum(status)
+    session['game8']['progress'].update_stars()
+
+    print('Game 8 progress updated: ', session['game8']['progress'])
+
+    socketio.emit('renew stars', {'stars': session['game8']['progress'].num_stars})
+
+    print('star request sent')
+
+@socketio.on('game8 update progress')
+def game8_update_progress(msg):
+    task = int(msg['task'])
+    # Only update if there is progress (no backtracking)
+    if task > session['game8']['task_completed']:
+        utils.update_session_subdict(session, 'game8', {'task_completed': task})
+        print('Task ', session['game8']['task_completed'], ' completed for game 8')
+
+        # Update database object
+        session['game8']['progress'].num_steps_complete = task
+        session['game8']['progress'].update_stars()
+        print('Game 8 progress updated: ', session['game8']['progress'])
+        socketio.emit('renew stars', {'stars': session['game8']['progress'].num_stars})

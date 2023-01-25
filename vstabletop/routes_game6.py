@@ -4,7 +4,8 @@ from __main__ import app, login_manager, db, socketio
 from vstabletop.workers.game6_worker import game6_worker_sim,game6_worker_map,initialize_phantom, calculate_circle
 from vstabletop.forms import Game6Form
 import vstabletop.utils as utils
-from vstabletop.info import GAME6_INFO
+from vstabletop.info import GAME6_INFO, GAME6_BACKGROUND, GAME6_INSTRUCTIONS
+from vstabletop.utils import fetch_all_game_questions
 
 DEFAULT_TIS = [5,10,20,50,100,500] # Seconds
 DEFAULT_TES = [8,16,24,32,64,128] # Seconds
@@ -14,10 +15,14 @@ def game6():
     utils.update_session_subdict(session,'game6',{'type':'sim','t1_map_TIs': DEFAULT_TIS,'t2_map_TEs': DEFAULT_TES})
     game6form = Game6Form()
     j1,j2,j3 = game6_worker_sim(session['game6'])
+    questions, success_text, uses_images = fetch_all_game_questions(6)
+
 
     return render_template('game6.html',template_title="Relaxation station",template_intro_text="Sit back and map",
                            template_game_form=game6form, game_num=6,
-                           graphJSON_left=j1, graphJSON_middle=j2, graphJSON_right=j3)
+                           graphJSON_left=j1, graphJSON_middle=j2, graphJSON_right=j3,
+                           questions=questions, success_text=success_text, uses_images=uses_images,
+                           background=GAME6_BACKGROUND, instructions=GAME6_INSTRUCTIONS)
 
 @socketio.on('Change to T1')
 def change_to_T1(payload):
@@ -153,3 +158,33 @@ def update_parameters_game6(info):
     utils.update_session_subdict(session,'game6',{info['id']:float(info['value'])})
     print('g6 param updated!',session['game6'])
 
+
+@socketio.on("game 6 question answered")
+def update_mc_progress(msg):
+    status = session['game6']['mc_status_list']
+    status[int(msg['ind'])] = bool(msg['correct'])
+
+    utils.update_session_subdict(session, 'game6', {'mc_status_list': status})
+
+    session['game6']['progress'].num_correct = sum(status)
+    session['game6']['progress'].update_stars()
+
+    print('Game 6 progress updated: ', session['game6']['progress'])
+
+    socketio.emit('renew stars', {'stars': session['game6']['progress'].num_stars})
+
+    print('star request sent')
+
+@socketio.on('game6 update progress')
+def game6_update_progress(msg):
+    task = int(msg['task'])
+    # Only update if there is progress (no backtracking)
+    if task > session['game6']['task_completed']:
+        utils.update_session_subdict(session, 'game6', {'task_completed': task})
+        print('Task ', session['game6']['task_completed'], ' completed for game 6')
+
+        # Update database object
+        session['game6']['progress'].num_steps_complete = task
+        session['game6']['progress'].update_stars()
+        print('Game 6 progress updated: ', session['game6']['progress'])
+        socketio.emit('renew stars', {'stars': session['game6']['progress'].num_stars})

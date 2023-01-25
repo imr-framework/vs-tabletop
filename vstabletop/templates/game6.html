@@ -76,7 +76,7 @@
                         aria-controls="v-tabs-t1"
                         aria-selected="true"
                         >
-                          <span class="h4">T1</span>
+                          <span class="h4">T<sub>1</sub></span>
                       </a
                       >
                       <a
@@ -88,7 +88,7 @@
                         aria-controls="v-tabs-t2"
                         aria-selected="false"
                         >
-                          <span class="h4">T2</span>
+                          <span class="h4">T<sub>2</sub></span>
                       </a
                       >
                     </div>
@@ -113,7 +113,7 @@
                               <div class="card-body">
                                   <div class="row">
                                     <div class="col-4">
-                                        {{ template_game_form.t1sim_T1_field.label(class="form-label") }}
+                                        <label for="t1_sim" class="form-label">T<sub>1</sub> (ms)</label>
                                     </div>
                                     <div class="col-8">
                                         {{ template_game_form.t1sim_T1_field(class="form-control session-input",id="t1_sim") }}
@@ -241,9 +241,9 @@
                                                     <div class="col h-50">
                                                         <div class="btn-group shadow-none">
                                                           <input type="radio" name="t1map-disp-options" class="btn-check" id="t1-map-disp" autocomplete="off" checked>
-                                                          <label class="btn btn-outline-primary" for="t1-map-disp">T1 map</label>
+                                                          <label class="btn btn-outline-primary" for="t1-map-disp">T<sub>1</sub> map</label>
                                                           <input type="radio" name="t1map-disp-options" class="btn-check" id="t1-pht-disp" autocomplete="off">
-                                                          <label class="btn btn-outline-primary" for="t1-pht-disp">T1 phantom</label>
+                                                          <label class="btn btn-outline-primary" for="t1-pht-disp">T<sub>1</sub> phantom</label>
 
                                                         </div>
                                                     </div>
@@ -277,7 +277,7 @@
                                     <div class="card-body">
                                         <div class="row">
                                             <div class="col-4">
-                                                {{ template_game_form.t2sim_T2_field.label(class="form-label") }}
+                                                <label for="t2_sim" class="form-label">T<sub>2</sub> (ms)</label>
                                             </div>
                                             <div class="col-8">
                                                 {{ template_game_form.t2sim_T2_field(class="form-control session-input",id="t2_sim") }}
@@ -401,9 +401,9 @@
                                                     <div class="col h-50">
                                                         <div class="btn-group shadow-none">
                                                           <input type="radio" name="t2map-disp-options" class="btn-check" id="t2-map-disp" autocomplete="off" checked>
-                                                          <label class="btn btn-outline-primary" for="t2-map-disp">T2 map</label>
+                                                          <label class="btn btn-outline-primary" for="t2-map-disp">T<sub>2</sub> map</label>
                                                           <input type="radio" name="t2map-disp-options" class="btn-check" id="t2-pht-disp" autocomplete="off">
-                                                          <label class="btn btn-outline-primary" for="t2-pht-disp">T2 phantom</label>
+                                                          <label class="btn btn-outline-primary" for="t2-pht-disp">T<sub>2</sub> phantom</label>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -434,6 +434,183 @@
 
 {% endblock %}
 
+{% block questions %}
+    <div class="card text-white bg-secondary mb-3 text-center" style="color: grey">
+                        <div id="slide" class="carousel slide" data-bs-interval="false">
+                            <div class="carousel-inner">
+                                <form action="/games/6" method="POST">
+                                {% for ind in range(success_text | length) %}
+                                    {% set letters = ['a','b','c','d'] %}
+                                    {% set active_text = 'active' if ind==0 else '' %}
+                                    <div class="carousel-item {{active_text}}">
+                                    <br>
+                                        <span> Q{{ ind + 1 }}:</span>
+                                        {{ questions[ind]['text'] }}
+
+                                        {% if (questions[ind]['main_image_path']) | length > 0 %}
+                                        <br><img src=".{{ questions[ind]['main_image_path']}}" alt="question image" style="height:150px; width:auto">
+                                        {% endif %}
+
+                                        {% for ind2 in range(questions[ind]['choices'] | length) %}
+                                            {% if not uses_images[ind] %}
+                                            <br><input type="radio" class="q{{ind}}-choice" id="q{{ind}}-{{letters[ind2]}}" name="mc-question" value="{{ letters[ind2] }}">
+                                            <label for="q{{ind}}-{{letters[ind2]}}">{{ questions[ind]['choices'][ind2] }}</label>
+                                            {% else %}
+                                            <input type="radio"  class="q{{ind}}-choice" id="q{{ind}}-{{letters[ind2] }}" name="mc-question" value="{{ letters[ind2] }}">
+                                            <label for="q{{ind}}-{{letters[ind2]}}"><img src=".{{ questions[ind]['choices'][ind2] }}" style="height: 150px; width:150px;"></label>
+                                            {% endif %}
+                                        {% endfor %}
+
+                                        <p class="d-none">Correct choice: <span id="mc-correct-choice-{{ind}}">{{ questions[ind]['correct']}}</span></p>
+
+
+                                        <br>
+
+                                        <div class="btn btn-large btn-primary answer-mc" id="answer-mc-{{ind}}">Submit</div>
+                                        <p id="mc-success-text-{{ind}}" class="d-none" style="color:palegreen">{{ success_text[ind] }}</p>
+                                        <p id="mc-failure-text-{{ind}}" class="d-none" style="color:#ffb500">Wrong answer, try again!</p>
+                                    </div>
+
+                                {% endfor %}
+
+                                </form>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#slide" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon"></span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#slide" data-bs-slide="next">
+                                <span class="carousel-control-next-icon"></span>
+                            </button>
+                </div>
+
+
+
+
+
+                 </div>
+{% endblock %}
+
+
+{% block tasks %}
+       <div class="card-body">
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar"
+                             style="width: {{ session['game6']['task_completed']*25 }}%"
+                             aria-valuenow="0" aria-valuemin="{{ session['game6']['task_completed']*25 }}" aria-valuemax="100"></div>
+
+                    </div>
+                    <!-- Show tab for each lab procedure -->
+                    <ul class="nav nav-tabs nav-justified" id="game6-tab" role="tablist">
+                        {% for tab in instructions['tabs'] %}
+                            {% if loop.index == ([session['game6']['task_completed'] + 1,4] | min) %}
+                                {% set active = 'active' %}
+                            {% else %}
+                                {% set active = '' %}
+                            {% endif %}
+
+                            {% set disabled = 'disabled' if loop.index > 1 + session['game6']['task_completed'] else '' %}
+                            {% set aria_disabled = (disabled == 'disabled') %}
+
+                            <li class="nav-item" role="presentation">
+                                <button class="col nav-link {{ active }} {{ disabled }} text-info task_tab" id="task{{ loop.index }}-tab" data-bs-toggle="tab" data-bs-target="#step{{ loop.index }}"
+                                        type="button" role="tab"  aria-controls="step{{ loop.index }}"
+                                        aria-selected="{{ loop.index==1 }}" aria-disabled= "{{ aria_disabled }}">
+                                    {{ tab }}
+                                </button>
+                            </li>
+                        {% endfor %}
+                    </ul>
+
+                    <!-- Instructions -->
+                    <!-- Show content for each lab procedure -->
+                    <div class="tab-content" id="game6-tab-content">
+                        {% for task, task_details in instructions['tasks'].items() %}
+                            {% if loop.index == ([session['game6']['task_completed'] + 1 , 4] | min) %}
+                                {% set show_text = 'show' %}
+                                {% set active_text = 'active' %}
+                            {% else %}
+                                {% set show_text = '' %}
+                                {% set active_text = '' %}
+                            {% endif %}
+                            <div class="tab-pane fade {{ show_text }} {{ active_text }}" id="step{{ loop.index }}" role="tabpanel" aria-labelledby="step{{ loop.index }}-tab">
+                                <div class="h4 text-info">{{ instructions['titles'][loop.index0] }}</div>
+
+                                <ul class="accordion" id="instructions-accordion">
+                                {% set task_index = loop.index %}
+                                {% for step, details in instructions['explorations'][loop.index0].items() %}
+                                      <li class="accordion-item">
+                                          <div class="accordion-header row d-flex justify-content-center" id="heading{{ loop.index }}">
+                                              <div class="col-2 d-flex align-items-center justify-content-center">
+                                              <input class="form-check-input task-{{ task_index }}-check" type="checkbox" value="" aria-label="">
+                                              </div>
+                                            <div class="col-10">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ loop.index }}" aria-expanded="false" aria-controls="collapse{{ loop.index }}">
+                                                <strong>{{ step }}</strong>
+                                            </button>
+                                          </div>
+                                          </div>
+                                          <div class="accordion-collapse collapse" id="collapse{{ loop.index }}" aria-labelledby="heading{{ loop.index }}" data-bs-parent="#instructions-accordion">
+                                              <div class="accordion-body">
+                                                    <span>{{ details }}</span>
+                                              </div>
+                                          </div>
+                                      </li>
+                                {% endfor %}
+
+                                <!-- Special item -->
+                                    <li class="accordion-item text-info">
+                                          <div class="accordion-header row d-flex justify-content-center" id="heading-final-{{ task_index }}">
+
+                                              <div class="col-2 d-flex align-items-center justify-content-center">
+                                                <input class="form-check-input task-{{ task_index }}-check" id="final-task-of-{{ task_index }}" type="checkbox">
+                                              </div>
+
+                                            <div class="col-10">
+                                            <button class="accordion-button collapsed final-task-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-final-{{ task_index }}" aria-expanded="false" aria-controls="collapse{{ loop.index }}">
+                                                <strong class="text-info">{{ task }}</strong>
+                                            </button>
+                                          </div>
+                                          </div>
+                                          <div class="accordion-collapse collapse" id="collapse-final-{{ task_index }}" aria-labelledby="heading-final-{{ task_index }}" data-bs-parent="#instructions-accordion">
+                                              <div class="accordion-body">
+                                                    <span>{{ task_details }}</span>
+                                              </div>
+                                          </div>
+                                      </li>
+                                </li>
+                                </ul>
+
+
+
+                                <div class="btn btn-info task-next-button" id="task{{ loop.index }}-next">Next</div>
+
+                                <p class="d-none text-danger" id="task-message-{{ task_index }}">
+                                    Complete and check all steps to move on.
+                                </p>
+                                {% set dnone = '' if session['game6']['task_completed'] >= task_index else 'd-none' %}
+
+                                {% set success_message = 'This step has been completed' if task_index < 4 else
+                                        'All steps complete. Congratulations! To earn the remaining stars, do the quiz.' %}
+
+                                <p class="{{ dnone }} text-success" id="task-success-{{ task_index }}">
+                                    {{ success_message }}
+                                    {% if task_index == 4 %}
+                                        <a class="btn btn-large btn-success" href="/games/7"> Next game! </a>
+                                    {% endif %}
+                                </p>
+
+
+                            </div>
+
+
+
+                        {% endfor %}
+
+
+
+                    </div>
+                    </div>
+{% endblock %}
 
 {% block additional_imports %}
     <script src="../static/game6.js"></script>

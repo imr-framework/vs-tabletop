@@ -1,332 +1,197 @@
 {% extends "base.html" %}
 {% block content %}
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=Neo, initial-scale=1.0">
-    <title>Tabs</title>
-</head>
 
-{% if session['game3']['completed_task'] == 3 %}
-    {% if session['game3']['P3_q'] == "CSF" %}
-    <div class="seperate"><canvas id="canvas"></canvas></div>
-    {% endif %}
-{% endif %}
-        <div class="row h-100">
-            <div class="col-5 h-100">
-                <div class="row">
-                 <div class="progress">
-                 {% set perc = session['game3']['completed_task']*100/3 %}
-                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-info"
-                         style="width: {{ perc }}%" aria-valuenow="{{ perc }}" aria-valuemin="0" aria-valuemax="100"></div>
-                 </div>
-                <div class="tabs">
-       {% if session['game3']['current_task'] == 1 %}
-          {% set task1_status = 'is-active' %}
-     {% elif session['game3']['current_task'] == 2 %}
-          {% set task2_status = 'is-active' %}
-     {% elif session['game3']['current_task'] == 3 %}
-          {% set task3_status = 'is-active' %}
-     {% elif session['game3']['current_task'] == 4 %}
+     <div class="row h-100">
+{#                <div class="row">#}
+{#                 <div class="progress">#}
+{#                 {% set perc = session['game3']['completed_task']*100/3 %}#}
+{#                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-info"#}
+{#                         style="width: {{ perc }}%" aria-valuenow="{{ perc }}" aria-valuemin="0" aria-valuemax="100"></div>#}
+{#                 </div>#}
+{#                <div class="tabs">#}
+{#       {% if session['game3']['current_task'] == 1 %}#}
+{#          {% set task1_status = 'is-active' %}#}
+{#     {% elif session['game3']['current_task'] == 2 %}#}
+{#          {% set task2_status = 'is-active' %}#}
+{#     {% elif session['game3']['current_task'] == 3 %}#}
+{#          {% set task3_status = 'is-active' %}#}
+{#     {% elif session['game3']['current_task'] == 4 %}#}
+{##}
+{##}
+{#    {% endif %}#}
+{#    {% if session['game3']['current_task'] == 1 %}#}
+{#      <div class="row tabs__head" style="width: 100%">#}
+{#        <div class="col-4 tabs__toggle {{ task1_status }}">#}
+{#          <span class="tabs__name">T1, T2, and PD</span>#}
+{#        </div>#}
+{#      </div>#}
+{#    {% elif session['game3']['current_task'] == 2 %}#}
+{#        <div class="row tabs__head" style="width: 100%">#}
+{#        <div class="col-4 tabs__toggle {{ task1_status }}">#}
+{#          <span class="tabs__name">T1, T2, and PD</span>#}
+{#        </div>#}
+{#            <div class="col-4 tabs__toggle {{ task2_status }}">#}
+{#          <span class="tabs__name">TR, TE, and FA</span>#}
+{#        </div>#}
+{#        </div>#}
+{#    {% elif session['game3']['current_task'] == 3 %}#}
+{#        <div class="row tabs__head" style="">#}
+{#        <div class="col-4 tabs__toggle {{ task1_status }}">#}
+{#          <span class="tabs__name">T1, T2, and PD</span>#}
+{#        </div>#}
+{#            <div class="col-4 tabs__toggle {{ task2_status }}">#}
+{#          <span class="tabs__name">TR, TE, and FA</span>#}
+{#        </div>#}
+{#        <div class="col-4 tabs__toggle {{ task3_status }}">#}
+{#          <span class="tabs__name">CSF, GM, and WM</span>#}
+{#        </div>#}
+{#        </div>#}
+{#    {% endif %}#}
+{#      <div class="tabs__body" style="">#}
+{#          {% if session['game3']['current_task'] == 1 %}#}
+{#          {% set task1_status = 'is-active' %}#}
+{#     {% elif session['game3']['current_task'] == 2 %}#}
+{#          {% set task2_status = 'is-active' %}#}
+{#     {% elif session['game3']['current_task'] == 3 %}#}
+{#          {% set task3_status = 'is-active' %}#}
+{#    {% endif %}#}
+{#        <div class="tabs__content {{ task1_status }}">#}
+{#          <h2 class="tabs__title">Instructions</h2>#}
+{#          <p class="tabs__text">#}
+{#              Explore each of the MR weighted scan types on Panel 1 on the right. Hit "RUN" and note how contrast changes with each of them. Refer to the Messages Panel for further directions.#}
+{#          </p>#}
+{#          <h2 class="tabs__title">Task</h2>#}
+{#            <form action="/games/3" method="POST">#}
+{#            <p class="tabs_text">#}
+{#                Answer the question below to test your knowledge and move on to the next task!#}
+{#                <br>Which scan makes CSF look dark?#}
+{#                <div class="card-body btn-group">#}
+{#                {% for subfield in G3Form.P1_q %}#}
+{#                                {% if subfield.id == "P1_q" %}#}
+{#                                    {{ subfield(class="btn-check ", autocomplete="off",checked=session['game3']['P1_q']=='T1') }}#}
+{#                                {% elif subfield.id == "P1_q-1" %}#}
+{#                                    {{ subfield(class="btn-check ", autocomplete="off",checked=session['game3']['P1_q']=='T2') }}#}
+{#                                {% else %}#}
+{#                                    {{ subfield(class="btn-check ", autocomplete="off", checked=session['game3']['P1_q']=='PD') }}#}
+{#                                {% endif %}#}
+{##}
+{#                                {{ subfield.label(class="btn btn-outline-primary d-flex align-items-center justify-content-center") }}#}
+{##}
+{#                            {% endfor %}#}
+{#                </div>#}
+{#                <br>#}
+{#                <button type="submit" class="btn btn-primary">Submit</button>#}
+{#            </p>#}
+{#            </form>#}
+{##}
+{#        </div>#}
+{#        <form class="tabs__content {{ task2_status }}">#}
+{#          <h2 class="tabs__title">Instructions</h2>#}
+{#          <p class="tabs__text">#}
+{#              Experiment with different TR, TE, and FA values to observe how each changes the contrast.#}
+{#              Test out the following TR, TE, and FA values on the second panel.#}
+{#              <ul>#}
+{#                    <li>1. A high TR (4000 - 5000 ms) with a low TE (0 - 150 ms)</li>#}
+{#                    <li>2. A low TR (500 - 1500 ms) with a low TE (0 - 150 ms)</li>#}
+{#                    <li>3. A high TR (4000 - 5000 ms) with a high TE (350 - 450 ms)</li>#}
+{#              </ul>#}
+{#          </p>#}
+{#          <h2 class="tabs__title">Task</h2>#}
+{#            <p class="tabs__text">#}
+{#                Answer the question below to continue to next task!#}
+{#                <br>At TR = 500 ms, TE = 0 ms, what happens as the flip angle approaches 90 degrees?#}
+{#                <div class="card-body btn-group">#}
+{#                {% for subfield in G3Form.P2_q %}#}
+{#                                {% if subfield.id == "P2_q-0" %}#}
+{#                                    {{ subfield(class="btn-check ", autocomplete="off",checked=session['game3']['P2_q']=='Contrast Decreases') }}#}
+{#                                {% elif subfield.id == "P2_q-1" %}#}
+{#                                    {{ subfield(class="btn-check ", autocomplete="off",checked=session['game3']['P2_q']=='Contrast Increases') }}#}
+{#                                {% endif %}#}
+{#                                {{ subfield.label(class="btn btn-outline-primary d-flex align-items-center justify-content-center") }}#}
+{##}
+{#                            {% endfor %}#}
+{#            </div>#}
+{#                <br>#}
+{#                <button type="submit" class="btn btn-primary">#}
+{#                    Submit#}
+{#                </button>#}
+{#            </p>#}
+{#        </div>#}
+{#        <div class="tabs__content {{ task3_status }}">#}
+{#          <h2 class="tabs__title">Instructions</h2>#}
+{#          <p class="tabs__text">#}
+{#              1. Click through preset T1w, T2w, and PDw scans on the first panel and hit "RUN" to observe how signal intensities of#}
+{#              CSF, GM, and WM change in Panel 3.#}
+{#              <br> 2. Change each value on Panel 2, hit "RUN", and observe how it changes the signal intensities of#}
+{#              CSF, GM, and WM in Panel 3.#}
+{#              <br> 3. Answer the queries in the Question panel to earn up to five stars!#}
+{#          </p>#}
+{#            <h2 class="tabs__title">Task</h2>#}
+{#            <form action="/games/3" method="POST">#}
+{#            <p class="tabs__text">#}
+{#                Answer the question below:#}
+{#                <br> In a T2 weighted scan, which tissue type results in the most signal intensity?#}
+{#                <div class="card-body btn-group">#}
+{#                {% for subfield in G3Form.P3_q %}#}
+{#                                {% if subfield.id == "P3_q" %}#}
+{#                                    {{ subfield(class="btn-check ", autocomplete="off",checked=session['game3']['P3_q']=='CSF') }}#}
+{#                                {% elif subfield.id == "P3_q-1" %}#}
+{#                                    {{ subfield(class="btn-check ", autocomplete="off",checked=session['game3']['P3_q']=='GM') }}#}
+{#                                {% else %}#}
+{#                                    {{ subfield(class="btn-check ", autocomplete="off",checked=session['game3']['P3_q']=='WM') }}#}
+{#                                {% endif %}#}
+{#                                {{ subfield.label(class="btn btn-outline-primary d-flex align-items-center justify-content-center") }}#}
+{##}
+{#                            {% endfor %}#}
+{#            </div>#}
+{#                <br>#}
+{#                            <button type="submit" class="btn btn-primary">Submit</button>#}
+{##}
+{##}
+{#            </p>#}
+{#            </form>#}
+{#        </div>#}
+{#      </div>#}
+{#    </div>#}
+{#                </div>#}
+{##}
+{##}
+{#            </div>#}
 
+             <div class="col mh-100">
+{#                <div class="card row bg-info">#}
+{#                         <div class="card-header text-light"><b>Messages</b></div>#}
+{#                         <div class="card-body text-light">#}
+{##}
+{#                             {% if session['game3']['completed_task'] == 3 %}#}
+{#                                Answer the questions to earn more stars!#}
+{#                                <br> or#}
+{#                                <br><a href="/games/5" class="btn btn-success btn-large">Continue to Game 5!</a>#}
+{#                             {% elif session['game3']['current_task'] == 1 %}#}
+{#                             Click on T1, T2, or PD values to observe their impact on the scan! Click "RUN" to apply the scan type!#}
+{#                             {% elif session['game3']['current_task'] == 2 %}#}
+{#                             Alter TR, TE, and FA values to observe their impact on the scan! Click "RUN" to apply the scan type!#}
+{#                             {% elif session['game3']['current_task'] == 3 %}#}
+{#                             Change specific TR, TE, and FA values and observe signal intensity changes on the bar graph!#}
+{##}
+{#                             {% endif %}#}
+{#                         </div>#}
+{#                     </div>#}
 
-    {% endif %}
-    {% if session['game3']['current_task'] == 1 %}
-      <div class="row tabs__head" style="width: 100%">
-        <div class="col-4 tabs__toggle {{ task1_status }}">
-          <span class="tabs__name">T1, T2, and PD</span>
-        </div>
-      </div>
-    {% elif session['game3']['current_task'] == 2 %}
-        <div class="row tabs__head" style="width: 100%">
-        <div class="col-4 tabs__toggle {{ task1_status }}">
-          <span class="tabs__name">T1, T2, and PD</span>
-        </div>
-            <div class="col-4 tabs__toggle {{ task2_status }}">
-          <span class="tabs__name">TR, TE, and FA</span>
-        </div>
-        </div>
-    {% elif session['game3']['current_task'] == 3 %}
-        <div class="row tabs__head" style="">
-        <div class="col-4 tabs__toggle {{ task1_status }}">
-          <span class="tabs__name">T1, T2, and PD</span>
-        </div>
-            <div class="col-4 tabs__toggle {{ task2_status }}">
-          <span class="tabs__name">TR, TE, and FA</span>
-        </div>
-        <div class="col-4 tabs__toggle {{ task3_status }}">
-          <span class="tabs__name">CSF, GM, and WM</span>
-        </div>
-        </div>
-    {% endif %}
-      <div class="tabs__body" style="">
-          {% if session['game3']['current_task'] == 1 %}
-          {% set task1_status = 'is-active' %}
-     {% elif session['game3']['current_task'] == 2 %}
-          {% set task2_status = 'is-active' %}
-     {% elif session['game3']['current_task'] == 3 %}
-          {% set task3_status = 'is-active' %}
-    {% endif %}
-        <div class="tabs__content {{ task1_status }}">
-          <h2 class="tabs__title">Instructions</h2>
-          <p class="tabs__text">
-              Explore each of the MR weighted scan types on Panel 1 on the right. Hit "RUN" and note how contrast changes with each of them. Refer to the Messages Panel for further directions.
-          </p>
-          <h2 class="tabs__title">Task</h2>
-            <form action="/games/3" method="POST">
-            <p class="tabs_text">
-                Answer the question below to test your knowledge and move on to the next task!
-                <br>Which scan makes CSF look dark?
-                <div class="card-body btn-group">
-                {% for subfield in G3Form.P1_q %}
-                                {% if subfield.id == "P1_q" %}
-                                    {{ subfield(class="btn-check ", autocomplete="off",checked=session['game3']['P1_q']=='T1') }}
-                                {% elif subfield.id == "P1_q-1" %}
-                                    {{ subfield(class="btn-check ", autocomplete="off",checked=session['game3']['P1_q']=='T2') }}
-                                {% else %}
-                                    {{ subfield(class="btn-check ", autocomplete="off", checked=session['game3']['P1_q']=='PD') }}
-                                {% endif %}
-
-                                {{ subfield.label(class="btn btn-outline-primary d-flex align-items-center justify-content-center") }}
-
-                            {% endfor %}
-                </div>
-                <br>
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </p>
-            </form>
-
-        </div>
-        <div class="tabs__content {{ task2_status }}">
-          <h2 class="tabs__title">Instructions</h2>
-          <p class="tabs__text">
-              Experiment with different TR, TE, and FA values to observe how each changes the contrast.
-              Test out the following TR, TE, and FA values on the second panel.
-              <ul>
-                    <li>1. A high TR (4000 - 5000 ms) with a low TE (0 - 150 ms)</li>
-                    <li>2. A low TR (500 - 1500 ms) with a low TE (0 - 150 ms)</li>
-                    <li>3. A high TR (4000 - 5000 ms) with a high TE (350 - 450 ms)</li>
-              </ul>
-          </p>
-          <h2 class="tabs__title">Task</h2>
-            <form action="/games/3" method="POST">
-            <p class="tabs__text">
-                Answer the question below to continue to next task!
-                <br>At TR = 500 ms, TE = 0 ms, what happens as the flip angle approaches 90 degrees?
-                <div class="card-body btn-group">
-                {% for subfield in G3Form.P2_q %}
-                                {% if subfield.id == "P2_q-0" %}
-                                    {{ subfield(class="btn-check ", autocomplete="off",checked=session['game3']['P2_q']=='Contrast Decreases') }}
-                                {% elif subfield.id == "P2_q-1" %}
-                                    {{ subfield(class="btn-check ", autocomplete="off",checked=session['game3']['P2_q']=='Contrast Increases') }}
-                                {% endif %}
-                                {{ subfield.label(class="btn btn-outline-primary d-flex align-items-center justify-content-center") }}
-
-                            {% endfor %}
-            </div>
-                <br>
-                <button type="submit" class="btn btn-primary">Submit</button>
-
-            </p>
-            </form>
-        </div>
-        <div class="tabs__content {{ task3_status }}">
-          <h2 class="tabs__title">Instructions</h2>
-          <p class="tabs__text">
-              1. Click through preset T1w, T2w, and PDw scans on the first panel and hit "RUN" to observe how signal intensities of
-              CSF, GM, and WM change in Panel 3.
-              <br> 2. Change each value on Panel 2, hit "RUN", and observe how it changes the signal intensities of
-              CSF, GM, and WM in Panel 3.
-              <br> 3. Answer the queries in the Question panel to earn up to five stars!
-          </p>
-            <h2 class="tabs__title">Task</h2>
-            <form action="/games/3" method="POST">
-            <p class="tabs__text">
-                Answer the question below:
-                <br> In a T2 weighted scan, which tissue type results in the most signal intensity?
-                <div class="card-body btn-group">
-                {% for subfield in G3Form.P3_q %}
-                                {% if subfield.id == "P3_q" %}
-                                    {{ subfield(class="btn-check ", autocomplete="off",checked=session['game3']['P3_q']=='CSF') }}
-                                {% elif subfield.id == "P3_q-1" %}
-                                    {{ subfield(class="btn-check ", autocomplete="off",checked=session['game3']['P3_q']=='GM') }}
-                                {% else %}
-                                    {{ subfield(class="btn-check ", autocomplete="off",checked=session['game3']['P3_q']=='WM') }}
-                                {% endif %}
-                                {{ subfield.label(class="btn btn-outline-primary d-flex align-items-center justify-content-center") }}
-
-                            {% endfor %}
-            </div>
-                <br>
-                            <button type="submit" class="btn btn-primary">Submit</button>
-
-
-            </p>
-            </form>
-        </div>
-      </div>
-    </div>
-                </div>
-                 <div class="card row bg-info">
-                         <div class="card-header text-light"><b>Messages</b></div>
-                         <div class="card-body text-light">
-
-                             {% if session['game3']['completed_task'] == 3 %}
-                                Answer the questions to earn more stars!
-                                <br> or
-                                <br><a href="/games/5" class="btn btn-success btn-large">Continue to Game 5!</a>
-                             {% elif session['game3']['current_task'] == 1 %}
-                             Click on T1, T2, or PD values to observe their impact on the scan! Click "RUN" to apply the scan type!
-                             {% elif session['game3']['current_task'] == 2 %}
-                             Alter TR, TE, and FA values to observe their impact on the scan! Click "RUN" to apply the scan type!
-                             {% elif session['game3']['current_task'] == 3 %}
-                             Change specific TR, TE, and FA values and observe signal intensity changes on the bar graph!
-
-                             {% endif %}
-                         </div>
-                     </div>
-
-
-            </div>
-             <div class="col-7 mh-100">
-
-                 <form action="/games/3" method="POST">
                     {{ G3Form.hidden_tag() }}
                  <div class="row">
-                <div class="card">
+                    <div class="col-6 card">
                     <div class="card-header"><b>Image</b></div>
                     <div class="card-body">
-                        <div class="chart" id="chart-G3">
+                        <div class="chart d-flex justify-content-center" id="chart-G3">
                         </div>
-                        <button type="submit" class="btn btn-large btn-success">RUN</button>
+
                     </div>
                 </div>
-                 </div>
-                 <div class="row">
-                 <div class="card">
-                     <div class="card-header">
-                         <b>Panel 1:</b>
-                         <b>T1</b>
-                         <button type="button" class="btn btn-sm shadow-none"
-                                 data-mdb-container="body"
-                                 data-mdb-toggle="popover"
-                                 data-mdb-placement="left" title="T1"
-                                 data-mdb-content="T1 tells us how long it takes for the z-component of the M vector to regrow from zero to about 63% of its maximum. Highlights fat and proteins">
-                                <i class="bi bi-question-circle-fill"></i></button>
-                        <b>T2</b>
-                         <button type="button" class="btn btn-sm shadow-none"
-                                 data-mdb-container="body"
-                                 data-mdb-toggle="popover"
-                                 data-mdb-placement="left" title="T2"
-                                 data-mdb-content="T2 tells us how long it takes for the xy-component of the M vector to decay from 100% to about 37%. Different tissues have different T2 values.">
-                                <i class="bi bi-question-circle-fill"></i></button>
-                         <b>or PD</b>
-                             <button type="button" class="btn btn-sm shadow-none"
-                                 data-mdb-container="body"
-                                 data-mdb-toggle="popover"
-                                 data-mdb-placement="left"
-                                 title="Proton density"
-                                 data-mdb-content="Proton density tells us how many protons there are in a unit volume tissue. More signal is generated from tissues with higher PD.">
-                                <i class="bi bi-question-circle-fill"></i></button>
-                         <b>weighted scan</b>
-                     </div>
-                     <div class="card-body h-50">
-                     <div class="btn-group">
-                         {% for subfield in G3Form.options %}
-                                {% if subfield.id == "options" %}
-                                    {{ subfield(class="btn-check", autocomplete="off",checked=session['game3']['options']=='T1') }}
-                                {% elif subfield.id == "options-1" %}
-                                    {{ subfield(class="btn-check", autocomplete="off",checked=session['game3']['options']=='T2') }}
-                                {% else %}
-                                    {{ subfield(class="btn-check ", autocomplete="off", checked=session['game3']['options']=='PD') }}
-                                {% endif %}
-                                {{ subfield.label(class="btn btn-outline-primary d-flex align-items-center justify-content-center") }}
 
-                            {% endfor %}
-                     </div>
-                     </div>
-                 </div>
-                 </div>
-                <div class="row">
-                 <div class="card">
-                     <div class="card-header"><b>Panel 2: Sequence Parameters</b></div>
-                     <div class="card-body pe-5">
-                         <div class="row">
-                             <div class="col-3">
-                                 <b>{{ G3Form.TR.label(class="form-label") }}</b>
-                                 <button type="button" class="btn btn-sm shadow-none"
-                                         data-mdb-container="body"
-                                         data-mdb-toggle="popover"
-                                         data-mdb-placement="left" title="Repetition Time (TR)"
-                                         data-mdb-content="TR is the time difference between one set of RF pulses and the next set,
-                                                which we use to repeatedly excite the protons. This ensures that the signal is consistent as we build
-                                                up an MR image.">
-                                <i class="bi bi-question-circle-fill"></i></button>
-                             </div>
-
-                             <div class="col-9">
-                                 <div class="row">
-                                     {{ G3Form.TR(class="form-range", id='TR', step=0.1, value=session['game3']['TR']) }}
-                                 </div>
-                                 <div class="ticks text-primary">
-                                     {% for angle in [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000] %}
-                                     <span class="tick">{{ angle }}</span>
-                                     {% endfor %}
-                                 </div>
-                             </div>
-                         </div>
-                         <div class="row">
-                             <div class="col-3">
-                                 <b>{{ G3Form.TE.label(class="form-label") }}</b>
-                                 <button type="button" class="btn btn-sm shadow-none"
-                                         data-mdb-container="body"
-                                         data-mdb-toggle="popover"
-                                         data-mdb-placement="left"
-                                         title="Echo Time (TE)"
-                                         data-mdb-content="TE is the time difference between the time when the RF pulse arrives at the target
-                                                to the time when the signal bounces back and hits a peak">
-                                <i class="bi bi-question-circle-fill"></i></button>
-                             </div>
-                             <div class="col-9">
-                                 <div class="row">
-                                     {{ G3Form.TE(class="form-range", id="TE", step=0.1, value=session['game3']['TE']) }}
-                                 </div>
-                                 <div class="ticks text-primary">
-                                     {% for angle in [0, 50, 100, 150, 200, 250, 300, 350, 400, 450] %}
-                                     <span class="tick">{{ angle }}</span>
-                                     {% endfor %}
-                                 </div>
-                             </div>
-                         </div>
-                         <div class="row">
-                             <div class="col-3">
-                                 <b>{{ G3Form.FA.label(class="form-label") }}</b>
-                                 <button type="button" class="btn btn-sm shadow-none"
-                                         data-mdb-container="body"
-                                         data-mdb-toggle="popover"
-                                         data-mdb-placement="left" title="Flip Angle (FA)"
-                                         data-mdb-content="FA is the amount we tip the magnetization vector using an RF pulse.
-                                                    It can be measured in degrees or radians.">
-                                <i class="bi bi-question-circle-fill"></i></button>
-                             </div>
-                             <div class="col-9">
-                                 <div class="row">
-                                     {{ G3Form.FA(class="form-range", id="FA", step=5, value=session['game3']['FA']) }}
-                                 </div>
-                                 <div class="ticks text-primary">
-                                     {% for angle in [0,45,90,135,180,225,270,315,360] %}
-                                     <span class="tick">{{ angle }}</span>
-                                {% endfor %}
-                                 </div>
-                             </div>
-                         </div>
-                     </div>
-                 </div>
-                </div>
-                <div class="row">
-                 <div class="card">
+                     <div class="col-6 card">
          <div class="card-header">
-             <b>Panel 3: Signal levels for</b>
+             <b>Signal levels for</b>
              <b>CSF</b>
              <button type="button" class="btn btn-sm shadow-none"
                      data-mdb-container="body"
@@ -357,27 +222,158 @@
 
          </div>
          <div class="card-body">
-             <div class="chart" id="chart-G3-bar">
+             <div class="chart d-flex justify-content-center" id="chart-G3-bar">
              </div>
          </div>
      </div>
-                </div>
-                 </form>
-             </div>
+                 </div>
+                 <div class="row h-25">
+                          <button id="game3-run" class="col-6 btn btn-large btn-success h-100">
+                            <span class="spinner-border spinner-border-sm d-none h1" id="game3-spinner" role="status" aria-hidden="true"></span>
+                              <span class="h1">RUN</span>
+                        </button>
+                 <div class="col-6 card">
+                     <div class="card-header">
+                         <b>T1</b>
+                         <button type="button" class="btn btn-sm shadow-none"
+                                 data-mdb-container="body"
+                                 data-mdb-toggle="popover"
+                                 data-mdb-placement="left" title="T1"
+                                 data-mdb-content="T1 tells us how long it takes for the z-component of the M vector to regrow from zero to about 63% of its maximum. Highlights fat and proteins">
+                                <i class="bi bi-question-circle-fill"></i></button>
+                        <b>T2</b>
+                         <button type="button" class="btn btn-sm shadow-none"
+                                 data-mdb-container="body"
+                                 data-mdb-toggle="popover"
+                                 data-mdb-placement="left" title="T2"
+                                 data-mdb-content="T2 tells us how long it takes for the xy-component of the M vector to decay from 100% to about 37%. Different tissues have different T2 values.">
+                                <i class="bi bi-question-circle-fill"></i></button>
+                         <b>or PD</b>
+                             <button type="button" class="btn btn-sm shadow-none"
+                                 data-mdb-container="body"
+                                 data-mdb-toggle="popover"
+                                 data-mdb-placement="left"
+                                 title="Proton density"
+                                 data-mdb-content="Proton density tells us how many protons there are in a unit volume tissue. More signal is generated from tissues with higher PD.">
+                                <i class="bi bi-question-circle-fill"></i></button>
+                         <b>weighted scan</b>
+                     </div>
+                     <div class="card-body h-50">
+                     <div class="btn-group">
+                         {% for subfield in G3Form.options %}
+                                {% if subfield.id == "options" %}
+                                    {{ subfield(class="btn-check h2", autocomplete="off",checked=session['game3']['options']=='T1') }}
+                                {% elif subfield.id == "options-1" %}
+                                    {{ subfield(class="btn-check h2", autocomplete="off",checked=session['game3']['options']=='T2') }}
+                                {% else %}
+                                    {{ subfield(class="btn-check h2", autocomplete="off", checked=session['game3']['options']=='PD') }}
+                                {% endif %}
+                                {{ subfield.label(class="btn btn-outline-primary d-flex align-items-center justify-content-center") }}
 
+                            {% endfor %}
+                     </div>
+                     </div>
+                 </div>
+                 </div>
+                <div class="row">
+                 <div class="card">
+                     <div class="card-header"><b>Sequence Parameters</b></div>
+                     <div class="card-body pe-5">
+                         <div class="row">
+                             <div class="col-3">
+{#                                 <b>{{ G3Form.TR.label(class="form-label") }}</b>#}
+                                 <b><label class="form-label" for="TR">TR = <span id="TR-val">{{ session['game3']['TR'] }}</span></label> ms</b>
+                                 <button type="button" class="btn btn-sm shadow-none"
+                                         data-mdb-container="body"
+                                         data-mdb-toggle="popover"
+                                         data-mdb-placement="top" title="Repetition Time (TR)"
+                                         data-mdb-content="TR is the time difference between one set of RF pulses and the next set,
+                                                which we use to repeatedly excite the protons. This ensures that the signal is consistent as we build
+                                                up an MR image.">
+                                <i class="bi bi-question-circle-fill"></i></button>
+                             </div>
+
+                             <div class="col-9">
+                                 <div class="row">
+                                     {{ G3Form.TR(class="form-range", id='TR', step=0.1, value=session['game3']['TR']) }}
+                                 </div>
+                                 <div class="ticks text-primary">
+                                     {% for angle in [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000] %}
+                                     <span class="tick">{{ angle }}</span>
+                                     {% endfor %}
+                                 </div>
+                             </div>
+                         </div>
+                         <div class="row">
+                             <div class="col-3">
+                                 <b><label class="form-label" for="TE">TE = <span id="TE-val">{{ session['game3']['TE'] }}</span></label> ms</b>
+
+                                 <button type="button" class="btn btn-sm shadow-none"
+                                         data-mdb-container="body"
+                                         data-mdb-toggle="popover"
+                                         data-mdb-placement="left"
+                                         title="Echo Time (TE)"
+                                         data-mdb-content="TE is the time difference between the time when the RF pulse arrives at the target
+                                                to the time when the signal bounces back and hits a peak">
+                                <i class="bi bi-question-circle-fill"></i></button>
+                             </div>
+                             <div class="col-9">
+                                 <div class="row">
+                                     {{ G3Form.TE(class="form-range", id="TE", step=0.1, value=session['game3']['TE']) }}
+                                 </div>
+                                 <div class="ticks text-primary">
+                                     {% for angle in [10,80,150,220,290,360,430,500]%}
+                                     <span class="tick">{{ angle }}</span>
+                                     {% endfor %}
+                                 </div>
+                             </div>
+                         </div>
+                         <div class="row">
+                             <div class="col-3">
+                                 <b><label class="form-label" for="FA">FA = <span id="FA-val">{{ session['game3']['FA'] }}</span></label> degrees</b>
+                                 <button type="button" class="btn btn-sm shadow-none"
+                                         data-mdb-container="body"
+                                         data-mdb-toggle="popover"
+                                         data-mdb-placement="bottom" title="Flip Angle (FA)"
+                                         data-mdb-content="FA is the amount we tip the magnetization vector using an RF pulse.
+                                                    It can be measured in degrees or radians.">
+                                <i class="bi bi-question-circle-fill"></i></button>
+                             </div>
+                             <div class="col-9">
+                                 <div class="row">
+                                     {{ G3Form.FA(class="form-range", id="FA", step=1, value=session['game3']['FA']) }}
+                                 </div>
+                                 <div class="ticks text-primary">
+                                     {% for angle in [0,15,30,45,60,75,90] %}
+                                     <span class="tick">{{ angle }}</span>
+                                {% endfor %}
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+                </div>
+                <div class="row">
+
+                </div>
+             </div>
+        </div>
 {% endblock %}
+
+
+
 {% block tasks %}
        <div class="card-body">
                     <div class="progress">
                         <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar"
-                             style="width: {{ session['game3']['task_completed']*25 }}%"
-                             aria-valuenow="0" aria-valuemin="{{ session['game3']['task_completed']*25 }}" aria-valuemax="100"></div>
+                             style="width: {{ session['game3']['task_completed']*100/3 }}%"
+                             aria-valuenow="0" aria-valuemin="{{ session['game3']['task_completed']*100/3 }}" aria-valuemax="100"></div>
 
                     </div>
                     <!-- Show tab for each lab procedure -->
                     <ul class="nav nav-tabs nav-justified" id="game3-tab" role="tablist">
                         {% for tab in instructions['tabs'] %}
-                            {% if loop.index == ([session['game3']['task_completed'] + 1,4] | min) %}
+                            {% if loop.index == ([session['game3']['task_completed'] + 1,3] | min) %}
                                 {% set active = 'active' %}
                             {% else %}
                                 {% set active = '' %}
@@ -400,7 +396,7 @@
                     <!-- Show content for each lab procedure -->
                     <div class="tab-content" id="game3-tab-content">
                         {% for task, task_details in instructions['tasks'].items() %}
-                            {% if loop.index == ([session['game3']['task_completed'] + 1 , 4] | min) %}
+                            {% if loop.index == ([session['game3']['task_completed'] + 1 , 3] | min) %}
                                 {% set show_text = 'show' %}
                                 {% set active_text = 'active' %}
                             {% else %}
@@ -456,21 +452,19 @@
                                 </ul>
 
 
-
                                 <div class="btn btn-info task-next-button" id="task{{ loop.index }}-next">Next</div>
-
                                 <p class="d-none text-danger" id="task-message-{{ task_index }}">
                                     Complete and check all steps to move on.
                                 </p>
                                 {% set dnone = '' if session['game3']['task_completed'] >= task_index else 'd-none' %}
 
-                                {% set success_message = 'This step has been completed' if task_index < 4 else
-                                        'All steps complete. Congratulations! To earn the remaining stars, answer the questions to the right.' %}
+                                {% set success_message = 'This step has been completed' if task_index < 3 else
+                                        'All steps complete. Congratulations! To earn the remaining stars, do the quiz.' %}
 
                                 <p class="{{ dnone }} text-success" id="task-success-{{ task_index }}">
                                     {{ success_message }}
-                                    {% if task_index == 4 %}
-                                        <a class="btn btn-large btn-success" href="/games/2"> Next game! </a>
+                                    {% if task_index == 3 %}
+                                        <a class="btn btn-large btn-success" href="/games/4"> Next game! </a>
                                     {% endif %}
                                 </p>
 
