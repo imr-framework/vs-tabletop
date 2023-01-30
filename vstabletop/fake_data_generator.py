@@ -4,7 +4,7 @@ import plotly.express as px
 import json
 import numpy as np
 import threading
-from __main__ import app, socketio
+from __main__ import socketio
 import ctypes
 
 # Share functionalities to allow the exiting of threads
