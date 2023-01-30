@@ -2,17 +2,11 @@ import threading
 
 from flask import flash, render_template, session, redirect, url_for, request
 from flask_login import login_required, login_user, logout_user
-import plotly
-import plotly.graph_objects as go
 import vstabletop.utils as utils
 import random
 from vstabletop.forms import Game5Form
-from info import GAMES_DICT, GAME5_INSTRUCTIONS, GAME5_M_INFO, GAME5_BACKGROUND
-from models import User, Calibration
+from info import GAME5_INSTRUCTIONS, GAME5_M_INFO, GAME5_BACKGROUND
 from __main__ import app, login_manager, db, socketio
-import plotly.express as px
-import pandas as pd
-import json
 import numpy as np
 from vstabletop.models import MultipleChoice
 from workers.game5_worker import simulate_RF_rotation, generate_static_plot,\
@@ -29,11 +23,11 @@ def game5_view():
     str
         HTML view of Game 5
     """
-    questions, success_text, uses_images_list = fetch_all_game5_questions()
-    print(questions)
     # Form for submitting data - current settings
     game_form = Game5Form()
     j1, j2 = make_default_graphs()
+    all_Qs = MultipleChoice.query.filter_by(game_number=5).all()
+    questions, success_text, uses_images = utils.process_all_game_questions(all_Qs)
 
     #if request.method == 'POST':
     #   print(request.form)
@@ -52,9 +46,8 @@ def game5_view():
 
     return render_template('game5.html',template_title="Proton's got moves",template_intro_text="Can you follow on?",
                            template_game_form=game_form, graphJSON_spin=j1, graphJSON_signal=j2,
-                           questions=questions,success_text=success_text,uses_images=uses_images_list,
+                           questions=questions,success_text=success_text,uses_images=uses_images,
                            instructions=GAME5_INSTRUCTIONS, game_num=5, background=GAME5_BACKGROUND)
-                            #TODO use function to store/generate tasks
 
 
 def make_default_graphs():

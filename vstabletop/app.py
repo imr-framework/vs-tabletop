@@ -5,6 +5,7 @@ from os import environ # this line should go at the top of your file
 from flask_socketio import SocketIO, emit
 from flask_session import Session
 from paths import IMG_PATH, DATA_PATH
+from vstabletop.models import db
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "how-i-spin"
@@ -28,8 +29,8 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['UPLOAD_FOLDER_GAME2'] = UPLOAD_FOLDER / 'Game2'
 app.config['UPLOAD_FOLDER_SCAN'] = DATA_PATH / 'scan'
 # Create database and bind it to vstabletop
-db = SQLAlchemy(app)
-
+#db = SQLAlchemy(app)
+db.init_app(app)
 # 2. Enable Authentication through flask_login
 # Login manager
 login_manager = LoginManager()
@@ -37,12 +38,13 @@ login_manager.init_app(app)
 
 # 3. Enable socketIO
 socketio = SocketIO(app, manage_session=False)
+import routes_main
+import routes_game1, routes_game3, routes_game5, routes_game7
+import routes_game2, routes_game4, routes_game6, routes_game8
+import routes_scan
+
 
 def launch_virtualscanner():
-    import routes_main
-    import routes_game1, routes_game3, routes_game5, routes_game7
-    import routes_game2, routes_game4, routes_game6, routes_game8
-    import routes_scan
     #vstabletop.run()
     socketio.run(app,debug=True,host="0.0.0.0")
 

@@ -5,8 +5,7 @@ from vstabletop.workers.game6_worker import game6_worker_sim,game6_worker_map,in
 from vstabletop.forms import Game6Form
 import vstabletop.utils as utils
 from vstabletop.info import GAME6_INFO, GAME6_BACKGROUND, GAME6_INSTRUCTIONS
-from vstabletop.utils import fetch_all_game_questions
-
+from vstabletop.models import MultipleChoice
 DEFAULT_TIS = [5,10,20,50,100,500] # Seconds
 DEFAULT_TES = [8,16,24,32,64,128] # Seconds
 @app.route('/games/6',methods=["GET","POST"])
@@ -15,8 +14,8 @@ def game6():
     utils.update_session_subdict(session,'game6',{'type':'sim','t1_map_TIs': DEFAULT_TIS,'t2_map_TEs': DEFAULT_TES})
     game6form = Game6Form()
     j1,j2,j3 = game6_worker_sim(session['game6'])
-    questions, success_text, uses_images = fetch_all_game_questions(6)
-
+    all_Qs = MultipleChoice.query.filter_by(game_number=6).all()
+    questions, success_text, uses_images = utils.process_all_game_questions(all_Qs)
 
     return render_template('game6.html',template_title="Relaxation station",template_intro_text="Sit back and map",
                            template_game_form=game6form, game_num=6,

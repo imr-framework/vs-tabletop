@@ -26,7 +26,8 @@ def game1():
         HTML to display on game 1 path
     """
     form=Game1Form()
-    questions, success_text, uses_images = fetch_all_game1_questions()
+    all_Qs = MultipleChoice.query.filter_by(game_number=1).all()
+    questions, success_text, uses_images = utils.process_all_game_questions(all_Qs)
 
     j1 = game1_worker(session['game1']['FOV_scale'], session['game1']['Matrix_scale'], session['game1']['zero_fill'],
                       session['game1']['Min_scale'], session['game1']['Max_scale'])

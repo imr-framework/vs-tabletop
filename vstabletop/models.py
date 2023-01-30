@@ -3,9 +3,11 @@
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
-from vstabletop.app import db
+#from vstabletop.app import db
 from datetime import datetime
 import numpy as np
+
+db = SQLAlchemy()
 
 class User(UserMixin, db.Model):
     """Player table for login and progress keeping
@@ -100,12 +102,8 @@ class Progress(db.Model):
 
         return rep
 
-
-
 class MultipleChoice(db.Model):
     __table_args__ = {'extend_existing': True}
-
-
     # Multiple choice question to store in database
     id = db.Column(db.Integer(),primary_key=True)
     game_number = db.Column(db.Integer(),index=True)# 1 - 8
@@ -155,7 +153,6 @@ class MultipleChoice(db.Model):
         question_string += f'Correct answer: {self.correct_choice}\n'
 
         return question_string
-
 
 def initialize_users():
     # When models.py is run by itself, the database gets established.

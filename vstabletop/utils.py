@@ -1,5 +1,5 @@
 import numpy as np
-from vstabletop.models import *
+from vstabletop.models import Progress
 # Utility functions
 
 
@@ -50,22 +50,19 @@ def spherical_to_cartesian(theta,phi,m0):
     M = m0*np.array([[np.sin(theta)*np.cos(phi)],[np.sin(theta)*np.sin(phi)],[np.cos(theta)]])
     return M
 
-def num_questions_of_game(num):
-    return len(MultipleChoice.query.filter_by(game_number=num).all())
+def num_questions_of_game(num, mc_model):
+    #return len(MultipleChoice.query.filter_by(game_number=num).all())
+    return len(mc_model.query.filter_by(game_number=num).all())
 
 
-def new_progress_of_game(num):
-    # TODO connect to Instructions db table
-
+def new_progress_of_game(num, mc_model):
     num_steps_dict = {1:4, 2:4, 3:3, 4:4, 5:4, 6:4, 7:5, 8:3}
-    num_mc = num_questions_of_game(num)
+    num_mc = num_questions_of_game(num, mc_model)
     return Progress(game_number=num, num_stars=0,
                     num_questions=num_mc, num_correct=0,
                     num_steps_total=num_steps_dict[num],num_steps_complete=0) # No user id attached yet
 
-
-def fetch_all_game_questions(num):
-    all_Qs = MultipleChoice.query.filter_by(game_number=num).all()
+def process_all_game_questions(all_Qs):
     questions = []
     uses_images_list = []
     success_text = len(all_Qs) * ['Correct! Move on to the next question.']
@@ -86,3 +83,6 @@ def fetch_all_game_questions(num):
                           'main_image_path': Q.main_image_path})
 
     return questions, success_text, uses_images_list
+
+
+# def fetch_all_game_questions(num):

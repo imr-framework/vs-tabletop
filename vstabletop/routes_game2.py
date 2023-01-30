@@ -29,10 +29,8 @@ def allowed_file(filename):
 def game2_view():
     G2Form = Game2Form()
     j1, j2 = make_empty_graphs()
-
-    # Get MC
-    questions, success_text, uses_images_list = utils.fetch_all_game_questions(2)
-    print(questions)
+    all_Qs = MultipleChoice.query.filter_by(game_number=2).all()
+    questions, success_text, uses_images = utils.process_all_game_questions(all_Qs)
 
     # User uploaded image!
     if request.method == 'POST':
@@ -58,7 +56,7 @@ def game2_view():
 
     return render_template('game2.html',template_title="K-space magik",template_intro_text="Can you find your way?",
                            template_game_form=G2Form, graphJSON_left=j1, graphJSON_right=j2,
-                           questions=questions,success_text=success_text,uses_images=uses_images_list,
+                           questions=questions,success_text=success_text,uses_images=uses_images,
                            game_num=2, instructions=GAME2_INSTRUCTIONS,background=GAME2_BACKGROUND)
 
 # Socket

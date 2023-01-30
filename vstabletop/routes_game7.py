@@ -21,11 +21,12 @@ def game7():
     j1, j2, j3 = game7_empty_plots_worker()
 
     utils.update_session_subdict(session,'game7',{'plot3d_visible':False, 'plot2d_visible':False, 'plot1d_visible':False})
-    questions, success_text, uses_images = fetch_all_game7_questions()
+    #questions, success_text, uses_images = fetch_all_game7_questions()
+    all_Qs = MultipleChoice.query.filter_by(game_number=7).all()
+    questions, success_text, uses_images = utils.process_all_game_questions(all_Qs)
 
     if form.validate_on_submit():
         print('validated')
-        #print(form)
         if form.phantom_type_field.data == 'random':
             j1, voxels = game7_prep3d_worker(difficulty="all")
         else:

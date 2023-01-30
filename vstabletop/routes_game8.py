@@ -5,16 +5,15 @@ from vstabletop.forms import Game8Form
 from vstabletop.workers.game8_worker import game8_worker_project, game8_worker_load
 import vstabletop.utils as utils
 from vstabletop.info import GAME8_INSTRUCTIONS, GAME8_BACKGROUND
-from vstabletop.utils import fetch_all_game_questions
-
+from vstabletop.models import MultipleChoice
 @app.route('/games/8',methods=["GET","POST"])
 def game8():
     info = session['game8']
     j1 = game8_worker_project(info, default=True)
     j2, __, __ = game8_worker_load(info,default=True)
     game8form = Game8Form()
-    questions, success_text, uses_images = fetch_all_game_questions(8)
-
+    all_Qs = MultipleChoice.query.filter_by(game_number=8).all()
+    questions, success_text, uses_images = utils.process_all_game_questions(all_Qs)
 
     return render_template('game8.html',template_title="Puzzled by Projection II",template_intro_text="Backward puzzle",
                            template_game_form=game8form,game_num=8,

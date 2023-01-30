@@ -8,6 +8,7 @@ from __main__ import app, login_manager, db, socketio
 
 # TODO
 from vstabletop.models import MultipleChoice
+
 questions = []
 
 
@@ -16,8 +17,8 @@ questions = []
 def game3():
     form=Game3Form()
 
-    questions, success_text, uses_images = fetch_all_game3_questions()
-    print(questions)
+    all_Qs = MultipleChoice.query.filter_by(game_number=3).all()
+    questions, success_text, uses_images = utils.process_all_game_questions(all_Qs)
 
     j1, j2, _ = game3_worker(session['game3']['TR'] / 1000, session['game3']['TE'] / 1000, session['game3']['FA'])
 

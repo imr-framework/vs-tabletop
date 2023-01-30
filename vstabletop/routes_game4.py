@@ -6,7 +6,7 @@ from vstabletop.workers.game4_worker import game4_worker_simulation, game4_worke
 import vstabletop.utils as utils
 from vstabletop.info import GAME4_INSTRUCTIONS, GAME4_BACKGROUND
 from vstabletop.models import MultipleChoice
-from vstabletop.utils import fetch_all_game_questions
+#from vstabletop.utils import fetch_all_game_questions
 
 @app.route('/games/4',methods=["GET","POST"])
 def game4():
@@ -21,7 +21,8 @@ def game4():
     j1, j2 = game4_worker_simulation('bright',info)
     j3, j4 = game4_worker_simulation('dark',info)
     j5 = game4_worker_image(session['game4']['mode'],info)
-    questions, success_text, uses_images = fetch_all_game_questions(4)
+    all_Qs = MultipleChoice.query.filter_by(game_number=4).all()
+    questions, success_text, uses_images = utils.process_all_game_questions(all_Qs)
 
     return render_template('game4.html',template_title="Fresh Blood",template_intro_text="See how flow changes MR signal!",
                            template_game_form=game4form, game_num=4,
