@@ -1,14 +1,16 @@
 
 from flask import flash, render_template, session, redirect, url_for
-from __main__ import app, login_manager, db, socketio
 from vstabletop.workers.game6_worker import game6_worker_sim,game6_worker_map,initialize_phantom, calculate_circle
 from vstabletop.forms import Game6Form
 import vstabletop.utils as utils
 from vstabletop.info import GAME6_INFO, GAME6_BACKGROUND, GAME6_INSTRUCTIONS
 from vstabletop.models import MultipleChoice
+from .. import socketio
+from .routes_game1 import bp_games
+
 DEFAULT_TIS = [5,10,20,50,100,500] # Seconds
 DEFAULT_TES = [8,16,24,32,64,128] # Seconds
-@app.route('/games/6',methods=["GET","POST"])
+@bp_games.route('/6',methods=["GET","POST"])
 def game6():
     initialize_phantom(session)
     utils.update_session_subdict(session,'game6',{'type':'sim','t1_map_TIs': DEFAULT_TIS,'t2_map_TEs': DEFAULT_TES})
@@ -17,7 +19,7 @@ def game6():
     all_Qs = MultipleChoice.query.filter_by(game_number=6).all()
     questions, success_text, uses_images = utils.process_all_game_questions(all_Qs)
 
-    return render_template('game6.html',template_title="Relaxation station",template_intro_text="Sit back and map",
+    return render_template('games/game6.html',template_title="Relaxation station",template_intro_text="Sit back and map",
                            template_game_form=game6form, game_num=6,
                            graphJSON_left=j1, graphJSON_middle=j2, graphJSON_right=j3,
                            questions=questions, success_text=success_text, uses_images=uses_images,

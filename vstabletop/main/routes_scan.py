@@ -1,7 +1,6 @@
 import json
 
 from flask import flash, render_template, session, redirect, url_for, request
-from __main__ import app, login_manager, db, socketio
 import os
 from pypulseq.Sequence.sequence import Sequence
 from pypulseq.calc_duration import calc_duration
@@ -14,13 +13,16 @@ from plotly.subplots import make_subplots
 import numpy as np
 import math
 
+from .routes_main import bp_main
+from .. import socketio
+
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() == 'seq'
 
 
 
-@app.route('/scan',methods=["GET","POST"])
+@bp_main.route('/scan',methods=["GET","POST"])
 def scan():
     # User uploaded image!
     if request.method == 'POST':
@@ -38,14 +40,14 @@ def scan():
         if file and allowed_file(file.filename):
             # filename = secure_filename(file.filename)
             ext = file.filename.split('.')[-1]
-            file.save(os.path.join(app.config['UPLOAD_FOLDER_SCAN'], f'user_uploaded.{ext}'))
+            file.save(os.path.join(DATA_PATH / 'scan', f'user_uploaded.{ext}'))
             socketio.emit("Seq file uploaded")
 
         else:
             print(f'File: {file.filename}')
             print('File format not allowed')
 
-    return render_template('scan.html',template_game_form=None, game_num=None)
+    return render_template('main/scan.html',template_game_form=None, game_num=None)
 
 @socketio.on("Display sequence")
 def display_seq():

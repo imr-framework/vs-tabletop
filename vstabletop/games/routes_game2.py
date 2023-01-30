@@ -2,22 +2,27 @@ from vstabletop.workers.game2_worker import make_empty_graphs, game2_worker_fetc
                                             game2_worker_convert, make_graph,\
                                             convert_2d_drawing, convert_1d_drawing,\
                                             retrieve_erase_mask
-from info import GAME2_INSTRUCTIONS, GAME2_BACKGROUND
+from vstabletop.info import GAME2_INSTRUCTIONS, GAME2_BACKGROUND
 from flask import flash, render_template, session, redirect, url_for, request
 from urllib.request import urlopen
 from werkzeug.utils import secure_filename
-from forms import Game2Form
+from vstabletop.forms import Game2Form
 import vstabletop.utils as utils
+from vstabletop.paths import IMG_PATH
 from vstabletop.paths import IMG_PATH
 import numpy as np
 import json
 import plotly
 import os
 import fnmatch
-import vstabletop.utils
 from vstabletop.models import MultipleChoice
+from .. import socketio
 
-from __main__ import app, login_manager, db, socketio, ALLOWED_EXTENSIONS
+#from __main__ import app, login_manager, db, socketio, ALLOWED_EXTENSIONS
+from .routes_game1 import bp_games
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+UPLOAD_FOLDER_GAME2 = IMG_PATH / 'Game2'
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -25,7 +30,7 @@ def allowed_file(filename):
 
 
 # Games
-@app.route('/games/2',methods=["GET","POST"])
+@bp_games.route('/2',methods=["GET","POST"])
 def game2_view():
     G2Form = Game2Form()
     j1, j2 = make_empty_graphs()
@@ -48,13 +53,13 @@ def game2_view():
         if file and allowed_file(file.filename):
             #filename = secure_filename(file.filename)
             ext = file.filename.split('.')[-1]
-            file.save(os.path.join(app.config['UPLOAD_FOLDER_GAME2'], f'user_uploaded.{ext}'))
+            file.save(os.path.join(UPLOAD_FOLDER_GAME2, f'user_uploaded.{ext}'))
             utils.update_session_subdict(session,'game2',{'source':'upload'})
 
         if session['game2']['source'] == 'upload':
             generate_new_image('upload')
 
-    return render_template('game2.html',template_title="K-space magik",template_intro_text="Can you find your way?",
+    return render_template('games/game2.html',template_title="K-space magik",template_intro_text="Can you find your way?",
                            template_game_form=G2Form, graphJSON_left=j1, graphJSON_right=j2,
                            questions=questions,success_text=success_text,uses_images=uses_images,
                            game_num=2, instructions=GAME2_INSTRUCTIONS,background=GAME2_BACKGROUND)

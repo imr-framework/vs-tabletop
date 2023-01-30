@@ -1,10 +1,105 @@
+
+from gevent import monkey
+monkey.patch_all()
+# All socketio stuff
+from .. import socketio
+import vstabletop.utils as utils
+from flask import session
+#from vstabletop.main.fake_data_generator import SignalPlotsThread, FlipAnglePlotThread, get_empty_calibration_plots
+import threading
+
+#from flask_socketio import emit, join_room, leave_room
+
+print(socketio)
+
+# When client says RUN, we run.
+@socketio.on('run scans')
+def pump_out_fake_plots(payload):
+    print('Running scans')
+    # Parse parameters and save to session
+    utils.update_session_subdict(session,'calibration',payload)
+    # Initiate the thread only if we are not scanning now
+    print(session)
+    if not session.get('scanningFID'): # If FID plots are not running, create thread to do that.
+        print("MAKING A NEW THREAD")
+        calib_thread = SignalPlotsThread(session['calibration']['f0'])
+        calib_thread.start()
+        session['scanningFID'] = True
+        session.modified = True
+    else:
+        print('we are in else')
+        for th in threading.enumerate():
+            if hasattr(th,'f0'):
+                th.set_f0(session['calibration']['f0'])
+
+    socketio.emit('take this',{'data':'THE SOCKET IS WORKING'})
+
+# When client says STOP, we stop.
+@socketio.on('stop scans')
+def stop_the_fake_plots(message):
+    print(message['data'])
+    for th in threading.enumerate():
+        if hasattr(th,'f0'):
+            th.raise_exception()
+            th.join()
+        if hasattr(th,'tx_amp_90'): # FA thread
+            th.raise_exception()
+            th.join()
+
+    session['scanningFID'] = False
+    session.modified = True
+    session['scanningFA'] = False
+    session.modified = True
+
+
+# Run FA calibration
+@socketio.on('run FA')
+def run_fake_FA_calibration(message):
+    print(message['data'])
+    # Get a FA plot
+    if not session.get('scanningFA'):
+        fa_thread = FlipAnglePlotThread(tx_amp_90=3, tx_amp_max=10, Npts=50)
+        # Preset - TODO incorporate as options?
+        fa_thread.start()
+        session['scanningFA'] = True
+        session.modified = True
+
+
+@socketio.on('zero shims')
+def zero_shims(message):
+    print(message['data'])
+    # This is another example of updating the session with newly zeroed shim values
+    utils.update_session_subdict(session,'calibration',{'shimx':0.0,'shimy':0.0,'shimz':0.0})
+
+#  Rishi: this decorated function (the "@" line is the decorator) does the following:
+#        1. It is run when socketio receives 'update single param' from the client
+#        2. The data being sent over is passed as the "info" parameter
+#        3. If the info is central frequency, f0, it scales it by 1e6 for unit conversion from MHz to Hz
+#        4. A Python dictionary, param, is created where the key is still the id and the value is converted into float
+#        5. It updates the session dictionary using a function from utils.py
+#        6. It finds a thread that has the f0 attribute and updates its f0
+#           (this is for continuously updating the leftmost plot on the calibration page)
+
+# Update signal parameters on change
+@socketio.on('update single param')
+def update_parameter(info):
+    if info['id'] == 'f0':
+        info['value'] = float(info['value'])*1e6
+    param = {info['id']:float(info['value'])}
+    utils.update_session_subdict(session,'calibration',param)
+    # TODO This line is needed to update session variables
+    # Update thread
+    for th in threading.enumerate():
+        if hasattr(th, 'f0'):
+            th.set_f0(session['calibration']['f0'])
+
 import plotly
 import pandas as pd
 import plotly.express as px
 import json
 import numpy as np
 import threading
-from __main__ import socketio
+from .. import socketio
 import ctypes
 
 # Share functionalities to allow the exiting of threads

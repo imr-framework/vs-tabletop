@@ -2,13 +2,16 @@
 
 
 let socket = io();
+
+console.log('socket: ',socket);
+
 // When server emits an event of 'take this', display its message
 socket.on('take this', (msg)=>{
     ///$('#declarer').text(msg.data);
 });
 
 socket.on('plots served', (msg)=>{
-    //$('#declarer').text('FID & Spectrum plots should be served now...');
+    $('#declarer').text('FID & Spectrum plots should be served now...');
     // consider extending Traces so that the plot is UPDATED rather than REDRAWN - the goal is to stay zoomed in
     Plotly.newPlot('chart-left',JSON.parse(msg['fid']),{});
     Plotly.newPlot('chart-center',JSON.parse(msg['spectrum']),{});
@@ -16,11 +19,12 @@ socket.on('plots served', (msg)=>{
 } )
 
 socket.on('fa plot served', (msg)=>{
-    //$('#declarer').text('FA plot should be served now ... ');
+    $('#declarer').text('FA plot should be served now ... ');
     Plotly.newPlot('chart-right',JSON.parse(msg['fa_signal']),{});
 })
 
 $('#run-scan').click(()=> {
+    console.log('Run scan clicked')
     // Emit signal to run scans while including current parameters
     let payload = {'f0':parseFloat($('#f0').val())*1e6,
         'shimx':parseFloat($('#shimx').val()),'shimy': parseFloat($('#shimy').val()),

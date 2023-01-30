@@ -1,18 +1,18 @@
-from workers.game3_worker import game3_worker
+from vstabletop.workers.game3_worker import game3_worker
 from flask import flash, render_template, session, redirect, url_for
 from flask_login import login_required, login_user, logout_user
 import vstabletop.utils as utils
 from vstabletop.forms import *
 from vstabletop.info import GAMES_DICT, GAME3_BACKGROUND, GAME3_INSTRUCTIONS
-from __main__ import app, login_manager, db, socketio
-
+from .. import socketio
+from .routes_game1 import bp_games
 # TODO
 from vstabletop.models import MultipleChoice
 
 questions = []
 
 
-@app.route('/games/3',methods=["GET","POST"])
+@bp_games.route('/3',methods=["GET","POST"])
 @login_required
 def game3():
     form=Game3Form()
@@ -29,7 +29,7 @@ def game3():
         j1, j2 = game3_worker(session['game3']['TR'] / 1000, session['game3']['TE'] / 1000, session['game3']['FA'])
 
     print(session['game3'])
-    return render_template('game3.html', template_title="Brains, please!", template_intro_text="",
+    return render_template('games/game3.html', template_title="Brains, please!", template_intro_text="",
                            G3Form=form, graphJSON_img = j1, graphJSON_bar = j2, questions = questions,
                            success_text=success_text, uses_images=uses_images, game_num=3,background=GAME3_BACKGROUND,
                            instructions=GAME3_INSTRUCTIONS)

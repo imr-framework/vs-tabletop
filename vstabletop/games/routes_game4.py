@@ -1,14 +1,15 @@
 
 from flask import flash, render_template, session, redirect, url_for
 from vstabletop.forms import *
-from __main__ import app, login_manager, db, socketio
 from vstabletop.workers.game4_worker import game4_worker_simulation, game4_worker_image
 import vstabletop.utils as utils
 from vstabletop.info import GAME4_INSTRUCTIONS, GAME4_BACKGROUND
 from vstabletop.models import MultipleChoice
 #from vstabletop.utils import fetch_all_game_questions
+from .. import socketio
+from .routes_game1 import bp_games
 
-@app.route('/games/4',methods=["GET","POST"])
+@bp_games.route('/4',methods=["GET","POST"])
 def game4():
     # Input fields
     game4form = Game4Form()
@@ -24,7 +25,7 @@ def game4():
     all_Qs = MultipleChoice.query.filter_by(game_number=4).all()
     questions, success_text, uses_images = utils.process_all_game_questions(all_Qs)
 
-    return render_template('game4.html',template_title="Fresh Blood",template_intro_text="See how flow changes MR signal!",
+    return render_template('games/game4.html',template_title="Fresh Blood",template_intro_text="See how flow changes MR signal!",
                            template_game_form=game4form, game_num=4,
                            graphJSON_top_bright=j1, graphJSON_bottom_bright=j2,
                            graphJSON_top_dark=j3, graphJSON_bottom_dark=j4,

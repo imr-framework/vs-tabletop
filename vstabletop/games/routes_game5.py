@@ -1,19 +1,19 @@
-import threading
 
 from flask import flash, render_template, session, redirect, url_for, request
 from flask_login import login_required, login_user, logout_user
 import vstabletop.utils as utils
 import random
 from vstabletop.forms import Game5Form
-from info import GAME5_INSTRUCTIONS, GAME5_M_INFO, GAME5_BACKGROUND
-from __main__ import app, login_manager, db, socketio
+from vstabletop.info import GAME5_INSTRUCTIONS, GAME5_M_INFO, GAME5_BACKGROUND
 import numpy as np
 from vstabletop.models import MultipleChoice
-from workers.game5_worker import simulate_RF_rotation, generate_static_plot,\
+from vstabletop.workers.game5_worker import simulate_RF_rotation, generate_static_plot,\
                                   animate_b0_turn_on, simulate_spin_precession,\
                                 generate_static_signals, generate_coil_signal
+from .. import socketio
+from .routes_game1 import bp_games
 
-@app.route('/games/5',methods=["GET","POST"])
+@bp_games.route('/5',methods=["GET","POST"])
 @login_required
 def game5_view():
     """View function for the main route to Game 5
@@ -44,7 +44,7 @@ def game5_view():
     #     else: # If B0 is off, flash message
     #         flash('Remember to turn on B0 before you perform the RF rotation.')
 
-    return render_template('game5.html',template_title="Proton's got moves",template_intro_text="Can you follow on?",
+    return render_template('games/game5.html',template_title="Proton's got moves",template_intro_text="Can you follow on?",
                            template_game_form=game_form, graphJSON_spin=j1, graphJSON_signal=j2,
                            questions=questions,success_text=success_text,uses_images=uses_images,
                            instructions=GAME5_INSTRUCTIONS, game_num=5, background=GAME5_BACKGROUND)

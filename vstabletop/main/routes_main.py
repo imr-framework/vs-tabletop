@@ -2,17 +2,20 @@
 # Gehua Tong, June 2022
 # Login, register, and calibration pages for Virtual Scanner Biobus Mode
 import numpy as np
-import threading
-from flask import flash, render_template, session, redirect, url_for, request
+from flask import flash, render_template, session, redirect, url_for, request, Blueprint
 from flask_login import login_required, login_user, logout_user
 import vstabletop.utils as utils
 from vstabletop.forms import *
 from vstabletop.info import GAMES_DICT, GAMES_INFO
-# TODO
-from vstabletop.models import User, Calibration, MultipleChoice
-from vstabletop.fake_data_generator import get_fake_calibration_plots, SignalPlotsThread, FlipAnglePlotThread, get_empty_calibration_plots
-from __main__ import app, login_manager, db, socketio
+from vstabletop.models import db, User, Calibration, MultipleChoice
+import json
+import plotly
+import plotly.express as px
+import pandas as pd
+
 from vstabletop.models import MultipleChoice
+
+bp_main = Blueprint('bp_main',__name__, template_folder="templates/main",url_prefix="")
 
 
 def initialize_parameters():
@@ -28,8 +31,7 @@ def initialize_parameters():
     session['game1'] = {'FOV_scale': 0.128, 'Matrix_scale': 128, 'Voxel_scale': 0.001,'zero_fill': 128,
                         'Min_scale': 0.1, 'Max_scale': 0.9, 'P1_q': 'No', 'P2_q': 'No', 'P3_q': 'No',
                         'progress': utils.new_progress_of_game(1,MultipleChoice), 'mc_status_list': utils.num_questions_of_game(1,MultipleChoice)*[False],
-                        'task_completed':0,
-                        'current_task': 1, 'completed_task': 0, 'star_count': 0, 'checked': 0}
+                        'task_completed':0, 'star_count': 0, 'checked': 0}
 
     session['game2'] = {'data_left': None, 'scale_left': None, 'data_right': None, 'scale_right': None, 'source': 'preset',
                         'erase_mask': None,
@@ -94,16 +96,10 @@ def initialize_parameters():
                          'mc_status_list':utils.num_questions_of_game(8,MultipleChoice)*[False],
                          'task_completed':0}
 
-# Login callback (required)
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
 
-@login_manager.unauthorized_handler
-def unauthorized():
-    return redirect(url_for('login'))
 
-@app.route('/logout')
+#@app.route('/logout')
+@bp_main.route('/logout')
 def logout():
     # Save user progress (Game 5 example)
 
@@ -126,20 +122,23 @@ def logout():
     return redirect(url_for("landing"))
 
 # Home
-@app.route('/index')
+#@app.route('/index')
+@bp_main.route('/index',methods=["GET","POST"])
 @login_required
 def index():
-    return render_template("index.html",template_dict_games=GAMES_DICT,template_dict_info=GAMES_INFO)
+    return render_template("main/index.html",template_dict_games=GAMES_DICT,template_dict_info=GAMES_INFO)
 
 
 # Login page
-@app.route('/',methods=["GET","POST"])
+#@app.route('/',methods=["GET","POST"])
+@bp_main.route('/',methods=["GET","POST"])
 def landing():
     initialize_parameters()
-    return render_template('landing.html')
+    return render_template('main/landing.html')
 
 
-@app.route('/login',methods=["GET","POST"])
+#@app.route('/login',methods=["GET","POST"])
+@bp_main.route('/login',methods=["GET","POST"])
 def login():
     login_form = Login_Form()
 
@@ -172,7 +171,7 @@ def login():
             flash('Wrong credentials - login failed')
             return redirect(url_for('login'))
 
-    return render_template("login.html",template_login_form=login_form)
+    return render_template("main/login.html",template_login_form=login_form)
 
 # template_title='login',
 #                            template_intro_text="Log into Virtual Scanner Biobus",
@@ -180,7 +179,8 @@ def login():
 
 
 # Register page
-@app.route('/register',methods=['GET','POST'])
+#@app.route('/register',methods=['GET','POST'])
+@bp_main.route('/register',methods=['GET','POST'])
 def register():
     reg_form = Register_Form()
     print('on register page...')
@@ -202,14 +202,16 @@ def register():
         print("Failed to validate")
         flash('Form is not validated; check your passwords!')
 
-    return render_template('register.html', title='Register', template_form=reg_form)
+    return render_template('main/register.html', title='Register', template_form=reg_form)
 
 # TODO calibration tunings - #4 save to file
 # 4. "Save to file" / "Load" buttons split the current "load previous" one
 #     save to file - > outputs as config file apart from config.py
 #     load - > load a config file to (a) config.py (b) session
 
-@app.route('/calibration',methods=["GET","POST"])
+#@app.route('/calibration',methods=["GET","POST"])
+@bp_main.route('calibration',methods=["GET","POST"])
+
 def calibration():
     #if request.method == 'POST':
      #   print(request.form['xshim'])
@@ -253,96 +255,110 @@ def calibration():
     # Default plots with no content to be displayed initially
     j1, j2, j3 = get_empty_calibration_plots()
 
-    return render_template("calibration.html", template_intro_text="Let's calibrate the scanner!",
+    return render_template("main/calibration.html", template_intro_text="Let's calibrate the scanner!",
                            template_calibration_form=calib_form, template_disp_form=display_opts_form,
                            graphJSON_left=j1, graphJSON_center=j2,graphJSON_right=j3)
 
-
-
-
-# When client says RUN, we run.
-@socketio.on('run scans')
-def pump_out_fake_plots(payload):
-    # Parse parameters and save to session
-    utils.update_session_subdict(session,'calibration',payload)
-    # Initiate the thread only if we are not scanning now
-    if not session.get('scanningFID'): # If FID plots are not running, create thread to do that.
-        print("MAKING A NEW THREAD")
-        calib_thread = SignalPlotsThread(session['calibration']['f0'])
-        calib_thread.start()
-        session['scanningFID'] = True
-        session.modified = True
-    else:
-        print('we are in else')
-        for th in threading.enumerate():
-            if hasattr(th,'f0'):
-                th.set_f0(session['calibration']['f0'])
-
-    socketio.emit('take this',{'data':'THE SOCKET IS WORKING'})
-
-# When client says STOP, we stop.
-@socketio.on('stop scans')
-def stop_the_fake_plots(message):
-    print(message['data'])
-    for th in threading.enumerate():
-        if hasattr(th,'f0'):
-            th.raise_exception()
-            th.join()
-        if hasattr(th,'tx_amp_90'): # FA thread
-            th.raise_exception()
-            th.join()
-
-    session['scanningFID'] = False
-    session.modified = True
-    session['scanningFA'] = False
-    session.modified = True
-
-
-# Run FA calibration
-@socketio.on('run FA')
-def run_fake_FA_calibration(message):
-    print(message['data'])
-    # Get a FA plot
-    if not session.get('scanningFA'):
-        fa_thread = FlipAnglePlotThread(tx_amp_90=3, tx_amp_max=10, Npts=50)
-        # Preset - TODO incorporate as options?
-        fa_thread.start()
-        session['scanningFA'] = True
-        session.modified = True
-
-
-@socketio.on('zero shims')
-def zero_shims(message):
-    print(message['data'])
-    # This is another example of updating the session with newly zeroed shim values
-    utils.update_session_subdict(session,'calibration',{'shimx':0.0,'shimy':0.0,'shimz':0.0})
-
-#  Rishi: this decorated function (the "@" line is the decorator) does the following:
-#        1. It is run when socketio receives 'update single param' from the client
-#        2. The data being sent over is passed as the "info" parameter
-#        3. If the info is central frequency, f0, it scales it by 1e6 for unit conversion from MHz to Hz
-#        4. A Python dictionary, param, is created where the key is still the id and the value is converted into float
-#        5. It updates the session dictionary using a function from utils.py
-#        6. It finds a thread that has the f0 attribute and updates its f0
-#           (this is for continuously updating the leftmost plot on the calibration page)
-
-# Update signal parameters on change
-@socketio.on('update single param')
-def update_parameter(info):
-    if info['id'] == 'f0':
-        info['value'] = float(info['value'])*1e6
-    param = {info['id']:float(info['value'])}
-    utils.update_session_subdict(session,'calibration',param)
-    # TODO This line is needed to update session variables
-    # Update thread
-    for th in threading.enumerate():
-        if hasattr(th, 'f0'):
-            th.set_f0(session['calibration']['f0'])
+#
+# # When client says RUN, we run.
+# @socketio.on('run scans')
+# def pump_out_fake_plots(payload):
+#     # Parse parameters and save to session
+#     utils.update_session_subdict(session,'calibration',payload)
+#     # Initiate the thread only if we are not scanning now
+#     if not session.get('scanningFID'): # If FID plots are not running, create thread to do that.
+#         print("MAKING A NEW THREAD")
+#         calib_thread = SignalPlotsThread(session['calibration']['f0'])
+#         calib_thread.start()
+#         session['scanningFID'] = True
+#         session.modified = True
+#     else:
+#         print('we are in else')
+#         for th in threading.enumerate():
+#             if hasattr(th,'f0'):
+#                 th.set_f0(session['calibration']['f0'])
+#
+#     socketio.emit('take this',{'data':'THE SOCKET IS WORKING'})
+#
+# # When client says STOP, we stop.
+# @socketio.on('stop scans')
+# def stop_the_fake_plots(message):
+#     print(message['data'])
+#     for th in threading.enumerate():
+#         if hasattr(th,'f0'):
+#             th.raise_exception()
+#             th.join()
+#         if hasattr(th,'tx_amp_90'): # FA thread
+#             th.raise_exception()
+#             th.join()
+#
+#     session['scanningFID'] = False
+#     session.modified = True
+#     session['scanningFA'] = False
+#     session.modified = True
+#
+#
+# # Run FA calibration
+# @socketio.on('run FA')
+# def run_fake_FA_calibration(message):
+#     print(message['data'])
+#     # Get a FA plot
+#     if not session.get('scanningFA'):
+#         fa_thread = FlipAnglePlotThread(tx_amp_90=3, tx_amp_max=10, Npts=50)
+#         # Preset - TODO incorporate as options?
+#         fa_thread.start()
+#         session['scanningFA'] = True
+#         session.modified = True
+#
+#
+# @socketio.on('zero shims')
+# def zero_shims(message):
+#     print(message['data'])
+#     # This is another example of updating the session with newly zeroed shim values
+#     utils.update_session_subdict(session,'calibration',{'shimx':0.0,'shimy':0.0,'shimz':0.0})
+#
+# #  Rishi: this decorated function (the "@" line is the decorator) does the following:
+# #        1. It is run when socketio receives 'update single param' from the client
+# #        2. The data being sent over is passed as the "info" parameter
+# #        3. If the info is central frequency, f0, it scales it by 1e6 for unit conversion from MHz to Hz
+# #        4. A Python dictionary, param, is created where the key is still the id and the value is converted into float
+# #        5. It updates the session dictionary using a function from utils.py
+# #        6. It finds a thread that has the f0 attribute and updates its f0
+# #           (this is for continuously updating the leftmost plot on the calibration page)
+#
+# # Update signal parameters on change
+# @socketio.on('update single param')
+# def update_parameter(info):
+#     if info['id'] == 'f0':
+#         info['value'] = float(info['value'])*1e6
+#     param = {info['id']:float(info['value'])}
+#     utils.update_session_subdict(session,'calibration',param)
+#     # TODO This line is needed to update session variables
+#     # Update thread
+#     for th in threading.enumerate():
+#         if hasattr(th, 'f0'):
+#             th.set_f0(session['calibration']['f0'])
 
 
 # Dev route for new features
-@app.route('/examples',methods=['POST','GET'])
+#@app.route('/examples',methods=['POST','GET'])
+@bp_main.route('/examples',methods=['POST','GET'])
 def example_elements():
-    return render_template('examples.html',template_title="UI Element Examples",
+    return render_template('main/examples.html',template_title="UI Element Examples",
                            template_intro_text="For developer use")
 
+
+
+
+
+def get_empty_calibration_plots():
+    df = pd.DataFrame({'t':[],'fid':[],'f':[],'spectrum':[]})
+    df2 = pd.DataFrame({'tx_model':[], 'tx_signal':[]})
+
+    fig_fid = px.line(df,x='t',y='fid')
+    fig_spectrum = px.line(df,x='f',y='spectrum')
+    fig_fa_calib = px.scatter(df2, x='tx_model',y='tx_signal')
+    graphJSON1 = json.dumps(fig_fid,cls=plotly.utils.PlotlyJSONEncoder)
+    graphJSON2 = json.dumps(fig_spectrum,cls=plotly.utils.PlotlyJSONEncoder)
+    graphJSON3 = json.dumps(fig_fa_calib,cls=plotly.utils.PlotlyJSONEncoder)
+    return graphJSON1, graphJSON2, graphJSON3

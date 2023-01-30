@@ -1,12 +1,15 @@
 
 from flask import flash, render_template, session, redirect, url_for
-from __main__ import app, login_manager, db, socketio
 from vstabletop.forms import Game8Form
 from vstabletop.workers.game8_worker import game8_worker_project, game8_worker_load
 import vstabletop.utils as utils
 from vstabletop.info import GAME8_INSTRUCTIONS, GAME8_BACKGROUND
 from vstabletop.models import MultipleChoice
-@app.route('/games/8',methods=["GET","POST"])
+
+from .. import socketio
+from .routes_game1 import bp_games
+
+@bp_games.route('/8',methods=["GET","POST"])
 def game8():
     info = session['game8']
     j1 = game8_worker_project(info, default=True)
@@ -15,7 +18,7 @@ def game8():
     all_Qs = MultipleChoice.query.filter_by(game_number=8).all()
     questions, success_text, uses_images = utils.process_all_game_questions(all_Qs)
 
-    return render_template('game8.html',template_title="Puzzled by Projection II",template_intro_text="Backward puzzle",
+    return render_template('games/game8.html',template_title="Puzzled by Projection II",template_intro_text="Backward puzzle",
                            template_game_form=game8form,game_num=8,
                            graphJSON_image=j1, graphJSON_options=j2,
                             questions=questions, success_text=success_text, uses_images=uses_images,

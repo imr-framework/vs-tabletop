@@ -10,10 +10,11 @@ from vstabletop.info import GAMES_DICT, GAME7_INSTRUCTIONS, GAME7_RANDOM_MODELS,
 
 # TODO
 from vstabletop.models import User, Calibration, MultipleChoice
-from __main__ import app, login_manager, db, socketio
+from .. import socketio
+from .routes_game1 import bp_games
 import random
 
-@app.route('/games/7', methods=["GET","POST"])
+@bp_games.route('/7', methods=["GET","POST"])
 @login_required
 def game7():
     # Viewing function for game 7
@@ -35,7 +36,7 @@ def game7():
         j2, j3 = game7_projection_worker(voxels, session['game7']['proj2d_axis'],
                                                  session['game7']['proj1d_angle'])
 
-    return render_template('game7.html',G7Form=form, template_title="Puzzled by Projection",
+    return render_template('games/game7.html',G7Form=form, template_title="Puzzled by Projection",
                            template_intro_text="Forward puzzle", instructions=GAME7_INSTRUCTIONS,
                             graphJSON_3dimg = j1, graphJSON_2dimg = j2, graphJSON_1dimg = j3,
                            questions=questions, success_text=success_text, uses_images=uses_images,
