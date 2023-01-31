@@ -39,7 +39,7 @@ GAME1_INSTRUCTIONS={
                     {'Adjust the image display with windowing':'The windowing sliders can be moved to change the range of values that is displayed from black to wihte.',
                      'Change the minimum level':'Keeping the maximum level to the very right (100%), change the minimum level and re-run. How does the image change?',
                      'Change the maximum level':'Keeping the minimum level to the very left (0%), change the maximum level and re-run. How does the image change now?',
-                     'Eliminate contrast':'Make minimum and maximum level the same and run at different values (for example, both at 0%, 50%,and 100%). Describe what exactly you see at a given level.'}],
+                     'Narrow windows':'Make minimum and maximum level almost the same (1-2 points difference) and run at different values (for example, both at 0%, 50%,and 100%). Describe what exactly you see at a given level.'}],
     'tasks':{'Task 1: To see the whole picture': 'Adjust the FOV until it is just right for viewing the object with all its structures.',
              'Task 2: To see the details ': 'Adjust the matrix size until you can have a good idea of all the shapes.',
              'Task 3: Zero-fill is not magic!': 'Produce a low resolution image with a big matrix size',
@@ -115,7 +115,7 @@ GAME3_INSTRUCTIONS={
     'tabs':[f'Step {a+1}' for a in range(3)],
     'titles':['Explore MRI contrasts','Explore MRI parameters','Explore signal levels'],
     'explorations':[{'Acquire an image':'Press RUN to acquire an image.',
-                     'Acquire different weightings':'Choose T<sub>1</sub>w, T<sub>2</sub>w, and PDw in turn and acquire an image each time. Can you identify the main brain tissues (CSF, GM, WM)?\
+                     'Acquire different weightings':'Choose T1w, T2w, and PDw in turn and acquire an image each time. Can you identify the main brain tissues (CSF, GM, WM)?\
                                                     How does the relative brightness change between the three contrasts?',},
                     {'Experiment with TR':'Try changing TR and observe how the image changes. ',
                      'Experiment with TE': 'Try changing TE and observe how the image changes. ',
@@ -251,23 +251,23 @@ GAME5_INSTRUCTIONS={
     'titles': ['The Equilibrating Move','The Circulating Move','The Tipping Move','The Electrifying Move'],
     'explorations':[
                     # Move 1
-                   {'Turn the main field (B<sub>0</sub>) on and off. ': 'Press the green magnet button to turn on B<sub>0</sub>.',
-                    'Experiment with different B<sub>0</sub> values.': 'Press the button again to turn off B<sub>0</sub>. Then use the slider to change the strength of B<sub>0</sub> and turn it on again. '},
+                   {'Turn the main field (B0) on and off. ': 'Press the green magnet button to turn on B0.',
+                    'Experiment with different B0 values.': 'Press the button again to turn off B0. Then use the slider to change the strength of B0 and turn it on again. '},
                     # Move 2
-                    {'Set up environment for precession': 'First, turn off the rotating frame. Then, on the Set Initial Magnetization panel, input theta = 45 degrees, phi = 135 degrees, M/M<sub>0</sub> = 1 and press SET. ',
+                    {'Set up environment for precession': 'First, turn off the rotating frame. Then, on the Set Initial Magnetization panel, input theta = 45 degrees, phi = 135 degrees, M/M0</su> = 1 and press SET. ',
                      'Let the magnetization precess':'Press "START". How would you describe this movement? ',
-                     'Experiment with different B<sub>0</sub> values': 'Change the main field values with the slider and press START again. How does the movement change with B<sub>0</sub>?',
+                     'Experiment with different B0 values': 'Change the main field values with the slider and press START again. How does the movement change with B0?',
                      'Experiment with different initial conditions': 'Set the initial magnetization to different thetas and phis, pressing SET and then START each time. How does the initial angle affect the trajectory of M?'},
                     # Move 3
-                    {'Reset everything': 'Press "RESET" to turn off everything and turn on B<sub>0</sub> again at B<sub>0</sub> = 100 Gauss.',
-                     'Prepare RF pulse':'Turn on the rotating frame and the red transmit field (megaphone icon) to enable RF pulses. The red line indicates the direction of the RF magnetic field, also called B<sub>1</sub>. It can be in any direction on the x-y plane.',
+                    {'Reset everything': 'Press "RESET" to turn off everything and turn on B0 again at B0 = 100 Gauss.',
+                     'Prepare RF pulse':'Turn on the rotating frame and the red transmit field (megaphone icon) to enable RF pulses. The red line indicates the direction of the RF magnetic field, also called B1. It can be in any direction on the x-y plane.',
                      'Play RF pulse': 'Press "TIP" to play the default RF pulse (FA = 90 degrees, Pulse direction = 0 degree). After the movement is over, rotate the 3D display to see what happened. How would you describe what the RF pulse did to the magnetization vector? ',
                      'Experiment with different flip angles. ': 'Turn off the RF field. Use the first slider to change the flip angle. Then turn it on again and press TIP. In your words, how does the flip angle affect the movement of M?',
                      'Experiment with different pulse directions.': 'Set the initial magnetization to z and press SET. Turn off the RF field and change the flip angle to 90 degrees and the pulse directions to 0, 180, and 45 degrees in turn. Each time, reset initial M and use TIP to observe the RF in action. What role does the pulse direction play in the motion of M?'},
                     # Move 4
-                    {'Set up environment for signal reception': 'Push the “RESET” button to turn off everything. Then turn on B<sub>0</sub>, set magnetization to x, and turn on the blue receive coil (ear icon). A blue coil should appear. You can re-orient it along x or y.',
+                    {'Set up environment for signal reception': 'Push the “RESET” button to turn off everything. Then turn on B0, set magnetization to x, and turn on the blue receive coil (ear icon). A blue coil should appear. You can re-orient it along x or y.',
                      'Let the magnetization precess in the presence of a receive coil':'Set the magnetization to x or y and press "SET". Then hit START. A green signal should appear below. What does this signal look like? Press the question mark button next to "signal(emf) to learn more." ',
-                     'Experiment with field strengths': 'Change field strengths and press START each time to observe how signal changes with B<sub>0</sub>',
+                     'Experiment with field strengths': 'Change field strengths and press START each time to observe how signal changes with B0',
                      'Experiment with initial M': 'Reset M to have different theta angles and press START each time to observe how signal changes with the orientation of M'},
                     ],
 

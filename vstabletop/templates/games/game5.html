@@ -452,7 +452,7 @@
 {% endblock %}
 
 {% block questions %}
-          <div class="card bg-light">
+          <div class="card bg-light text-center">
               <div id="slide" class="carousel slide card-body h-75" data-bs-interval="false">
                             <div class="carousel-inner">
                                 {% for ind in range(success_text | length) %}
@@ -483,16 +483,12 @@
                                         </div>
                                         </div>
 
-                                        <div class="row d-flex justify-content-center">
-                                            <div class="col-4">
-                                                <div class="btn btn-large btn-primary answer-mc" id="answer-mc-{{ind}}">Submit</div>
-                                            </div>
-                                            <div class="col-8">
+                                                <br><div class="btn btn-large btn-primary answer-mc" id="answer-mc-{{ind}}">Submit</div>
+
                                                 <p id="mc-success-text-{{ ind }}" class="d-none" style="color:palegreen">{{ success_text[ind] }}</p>
                                                 <p id="mc-failure-text-{{ ind }}" class="d-none" style="color:#ffb500">Wrong answer. Try again!</p>
-                                            </div>
 
-                                        </div>
+
 
                                         <p class="d-none">Correct choice: <span id="mc-correct-choice-{{ind}}">{{ questions[ind]['correct']}}</span></p>
 
