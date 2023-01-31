@@ -1,6 +1,6 @@
 
-from gevent import monkey
-monkey.patch_all()
+# from gevent import monkey
+# monkey.patch_all()
 # All socketio stuff
 from .. import socketio
 import vstabletop.utils as utils

@@ -16,7 +16,6 @@ import matplotlib as mpl
 from vstabletop.paths import DATA_PATH, IMG_PATH
 from virtualscanner.server.simulation.bloch.phantom import makeCylindricalPhantom
 from virtualscanner.server.simulation.bloch.spingroup_ps import SpinGroup
-from virtualscanner.server.ana.T2_mapping import T2_sig_eq
 import vstabletop.utils as utils
 from vstabletop.info import GAME6_INFO
 

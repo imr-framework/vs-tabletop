@@ -12,10 +12,7 @@ def load_user(user_id):
 def unauthorized():
     return redirect(url_for('login'))
 
-def launch_virtualscanner():
-    app = create_app()
-    print(app.url_map)
-    socketio.run(app,debug=True,host="0.0.0.0")
+app = create_app()
 
 
 if __name__ == '__main__':
@@ -25,4 +22,5 @@ if __name__ == '__main__':
     SEARCH_PATH = script_path[:script_path.index('vstabletop')]
     sys.path.insert(0,SEARCH_PATH)
 
-    launch_virtualscanner()
+    print(app.url_map)
+    socketio.run(app, debug=True, host="0.0.0.0")

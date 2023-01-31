@@ -119,7 +119,7 @@ def logout():
 
 
     logout_user()
-    return redirect(url_for("landing"))
+    return redirect(url_for("bp_main.landing"))
 
 # Home
 #@app.route('/index')
@@ -169,7 +169,7 @@ def login():
         else:
             print('login failed')
             flash('Wrong credentials - login failed')
-            return redirect(url_for('login'))
+            return redirect(url_for('bp_main.login'))
 
     return render_template("main/login.html",template_login_form=login_form)
 
@@ -197,7 +197,7 @@ def register():
             db.session.commit()
         except:
             db.session.rollback()
-        return redirect(url_for('login'))
+        return redirect(url_for('bp_main.login'))
     else:
         print("Failed to validate")
         flash('Form is not validated; check your passwords!')
