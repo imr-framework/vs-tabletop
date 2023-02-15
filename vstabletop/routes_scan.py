@@ -6,19 +6,22 @@ import os
 from pypulseq.Sequence.sequence import Sequence
 from pypulseq.calc_duration import calc_duration
 from pypulseq.calc_rf_center import calc_rf_center
-from vstabletop.paths import DATA_PATH, LOCAL_CONFIG_PATH
+from pypulseq.make_delay import make_delay
+from pypulseq.make_adc import make_adc
+from pypulseq.make_block_pulse import make_block_pulse
+from pypulseq.opts import Opts
+from vstabletop.paths import DATA_PATH, LOCAL_CONFIG_PATH, CONFIG_PATH
+import vstabletop.config as cfg
 import plotly.graph_objects as go
 import plotly
 from plotly.subplots import make_subplots
-<<<<<<< Updated upstream
-=======
+
 from external.marcos_pack.flocra_pulseq.flocra_pulseq_interpreter import PSInterpreter
 import external.marcos_pack.marcos_client.experiment as ex
 import matplotlib.pyplot as plt
 from vstabletop.forms import ScanForm
 import vstabletop.utils as utils
 from scipy.io import savemat, loadmat
->>>>>>> Stashed changes
 
 import numpy as np
 import math
@@ -67,10 +70,17 @@ def display_seq(info):
     all_waveforms = export_waveforms(seq, time_range=time_range) #TODO parametrize
 
     # Create plot
-    fig = make_subplots(rows=6, cols=1,
+    fig = make_subplots(rows=3, cols=2,
                         subplot_titles=("RF magnitude","RF phase", "ADC", "Gx", "Gy", "Gz"), shared_xaxes='all')
                       #  row_heights=6*[20])
-
+    fig.update_layout(
+        margin=dict(
+            l=2,
+            r=2,
+            b=5,
+            t=50,
+            pad=5
+        ), showlegend=False)
     fig.add_trace(
         go.Scatter(x=all_waveforms['t_rf'], y=np.absolute(all_waveforms['rf']), mode='lines', name='RF magnitude',
                    line=dict(color='blue', width=2)),
@@ -84,13 +94,13 @@ def display_seq(info):
         row=3, col=1)
     fig.add_trace(go.Scatter(x=all_waveforms['t_gx'], y=all_waveforms['gx'], mode='lines', name='Gx',
                              line=dict(color='green', width=2)),
-                  row=4, col=1)
+                  row=1, col=2)
     fig.add_trace(go.Scatter(x=all_waveforms['t_gy'], y=all_waveforms['gy'], mode='lines', name='Gy',
                              line=dict(color='orange', width=2)),
-                  row=5, col=1)
+                  row=2, col=2)
     fig.add_trace(go.Scatter(x=all_waveforms['t_gz'], y=all_waveforms['gz'], mode='lines', name='Gz',
                              line=dict(color='purple', width=2)),
-                  row=6, col=1)
+                  row=3, col=2)
 
     fig.update_xaxes(title_text="Time (seconds)", row=6, col=1, range=time_range)
     fig.update_yaxes(title_text=all_waveforms['rf_unit'], row=1, col=1)
@@ -215,22 +225,48 @@ def export_waveforms(seq, time_range=(0, np.inf)):
                      'adc': adc_signal_all, 'rf': rf_signal_all, 'rf_centers': rf_signal_centers,'gx':gx_all, 'gy':gy_all, 'gz':gz_all,
                      'grad_unit': '[kHz/m]', 'rf_unit': '[Hz]', 'time_unit':'[seconds]'}
 
-<<<<<<< Updated upstream
-    return all_waveforms
-=======
     return all_waveforms
 
 
 @socketio.on("Compile sequence")
-def compile_seq():
+def compile_seq(info):
+    print('mode:', info['mode'])
     # Load seq
     print("Compiling uploaded sequence")
-    seq = Sequence()
-    seq.read(DATA_PATH / "scan" / "user_uploaded.seq")
-    print("Seq read")
-    #exp = ex.Experiment(lo_freq=5, rx_t=3.125)
 
-    ps = PSInterpreter()
+    if info['mode'] == '0':
+        print("File mode")
+        seq = Sequence()
+        seq.read(DATA_PATH / "scan" / "user_uploaded.seq")
+        print("Seq read")
+        #exp = ex.Experiment(lo_freq=5, rx_t=3.125)
+    elif info['mode'] == '1': # Just noise
+        print("Noise mode")
+        seq = Sequence()
+        seq.add_block(make_adc(num_samples=128,dwell=1e-6,delay=1e-3))
+        print("Noise adc thing", seq.dict_block_events)
+    elif info['mode'] == '2': #  FID
+        print("FID mode")
+        seq = Sequence()
+        seq.add_block(make_block_pulse(2*np.pi, system=Opts(), duration=100e-6,
+                    freq_offset=0, phase_offset=0, time_bw_product=4,
+                     bandwidth=0, max_grad=0, max_slew=0, slice_thickness=0, delay=0, use=''))
+        seq.add_block(make_adc(num_samples=128,dwell=1e-6,delay=1e-3))
+        seq.add_block(make_delay(500e-3))
+
+    else:
+        print('Nothing else')
+
+
+
+    ps = PSInterpreter(rf_center=cfg.LARMOR_FREQ*1e6,
+                       tx_warmup=100,
+                       rf_amp_max=cfg.RF_MAX,
+                       tx_t=1,grad_t=10,
+                       gx_max=cfg.GX_MAX,
+                       gy_max=cfg.GY_MAX,
+                       gz_max=cfg.GZ_MAX,
+                       log_file = cfg.LOG_PATH + 'ps-interpreter')
     try:
         event_dict, params = ps.interpret(str(DATA_PATH / "scan" / "user_uploaded.seq"))
         print("Seq interpreted")
@@ -239,38 +275,74 @@ def compile_seq():
     except Exception as err:
         print(f"Unexpected {err=}, {type(err)=}")
         socketio.emit("Message",{'type':'danger', 'text': "Interpreter error"})
-        return
 
-    exp = ex.Experiment(lo_freq=5,
-                         rx_t=3.125,
-                         init_gpa=True,
-                         gpa_fhdo_offset_time=params['grad_t'] / 3,
-                         flush_old_rx=True,
-                         halt_and_reset=True,
-                         grad_max_update_rate=0.2)
-
-    try:
-        exp.add_flodict(event_dict)
-        print("Seq flodict added")
-        #exp.plot_sequence()
-        #plt.show()
-        #print("Seq plotted")
-    except Exception as err:
-        print(f"Unexpected {err=}, {type(err)=}")
-        socketio.emit("Message", {'type': 'danger', 'text': "Error adding flodict to experiment"})
         return
+    rxd_sum = {'rx0':[],'rx1':[]}
+    for n in range(32):
+        exp = ex.Experiment(lo_freq=5,
+                             rx_t=params['rx_t'],
+                             init_gpa=True,
+                             gpa_fhdo_offset_time=params['grad_t'] / 3,
+                             flush_old_rx=True,
+                             halt_and_reset=True,
+                             grad_max_update_rate=0.2)
+        try:
+            exp.add_flodict(event_dict)
+            print("Seq flodict added")
+            # exp.plot_sequence()
+            # plt.show()
+            # print("Seq plotted")
+        except Exception as err:
+            print(f"Unexpected {err=}, {type(err)=}")
+            socketio.emit("Message", {'type': 'danger', 'text': "Error adding flodict to experiment"})
 
-    try: # Run experiment
-        print("running experiment...")
-        rxd, msgs = exp.run()
-        print(f'received signal: {rxd}')
-        savemat(f"{str(DATA_PATH)}/rx_data.mat",{'rxd': rxd, 'msgs': msgs})
-        exp.close_server(only_if_sim=True)
-        #exp.close_server()
-    except Exception as err:
-        print(f"Unexpected {err=}, {type(err)=}")
-        socketio.emit("Message", {'type': 'danger', 'text': 'Error compiling / running the experiment'})
-        return
+            exp.close_server(only_if_sim=True)
+            exp.__del__()
+            return
+
+
+        try: # Run experiment
+            print("running experiment...")
+            rxd, msgs = exp.run()
+            # Announce completion
+            nSamples = params['readout_number']
+            print(f'Finished -- read {nSamples} samples')
+
+            print(f'received signal: {rxd}')
+            if rxd_sum['rx0'] == []:
+                rxd_sum['rx0'] = rxd['rx0']
+            else:
+                rxd_sum['rx0'] += rxd['rx0']
+            if rxd_sum['rx1'] == []:
+                rxd_sum['rx1'] = rxd['rx1']
+            else:
+                rxd_sum['rx1'] += rxd['rx1']
+
+            savemat(f"{str(DATA_PATH)}/rx_data.mat",{'rxd': rxd, 'msgs': msgs})
+
+            # Deliver Rx data as plot
+            #fig = plot_rx_data(rxd)
+            #j2 = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+
+            #socketio.emit("Deliver Rx data",{'graph': j2})
+
+            exp.close_server(only_if_sim=True)
+            exp.__del__()
+            #exp.close_server()
+
+
+        except Exception as err:
+            print(f"Unexpected {err=}, {type(err)=}")
+            socketio.emit("Message", {'type': 'danger', 'text': 'Error compiling / running the experiment'})
+
+            exp.close_server(only_if_sim=True)
+            exp.__del__()
+            return
+
+    # Deliver Rx data as plot
+    fig = plot_rx_data(rxd_sum)
+    j2 = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+    socketio.emit("Deliver Rx data",{'graph': j2})
 
     return rxd, msgs
 
@@ -279,4 +351,41 @@ def update_local_config(payload):
     print(f"Updating ip to {payload['ip-address']}")
     utils.update_local_configuration(payload['ip-address'], LOCAL_CONFIG_PATH)
 
->>>>>>> Stashed changes
+@socketio.on("Update config")
+def update_config(payload):
+    print("Updating config with ... ")
+    print(payload)
+    params = {'f0': float(payload['f0'])*1e6,
+              'tx_amp' : float(payload['power']),
+              'shimx':0, 'shimy':0, 'shimz':0}
+    utils.update_configuration(params, CONFIG_PATH)
+
+def plot_rx_data(rxd):
+    fig = make_subplots(rows=1,cols=2)
+    fig.add_trace(
+        go.Scatter(y=np.absolute(rxd['rx0']), mode='lines', name='Rx0',
+                   line=dict(color='blue', width=2)), row=1,col=1)
+
+    fig.add_trace(
+        go.Scatter(y=np.absolute(rxd['rx1']), mode='lines', name='Rx1',
+                   line=dict(color='red', width=2)), row=1,col=1)
+
+    fig.add_trace(
+        go.Scatter(y=np.absolute(np.fft.fftshift(np.fft.fft(rxd['rx0']))), mode='lines',
+                   name='Rx0 FFT',line=dict(color='cyan',width=2)),row=1,col=2)
+
+    fig.add_trace(
+        go.Scatter(y=np.absolute(np.fft.fftshift(np.fft.fft(rxd['rx1']))), mode='lines',
+                   name='Rx1 FFT',line=dict(color='pink',width=2)),row=1,col=2)
+
+
+
+    fig.update_layout(
+        margin=dict(
+            l=1,
+            r=1,
+            b=1,
+            t=1,
+            pad=0
+        ))
+    return fig

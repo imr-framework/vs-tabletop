@@ -2,7 +2,7 @@
 {% block content %}
 <div class="container-fluid vh-100">
     <div class="row h-100">
-        <div class="col-4">
+        <div class="col-5">
             <div class="card">
                 <div class="card-header">Sequence</div>
                 <div class="card-body">
@@ -31,14 +31,38 @@
                 </div>
             </div>
                       <div class="card">
-                <div class="card-header">Mode</div>
+                <div class="card-header">Settings</div>
                 <div class="card-body">
-                    <div class="row d-flex justify-content-center">
-                        <span>Red pitaya 122.88</span>
+                    <div class="row">
+                    <div class="col-9">
+                        <div class="row d-flex justify-content-center">
+                            <label class="form-label" for="scan-mode">Mode</label>
+                                <select class="form-select" id="scan-mode" aria-label="Default select example">
+                                  <option value="0" selected>Seq file upload</option>
+                                  <option value="1">Noise</option>
+                                  <option value="2">FID</option>
+                                  <option value="3">Spin Echo</option>
+                                </select>
+                        </div>
+                        <div class="row d-flex justify-content-center">
+                            <div class="col form-group">
+                                <label class="form-label">f0 (MHz)</label>
+                                <input class="form-control" type="number" id="f0" value="15.53">
+                            </div>
+                              <div class="col form-group">
+                                <label class="form-label">Pulse width (us)</label>
+                                <input class="form-control" type="number" id="pulse-width" value="250">
+                            </div>
+                              <div class="col form-group">
+                                <label class="form-label">Pulse power (0-1)</label>
+                                <input class="form-control" type="number" id="pulse-power" value="0.5">
+                            </div>
+                        </div>
                     </div>
-                    <div class="row d-flex justify-content-center">
-                        <span>Enter "localhost" for simulation and RP IP address for hardware mode</span>
+                    <div class="col-3 h-100">
+                        <button id="update-settings" class="btn btn-lg btn-secondary h-100 w-100">Save</button>
                     </div>
+                </div>
                     <hr>
                     <div class="row">
                         <div class="col">
@@ -69,12 +93,20 @@
         </div>
 
 
-        <div class="col-8">
-            <div class="row h-100">
+        <div class="col-7">
+            <div class="row h-50">
                 <div class="card">
                     <div class="card-header">Sequence waveforms</div>
                     <div class="card-body">
                         <div class="chart h-100" id="psd-chart"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row h-50">
+                <div class="card">
+                    <div class="card-header">Received data</div>
+                    <div class="card-body">
+                        <div class="chart h-100" id="rx-plot"></div>
                     </div>
                 </div>
             </div>

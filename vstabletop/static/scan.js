@@ -39,7 +39,8 @@ socket.on("Deliver seq plot",(payload)=>{
 })
 
 $("#compile-seq").on("click",()=>{
-    socket.emit("Compile sequence");
+    socket.emit("Compile sequence",{'mode':$("#scan-mode").val()});
+
 })
 
 socket.on("Message",(payload)=>{
@@ -51,4 +52,16 @@ $("#update-ip").on("click",()=>{
     let ip = $("#ip-address").val();
     console.log(ip);
     socket.emit("Update local config with ip",{'ip-address':ip});
+
+
+})
+
+$("#update-settings").on('click',()=>{
+    socket.emit("Update config",{'f0':$("#f0").val(),
+                                  'width':$("#pulse-width").val(),
+                                  'power':$('#pulse-power').val()})
+})
+
+socket.on("Deliver Rx data",(payload)=>{
+        Plotly.newPlot('rx-plot',JSON.parse(payload['graph']), {autosize: true});
 })

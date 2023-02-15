@@ -6,6 +6,7 @@ ULTIMATE_PATH = Path(__file__).parent.parent
 IMG_PATH = ROOT_PATH / 'static' / 'img'
 DATA_PATH = ROOT_PATH / 'static' / 'data'
 LOCAL_CONFIG_PATH = ULTIMATE_PATH / 'external' / 'marcos_pack' / 'marcos_client' / 'local_config.py'
+CONFIG_PATH = ROOT_PATH / 'config.py'
 
 if __name__ == "__main__":
     # Print the paths

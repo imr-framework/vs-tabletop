@@ -24,16 +24,14 @@ def update_configuration(params,config_path):
         new_config += f"SHIM_Y = {params['shimy']} \n" # -1 to 1
         new_config += f"SHIM_Z = {params['shimz']} \n" # -1 to 1
 
-        new_config += "MGH_PATH = 'PATH/TO/mgh/DIR' \n"
-        new_config += "LOG_PATH = 'PATH/TO/PROGRAM/LOG/DIR' \n"
-        new_config += "SEQ_PATH = 'PATH/TO/SEQ/FILES/DIR' \n"
-        new_config += "DATA_PATH = 'PATH/TO/DATA/OUTPUT/DIR'"
+        new_config += "MGH_PATH = '../external/mgh_marcos' \n"
+        new_config += "LOG_PATH = '../vstabletop'\n"
+        new_config += "SEQ_PATH = '../vstabletop/static/data/scan/user_uploaded.seq' \n"
+        new_config += "DATA_PATH = '../vstabletop/static/data' \n"
 
         f.write(new_config)
         f.close()
 
-<<<<<<< Updated upstream
-=======
 # TODO TODO TODO
 def update_local_configuration(ip,config_path):
     # Only if file exists
@@ -57,7 +55,6 @@ def update_local_configuration(ip,config_path):
         f.write(new_config)
         f.close()
 
->>>>>>> Stashed changes
 def update_session_subdict(sess,first_key, params):
     for second_key in params.keys():
         sess[first_key][second_key] = params[second_key]
