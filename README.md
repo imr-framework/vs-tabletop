@@ -4,13 +4,14 @@
 </p>
 <br>
 
-Virtual Scanner Tabletop is an extension to [Virtual Scanner](https://github.com/imr-framework/virtual-scanner/) that comprises of educational games about MRI that can be run by simulation or connected to a real educational MRI scanner. Target audience include high school, college, and post-grad students as well as members of the MR and scientific community at large.   
+Virtual Scanner Tabletop is an extension to [Virtual Scanner](https://github.com/imr-framework/virtual-scanner/) comprising of educational games about MRI that can be run by simulation or connected to a real educational MRI scanner. Target audience include high school, college, and post-grad students as well as members of the MR and scientific community at large.   
 
 ## Quickstart
 ### Method 1: `pip install`
-1. On the command line, make a new virtual environment. 
-2. `pip install vs-tabletop`
-3. cd into the main folder called "vstabletop" (`venv\Lib\site-packages\vstabletop`) and run `app.py`. Click into the link in the program output (examplee: http://127.0.0.1:5000/). Log in as admin using password `123456`. 
+1. On the command line, make a new virtual environment in your terminal using the command: '''python -m venv myenv''' For more info on creating virtual environments,
+see here [https://docs.python.org/3/library/venv.html]. 
+2. Pip install the games using the command: '''pip install vs-tabletop'''
+3. cd into the main folder called "vstabletop" (`venv\Lib\site-packages\vstabletop`) and run '''app.py'''. Click into the link in the program output (examplee: http://127.0.0.1:5000/). Log in as admin using password `123456`. 
 #### Troubleshooting 
 (version 1.0.0b5) - You might encounter problems with installing Kiwisolver which requires Visual C++. If you have trouble getting the Visual C++, you can ignore the kiwisolver and perform the following steps:
 1. Install vs-tabletop without dependencies: `pip install vs-tabletop==1.0.0b4 --no-deps`
