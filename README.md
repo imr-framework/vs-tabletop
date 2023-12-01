@@ -8,10 +8,11 @@ Virtual Scanner Tabletop is an extension to [Virtual Scanner](https://github.com
 
 ## Quickstart
 ### Method 1: `pip install`
-1. On the command line, make a new virtual environment in your terminal using the command: `python -m venv myenv` For more info on creating virtual environments,
-see here [https://docs.python.org/3/library/venv.html]. 
-2. Pip install the games using the command: 'pip install vs-tabletop'
-3. cd into the main folder called "vstabletop" (`venv\Lib\site-packages\vstabletop`) and run `app.py`. Click into the link in the program output (examplee: http://127.0.0.1:5000/). Log in as admin using password `123456`. 
+1. On the command line, make a new virtual environment using the command: `python -m venv myenv` For more info on creating virtual environments,
+see [here](https://docs.python.org/3/library/venv.html]). 
+2. Install the games using the command: 'pip install vs-tabletop'
+3. cd into the main folder called "vstabletop" (`venv\Lib\site-packages\vstabletop`) and run `app.py`. Click into the link in the program output (examplee: http://127.0.0.1:5000/). Log in as `admin` using password `123456`.
+   
 #### Troubleshooting 
 (version 1.0.0b5) - You might encounter problems with installing Kiwisolver which requires Visual C++. If you have trouble getting the Visual C++, you can ignore the kiwisolver and perform the following steps:
 1. Install vs-tabletop without dependencies: `pip install vs-tabletop==1.0.0b4 --no-deps`
@@ -21,10 +22,10 @@ see here [https://docs.python.org/3/library/venv.html].
 
 ### Method 2: Cloning 
 1. Clone the repository.
-2. Make a virtual environment, activate it, and install everything specified in `requirements.txt`
+2. Make a virtual environment as described in Method 1, activate it, and install everything specified in `requirements.txt`
 3. `cd` into the app directory and run `questions.py` to set up the database.
 4. Run the app in one of two ways:
-   (a) Run app.py using Pycharm or other IDE, or on the command line with `python app.py`
+   (a) Run `app.py` using Pycharm or other IDE, or on the command line with `python app.py`
    (b) On the command line, set the FLASK_APP variable (`set FLASK_APP=app` on Windows, or `export FLASK_APP=app` on non-Windows). Then run the app with: `flask run`
 5. Click into the link in the program output (example: http://127.0.0.1:5000/) or copy & paste it into the browser. Log in as admin using password `123456`.
 
