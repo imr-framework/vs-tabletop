@@ -46,7 +46,16 @@ Games 1, 3, 5, 7 are beginner games and the games 2, 4, 6, 8 are advanced games.
 | 7 | Puzzled by projection I  | 1D and 2D projection (forward) |
 | 8 | Puzzled by projection II | 1D and 2D projection (inverse)|
 
-## Screenshots 
+## 7. 👥 Contributing and Community guidelines
+`vs-tabletop` adheres to a code of conduct adapted from the [Contributor Covenant](https://www.contributor-covenant.org/) code of conduct.
+Contributing guidelines can be found [here](https://github.com/imr-framework/vs-tabletop/blob/main/CONTRIBUTING.md).
+
+# References
+Brain images from the Coursera Neurohacking in R (https://www.kaggle.com/datasets/ilknuricke/neurohackinginrimages) were used in Game 2.
+
+
+
+## Screenshots for quick reference
 Screenshots are in-development previews of the games. They will be updated at the first release. 
 
 ### Login page
@@ -67,5 +76,3 @@ Screenshots are in-development previews of the games. They will be updated at th
 ### Module 4 (beginner): Puzzled by Projection I 
 ![game7](https://user-images.githubusercontent.com/31249056/186201082-00fc2dad-a9b1-4911-8862-99fbd73cccdc.png)
 
-# References
-Brain images from the Coursera Neurohacking in R (https://www.kaggle.com/datasets/ilknuricke/neurohackinginrimages) were used in Game 2.
