@@ -34,9 +34,6 @@ imageio==2.19.3
 importlib-metadata==4.11.4
 itsdangerous==2.1.2
 Jinja2==3.1.2
-keras==2.9.0
-Keras-Applications==1.0.8
-Keras-Preprocessing==1.1.2
 kiwisolver==1.0.1
 libclang==14.0.1
 Markdown==3.1
