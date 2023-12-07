@@ -1,3 +1,6 @@
+import sys
+sys.path.insert(0, '.')
+
 from flask import redirect, url_for
 from vstabletop.models import User
 from vstabletop import create_app, socketio, login_manager
