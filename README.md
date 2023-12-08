@@ -29,6 +29,9 @@ see [here](https://docs.python.org/3/library/venv.html]). Activate the virtual e
    (b) On the command line, set the FLASK_APP variable (`set FLASK_APP=app` on Windows, or `export FLASK_APP=app` on non-Windows). Then run the app with: `flask run`
 5. Click into the link in the program output (example: http://127.0.0.1:5000/) or copy & paste it into the browser. Log in as admin using password `123456`.
 
+### Method 3: Virtual Machine
+1. Please visit the wiki page [here](https://github.com/imr-framework/vs-tabletop/wiki/Virtual-Machine-with-Vagrant) if you are interested in using a virtual machine to play these games
+
 Please provide feedback here after you've tried all the beginner games:smile:: https://forms.gle/HMby4NHcmrTLi5Ai7
 
 ## Tabletop Games
