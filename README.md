@@ -53,8 +53,9 @@ Games 1, 3, 5, 7 are beginner games and the games 2, 4, 6, 8 are advanced games.
 `vs-tabletop` adheres to a code of conduct adapted from the [Contributor Covenant](https://www.contributor-covenant.org/) code of conduct.
 Contributing guidelines can be found [here](https://github.com/imr-framework/vs-tabletop/blob/main/CONTRIBUTING.md).
 
-# References
-Brain images from the Coursera Neurohacking in R (https://www.kaggle.com/datasets/ilknuricke/neurohackinginrimages) were used in Game 2.
+# References:
+1. Please cite our article: Tong, G., Ananth, R., Vaughan Jr, J.T. and Geethanath, S., 2024. Expanding access to magnetic resonance education through open-source web tutorials. NMR in Biomedicine, pp.e5109-e5109.
+2. Brain images from the Coursera Neurohacking in R (https://www.kaggle.com/datasets/ilknuricke/neurohackinginrimages) were used in Game 2.
 
 
 
