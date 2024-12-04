@@ -7,7 +7,11 @@
 Virtual Scanner Tabletop is an extension to [Virtual Scanner](https://github.com/imr-framework/virtual-scanner/) comprising of educational games about MRI that can be run by simulation or connected to a real educational MRI scanner. Target audience include high school, college, and post-grad students as well as members of the MR and scientific community at large.   
 
 ## Quickstart
-### Method 1: `pip install`
+
+### Method 1:
+Play online  here on Heroku [vs-tabletop games](https://vs-tabletop-713f97371131.herokuapp.com/). You can register your name/password but lasts only a session. Free things sometimes have these challenges :)
+
+### Method 2: `pip install`
 1. On the command line, make a new virtual environment using the command: `python -m venv myenv` For more info on creating virtual environments,
 see [here](https://docs.python.org/3/library/venv.html]). Activate the virtual environment using the command `source venv/bin/activate` on the terminal from the folder where you installed the virtual environment
 2. Install the games using the command: 'pip install vs-tabletop-lite'
@@ -20,7 +24,7 @@ see [here](https://docs.python.org/3/library/venv.html]). Activate the virtual e
 3. Install the rest of the requirements: `pip install -r requirements.txt`
 4. Run `app.py` the same way as described above. The games should be able to run normally.
 
-### Method 2: Cloning 
+### Method 3: Cloning 
 1. Clone the repository.
 2. Make a virtual environment as described in Method 1, activate it, and install everything specified in `requirements.txt`
 3. `cd` into the app directory and run `questions.py` to set up the database.
@@ -29,7 +33,7 @@ see [here](https://docs.python.org/3/library/venv.html]). Activate the virtual e
    (b) On the command line, set the FLASK_APP variable (`set FLASK_APP=app` on Windows, or `export FLASK_APP=app` on non-Windows). Then run the app with: `flask run`
 5. Click into the link in the program output (example: http://127.0.0.1:5000/) or copy & paste it into the browser. Log in as admin using password `123456`.
 
-### Method 3: Virtual Machine
+### Method 4: Virtual Machine
 1. Please visit the wiki page [here](https://github.com/imr-framework/vs-tabletop/wiki/Virtual-Machine-with-Vagrant) if you are interested in using a virtual machine to play these games
 
 Please provide feedback here after you've tried all the beginner games:smile:: https://forms.gle/HMby4NHcmrTLi5Ai7
