@@ -4,7 +4,7 @@
 </p>
 <br>
 
-This is the development branch for the games software as part of the [DELTA DIY project] (https://github.com/delta-diy-mri/delta-diy-mri.github.io), 2024.
+This is the development branch for the games software as part of the [DELTA DIY project](https://github.com/delta-diy-mri/delta-diy-mri.github.io).
 The goal is to use this in a master's level MRI course and obtain feedback.
 
 Virtual Scanner Tabletop is an extension to [Virtual Scanner](https://github.com/imr-framework/virtual-scanner/) comprising of educational games about MRI that can be run by simulation or connected to a real educational MRI scanner. Target audience include high school, college, and post-grad students as well as members of the MR and scientific community at large.   
