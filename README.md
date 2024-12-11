@@ -9,6 +9,7 @@ The goal is to use this in a master's level MRI course and obtain feedback.
 
 Virtual Scanner Tabletop is an extension to [Virtual Scanner](https://github.com/imr-framework/virtual-scanner/) comprising of educational games about MRI that can be run by simulation or connected to a real educational MRI scanner. Target audience include high school, college, and post-grad students as well as members of the MR and scientific community at large.   
 
+
 ## Quickstart
 
 ### Method 1:
@@ -64,7 +65,9 @@ Contributing guidelines can be found [here](https://github.com/imr-framework/vs-
 1. Please cite our article: Tong, G., Ananth, R., Vaughan Jr, J.T. and Geethanath, S., 2024. Expanding access to magnetic resonance education through open-source web tutorials. NMR in Biomedicine, pp.e5109-e5109.
 2. Brain images from the Coursera Neurohacking in R (https://www.kaggle.com/datasets/ilknuricke/neurohackinginrimages) were used in Game 2.
 
-
+## Feedback:
+If you have played the games, please provide your feedback [here](https://docs.google.com/forms/d/1pZaqmwBlUsxJOpEuZxLZClcquNuc0dTPfkJJRPW_Ivk/viewform?edit_requested=true).
+Your time is sincerely appreciated and will help us make this tool better.
 
 ## Screenshots for quick reference
 Screenshots are in-development previews of the games. They will be updated at the first release. 
