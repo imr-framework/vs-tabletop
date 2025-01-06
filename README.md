@@ -42,6 +42,8 @@ see [here](https://docs.python.org/3/library/venv.html]). Activate the virtual e
 
 Please also use this method (recommended) if you want to contribute to the repository.
 
+If on windows, make sure to check you are not running on OneDrive but only from a local folder.
+
 Please provide feedback here after you've tried all the beginner games:smile:: https://forms.gle/HMby4NHcmrTLi5Ai7
 
 ## Tabletop Games
