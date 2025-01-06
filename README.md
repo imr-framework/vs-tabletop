@@ -40,6 +40,8 @@ see [here](https://docs.python.org/3/library/venv.html]). Activate the virtual e
 ### Method 4: Virtual Machine
 1. Please visit the wiki page [here](https://github.com/imr-framework/vs-tabletop/wiki/Virtual-Machine-with-Vagrant) if you are interested in using a virtual machine to play these games
 
+Please also use this method (recommended) if you want to contribute to the repository.
+
 Please provide feedback here after you've tried all the beginner games:smile:: https://forms.gle/HMby4NHcmrTLi5Ai7
 
 ## Tabletop Games
