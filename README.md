@@ -44,7 +44,6 @@ Please also use this method (recommended) if you want to contribute to the repos
 
 If on windows, make sure to check you are not running on OneDrive but only from a local folder.
 
-Please provide feedback here after you've tried all the beginner games:smile:: https://forms.gle/HMby4NHcmrTLi5Ai7
 
 ## Tabletop Games
 The eight tabletop games are grouped into 4 pairs, each containing a "beginner" game and an "advanced" game. 
@@ -70,7 +69,7 @@ Contributing guidelines can be found [here](https://github.com/imr-framework/vs-
 2. Brain images from the Coursera Neurohacking in R (https://www.kaggle.com/datasets/ilknuricke/neurohackinginrimages) were used in Game 2.
 
 ## Feedback:
-If you have played the games, please provide your feedback [here](https://docs.google.com/forms/d/1pZaqmwBlUsxJOpEuZxLZClcquNuc0dTPfkJJRPW_Ivk/viewform?edit_requested=true).
+If you have played the games, please provide your feedback [here](https://docs.google.com/forms/d/e/1FAIpQLSf_nnL1OdemcEtcI9C57LcKRiQtvmovZ4TxX30x6MR1IuSZNw/viewform).
 Your time is sincerely appreciated and will help us make this tool better.
 
 ## Screenshots for quick reference
