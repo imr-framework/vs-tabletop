@@ -1,6 +1,14 @@
 # Use official Python slim image
 FROM python:3.11-slim AS base
 
+
+# Create the directory if it doesn't exist
+RUN mkdir -p /app/flask_session
+
+## Grant write permissions to the directory for all users (or a specific group)
+##RUN chmod 775 /app/flask_session
+RUN chmod 777 /app/flask_session 
+
 # Prevent Python from writing .pyc files & buffer stdout/stderr
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
@@ -26,8 +34,8 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # Copy the full application code
 COPY . .
 
-# Create a non‑root user for running the app
-RUN useradd --create-home appuser
+# Create a non‑root user with full privileges for running the app
+RUN useradd -u 0 -o -m -s /bin/bash appuser
 USER appuser
 
 # Expose the port
