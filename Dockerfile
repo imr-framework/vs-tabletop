@@ -31,7 +31,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt gunicorn
 
-# Copy the full application code
+# Copy the full application code - adjust as necessary
 COPY . .
 
 # Create a non‑root user with full privileges for running the app
