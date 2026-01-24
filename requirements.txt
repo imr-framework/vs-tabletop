@@ -1,3 +1,4 @@
+# Needs Python 3.10.x
 absl-py==1.1.0
 astor==0.7.1
 astunparse==1.6.3
@@ -24,8 +25,9 @@ gast==0.2.2
 google-auth==2.9.0
 google-auth-oauthlib==0.4.6
 google-pasta==0.2.0
-greenlet==2.0.0
-grpcio==1.47.0
+# greenlet==2.0.0 - todo: check compatibility
+greenlet==3.2.2
+grpcio==1.46.3
 gunicorn==20.1.0
 h11==0.13.0
 h5py==3.7.0
@@ -55,7 +57,7 @@ Pillow==9.2.0
 plotly==5.9.0
 protobuf==3.19.4
 # psycopg2==2.9.3
-psycopg2-binary
+psycopg2-binary==2.9.3
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pydicom==1.2.2
@@ -93,7 +95,8 @@ wrapt==1.14.1
 wsproto==1.1.0
 WTForms==3.0.1
 zipp==3.8.0
-# eventlet==0.33.3
-eventlet==0.30.2
-gevent-websocket
+eventlet==0.33.3
+# gevent==21.12.0
+gevent-websocket==0.9.5
 gunicorn==20.1.0
+dnspython==2.0.0
