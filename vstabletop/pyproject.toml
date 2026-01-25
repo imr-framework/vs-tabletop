@@ -1,0 +1,64 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vstabletop"
+version = "0.1.0"
+description = "Utilities and tools for VS Tabletop."
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+authors = [
+    { name = "Sairam Geethanath", email = "sairamgeethanath@gmail.com" }
+]
+keywords = ["tabletop", "vstabletop", "game"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Topic :: Games/Entertainment",
+]
+
+#!/usr/bin/env python3
+# Run this in the project root to print a TOML-compatible dependencies block
+from pathlib import Path
+
+p = Path("requirements.txt")
+if not p.exists():
+    raise SystemExit("requirements.txt not found in current directory")
+
+lines = [ln.strip() for ln in p.read_text().splitlines()]
+deps = [ln for ln in lines if ln and not ln.startswith("#")]
+
+print("dependencies = [")
+for d in deps:
+    print(f'    "{d}",')
+print("]")
+
+[project.urls]
+Homepage = "https://example.com/vstabletop"
+Repository = "https://github.com/imr-framework/vs-tabletop"
+Changelog = "https://github.com/imr-framework/vs-tabletop/releases"
+
+[project.scripts]
+vstabletop = "vstabletop.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.flake8]
+max-line-length = 88
+extend-ignore = ["E203"]
+
+[tool.black]
+line-length = 88
+target-version = ["py38"]
