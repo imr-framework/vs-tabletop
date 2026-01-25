@@ -73,7 +73,10 @@ create_folders () {
 install_games() {
   echo "## Installing vs-tabletop repositories..."
   cd $VS_BASE
-  sudo su $VS_USER -c "git clone --branch delta-diy https://github.com/imr-framework/vs-tabletop vs-tabletop-main" 
+  # Clone the repository. By default, uses the delta-diy branch for the DELTA DIY project.
+  # To use a different branch, modify the --branch parameter below.
+  VS_BRANCH="${VS_BRANCH:-delta-diy}"
+  sudo su $VS_USER -c "git clone --branch $VS_BRANCH https://github.com/imr-framework/vs-tabletop vs-tabletop-main" 
   cd vs-tabletop-main
 }
 

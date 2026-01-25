@@ -1,0 +1,13 @@
+# SSH private key removed from version control.
+# 
+# To use this project, provide the required SSH private key via a secure
+# mechanism such as:
+#   - environment variables
+#   - a secret management tool (e.g., Vault, cloud secret manager)
+#   - SSH agent forwarding
+#   - a private key file stored outside of the repository
+#
+# IMPORTANT:
+# - Never commit private keys to version control
+# - Revoke and rotate any SSH keys that were previously stored here.
+# - Rewrite Git history to remove the old key material from all commits.
