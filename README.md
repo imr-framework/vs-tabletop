@@ -4,7 +4,11 @@
 </p>
 <br>
 
+This is the development branch for the games software as part of the [DELTA DIY project](https://github.com/delta-diy-mri/delta-diy-mri.github.io).
+The goal is to use this in a master's level MRI course and obtain feedback.
+
 Virtual Scanner Tabletop is an extension to [Virtual Scanner](https://github.com/imr-framework/virtual-scanner/) comprising of educational games about MRI that can be run by simulation or connected to a real educational MRI scanner. Target audience include high school, college, and post-grad students as well as members of the MR and scientific community at large.   
+
 
 ## Quickstart
 
@@ -36,7 +40,10 @@ see [here](https://docs.python.org/3/library/venv.html]). Activate the virtual e
 ### Method 4: Virtual Machine
 1. Please visit the wiki page [here](https://github.com/imr-framework/vs-tabletop/wiki/Virtual-Machine-with-Vagrant) if you are interested in using a virtual machine to play these games
 
-Please provide feedback here after you've tried all the beginner games:smile:: https://forms.gle/HMby4NHcmrTLi5Ai7
+Please also use this method (recommended) if you want to contribute to the repository.
+
+If on windows, make sure to check you are not running on OneDrive but only from a local folder.
+
 
 ## Tabletop Games
 The eight tabletop games are grouped into 4 pairs, each containing a "beginner" game and an "advanced" game. 
@@ -61,7 +68,9 @@ Contributing guidelines can be found [here](https://github.com/imr-framework/vs-
 1. Please cite our article: Tong, G., Ananth, R., Vaughan Jr, J.T. and Geethanath, S., 2024. Expanding access to magnetic resonance education through open-source web tutorials. NMR in Biomedicine, pp.e5109-e5109.
 2. Brain images from the Coursera Neurohacking in R (https://www.kaggle.com/datasets/ilknuricke/neurohackinginrimages) were used in Game 2.
 
-
+## Feedback:
+If you have played the games, please provide your feedback [here](https://docs.google.com/forms/d/e/1FAIpQLSf_nnL1OdemcEtcI9C57LcKRiQtvmovZ4TxX30x6MR1IuSZNw/viewform).
+Your time is sincerely appreciated and will help us make this tool better.
 
 ## Screenshots for quick reference
 Screenshots are in-development previews of the games. They will be updated at the first release. 

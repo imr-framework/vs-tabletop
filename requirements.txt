@@ -1,3 +1,4 @@
+# Needs Python 3.10.x
 absl-py==1.1.0
 astor==0.7.1
 astunparse==1.6.3

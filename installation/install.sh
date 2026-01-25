@@ -73,7 +73,7 @@ create_folders () {
 install_games() {
   echo "## Installing vs-tabletop repositories..."
   cd $VS_BASE
-  sudo su $VS_USER -c "git clone https://github.com/imr-framework/vs-tabletop vs-tabletop-main" 
+  sudo su $VS_USER -c "git clone --branch delta-diy https://github.com/imr-framework/vs-tabletop vs-tabletop-main" 
   cd vs-tabletop-main
 }
 
