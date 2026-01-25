@@ -1,9 +1,14 @@
 #!/usr/bin/bash
 set -euo pipefail
 # Reusing mri4all install script
+#
+# Environment variables:
+#   VS_BRANCH - Git branch to clone (default: main)
+#               Example: VS_BRANCH=delta-diy ./install.sh
 
 VS_BASE=/opt/games
 VS_USER=vagrant
+VS_BRANCH=${VS_BRANCH:-main}
 
 error() {
   local parent_lineno="$1"
@@ -73,15 +78,6 @@ create_folders () {
 install_games() {
   echo "## Installing vs-tabletop repositories..."
   cd $VS_BASE
-  # Clone the repository. By default, uses the delta-diy branch for the DELTA DIY project.
-  # To use a different branch, set the VS_BRANCH environment variable before running this script.
-  # Example: VS_BRANCH=main ./install.sh
-  VS_BRANCH="${VS_BRANCH:-delta-diy}"
-  # Validate branch name to prevent command injection
-  if [[ ! "$VS_BRANCH" =~ ^[a-zA-Z0-9._/-]+$ ]]; then
-    echo "Error: Invalid branch name '$VS_BRANCH'. Only alphanumeric characters, dots, underscores, slashes, and hyphens are allowed."
-    exit 1
-  fi
   sudo su $VS_USER -c "git clone --branch $VS_BRANCH https://github.com/imr-framework/vs-tabletop vs-tabletop-main" 
   cd vs-tabletop-main
 }
