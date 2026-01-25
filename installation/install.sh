@@ -74,7 +74,8 @@ install_games() {
   echo "## Installing vs-tabletop repositories..."
   cd $VS_BASE
   # Clone the repository. By default, uses the delta-diy branch for the DELTA DIY project.
-  # To use a different branch, modify the --branch parameter below.
+  # To use a different branch, set the VS_BRANCH environment variable before running this script.
+  # Example: VS_BRANCH=main ./install.sh
   VS_BRANCH="${VS_BRANCH:-delta-diy}"
   sudo su $VS_USER -c "git clone --branch $VS_BRANCH https://github.com/imr-framework/vs-tabletop vs-tabletop-main" 
   cd vs-tabletop-main
