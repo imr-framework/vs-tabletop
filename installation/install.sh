@@ -1,9 +1,14 @@
 #!/usr/bin/bash
 set -euo pipefail
 # Reusing mri4all install script
+#
+# Environment variables:
+#   VS_BRANCH - Git branch to clone (default: main)
+#               Example: VS_BRANCH=delta-diy ./install.sh
 
 VS_BASE=/opt/games
 VS_USER=vagrant
+VS_BRANCH=${VS_BRANCH:-main}
 
 error() {
   local parent_lineno="$1"
@@ -73,7 +78,7 @@ create_folders () {
 install_games() {
   echo "## Installing vs-tabletop repositories..."
   cd $VS_BASE
-  sudo su $VS_USER -c "git clone --branch delta-diy https://github.com/imr-framework/vs-tabletop vs-tabletop-main" 
+  sudo su $VS_USER -c "git clone --branch $VS_BRANCH https://github.com/imr-framework/vs-tabletop vs-tabletop-main" 
   cd vs-tabletop-main
 }
 
