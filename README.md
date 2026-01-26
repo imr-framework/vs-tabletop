@@ -27,11 +27,22 @@ see [here](https://docs.python.org/3/library/venv.html]). Activate the virtual e
 
 ### Method 2: Cloning 
 1. Clone the repository.
-2. Make a virtual environment as described in Method 1, activate it, and install everything specified in `requirements.txt`
+2. Make a virtual environment as described in Method 1, activate it, and install everything specified in `requirements.txt`. Make sure that you are using `Python 3.10.x`
 3. `cd` into the app directory and run `questions.py` to set up the database.
 4. Run the app in one of two ways:
-   (a) Run `app.py` using Pycharm or other IDE, or on the command line with `python app.py`
+   (a) Run `app.py` using Pycharm or other IDE,
+    or on the command line as follows:
+   ```bash
+   python ./vstabletop/main/app.py
+   ```
    (b) On the command line, set the FLASK_APP variable (`set FLASK_APP=app` on Windows, or `export FLASK_APP=app` on non-Windows). Then run the app with: `flask run`
+
+   ```bash
+   # For example on non-Windows
+   cd vstabletop/main
+   export FLASK_APP=app
+   flask run
+   ```
 5. Click into the link in the program output (example: http://127.0.0.1:5000/) or copy & paste it into the browser. Log in as admin using password `123456`.
 
 ### Method 3: Virtual Machine
