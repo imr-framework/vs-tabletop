@@ -38,7 +38,7 @@ see [here](https://docs.python.org/3/library/venv.html]). Activate the virtual e
    (b) On the command line, set the FLASK_APP variable (`set FLASK_APP=app` on Windows, or `export FLASK_APP=app` on non-Windows). Then run the app with: `flask run`
 
    ```bash
-   # For example on non-Windows
+   # An example on non-Windows
    cd vstabletop/main
    export FLASK_APP=app
    flask run
