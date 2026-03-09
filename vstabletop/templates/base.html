@@ -288,7 +288,7 @@
         </div>
 
           <!-- Sidebar and main content -->
-           <div class="row h-100 collapse g-0 d-flex collapsable-sidebar">
+           <div class="row h-100 collapse g-0 d-flex collapsable-sidebar", style="overflow-y: auto;">
               <div class="col m-0 p-0 h-100 w-sidebar navbar-collapse collapse d-md-flex sidebar collapsable-sidebar">
               <div class="row w-100 m-0">
 
@@ -297,7 +297,7 @@
                                 <i class="fas fa-tasks"></i>
                                 Instructions
                     </button>
-                  <div class="card bg-light collapse" id="collapsible-tasks">
+                  <div class="card bg-light collapse" id="collapsible-tasks", style="overflow-y: auto; max-height: 90vh;">
                     <!-- Collapsible tasks -->
                         {% block tasks %}
                         {% endblock %}
