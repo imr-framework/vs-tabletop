@@ -352,6 +352,7 @@
 
                     <!-- Instructions -->
                     <!-- Show content for each lab procedure -->
+                    <div style="overflow-y: auto; max-height: 70vh;">
                     <div class="tab-content" id="game5-tab-content">
                         {% for task, task_details in instructions['tasks'].items() %}
                             {% if loop.index == ([session['game5']['task_completed'] + 1 , 4] | min) %}
@@ -447,6 +448,7 @@
 
                       <div class="tab-pane fade" id="step2" role="tabpanel" aria-labelledby="profile-tab"></div>
                       <div class="tab-pane fade" id="step3" role="tabpanel" aria-labelledby="contact-tab"></div>
+                    </div>
                     </div>
                     </div>
 {% endblock %}
