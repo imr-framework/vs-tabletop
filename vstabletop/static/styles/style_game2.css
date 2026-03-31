@@ -2,3 +2,19 @@
     border-style: solid;
     border-color: black;
 }
+
+/* Keep Fabric canvases inside Game 2 panels (do not overlay page UI). */
+#drawing,
+#erase,
+.canvas-container canvas {
+    position: static;
+    bottom: auto;
+    left: auto;
+    width: auto;
+}
+
+/* Keep the Game 2 sidebar controls above main content overlays. */
+.collapsable-sidebar .sidebar {
+    position: relative;
+    z-index: 20;
+}
