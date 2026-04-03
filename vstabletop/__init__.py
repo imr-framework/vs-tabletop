@@ -1,3 +1,9 @@
+import matplotlib
+
+# Must run before any module imports matplotlib.pyplot (e.g. workers). Socket.IO and
+# Flask run matplotlib from background threads; macOS GUI backend crashes (NSWindow).
+matplotlib.use("Agg")
+
 from flask import Flask, abort, render_template, url_for, redirect, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_required, login_user, current_user, logout_user

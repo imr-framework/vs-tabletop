@@ -1,3 +1,7 @@
+import matplotlib
+
+matplotlib.use("Agg")
+
 import sys
 sys.path.insert(0, '.')
 
