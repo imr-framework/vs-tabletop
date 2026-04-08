@@ -1,5 +1,8 @@
-# Use official Python slim image
-FROM python:3.10.20-slim AS base
+# syntax=docker/dockerfile:1.7
+
+# Use official Python slim image (override via --build-arg PYTHON_VERSION=...)
+ARG PYTHON_VERSION=3.10.20
+FROM python:${PYTHON_VERSION}-slim AS base
 
 
 # Create the directory if it doesn't exist
@@ -28,8 +31,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Copy requirements and install Python dependencies
 COPY requirements.txt .
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt gunicorn
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --upgrade pip && \
+    pip install -r requirements.txt gunicorn
 
 # Copy the full application code - adjust as necessary
 COPY . .
@@ -41,5 +45,5 @@ USER appuser
 # Expose the port
 EXPOSE 8080
 
-# Run the application using Gunicorn: adjusted module path
-CMD ["gunicorn", "--bind", "0.0.0.0:8080", "vstabletop.main.app:app", "--workers", "2", "--timeout", "120"]
+# Run with Socket.IO-compatible gevent websocket worker setup.
+CMD ["gunicorn", "-k", "geventwebsocket.gunicorn.workers.GeventWebSocketWorker", "-w", "1", "--bind", "0.0.0.0:8080", "vstabletop.main.app:app", "--timeout", "120"]

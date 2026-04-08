@@ -12,7 +12,9 @@ from flask_socketio import SocketIO, emit
 from flask_session import Session
 #from vstabletop.main.paths import IMG_PATH, DATA_PATH
 
-socketio = SocketIO(manage_session=False)
+# Match the Gunicorn worker stack in Docker (gevent websocket).
+# This avoids auto-selecting eventlet when it is installed in requirements.
+socketio = SocketIO(manage_session=False, async_mode="gevent")
 login_manager = LoginManager()
 
 
