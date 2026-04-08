@@ -1,5 +1,5 @@
 # Use official Python slim image
-FROM python:3.11-slim AS base
+FROM python:3.10.20-slim AS base
 
 
 # Create the directory if it doesn't exist
