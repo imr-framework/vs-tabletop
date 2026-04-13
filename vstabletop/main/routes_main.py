@@ -3,7 +3,7 @@
 # Login, register, and calibration pages for Virtual Scanner Biobus Mode
 import numpy as np
 from flask import flash, render_template, session, redirect, url_for, request, Blueprint
-from flask_login import login_required, login_user, logout_user
+from flask_login import login_required, login_user, logout_user, current_user
 import vstabletop.utils as utils
 from vstabletop.forms import *
 from vstabletop.info import GAMES_DICT, GAMES_INFO
@@ -12,10 +12,35 @@ import json
 import plotly
 import plotly.express as px
 import pandas as pd
+import re
 
 from vstabletop.models import MultipleChoice
+from vstabletop.auth_clerk import clerk_enabled, clerk_publishable_key, clerk_frontend_api, verify_clerk_token
 
 bp_main = Blueprint('bp_main',__name__, template_folder="templates/main",url_prefix="")
+
+
+def _clerk_template_context():
+    return {
+        "clerk_enabled": clerk_enabled(),
+        "clerk_publishable_key": clerk_publishable_key(),
+        "clerk_frontend_api": clerk_frontend_api(),
+    }
+
+
+def _safe_username(base):
+    base = re.sub(r"[^a-zA-Z0-9_]", "", (base or "player")).lower()
+    base = (base or "player")[:10]
+    if len(base) < 3:
+        base += "user"
+    base = base[:10]
+    candidate = base
+    suffix = 1
+    while User.query.filter_by(username=candidate).first() is not None:
+        tail = str(suffix)
+        candidate = f"{base[:max(1, 10-len(tail))]}{tail}"
+        suffix += 1
+    return candidate
 
 
 def initialize_parameters():
@@ -119,7 +144,9 @@ def logout():
 
 
     logout_user()
-    return redirect(url_for("bp_main.landing"))
+    session.clear()
+    # Force Clerk sign-out on next login page load to prevent auto re-login.
+    return redirect(url_for("bp_main.login", logged_out="1"))
 
 # Home
 #@app.route('/index')
@@ -133,13 +160,24 @@ def index():
 #@app.route('/',methods=["GET","POST"])
 @bp_main.route('/',methods=["GET","POST"])
 def landing():
-    initialize_parameters()
+    if current_user.is_authenticated:
+        return redirect(url_for('bp_main.index'))
+    # Keep landing page accessible, but initialize session state only once.
+    if 'user' not in session:
+        initialize_parameters()
     return render_template('main/landing.html')
 
 
 #@app.route('/login',methods=["GET","POST"])
 @bp_main.route('/login',methods=["GET","POST"])
 def login():
+    if request.args.get("switch_account") == "1":
+        logout_user()
+        session.clear()
+        initialize_parameters()
+
+    if current_user.is_authenticated and request.args.get("logged_out") != "1":
+        return redirect(url_for('bp_main.index'))
     login_form = Login_Form()
 
     if login_form.validate_on_submit():
@@ -171,7 +209,7 @@ def login():
             flash('Wrong credentials - login failed')
             return redirect(url_for('bp_main.login'))
 
-    return render_template("main/login.html",template_login_form=login_form)
+    return render_template("main/login.html",template_login_form=login_form, **_clerk_template_context())
 
 # template_title='login',
 #                            template_intro_text="Log into Virtual Scanner Biobus",
@@ -182,6 +220,8 @@ def login():
 #@app.route('/register',methods=['GET','POST'])
 @bp_main.route('/register',methods=['GET','POST'])
 def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('bp_main.index'))
     reg_form = Register_Form()
     print('on register page...')
 
@@ -202,7 +242,68 @@ def register():
         print("Failed to validate")
         flash('Form is not validated; check your passwords!')
 
-    return render_template('main/register.html', title='Register', template_form=reg_form)
+    return render_template('main/register.html', title='Register', template_form=reg_form, **_clerk_template_context())
+
+
+@bp_main.route('/auth/clerk/session', methods=['POST'])
+def clerk_session_login():
+    if not clerk_enabled():
+        return {"ok": False, "error": "Clerk auth is disabled."}, 400
+    auth_header = request.headers.get("Authorization", "")
+    if not auth_header.startswith("Bearer "):
+        return {"ok": False, "error": "Missing bearer token."}, 401
+    token = auth_header.split(" ", 1)[1]
+    try:
+        claims = verify_clerk_token(token)
+    except Exception as e:
+        print("Clerk session verification failed:", e)
+        return {"ok": False, "error": f"Invalid token: {e}"}, 401
+
+    clerk_id = claims.get("sub")
+    if not clerk_id:
+        return {"ok": False, "error": "Token missing subject."}, 401
+    print("Clerk session login hit for:", clerk_id)
+
+    payload = request.get_json(silent=True) or {}
+    email = payload.get("email") or claims.get("email_address")
+    preferred_username = payload.get("username") or payload.get("name") or (email.split("@")[0] if email else None)
+
+    user = User.query.filter_by(clerk_user_id=clerk_id).first()
+    if user is None and email:
+        user = User.query.filter_by(email=email).first()
+
+    if user is None:
+        user = User(username=_safe_username(preferred_username), email=email, clerk_user_id=clerk_id)
+        # local password login is optional for Clerk users
+        user.set_password(clerk_id)
+        db.session.add(user)
+        db.session.commit()
+    else:
+        updated = False
+        if not user.clerk_user_id:
+            user.clerk_user_id = clerk_id
+            updated = True
+        if email and user.email != email:
+            user.email = email
+            updated = True
+        if updated:
+            db.session.commit()
+
+    login_user(user)
+    session['user']['id'] = user.id
+    session['user']['username'] = user.username
+    session['user']['date_joined'] = user.joined_at
+    session['user']['role'] = 'administrator' if user.username == 'admin' else 'student'
+    session['game5']['progress'].user_id = user.id
+    session.modified = True
+    return {"ok": True, "redirect": url_for('bp_main.index')}
+
+
+@bp_main.route('/auth/clerk/logout', methods=['POST'])
+def clerk_logout():
+    logout_user()
+    session.clear()
+    return {"ok": True}
 
 # TODO calibration tunings - #4 save to file
 # 4. "Save to file" / "Load" buttons split the current "load previous" one

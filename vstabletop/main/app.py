@@ -17,7 +17,7 @@ def load_user(user_id):
 
 @login_manager.unauthorized_handler
 def unauthorized():
-    return redirect(url_for('login'))
+    return redirect(url_for('bp_main.login'))
 
 app = create_app()
 

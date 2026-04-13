@@ -212,17 +212,18 @@
 
 
                 <div class="collapse navbar-collapse" id="navbarColor01" data-toggle="buttons">
-                {% if session['user']['username'] %}
+                {% set user_info = session.get('user') or {} %}
+                {% if user_info and user_info.get('username') %}
 
                 <ul class="navbar-nav ms-auto">
                       <li class="nav-item d-flex align-content-center">
                          <div class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userInfoModalCenter">
-                           User: {{ session['user']['username'] }}
+                           User: {{ user_info.get('username') }}
                         </div>
                       </li>
                       <!-- Button trigger modal -->
                     <li class="nav-item">
-                      <a class="nav-link" href="/logout">Log out</a>
+                      <a class="nav-link" href="/logout" id="logout-link">Log out</a>
                   </li>
                 </ul>
                 {% endif %}
@@ -233,6 +234,7 @@
           </div>
 
           <!-- Modal: user profile -->
+          {% if user_info and user_info.get('username') %}
           <div class="modal fade" id="userInfoModalCenter" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -248,9 +250,9 @@
                          </svg>
                           </div>
                           <div class="row h-50 d-flex justify-content-center align-content-center">
-                          Username:  {{ session['user']['username']}} <br>
-                          Role: {{ session['user']['role']}} <br>
-                          Date joined: {{ session['user']['date_joined'] }}
+                          Username:  {{ user_info.get('username', '') }} <br>
+                          Role: {{ user_info.get('role', '') }} <br>
+                          Date joined: {{ user_info.get('date_joined', '') }}
 
                           </div>
                       </div>
@@ -260,6 +262,7 @@
                     </div>
                 </div>
                 </div>
+          {% endif %}
 
           <!-- Modal: Questions panel -->
           <div class="modal top fade" id="quizCenter" tabindex="-1">
@@ -339,6 +342,38 @@
       <!-- Additional, page-specific imports -->
       {% block additional_imports %}
       {% endblock %}
+
+      {% if clerk_enabled and clerk_publishable_key and clerk_frontend_api %}
+      <script async crossorigin="anonymous" data-clerk-publishable-key="{{ clerk_publishable_key }}" src="https://{{ clerk_frontend_api }}/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
+      <script>
+        async function bindClerkLogout() {
+          const link = document.getElementById("logout-link");
+          if (!link) return;
+          link.addEventListener("click", async (e) => {
+            e.preventDefault();
+            try {
+              let retries = 0;
+              while (!window.Clerk && retries < 20) {
+                await new Promise(r => setTimeout(r, 100));
+                retries += 1;
+              }
+              if (window.Clerk) {
+                await window.Clerk.load();
+                await window.Clerk.signOut();
+              }
+            } catch (err) {
+              console.error("Clerk signOut failed:", err);
+            }
+            try {
+              await fetch("/auth/clerk/logout", { method: "POST", credentials: "same-origin" });
+            } finally {
+              window.location.assign("/login?logged_out=1");
+            }
+          });
+        }
+        window.addEventListener("load", bindClerkLogout);
+      </script>
+      {% endif %}
 
   </body>
 </html>

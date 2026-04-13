@@ -35,6 +35,8 @@ class User(UserMixin, db.Model):
     # Basic fields
     id = db.Column(db.Integer,primary_key=True)
     username = db.Column(db.String(10),index=True,unique=True)
+    email = db.Column(db.String(255), index=True, unique=False, nullable=True)
+    clerk_user_id = db.Column(db.String(64), index=True, unique=True, nullable=True)
     password_hash = db.Column(db.String(128),index=False,unique=False)
     joined_at = db.Column(db.Date(),index=True,default=datetime.utcnow())
     #progresses = db.relationship('Progress',backref='user',lazy='dynamic')

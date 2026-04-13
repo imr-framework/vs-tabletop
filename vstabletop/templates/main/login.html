@@ -1,35 +1,201 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="container-fluid vh-100">
-  <div class="row d-flex justify-content-center align-items-center">
-            <div id="logo" class="row align-content-center">
-            <img src="../static/img/virtual_scanner_logo.png" class="mx-auto d-block w-25" alt="Virtual Scanner Logo">
+<div class="container-fluid login-page py-4 py-md-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-8 col-xl-7">
+      <div class="card login-shell border-0 shadow-sm">
+        <div class="row g-0">
+          <div class="col-md-5 login-brand-panel d-none d-md-flex">
+            <div class="w-100 text-center">
+              <img src="../static/img/virtual_scanner_logo.png" class="img-fluid login-logo mb-3" alt="Virtual Scanner Logo">
+              <h2 class="h4 mb-2">Virtual Scanner Tabletop</h2>
+              <p class="small mb-0">Interactive MRI learning games with guided challenges.</p>
             </div>
-            <div class="col-6 card bg-light">
-            <div class="card-header h3 font-monospace">Login here!</div>
-            <div class="card-body">
-                <form action="/login" method="POST">
-                    {{ template_login_form.csrf_token }}
-                  {{ template_login_form.hidden_tag() }}
-                  {{template_login_form.username_field.label(class="form-label")}}
-                  {{template_login_form.username_field(class="form-control",value=session['username_display'])}}
-                  {{template_login_form.password_field.label(class="form-label")}}
-                  {{template_login_form.password_field(class="form-control")}}
-                    <br>
-                  {{template_login_form.submit_field()}}
-                      <div class="row text-center">
-                          <a href="/register">Register here</a>
-                      </div>
-                </form>
+          </div>
+          <div class="col-12 col-md-7">
+            <div class="card-body p-4 p-md-4">
+              <h1 class="h3 mb-1">Welcome back</h1>
+              <p class="text-muted mb-4">Sign in to continue your progress.</p>
+              {% if clerk_enabled %}
+              <div id="clerk-login-root" class="mb-3"></div>
+              {% set show_clerk_status = config.DEBUG or config.TESTING %}
+              {% if show_clerk_status %}
+              <div id="clerk-login-status" class="small text-muted mb-3">Clerk: initializing...</div>
+              {% endif %}
+              <div class="login-divider mb-3"></div>
+              {% endif %}
+              {% if not clerk_enabled %}
+              <form action="/login" method="POST">
+                  {{ template_login_form.csrf_token }}
+                {{ template_login_form.hidden_tag() }}
+                {{template_login_form.username_field.label(class="form-label")}}
+                {{template_login_form.username_field(class="form-control",value=session['username_display'])}}
+                {{template_login_form.password_field.label(class="form-label mt-3")}}
+                {{template_login_form.password_field(class="form-control")}}
+                  <br>
+                {{template_login_form.submit_field(class="btn btn-primary w-100")}}
+                    <div class="text-center mt-3">
+                        <a href="/register">Create an account</a>
+                    </div>
+              </form>
+              {% else %}
+              {% if show_clerk_status %}
+              <div class="text-center mt-2">
+                  <small class="text-muted">Use Clerk sign-in above.</small>
+              </div>
+              {% endif %}
+              <div class="text-center mt-3">
+                  <a href="/login?switch_account=1" id="switch-account-link">Sign in with a different account</a>
+              </div>
+              {% endif %}
             </div>
-            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
 {% endblock %}
 
 {% block additional_imports %}
-    <!-- Script to hide user info -->
+    {% if clerk_enabled and clerk_publishable_key %}
+    <script>
+      window.__CLERK_PUBLISHABLE_KEY__ = "{{ clerk_publishable_key }}";
+    </script>
+    <script async crossorigin="anonymous" data-clerk-publishable-key="{{ clerk_publishable_key }}" src="https://{{ clerk_frontend_api }}/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
+    <script>
+      async function syncClerkToBackend(user, session, status) {
+        if (!user || !session) return false;
+        if (window.__clerkSyncInFlight || window.__clerkSessionSynced) return false;
+        window.__clerkSyncInFlight = true;
+        const token = await session.getToken();
+        const resp = await fetch("/auth/clerk/session", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          credentials: "same-origin",
+          body: JSON.stringify({
+            username: user.username || user.firstName || user.fullName || "",
+            email: user.primaryEmailAddress ? user.primaryEmailAddress.emailAddress : ""
+          })
+        });
+        if (resp.ok) {
+          const data = await resp.json();
+          if (status) status.textContent = "Clerk session accepted. Redirecting...";
+          window.__clerkSessionSynced = true;
+          window.location.replace(data.redirect || "/index");
+          return true;
+        }
+        const txt = await resp.text();
+        if (status) status.textContent = "Clerk backend auth failed. Check server logs.";
+        console.error("Clerk backend auth failed:", resp.status, txt);
+        window.__clerkSyncInFlight = false;
+        return false;
+      }
+
+      async function initClerkLogin() {
+        const status = document.getElementById("clerk-login-status");
+        if (!document.getElementById("clerk-login-root")) return;
+        let retries = 0;
+        while (!window.Clerk && retries < 20) {
+          await new Promise(r => setTimeout(r, 150));
+          retries += 1;
+        }
+        if (!window.Clerk) {
+          if (status) status.textContent = "Clerk failed to load script.";
+          console.error("Clerk failed to load script.");
+          return;
+        }
+        await window.Clerk.load();
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("logged_out") === "1") {
+          await window.Clerk.signOut();
+          if (status) status.textContent = "Signed out successfully.";
+        }
+        // If Clerk already has an active session, sync immediately and skip mount flow.
+        if (window.Clerk.user && window.Clerk.session) {
+          if (status) status.textContent = "Existing Clerk session found. Signing in...";
+          const didSync = await syncClerkToBackend(window.Clerk.user, window.Clerk.session, status);
+          if (didSync) return;
+        }
+        const switchLink = document.getElementById("switch-account-link");
+        if (switchLink) {
+          switchLink.addEventListener("click", async (e) => {
+            e.preventDefault();
+            if (status) status.textContent = "Signing out current account...";
+            try {
+              await window.Clerk.signOut();
+            } catch (err) {
+              console.error("Clerk switch-account signOut failed:", err);
+            }
+            try {
+              await fetch("/auth/clerk/logout", { method: "POST", credentials: "same-origin" });
+            } finally {
+              window.location.assign("/login?switch_account=1");
+            }
+          });
+        }
+        if (status) status.textContent = "Clerk loaded. Mounting sign-in...";
+        try {
+          window.Clerk.mountSignIn(document.getElementById("clerk-login-root"), {
+            appearance: { elements: { card: "shadow-none" } },
+            signUpUrl: "/register",
+            redirectUrl: "/index",
+            afterSignInUrl: "/index",
+            afterSignUpUrl: "/index",
+            fallbackRedirectUrl: "/index",
+            forceRedirectUrl: "/index"
+          });
+          if (status) status.textContent = "Clerk sign-in mounted.";
+        } catch (e) {
+          if (status) status.textContent = `Clerk mount failed: ${e}`;
+          console.error("Clerk mountSignIn failed:", e);
+          return;
+        }
+        window.Clerk.addListener(async ({ user, session }) => {
+          await syncClerkToBackend(user, session, status);
+        });
+      }
+      window.addEventListener("load", initClerkLogin);
+    </script>
+    {% endif %}
+    <style>
+      .login-page {
+        min-height: calc(100vh - 80px);
+      }
+      .login-shell {
+        border-radius: 14px;
+        overflow: hidden;
+      }
+      .login-brand-panel {
+        background: linear-gradient(145deg, #103b63 0%, #1f5a8f 100%);
+        color: #ffffff;
+        align-items: center;
+        padding: 2rem 1.35rem;
+      }
+      .login-logo {
+        max-width: 130px;
+      }
+      .login-divider {
+        height: 1px;
+        background-color: #dbe2ea;
+      }
+      #clerk-login-root .cl-card {
+        box-shadow: none !important;
+      }
+      #clerk-login-root .cl-footerAction,
+      #clerk-login-root .cl-socialButtonsBlockButtonText,
+      #clerk-login-root .cl-formFieldLabel {
+        font-size: 0.9rem;
+      }
+    </style>
+    <script type="text/javascript">
+      $('#base-navbar').hide();
+      $('#base-message-board').hide();
+    </script>
 
 {% endblock %}

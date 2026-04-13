@@ -22,8 +22,6 @@ Flask-WTF==1.0.1
 flatbuffers==1.12
 fonttools==4.33.3
 gast==0.2.2
-gevent==25.9.1
-gevent-websocket==0.10.1
 google-auth==2.9.0
 google-auth-oauthlib==0.4.6
 google-pasta==0.2.0
@@ -70,6 +68,7 @@ psycopg2-binary==2.9.3
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pydicom==1.2.2
+PyJWT==2.8.0
 Pygments==2.19.2
 pymesh==1.0.2
 pyparsing==2.3.1

@@ -12,14 +12,15 @@ from flask_socketio import SocketIO, emit
 from flask_session import Session
 #from vstabletop.main.paths import IMG_PATH, DATA_PATH
 
-# Match the Gunicorn worker stack in Docker (gevent websocket).
-# This avoids auto-selecting eventlet when it is installed in requirements.
-socketio = SocketIO(manage_session=False, async_mode="gevent")
+# Use threading mode to avoid gevent/eventlet websocket stack incompatibilities.
+# This keeps Socket.IO stable for local dev and single-instance deployments.
+socketio = SocketIO(manage_session=False, async_mode="threading")
 login_manager = LoginManager()
 
 
 def create_app():
     app = Flask(__name__)
+    from .auth_clerk import clerk_enabled, clerk_publishable_key, clerk_frontend_api
     # Register blueprints TODO for all files
     from .models import db, User
     from .main.routes_main import bp_main
@@ -57,6 +58,14 @@ def create_app():
     # 3. Enable socketIO
     #socketio = SocketIO(app, manage_session=False)
     socketio.init_app(app)
+
+    @app.context_processor
+    def inject_clerk_context():
+        return {
+            "clerk_enabled": clerk_enabled(),
+            "clerk_publishable_key": clerk_publishable_key(),
+            "clerk_frontend_api": clerk_frontend_api(),
+        }
 
     return app
 

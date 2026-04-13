@@ -45,5 +45,5 @@ USER appuser
 # Expose the port
 EXPOSE 8080
 
-# Run with Socket.IO-compatible gevent websocket worker setup.
-CMD ["gunicorn", "-k", "geventwebsocket.gunicorn.workers.GeventWebSocketWorker", "-w", "1", "--bind", "0.0.0.0:8080", "vstabletop.main.app:app", "--timeout", "120"]
+# Run with threaded workers + simple-websocket compatible Socket.IO mode.
+CMD ["gunicorn", "--worker-class", "gthread", "--threads", "8", "-w", "1", "--bind", "0.0.0.0:8080", "vstabletop.main.app:app", "--timeout", "120"]
