@@ -223,7 +223,10 @@ def register():
     if current_user.is_authenticated:
         return redirect(url_for('bp_main.index'))
     reg_form = Register_Form()
-    print('on register page...')
+    print(
+        f"[register] method={request.method} clerk_enabled={clerk_enabled()} "
+        f"path={request.path}"
+    )
 
     if request.method == 'POST':
         print(request.form)
@@ -238,9 +241,9 @@ def register():
         except:
             db.session.rollback()
         return redirect(url_for('bp_main.login'))
-    else:
+    elif request.method == 'POST' and not clerk_enabled():
         print("Failed to validate")
-        flash('Form is not validated; check your passwords!')
+        flash('Form is not validated; check your passwords!', 'danger')
 
     return render_template('main/register.html', title='Register', template_form=reg_form, **_clerk_template_context())
 
@@ -278,6 +281,7 @@ def clerk_session_login():
         user.set_password(clerk_id)
         db.session.add(user)
         db.session.commit()
+        print(f"[Clerk] provisioned new local user id={user.id} username={user.username!r}")
     else:
         updated = False
         if not user.clerk_user_id:
@@ -288,6 +292,9 @@ def clerk_session_login():
             updated = True
         if updated:
             db.session.commit()
+            print(f"[Clerk] updated local user id={user.id} username={user.username!r}")
+        else:
+            print(f"[Clerk] reused existing local user id={user.id} username={user.username!r}")
 
     login_user(user)
     session['user']['id'] = user.id

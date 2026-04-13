@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% set hide_base_flashes = True %}
+{% set register_flashes = get_flashed_messages(with_categories=True) %}
 {% block content %}
 <div class="container-fluid login-page py-4 py-md-5">
   <div class="row justify-content-center">
@@ -18,10 +20,6 @@
               <p class="text-muted mb-4">Register to start and track your progress.</p>
               {% if clerk_enabled %}
               <div id="clerk-register-root" class="mb-3"></div>
-              {% set show_clerk_status = config.DEBUG or config.TESTING %}
-              {% if show_clerk_status %}
-              <div id="clerk-register-status" class="small text-muted mb-3">Clerk: initializing...</div>
-              {% endif %}
               <div class="login-divider mb-3"></div>
               {% endif %}
               {% if not clerk_enabled %}
@@ -37,11 +35,6 @@
                 {{ template_form.submit_field(class="btn btn-primary w-100") }}
               </form>
               {% else %}
-              {% if show_clerk_status %}
-              <div class="text-center">
-                <small class="text-muted">Use Clerk sign-up above.</small>
-              </div>
-              {% endif %}
               {% endif %}
 
               <div class="text-center mt-3">
@@ -54,6 +47,29 @@
     </div>
   </div>
 </div>
+
+{% if register_flashes %}
+<div class="modal fade" id="register-flash-modal" tabindex="-1" aria-labelledby="registerFlashTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow">
+      <div class="modal-header">
+        <h5 class="modal-title" id="registerFlashTitle">Registration</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-start">
+        {% for category, message in register_flashes %}
+        <div class="alert {{ 'alert-danger' if category in ['error', 'danger'] else 'alert-info' }} mb-2" role="alert">
+          {{ message }}
+        </div>
+        {% endfor %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
 {% endblock %}
 
 {% block additional_imports %}
@@ -64,7 +80,6 @@
     <script async crossorigin="anonymous" data-clerk-publishable-key="{{ clerk_publishable_key }}" src="https://{{ clerk_frontend_api }}/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
     <script>
       async function initClerkRegister() {
-        const status = document.getElementById("clerk-register-status");
         if (!document.getElementById("clerk-register-root")) return;
         let retries = 0;
         while (!window.Clerk && retries < 20) {
@@ -72,15 +87,14 @@
           retries += 1;
         }
         if (!window.Clerk) {
-          if (status) status.textContent = "Clerk failed to load script.";
           console.error("Clerk failed to load script.");
           return;
         }
         await window.Clerk.load();
-        if (status) status.textContent = "Clerk loaded. Mounting sign-up...";
+        console.info("[Clerk] loaded; mounting sign-up widget");
         try {
           window.Clerk.mountSignUp(document.getElementById("clerk-register-root"), {
-            appearance: { elements: { card: "shadow-none" } },
+            appearance: { elements: { card: "clerk-auth-card" } },
             signInUrl: "/login",
             redirectUrl: "/index",
             afterSignInUrl: "/index",
@@ -88,9 +102,8 @@
             fallbackRedirectUrl: "/index",
             forceRedirectUrl: "/index"
           });
-          if (status) status.textContent = "Clerk sign-up mounted.";
+          console.info("[Clerk] sign-up widget mounted");
         } catch (e) {
-          if (status) status.textContent = `Clerk mount failed: ${e}`;
           console.error("Clerk mountSignUp failed:", e);
           return;
         }
@@ -112,12 +125,11 @@
           });
           if (resp.ok) {
             const data = await resp.json();
-            if (status) status.textContent = "Clerk session accepted. Redirecting...";
+            console.info("[Clerk] backend session OK; redirecting");
             window.__clerkSessionSynced = true;
             window.location.replace(data.redirect || "/index");
           } else {
             const txt = await resp.text();
-            if (status) status.textContent = "Clerk backend auth failed. Check server logs.";
             console.error("Clerk backend auth failed:", resp.status, txt);
             window.__clerkSyncInFlight = false;
           }
@@ -147,8 +159,11 @@
         height: 1px;
         background-color: #dbe2ea;
       }
-      #clerk-register-root .cl-card {
-        box-shadow: none !important;
+      #clerk-register-root .clerk-auth-card {
+        background: #ffffff !important;
+        border: 1px solid #dbe4ef !important;
+        border-radius: 12px !important;
+        box-shadow: 0 10px 28px rgba(15, 23, 42, 0.12) !important;
       }
       #clerk-register-root .cl-footerAction,
       #clerk-register-root .cl-socialButtonsBlockButtonText,
@@ -160,4 +175,14 @@
       $('#base-navbar').hide();
       $('#base-message-board').hide();
     </script>
+    {% if register_flashes %}
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var el = document.getElementById("register-flash-modal");
+        if (!el || !window.bootstrap || !window.bootstrap.Modal) return;
+        var modal = new bootstrap.Modal(el);
+        modal.show();
+      });
+    </script>
+    {% endif %}
 {% endblock %}

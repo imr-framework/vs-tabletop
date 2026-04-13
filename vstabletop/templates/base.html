@@ -278,6 +278,7 @@
         </div>
 
           <!-- Message board -->
+          {% if hide_base_flashes is not defined or not hide_base_flashes %}
           <div class="row">
               <div id="base-message-board" class="card bg-info">
           </div>
@@ -289,6 +290,7 @@
                 {% endif %}
             {% endwith %}
         </div>
+          {% endif %}
 
           <!-- Sidebar and main content -->
            <div class="row h-100 collapse g-0 d-flex collapsable-sidebar", style="overflow-y: auto;">
