@@ -7,7 +7,7 @@ from flask_login import login_required, login_user, logout_user, current_user
 import vstabletop.utils as utils
 from vstabletop.forms import *
 from vstabletop.info import GAMES_DICT, GAMES_INFO
-from vstabletop.models import db, User, Calibration, MultipleChoice
+from vstabletop.models import db, User, Calibration, MultipleChoice, UserAuthEvent
 import json
 import plotly
 import plotly.express as px
@@ -41,6 +41,32 @@ def _safe_username(base):
         candidate = f"{base[:max(1, 10-len(tail))]}{tail}"
         suffix += 1
     return candidate
+
+
+def _log_auth_event(event_type, provider="local", user=None, email=None):
+    """Persist auth event for signup/login/logout."""
+    try:
+        if user is not None:
+            user_id = user.id
+            username = user.username
+            user_email = email or user.email
+        else:
+            sess_user = session.get("user") or {}
+            user_id = sess_user.get("id")
+            username = sess_user.get("username")
+            user_email = email
+        evt = UserAuthEvent(
+            user_id=user_id,
+            username=username,
+            email=user_email,
+            provider=provider,
+            event_type=event_type,
+        )
+        db.session.add(evt)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        print(f"[auth-event] failed to log {event_type}/{provider}: {e}")
 
 
 def initialize_parameters():
@@ -143,6 +169,8 @@ def logout():
             db.session.rollback()
 
 
+    user_for_log = current_user if current_user.is_authenticated else None
+    _log_auth_event("logout", provider="local", user=user_for_log)
     logout_user()
     session.clear()
     # Force Clerk sign-out on next login page load to prevent auto re-login.
@@ -191,6 +219,7 @@ def login():
             login_user(user)
             print('login success')
             flash("Login successful, welcome!")
+            _log_auth_event("login", provider="local", user=user)
             session['user']['id'] = user.id
             session['user']['username'] = user.username
             session['user']['date_joined'] = user.joined_at
@@ -238,6 +267,7 @@ def register():
         db.session.add(user)
         try:
             db.session.commit()
+            _log_auth_event("signup", provider="local", user=user)
         except:
             db.session.rollback()
         return redirect(url_for('bp_main.login'))
@@ -281,6 +311,7 @@ def clerk_session_login():
         user.set_password(clerk_id)
         db.session.add(user)
         db.session.commit()
+        _log_auth_event("signup", provider="clerk", user=user, email=email)
         print(f"[Clerk] provisioned new local user id={user.id} username={user.username!r}")
     else:
         updated = False
@@ -297,6 +328,7 @@ def clerk_session_login():
             print(f"[Clerk] reused existing local user id={user.id} username={user.username!r}")
 
     login_user(user)
+    _log_auth_event("login", provider="clerk", user=user, email=email)
     session['user']['id'] = user.id
     session['user']['username'] = user.username
     session['user']['date_joined'] = user.joined_at
@@ -308,6 +340,8 @@ def clerk_session_login():
 
 @bp_main.route('/auth/clerk/logout', methods=['POST'])
 def clerk_logout():
+    user_for_log = current_user if current_user.is_authenticated else None
+    _log_auth_event("logout", provider="clerk", user=user_for_log)
     logout_user()
     session.clear()
     return {"ok": True}

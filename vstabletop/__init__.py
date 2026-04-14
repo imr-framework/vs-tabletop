@@ -12,6 +12,18 @@ from flask_socketio import SocketIO, emit
 from flask_session import Session
 #from vstabletop.main.paths import IMG_PATH, DATA_PATH
 
+
+def _database_uri():
+    """Resolve SQLAlchemy database URI: Postgres via DATABASE_URL, else local SQLite."""
+    url = environ.get("DATABASE_URL", "").strip()
+    if not url:
+        return "sqlite:///myDB.db"
+    # Heroku-style URLs use postgres:// which SQLAlchemy does not accept for psycopg2.
+    if url.startswith("postgres://"):
+        url = "postgresql://" + url[len("postgres://") :]
+    return url
+
+
 # Use threading mode to avoid gevent/eventlet websocket stack incompatibilities.
 # This keeps Socket.IO stable for local dev and single-instance deployments.
 socketio = SocketIO(manage_session=False, async_mode="threading")
@@ -39,8 +51,8 @@ def create_app():
     #vstabletop.config.update(SESSION_COOKIE_SAMESITE="None", SESSION_COOKIE_SECURE=True)
     # Add database location
     #vstabletop.config['SQLALCHEMY_DATABASE_URI'] = 'splite:///myDB.db'
-    ### -> uses DATABASE_URL (connecting to PostgreSQL instead of SQLite IF POSSIBLE, for Heroku deployment)
-    app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DATABASE_URL') or 'sqlite:///myDB.db'
+    ### -> uses DATABASE_URL for PostgreSQL; falls back to SQLite when unset
+    app.config["SQLALCHEMY_DATABASE_URI"] = _database_uri()
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     # more configuration
     UPLOAD_FOLDER = IMG_PATH

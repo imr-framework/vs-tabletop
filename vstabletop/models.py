@@ -117,7 +117,11 @@ class MultipleChoice(db.Model):
     choiceC = db.Column(db.String(),default='Third choice')
     choiceD = db.Column(db.String(),default='Fourth choice')
     correct_choice = db.Column(db.Enum('A','B','C','D',name='four_choices')) # A, B, C, or D
-    difficulty = db.Column(db.Enum('easy','medium','hard'),default='easy',index=True) # easy, medium, hard
+    difficulty = db.Column(
+        db.Enum('easy', 'medium', 'hard', name='difficulty_level'),
+        default='easy',
+        index=True
+    ) # easy, medium, hard
 
     def check_answer(self,answer):
     # Check if answer is correct!
@@ -155,6 +159,19 @@ class MultipleChoice(db.Model):
         question_string += f'Correct answer: {self.correct_choice}\n'
 
         return question_string
+
+
+class UserAuthEvent(db.Model):
+    """Audit trail for user auth actions."""
+    __table_args__ = {'extend_existing': True}
+
+    id = db.Column(db.Integer(), primary_key=True)
+    user_id = db.Column(db.Integer(), index=True, nullable=True)
+    username = db.Column(db.String(64), index=True, nullable=True)
+    email = db.Column(db.String(255), index=True, nullable=True)
+    provider = db.Column(db.String(16), index=True, nullable=False, default="local")  # local|clerk
+    event_type = db.Column(db.String(16), index=True, nullable=False)  # signup|login|logout
+    happened_at = db.Column(db.DateTime(), index=True, default=datetime.utcnow)
 
 def initialize_users():
     # When models.py is run by itself, the database gets established.
