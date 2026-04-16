@@ -13,11 +13,13 @@ import plotly
 import plotly.express as px
 import pandas as pd
 import re
+import logging
 
 from vstabletop.models import MultipleChoice
 from vstabletop.auth_clerk import clerk_enabled, clerk_publishable_key, clerk_frontend_api, verify_clerk_token
 
 bp_main = Blueprint('bp_main',__name__, template_folder="templates/main",url_prefix="")
+logger = logging.getLogger(__name__)
 
 
 def _clerk_template_context():
@@ -66,7 +68,7 @@ def _log_auth_event(event_type, provider="local", user=None, email=None):
         db.session.commit()
     except Exception as e:
         db.session.rollback()
-        print(f"[auth-event] failed to log {event_type}/{provider}: {e}")
+        logger.warning("[auth-event] failed to log %s/%s: %s", event_type, provider, e)
 
 
 def initialize_parameters():
@@ -252,16 +254,7 @@ def register():
     if current_user.is_authenticated:
         return redirect(url_for('bp_main.index'))
     reg_form = Register_Form()
-    print(
-        f"[register] method={request.method} clerk_enabled={clerk_enabled()} "
-        f"path={request.path}"
-    )
-
-    if request.method == 'POST':
-        print(request.form)
-
     if reg_form.validate_on_submit(): #define user with data from form here:
-        print("Validated!")
         user = User(username=reg_form.username_field.data) # set user's password here:
         user.set_password(reg_form.password_field.data)
         db.session.add(user)
@@ -272,7 +265,6 @@ def register():
             db.session.rollback()
         return redirect(url_for('bp_main.login'))
     elif request.method == 'POST' and not clerk_enabled():
-        print("Failed to validate")
         flash('Form is not validated; check your passwords!', 'danger')
 
     return render_template('main/register.html', title='Register', template_form=reg_form, **_clerk_template_context())
@@ -289,13 +281,12 @@ def clerk_session_login():
     try:
         claims = verify_clerk_token(token)
     except Exception as e:
-        print("Clerk session verification failed:", e)
-        return {"ok": False, "error": f"Invalid token: {e}"}, 401
+        logger.warning("Clerk session verification failed: %s", e)
+        return {"ok": False, "error": "Invalid token."}, 401
 
     clerk_id = claims.get("sub")
     if not clerk_id:
         return {"ok": False, "error": "Token missing subject."}, 401
-    print("Clerk session login hit for:", clerk_id)
 
     payload = request.get_json(silent=True) or {}
     email = payload.get("email") or claims.get("email_address")
@@ -312,7 +303,7 @@ def clerk_session_login():
         db.session.add(user)
         db.session.commit()
         _log_auth_event("signup", provider="clerk", user=user, email=email)
-        print(f"[Clerk] provisioned new local user id={user.id} username={user.username!r}")
+        logger.info("[Clerk] provisioned new local user id=%s username=%r", user.id, user.username)
     else:
         updated = False
         if not user.clerk_user_id:
@@ -323,9 +314,13 @@ def clerk_session_login():
             updated = True
         if updated:
             db.session.commit()
-            print(f"[Clerk] updated local user id={user.id} username={user.username!r}")
+            logger.info("[Clerk] updated local user id=%s username=%r", user.id, user.username)
         else:
-            print(f"[Clerk] reused existing local user id={user.id} username={user.username!r}")
+            logger.info("[Clerk] reused existing local user id=%s username=%r", user.id, user.username)
+
+    # Clerk flow can hit this endpoint before landing/login initialized session keys.
+    if "user" not in session or "game5" not in session:
+        initialize_parameters()
 
     login_user(user)
     _log_auth_event("login", provider="clerk", user=user, email=email)

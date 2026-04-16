@@ -23,12 +23,6 @@ app = create_app()
 
 
 if __name__ == '__main__':
-    import sys
     import os
-    script_path = os.path.abspath(__file__)
-    print(f"Script path: {script_path}")
-    SEARCH_PATH = script_path[:script_path.index('vstabletop')]
-    sys.path.insert(0,SEARCH_PATH)
-
-    print(app.url_map)
-    socketio.run(app, debug=True, host="0.0.0.0")
+    debug = os.environ.get("FLASK_DEBUG", "0").lower() in {"1", "true", "yes"}
+    socketio.run(app, debug=debug, host="0.0.0.0")
