@@ -41,7 +41,7 @@ services:
       # App security/runtime settings
       SECRET_KEY: ${SECRET_KEY:-}
       WTF_CSRF_SECRET_KEY: ${WTF_CSRF_SECRET_KEY:-}
-      SESSION_COOKIE_SECURE: ${SESSION_COOKIE_SECURE:-1}
+      SESSION_COOKIE_SECURE: "0"
       SESSION_COOKIE_SAMESITE: ${SESSION_COOKIE_SAMESITE:-Lax}
       # For deployment, disable auto schema creation and run migrations/init explicitly.
       AUTO_DB_INIT: ${AUTO_DB_INIT:-0}
