@@ -12,7 +12,7 @@ Virtual Scanner Tabletop is an extension to [Virtual Scanner](https://github.com
 
 ## Quickstart
 
-### Docker Compose (single file)
+### Docker Compose
 1. Create a .env file and fill in environment variable as listed in the .env.example  
 
 2. Start the stack with one compose file:
