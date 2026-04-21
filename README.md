@@ -13,14 +13,13 @@ Virtual Scanner Tabletop is an extension to [Virtual Scanner](https://github.com
 ## Quickstart
 
 ### Docker Compose (single file)
-1. Use one env file per environment:
-   - dev: `.env`
-   - prod: `.env.prod` (copy from `.env.prod.example` and set real secrets)
+1. Create a .env file and fill in environment variable as listed in the .env.example  
+
 2. Start the stack with one compose file:
    - `docker compose --env-file .env up -d --build`
-   - `docker compose --env-file .env.prod up -d --build`
-3. Run schema init/migrations explicitly in production:
-   - `docker compose --env-file .env.prod run --rm web python scripts/init_db.py`
+
+3. Run schema init/migrations:
+   - `docker compose --env-file .env run --rm web python scripts/init_db.py`
 
 ### Method 1: `pip install`
 1. On the command line, make a new virtual environment using the command: `python -m venv myenv` For more info on creating virtual environments,
