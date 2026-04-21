@@ -90,8 +90,9 @@ class Progress(db.Model):
     date_achieved = db.Column(db.Date(),index=True,default=datetime.utcnow())
 
     def update_stars(self):
-        correct_rate = self.num_correct / self.num_questions
-        complete_rate = self.num_steps_complete / self.num_steps_total
+        # Guard against empty/missing content so game pages don't crash.
+        correct_rate = (self.num_correct / self.num_questions) if self.num_questions else 0
+        complete_rate = (self.num_steps_complete / self.num_steps_total) if self.num_steps_total else 0
         self.num_stars = round(2*(correct_rate * 2 + complete_rate * 3))/2
 
 

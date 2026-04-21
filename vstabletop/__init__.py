@@ -52,7 +52,9 @@ def create_app():
     app.config["SESSION_FILE_DIR"] = os.environ.get("SESSION_FILE_DIR", "/tmp/flask_session")
     app.config["SESSION_COOKIE_HTTPONLY"] = True
     app.config["SESSION_COOKIE_SAMESITE"] = os.environ.get("SESSION_COOKIE_SAMESITE", "Lax")
-    app.config["SESSION_COOKIE_SECURE"] = os.environ.get("SESSION_COOKIE_SECURE", "1").lower() in {"1", "true", "yes"}
+    # Default to non-secure cookies for local HTTP dev.
+    # In production behind HTTPS, set SESSION_COOKIE_SECURE=1 explicitly.
+    app.config["SESSION_COOKIE_SECURE"] = os.environ.get("SESSION_COOKIE_SECURE", "0").lower() in {"1", "true", "yes"}
     # Add database location and settings
     #vstabletop.config.update(SESSION_COOKIE_SAMESITE="None", SESSION_COOKIE_SECURE=True)
     # Add database location
