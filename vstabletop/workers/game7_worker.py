@@ -9,8 +9,13 @@ import plotly
 import stltovoxel
 import os
 import glob
-from skimage.transform import radon
+from skimage.transform import radon, resize
 from scipy.spatial.transform import Rotation as R
+import matplotlib
+
+# Headless backend: Socket.IO runs handlers off the main thread; macOS GUI backend
+# (MacOSX) crashes with NSWindow main-thread errors when saving figures from workers.
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 from vstabletop.paths import DATA_PATH, IMG_PATH
@@ -323,7 +328,10 @@ def generate_projection_2d_1d(img,angle):
     # Generate 1D projection of 2D image
     proj1d = radon(img,[angle])
     # Normalize and make it 1D
-    proj1d = proj1d.flatten() / np.max(proj1d)
+    proj1d = proj1d.flatten()
+    mx = np.max(proj1d)
+    if mx > 0:
+        proj1d = proj1d / mx
 
     return np.flip(proj1d)
 
@@ -481,6 +489,39 @@ def get_2D_proj_graph(name,dir):
     proj2d = generate_projection_3d_2d(voxels,dir)
     return proj2d
 
+
+def projection_distance_2d(a, b, target_shape=(128, 128)):
+    """L2 distance between L2-normalized projections resampled to a common size.
+
+    Different phantom voxel grids yield different projection shapes; this keeps
+    the original intent (reject near-duplicate options) without requiring equal
+    array shapes for subtraction.
+    """
+    aa = resize(np.asarray(a, dtype=float), target_shape, anti_aliasing=True)
+    bb = resize(np.asarray(b, dtype=float), target_shape, anti_aliasing=True)
+    va = aa.ravel()
+    vb = bb.ravel()
+    va = va / (np.linalg.norm(va) + 1e-12)
+    vb = vb / (np.linalg.norm(vb) + 1e-12)
+    return float(np.linalg.norm(va - vb))
+
+
+def projection_distance_1d(a, b, target_len=256):
+    """L2 distance between 1D curves resampled to a common length and L2-normalized."""
+    a = np.asarray(a, dtype=float).ravel()
+    b = np.asarray(b, dtype=float).ravel()
+    if a.size == 0 or b.size == 0:
+        return 1.0
+    xa = np.linspace(0.0, 1.0, a.size)
+    xb = np.linspace(0.0, 1.0, b.size)
+    grid = np.linspace(0.0, 1.0, target_len)
+    ia = np.interp(grid, xa, a)
+    ib = np.interp(grid, xb, b)
+    ia = ia / (np.linalg.norm(ia) + 1e-12)
+    ib = ib / (np.linalg.norm(ib) + 1e-12)
+    return float(np.linalg.norm(ia - ib))
+
+
 def get_1D_proj_graph(name,dir,angle):
     # Generate arrays for challenge answer options (1D)
     #voxels = np.load(f'./static/data/solids/{name}.npy')
@@ -504,6 +545,7 @@ def projections_to_images(g_list_2d, g_list_1d):
         ax.set_axis_off()
         #fig.savefig(f'./static/img/game7/im1d-{q}.jpg')
         fig.savefig(IMG_PATH / 'game7' / f'im1d-{q}.jpg')
+        plt.close(fig)
 
         # 2D
         #plt.imsave(f'./static/img/game7/im2d-{q}.jpg', np.flipud(g_list_2d[q].T),cmap=mpl.cm.gray)

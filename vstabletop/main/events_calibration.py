@@ -10,8 +10,6 @@ import threading
 
 #from flask_socketio import emit, join_room, leave_room
 
-print(socketio)
-
 # When client says RUN, we run.
 @socketio.on('run scans')
 def pump_out_fake_plots(payload):

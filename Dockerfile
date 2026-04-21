@@ -1,18 +1,18 @@
-# Use official Python slim image
-FROM python:3.11-slim AS base
+# syntax=docker/dockerfile:1.7
+
+# Use official Python slim image (override via --build-arg PYTHON_VERSION=...)
+ARG PYTHON_VERSION=3.10.20
+FROM python:${PYTHON_VERSION}-slim AS base
 
 
-# Create the directory if it doesn't exist
-RUN mkdir -p /app/flask_session
-
-## Grant write permissions to the directory for all users (or a specific group)
-##RUN chmod 775 /app/flask_session
-RUN chmod 777 /app/flask_session 
+# Create runtime session directory.
+RUN mkdir -p /tmp/flask_session
 
 # Prevent Python from writing .pyc files & buffer stdout/stderr
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    PORT=8080
+    PORT=8080 \
+    SESSION_FILE_DIR=/tmp/flask_session
 
 # Set working directory
 WORKDIR /app
@@ -28,18 +28,24 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Copy requirements and install Python dependencies
 COPY requirements.txt .
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt gunicorn
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --upgrade pip && \
+    pip install -r requirements.txt gunicorn
 
 # Copy the full application code - adjust as necessary
 COPY . .
 
-# Create a non‑root user with full privileges for running the app
-RUN useradd -u 0 -o -m -s /bin/bash appuser
+RUN chmod +x /app/scripts/docker_entrypoint.sh
+
+# Create an unprivileged runtime user.
+RUN groupadd -r appuser && useradd -r -g appuser -m -s /bin/bash appuser \
+ && chown -R appuser:appuser /app /tmp/flask_session
 USER appuser
 
 # Expose the port
 EXPOSE 8080
 
-# Run the application using Gunicorn: adjusted module path
-CMD ["gunicorn", "--bind", "0.0.0.0:8080", "vstabletop.main.app:app", "--workers", "2", "--timeout", "120"]
+ENTRYPOINT ["/app/scripts/docker_entrypoint.sh"]
+
+# Run with threaded workers + simple-websocket compatible Socket.IO mode.
+CMD ["gunicorn", "--worker-class", "gthread", "--threads", "8", "-w", "1", "--bind", "0.0.0.0:8080", "vstabletop.main.app:app", "--timeout", "120"]

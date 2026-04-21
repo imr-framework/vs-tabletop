@@ -363,6 +363,7 @@
 
                     <!-- Instructions -->
                     <!-- Show content for each lab procedure -->
+                    <div style="overflow-y: auto; max-height: 70vh;">
                     <div class="tab-content" id="game4-tab-content">
                         {% for task, task_details in instructions['tasks'].items() %}
                             {% if loop.index == ([session['game4']['task_completed'] + 1 , 4] | min) %}
@@ -447,7 +448,7 @@
                         {% endfor %}
 
 
-
+                    </div>
                     </div>
                     </div>
 {% endblock %}

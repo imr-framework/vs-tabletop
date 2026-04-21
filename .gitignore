@@ -140,3 +140,6 @@ external/
 vstabletop/flask_session/
 .xml
 .iml
+.env*
+!.env.example
+!.env.prod.example

@@ -3,19 +3,72 @@
 # Login, register, and calibration pages for Virtual Scanner Biobus Mode
 import numpy as np
 from flask import flash, render_template, session, redirect, url_for, request, Blueprint
-from flask_login import login_required, login_user, logout_user
+from flask_login import login_required, login_user, logout_user, current_user
 import vstabletop.utils as utils
 from vstabletop.forms import *
 from vstabletop.info import GAMES_DICT, GAMES_INFO
-from vstabletop.models import db, User, Calibration, MultipleChoice
+from vstabletop.models import db, User, Calibration, MultipleChoice, UserAuthEvent
 import json
 import plotly
 import plotly.express as px
 import pandas as pd
+import re
+import logging
 
 from vstabletop.models import MultipleChoice
+from vstabletop.auth_clerk import clerk_enabled, clerk_publishable_key, clerk_frontend_api, verify_clerk_token
 
 bp_main = Blueprint('bp_main',__name__, template_folder="templates/main",url_prefix="")
+logger = logging.getLogger(__name__)
+
+
+def _clerk_template_context():
+    return {
+        "clerk_enabled": clerk_enabled(),
+        "clerk_publishable_key": clerk_publishable_key(),
+        "clerk_frontend_api": clerk_frontend_api(),
+    }
+
+
+def _safe_username(base):
+    base = re.sub(r"[^a-zA-Z0-9_]", "", (base or "player")).lower()
+    base = (base or "player")[:10]
+    if len(base) < 3:
+        base += "user"
+    base = base[:10]
+    candidate = base
+    suffix = 1
+    while User.query.filter_by(username=candidate).first() is not None:
+        tail = str(suffix)
+        candidate = f"{base[:max(1, 10-len(tail))]}{tail}"
+        suffix += 1
+    return candidate
+
+
+def _log_auth_event(event_type, provider="local", user=None, email=None):
+    """Persist auth event for signup/login/logout."""
+    try:
+        if user is not None:
+            user_id = user.id
+            username = user.username
+            user_email = email or user.email
+        else:
+            sess_user = session.get("user") or {}
+            user_id = sess_user.get("id")
+            username = sess_user.get("username")
+            user_email = email
+        evt = UserAuthEvent(
+            user_id=user_id,
+            username=username,
+            email=user_email,
+            provider=provider,
+            event_type=event_type,
+        )
+        db.session.add(evt)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        logger.warning("[auth-event] failed to log %s/%s: %s", event_type, provider, e)
 
 
 def initialize_parameters():
@@ -118,8 +171,12 @@ def logout():
             db.session.rollback()
 
 
+    user_for_log = current_user if current_user.is_authenticated else None
+    _log_auth_event("logout", provider="local", user=user_for_log)
     logout_user()
-    return redirect(url_for("bp_main.landing"))
+    session.clear()
+    # Force Clerk sign-out on next login page load to prevent auto re-login.
+    return redirect(url_for("bp_main.login", logged_out="1"))
 
 # Home
 #@app.route('/index')
@@ -133,13 +190,24 @@ def index():
 #@app.route('/',methods=["GET","POST"])
 @bp_main.route('/',methods=["GET","POST"])
 def landing():
-    initialize_parameters()
+    if current_user.is_authenticated:
+        return redirect(url_for('bp_main.index'))
+    # Keep landing page accessible, but initialize session state only once.
+    if 'user' not in session:
+        initialize_parameters()
     return render_template('main/landing.html')
 
 
 #@app.route('/login',methods=["GET","POST"])
 @bp_main.route('/login',methods=["GET","POST"])
 def login():
+    if request.args.get("switch_account") == "1":
+        logout_user()
+        session.clear()
+        initialize_parameters()
+
+    if current_user.is_authenticated and request.args.get("logged_out") != "1":
+        return redirect(url_for('bp_main.index'))
     login_form = Login_Form()
 
     if login_form.validate_on_submit():
@@ -153,6 +221,7 @@ def login():
             login_user(user)
             print('login success')
             flash("Login successful, welcome!")
+            _log_auth_event("login", provider="local", user=user)
             session['user']['id'] = user.id
             session['user']['username'] = user.username
             session['user']['date_joined'] = user.joined_at
@@ -171,7 +240,7 @@ def login():
             flash('Wrong credentials - login failed')
             return redirect(url_for('bp_main.login'))
 
-    return render_template("main/login.html",template_login_form=login_form)
+    return render_template("main/login.html",template_login_form=login_form, **_clerk_template_context())
 
 # template_title='login',
 #                            template_intro_text="Log into Virtual Scanner Biobus",
@@ -182,27 +251,95 @@ def login():
 #@app.route('/register',methods=['GET','POST'])
 @bp_main.route('/register',methods=['GET','POST'])
 def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('bp_main.index'))
     reg_form = Register_Form()
-    print('on register page...')
-
-    if request.method == 'POST':
-        print(request.form)
-
     if reg_form.validate_on_submit(): #define user with data from form here:
-        print("Validated!")
         user = User(username=reg_form.username_field.data) # set user's password here:
         user.set_password(reg_form.password_field.data)
         db.session.add(user)
         try:
             db.session.commit()
+            _log_auth_event("signup", provider="local", user=user)
         except:
             db.session.rollback()
         return redirect(url_for('bp_main.login'))
-    else:
-        print("Failed to validate")
-        flash('Form is not validated; check your passwords!')
+    elif request.method == 'POST' and not clerk_enabled():
+        flash('Form is not validated; check your passwords!', 'danger')
 
-    return render_template('main/register.html', title='Register', template_form=reg_form)
+    return render_template('main/register.html', title='Register', template_form=reg_form, **_clerk_template_context())
+
+
+@bp_main.route('/auth/clerk/session', methods=['POST'])
+def clerk_session_login():
+    if not clerk_enabled():
+        return {"ok": False, "error": "Clerk auth is disabled."}, 400
+    auth_header = request.headers.get("Authorization", "")
+    if not auth_header.startswith("Bearer "):
+        return {"ok": False, "error": "Missing bearer token."}, 401
+    token = auth_header.split(" ", 1)[1]
+    try:
+        claims = verify_clerk_token(token)
+    except Exception as e:
+        logger.warning("Clerk session verification failed: %s", e)
+        return {"ok": False, "error": "Invalid token."}, 401
+
+    clerk_id = claims.get("sub")
+    if not clerk_id:
+        return {"ok": False, "error": "Token missing subject."}, 401
+
+    payload = request.get_json(silent=True) or {}
+    email = payload.get("email") or claims.get("email_address")
+    preferred_username = payload.get("username") or payload.get("name") or (email.split("@")[0] if email else None)
+
+    user = User.query.filter_by(clerk_user_id=clerk_id).first()
+    if user is None and email:
+        user = User.query.filter_by(email=email).first()
+
+    if user is None:
+        user = User(username=_safe_username(preferred_username), email=email, clerk_user_id=clerk_id)
+        # local password login is optional for Clerk users
+        user.set_password(clerk_id)
+        db.session.add(user)
+        db.session.commit()
+        _log_auth_event("signup", provider="clerk", user=user, email=email)
+        logger.info("[Clerk] provisioned new local user id=%s username=%r", user.id, user.username)
+    else:
+        updated = False
+        if not user.clerk_user_id:
+            user.clerk_user_id = clerk_id
+            updated = True
+        if email and user.email != email:
+            user.email = email
+            updated = True
+        if updated:
+            db.session.commit()
+            logger.info("[Clerk] updated local user id=%s username=%r", user.id, user.username)
+        else:
+            logger.info("[Clerk] reused existing local user id=%s username=%r", user.id, user.username)
+
+    # Clerk flow can hit this endpoint before landing/login initialized session keys.
+    if "user" not in session or "game5" not in session:
+        initialize_parameters()
+
+    login_user(user)
+    _log_auth_event("login", provider="clerk", user=user, email=email)
+    session['user']['id'] = user.id
+    session['user']['username'] = user.username
+    session['user']['date_joined'] = user.joined_at
+    session['user']['role'] = 'administrator' if user.username == 'admin' else 'student'
+    session['game5']['progress'].user_id = user.id
+    session.modified = True
+    return {"ok": True, "redirect": url_for('bp_main.index')}
+
+
+@bp_main.route('/auth/clerk/logout', methods=['POST'])
+def clerk_logout():
+    user_for_log = current_user if current_user.is_authenticated else None
+    _log_auth_event("logout", provider="clerk", user=user_for_log)
+    logout_user()
+    session.clear()
+    return {"ok": True}
 
 # TODO calibration tunings - #4 save to file
 # 4. "Save to file" / "Load" buttons split the current "load previous" one

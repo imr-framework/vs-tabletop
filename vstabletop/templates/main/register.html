@@ -1,43 +1,188 @@
 {% extends "base.html" %}
+{% set hide_base_flashes = True %}
+{% set register_flashes = get_flashed_messages(with_categories=True) %}
 {% block content %}
-    <div class="container-fluid vh-100">
-        <div class="row h-25 d-flex justify-content-center align-content-center">
-            <div class="col text-info">
-                <div class="row h-50 d-flex align-content-center">
-                    <span class="h1 font-weight-bold" style="font-family:monospace; font-size:60px">Welcome to Virtual Scanner Tabletop</span>
-                </div>
-                <div class="row h-50 d-flex align-content-center">
-                    <i class="bi bi-controller fa-5x"></i>
-                </div>
+<div class="container-fluid login-page py-4 py-md-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-8 col-xl-7">
+      <div class="card login-shell border-0 shadow-sm">
+        <div class="row g-0">
+          <div class="col-md-5 login-brand-panel d-none d-md-flex">
+            <div class="w-100 text-center">
+              <img src="../static/img/virtual_scanner_logo.png" class="img-fluid login-logo mb-3" alt="Virtual Scanner Logo">
+              <h2 class="h4 mb-2">Virtual Scanner Tabletop</h2>
+              <p class="small mb-0">Interactive MRI learning games with guided challenges.</p>
             </div>
-
-        </div>
-        <div class="row h-50 d-flex justify-content-center">
-            <div class="col-4">
-            <form action="/register" method="POST">
-
-                     <div class="card row h-50 bg-light">
-                <span class="h3 font-monospace card-header text-primary">Register here</span>
-            <div class="card-body">
-            {{ template_form.hidden_tag()}}
-            {{ template_form.username_field.label(class="form-label text-primary") }}
-            {{template_form.username_field(size=27,class="form-control col", placeholder="Enter username")}}
-
-                {{template_form.password_field.label(class="form-label text-primary")}}
+          </div>
+          <div class="col-12 col-md-7">
+            <div class="card-body p-4 p-md-4">
+              <h1 class="h3 mb-1">Create your account</h1>
+              <p class="text-muted mb-4">Register to start and track your progress.</p>
+              {% if clerk_enabled %}
+              <div id="clerk-register-root" class="mb-3"></div>
+              <div class="login-divider mb-3"></div>
+              {% endif %}
+              {% if not clerk_enabled %}
+              <form action="/register" method="POST">
+                {{ template_form.hidden_tag()}}
+                {{ template_form.username_field.label(class="form-label") }}
+                {{template_form.username_field(size=27,class="form-control col", placeholder="Enter username")}}
+                {{template_form.password_field.label(class="form-label mt-3")}}
                 {{template_form.password_field(class="form-control")}}
-                {{template_form.password2_field.label(class="form-label text-primary")}}
+                {{template_form.password2_field.label(class="form-label mt-3")}}
                 {{template_form.password2_field(class="form-control")}}
+                <br>
+                {{ template_form.submit_field(class="btn btn-primary w-100") }}
+              </form>
+              {% else %}
+              {% endif %}
 
-            <br>
-                {{ template_form.submit_field() }}
+              <div class="text-center mt-3">
+                <a href="/login">Return to login page</a>
+              </div>
             </div>
-     </div>
-            </form>
-
-<div class="row text-center">
-          <a href="/login">Return to Login Page</a>
+          </div>
+        </div>
       </div>
-</div>
-</div>
     </div>
+  </div>
+</div>
+
+{% if register_flashes %}
+<div class="modal fade" id="register-flash-modal" tabindex="-1" aria-labelledby="registerFlashTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow">
+      <div class="modal-header">
+        <h5 class="modal-title" id="registerFlashTitle">Registration</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-start">
+        {% for category, message in register_flashes %}
+        <div class="alert {{ 'alert-danger' if category in ['error', 'danger'] else 'alert-info' }} mb-2" role="alert">
+          {{ message }}
+        </div>
+        {% endfor %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block additional_imports %}
+    {% if clerk_enabled and clerk_publishable_key %}
+    <script>
+      window.__CLERK_PUBLISHABLE_KEY__ = "{{ clerk_publishable_key }}";
+    </script>
+    <script async crossorigin="anonymous" data-clerk-publishable-key="{{ clerk_publishable_key }}" src="https://{{ clerk_frontend_api }}/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
+    <script>
+      async function initClerkRegister() {
+        if (!document.getElementById("clerk-register-root")) return;
+        let retries = 0;
+        while (!window.Clerk && retries < 20) {
+          await new Promise(r => setTimeout(r, 150));
+          retries += 1;
+        }
+        if (!window.Clerk) {
+          console.error("Clerk failed to load script.");
+          return;
+        }
+        await window.Clerk.load();
+        console.info("[Clerk] loaded; mounting sign-up widget");
+        try {
+          window.Clerk.mountSignUp(document.getElementById("clerk-register-root"), {
+            appearance: { elements: { card: "clerk-auth-card" } },
+            signInUrl: "/login",
+            redirectUrl: "/index",
+            afterSignInUrl: "/index",
+            afterSignUpUrl: "/index",
+            fallbackRedirectUrl: "/index",
+            forceRedirectUrl: "/index"
+          });
+          console.info("[Clerk] sign-up widget mounted");
+        } catch (e) {
+          console.error("Clerk mountSignUp failed:", e);
+          return;
+        }
+        window.Clerk.addListener(async ({ user, session }) => {
+          if (!user || !session) return;
+          if (window.__clerkSyncInFlight || window.__clerkSessionSynced) return;
+          window.__clerkSyncInFlight = true;
+          const token = await session.getToken();
+          const resp = await fetch("/auth/clerk/session", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({
+              username: user.username || user.firstName || user.fullName || "",
+              email: user.primaryEmailAddress ? user.primaryEmailAddress.emailAddress : ""
+            })
+          });
+          if (resp.ok) {
+            const data = await resp.json();
+            console.info("[Clerk] backend session OK; redirecting");
+            window.__clerkSessionSynced = true;
+            window.location.replace(data.redirect || "/index");
+          } else {
+            const txt = await resp.text();
+            console.error("Clerk backend auth failed:", resp.status, txt);
+            window.__clerkSyncInFlight = false;
+          }
+        });
+      }
+      window.addEventListener("load", initClerkRegister);
+    </script>
+    {% endif %}
+    <style>
+      .login-page {
+        min-height: calc(100vh - 80px);
+      }
+      .login-shell {
+        border-radius: 14px;
+        overflow: hidden;
+      }
+      .login-brand-panel {
+        background: linear-gradient(145deg, #103b63 0%, #1f5a8f 100%);
+        color: #ffffff;
+        align-items: center;
+        padding: 2rem 1.35rem;
+      }
+      .login-logo {
+        max-width: 130px;
+      }
+      .login-divider {
+        height: 1px;
+        background-color: #dbe2ea;
+      }
+      #clerk-register-root .clerk-auth-card {
+        background: #ffffff !important;
+        border: 1px solid #dbe4ef !important;
+        border-radius: 12px !important;
+        box-shadow: 0 10px 28px rgba(15, 23, 42, 0.12) !important;
+      }
+      #clerk-register-root .cl-footerAction,
+      #clerk-register-root .cl-socialButtonsBlockButtonText,
+      #clerk-register-root .cl-formFieldLabel {
+        font-size: 0.9rem;
+      }
+    </style>
+    <script type="text/javascript">
+      $('#base-navbar').hide();
+      $('#base-message-board').hide();
+    </script>
+    {% if register_flashes %}
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var el = document.getElementById("register-flash-modal");
+        if (!el || !window.bootstrap || !window.bootstrap.Modal) return;
+        var modal = new bootstrap.Modal(el);
+        modal.show();
+      });
+    </script>
+    {% endif %}
 {% endblock %}

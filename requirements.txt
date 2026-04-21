@@ -12,7 +12,6 @@ cycler==0.10.0
 dnspython==2.0.0
 dominate==2.6.0
 ellipsinator==0.2.1
-eventlet==0.33.3
 Flask==2.1.2
 Flask-Bootstrap==3.3.7.1
 Flask-Login==0.6.1
@@ -23,8 +22,6 @@ Flask-WTF==1.0.1
 flatbuffers==1.12
 fonttools==4.33.3
 gast==0.2.2
-gevent==25.9.1
-gevent-websocket==0.9.5
 google-auth==2.9.0
 google-auth-oauthlib==0.4.6
 google-pasta==0.2.0
@@ -67,10 +64,11 @@ Pillow==9.2.0
 pip==25.3
 plotly==5.9.0
 protobuf==3.19.4
-psycopg2-binary==2.9.3
+psycopg2-binary==2.9.11
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pydicom==1.2.2
+PyJWT[crypto]==2.8.0
 Pygments==2.19.2
 pymesh==1.0.2
 pyparsing==2.3.1

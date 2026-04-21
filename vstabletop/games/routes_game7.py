@@ -1,6 +1,6 @@
 import threading
 from vstabletop.workers.game7_worker import game7_prep3d_worker, game7_projection_worker, game7_empty_plots_worker, \
-    get_2D_proj_graph, get_1D_proj_graph, projections_to_images
+    get_2D_proj_graph, get_1D_proj_graph, projections_to_images, projection_distance_2d, projection_distance_1d
 import numpy as np
 from flask import flash, render_template, session, redirect, url_for
 from flask_login import login_required, login_user, logout_user
@@ -127,35 +127,74 @@ def get_random_mystery_model(msg):
     utils.update_session_subdict(session,'game7',{'proj2d_axis':dir0, 'proj1d_angle':ang0})
 
     # Graphs ready to display (plotly, simpler style)
-    g_list_2d = [get_2D_proj_graph(name,dir0)]
-    g_list_1d = [get_1D_proj_graph(name,dir0,ang0)]
+    g_list_2d = [get_2D_proj_graph(name, dir0)]
+    g_list_1d = [get_1D_proj_graph(name, dir0, ang0)]
 
-    # Generate wrong answers
-    # 2D
-    while len(g_list_2d)<3:
-        # For 2D, only choose other things in the set
+    # Wrong answers: add candidates that differ from every existing option (shape-agnostic distance).
+    # Original code used np.linalg.norm(a-b) > 0.1 on equal-shaped arrays; we map that intent to
+    # normalized-resampled L2 distance with a comparable minimum gap, and relax if needed.
+    min_sep_2d = 0.08
+    min_sep_1d = 0.08
+    max_attempts = 4000
+
+    attempts_2d = 0
+    while len(g_list_2d) < 3 and attempts_2d < max_attempts:
+        attempts_2d += 1
+        if attempts_2d % 1000 == 0 and min_sep_2d > 1e-4:
+            min_sep_2d *= 0.5
         name_new = random.choice(set_names)
-        dir_new = random.choice(['x','y','z'])
-        if name_new != name or dir_new != dir0:
-            g_temp_2d = get_2D_proj_graph(name_new,dir_new)
-            for g_list_2d_opt in g_list_2d:
-                if np.linalg.norm(g_list_2d_opt-g_temp_2d) > 0.1:
-                    g_list_2d.append(g_temp_2d)
-                else:
-                    print("The graphs are too similar; redraw! 2D")
-    # 1D
-    while len(g_list_1d)<3:
-        # For 1D, choose any model
+        dir_new = random.choice(['x', 'y', 'z'])
+        if name_new == name and dir_new == dir0:
+            continue
+        g_temp_2d = get_2D_proj_graph(name_new, dir_new)
+        if all(projection_distance_2d(g_temp_2d, ex) > min_sep_2d for ex in g_list_2d):
+            g_list_2d.append(g_temp_2d)
+
+    # Last resort: fill remaining slots (bounded attempts, then duplicate last slice if needed).
+    fill_2d = 0
+    while len(g_list_2d) < 3 and fill_2d < 400:
+        fill_2d += 1
+        name_new = random.choice(set_names)
+        dir_new = random.choice(['x', 'y', 'z'])
+        if name_new == name and dir_new == dir0:
+            continue
+        g_temp_2d = get_2D_proj_graph(name_new, dir_new)
+        if all(projection_distance_2d(g_temp_2d, ex) > 1e-6 for ex in g_list_2d):
+            g_list_2d.append(g_temp_2d)
+        elif len(g_list_2d) < 3:
+            g_list_2d.append(g_temp_2d)
+    while len(g_list_2d) < 3:
+        g_list_2d.append(np.array(g_list_2d[-1], copy=True))
+
+    attempts_1d = 0
+    while len(g_list_1d) < 3 and attempts_1d < max_attempts:
+        attempts_1d += 1
+        if attempts_1d % 1000 == 0 and min_sep_1d > 1e-4:
+            min_sep_1d *= 0.5
         name_new = random.choice(GAME7_RANDOM_MODELS)
-        dir_new = random.choice(['x','y','z'])
-        ang_new = random.choice([0,45,90,135,180])
-        if name_new != name or dir_new != dir0 or ang_new != ang0:
-            g_temp_1d = get_1D_proj_graph(name_new,dir_new,ang_new)
-            for g_list_1d_opt in g_list_1d:
-                if np.linalg.norm(g_list_1d_opt - g_temp_1d) > 0.1:
-                    g_list_1d.append(g_temp_1d)
-                else:
-                    print("The curves are too similar; redraw! 1D")
+        dir_new = random.choice(['x', 'y', 'z'])
+        ang_new = random.choice([0, 45, 90, 135, 180])
+        if name_new == name and dir_new == dir0 and ang_new == ang0:
+            continue
+        g_temp_1d = get_1D_proj_graph(name_new, dir_new, ang_new)
+        if all(projection_distance_1d(g_temp_1d, ex) > min_sep_1d for ex in g_list_1d):
+            g_list_1d.append(g_temp_1d)
+
+    fill_1d = 0
+    while len(g_list_1d) < 3 and fill_1d < 400:
+        fill_1d += 1
+        name_new = random.choice(GAME7_RANDOM_MODELS)
+        dir_new = random.choice(['x', 'y', 'z'])
+        ang_new = random.choice([0, 45, 90, 135, 180])
+        if name_new == name and dir_new == dir0 and ang_new == ang0:
+            continue
+        g_temp_1d = get_1D_proj_graph(name_new, dir_new, ang_new)
+        if all(projection_distance_1d(g_temp_1d, ex) > 1e-6 for ex in g_list_1d):
+            g_list_1d.append(g_temp_1d)
+        elif len(g_list_1d) < 3:
+            g_list_1d.append(g_temp_1d)
+    while len(g_list_1d) < 3:
+        g_list_1d.append(np.array(g_list_1d[-1], copy=True))
 
     # TODO Shuffle (the list, and the correct choice)
     perm2 = np.random.permutation(3)

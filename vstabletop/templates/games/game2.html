@@ -73,7 +73,7 @@
                 <a
                   class="nav-link active"
                   id="ex0-tab-1"
-                  data-mdb-toggle="tab"
+                  data-bs-toggle="tab"
                   href="#ex0-tabs-1"
                   role="tab"
                   aria-controls="ex0-tabs-1"
@@ -85,7 +85,7 @@
                 <a
                   class="nav-link"
                   id="ex0-tab-2"
-                  data-mdb-toggle="tab"
+                  data-bs-toggle="tab"
                   href="#ex0-tabs-2"
                   role="tab"
                   aria-controls="ex0-tabs-2"
@@ -250,7 +250,7 @@
                     <a
                       class="nav-link active"
                       id="ex1-tab-1"
-                      data-mdb-toggle="tab"
+                      data-bs-toggle="tab"
                       href="#ex1-tabs-1"
                       role="tab"
                       aria-controls="ex1-tabs-1"
@@ -262,7 +262,7 @@
                     <a
                       class="nav-link"
                       id="ex1-tab-2"
-                      data-mdb-toggle="tab"
+                      data-bs-toggle="tab"
                       href="#ex1-tabs-2"
                       role="tab"
                       aria-controls="ex1-tabs-2"
@@ -274,7 +274,7 @@
                     <a
                       class="nav-link"
                       id="ex1-tab-3"
-                      data-mdb-toggle="tab"
+                      data-bs-toggle="tab"
                       href="#ex1-tabs-3"
                       role="tab"
                       aria-controls="ex1-tabs-3"
@@ -286,7 +286,7 @@
                     <a
                       class="nav-link"
                       id="ex1-tab-4"
-                      data-mdb-toggle="tab"
+                      data-bs-toggle="tab"
                       href="#ex1-tabs-4"
                       role="tab"
                       aria-controls="ex1-tabs-4"
@@ -417,7 +417,7 @@
                 <a
                   class="nav-link active"
                   id="ex2-tab-1"
-                  data-mdb-toggle="tab"
+                  data-bs-toggle="tab"
                   href="#ex2-tabs-1"
                   role="tab"
                   aria-controls="ex2-tabs-1"
@@ -429,7 +429,7 @@
                 <a
                   class="nav-link"
                   id="ex2-tab-2"
-                  data-mdb-toggle="tab"
+                  data-bs-toggle="tab"
                   href="#ex2-tabs-2"
                   role="tab"
                   aria-controls="ex2-tabs-2"
@@ -564,7 +564,7 @@
 
 
 {% block questions %}
-    <div id="slide" class="carousel slide" data-mdb-interval="false">
+    <div id="slide" class="carousel slide" data-bs-interval="false">
             <div class="col">
                 <div class="carousel-inner">
                     <form action="/games/2" method="POST">
@@ -602,10 +602,10 @@
                     </form>
                 </div>
 
-                <button class="carousel-control-prev" type="button" data-mdb-target="#slide" data-mdb-slide="prev">
+                <button class="carousel-control-prev" type="button" data-bs-target="#slide" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon"></span>
                 </button>
-                <button class="carousel-control-next" type="button" data-mdb-target="#slide" data-mdb-slide="next">
+                <button class="carousel-control-next" type="button" data-bs-target="#slide" data-bs-slide="next">
                     <span class="carousel-control-next-icon"></span>
                 </button>
             </div>
@@ -636,7 +636,7 @@
                             {% set aria_disabled = (disabled == 'disabled') %}
 
                             <li class="nav-item" role="presentation">
-                                <button class="col nav-link {{ active }} {{ disabled }} text-info" id="task{{ loop.index }}-tab" data-mdb-toggle="tab" data-mdb-target="#step{{ loop.index }}"
+                                <button class="col nav-link {{ active }} {{ disabled }} text-info" id="task{{ loop.index }}-tab" data-bs-toggle="tab" data-bs-target="#step{{ loop.index }}"
                                         type="button" role="tab"  aria-controls="step{{ loop.index }}"
                                         aria-selected="{{ loop.index==1 }}" aria-disabled= "{{ aria_disabled }}">
                                     {{ tab }}
@@ -647,6 +647,7 @@
 
                     <!-- Instructions -->
                     <!-- Show content for each lab procedure -->
+                    <div style="overflow-y: auto; max-height: 70vh;">
                     <div class="tab-content" id="game2-tab-content">
                         {% for task, task_details in instructions['tasks'].items() %}
                             {% if loop.index == ([session['game2']['task_completed'] + 1, 4] | min) %}
@@ -668,12 +669,12 @@
                                               <input class="form-check-input task-{{ task_index }}-check" type="checkbox" value="" aria-label="">
                                               </div>
                                             <div class="col-10">
-                                            <button class="accordion-button" type="button" data-mdb-toggle="collapse" data-mdb-target="#collapse{{ loop.index }}" aria-expanded="false" aria-controls="collapse{{ loop.index }}">
+                                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ loop.index }}" aria-expanded="false" aria-controls="collapse{{ loop.index }}">
                                                 <strong>{{ step }}</strong>
                                             </button>
                                           </div>
                                           </div>
-                                          <div class="accordion-collapse collapse taskstep" id="collapse{{ loop.index }}" aria-labelledby="heading{{ loop.index }}" data-mdb-parent="#instructions-accordion">
+                                          <div class="accordion-collapse collapse taskstep" id="collapse{{ loop.index }}" aria-labelledby="heading{{ loop.index }}" data-bs-parent="#instructions-accordion">
                                               <div class="accordion-body">
                                                     <span>{{ details }}</span>
                                               </div>
@@ -690,12 +691,12 @@
                                               </div>
 
                                             <div class="col-10">
-                                            <button class="accordion-button collapsed final-task-button" type="button" data-mdb-toggle="collapse" data-mdb-target="#collapse-final-{{ task_index }}" aria-expanded="false" aria-controls="collapse{{ loop.index }}">
+                                            <button class="accordion-button collapsed final-task-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-final-{{ task_index }}" aria-expanded="false" aria-controls="collapse{{ loop.index }}">
                                                 <strong class="text-info">{{ task }}</strong>
                                             </button>
                                           </div>
                                           </div>
-                                          <div class="accordion-collapse collapse" id="collapse-final-{{ task_index }}" aria-labelledby="heading-final-{{ task_index }}" data-mdb-parent="#instructions-accordion">
+                                          <div class="accordion-collapse collapse" id="collapse-final-{{ task_index }}" aria-labelledby="heading-final-{{ task_index }}" data-bs-parent="#instructions-accordion">
                                               <div class="accordion-body">
                                                     <span>{{ task_details }}</span>
                                               </div>
@@ -733,7 +734,8 @@
                       <div class="tab-pane fade" id="step2" role="tabpanel" aria-labelledby="profile-tab"></div>
                       <div class="tab-pane fade" id="step3" role="tabpanel" aria-labelledby="contact-tab"></div>
 
-
+                    </div>
+                    
                     </div>
 
                     </div>
