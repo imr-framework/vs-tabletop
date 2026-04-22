@@ -15,9 +15,7 @@ services:
       retries: 20
 
   web:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: mcbills/vs-games:latest
     restart: unless-stopped
     depends_on:
       db:
